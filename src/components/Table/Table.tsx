@@ -1,4 +1,4 @@
-import React, { useMemo, useState, Suspense, useRef } from "react";
+import { useMemo, useRef, useCallback, Suspense, useEffect } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
 import { DndProvider } from "react-dnd";
@@ -11,6 +11,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useVirtual } from "react-virtual";
 
 import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
@@ -58,6 +59,7 @@ import { FieldType } from "@src/constants/fields";
 import { formatSubTableName } from "@src/utils/table";
 import { TableRow, ColumnConfig } from "@src/types/table";
 import { StyledCell } from "./Styled/StyledCell";
+import { useKeyboardNavigation } from "./useKeyboardNavigation";
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
@@ -86,8 +88,8 @@ export default function TableComponent() {
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
 
+  const containerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
-  const [focusInsideCell, setFocusInsideCell] = useState(false);
 
   const canAddColumn = userRoles.includes("ADMIN");
   const canEditColumn = userRoles.includes("ADMIN");
@@ -167,149 +169,111 @@ export default function TableComponent() {
     columnResizeMode: "onChange",
     // debugRows: true,
   });
+  const { rows } = table.getRowModel();
   // console.log(table, selectedCell);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    console.log(
-      "keydown",
-      // e.target,
-      e.key,
-      e.ctrlKey ? "ctrl" : "",
-      e.altKey ? "alt" : "",
-      e.metaKey ? "meta" : "",
-      e.shiftKey ? "shift" : ""
-    );
-    const LISTENED_KEYS = [
-      "ArrowUp",
-      "ArrowDown",
-      "ArrowLeft",
-      "ArrowRight",
-      "Enter",
-      "Escape",
-      "Home",
-      "End",
-      "PageUp",
-      "PageDown",
-    ];
-    if (LISTENED_KEYS.includes(e.key)) e.preventDefault();
+  const {
+    virtualItems: virtualRows,
+    totalSize: totalHeight,
+    scrollToIndex: scrollToRowIndex,
+  } = useVirtual({
+    parentRef: containerRef,
+    size: tableRows.length,
+    overscan: 10,
+    estimateSize: useCallback(
+      () => tableSchema.rowHeight || DEFAULT_ROW_HEIGHT,
+      [tableSchema.rowHeight]
+    ),
+  });
 
-    if (e.key === "Escape") {
-      setFocusInsideCell(false);
-      (
-        gridRef.current?.querySelector("[aria-selected=true]") as HTMLDivElement
-      )?.focus();
-      return;
+  const {
+    virtualItems: virtualCols,
+    totalSize: totalWidth,
+    scrollToIndex: scrollToColIndex,
+  } = useVirtual({
+    parentRef: containerRef,
+    horizontal: true,
+    size: columns.length,
+    overscan: 1,
+    estimateSize: useCallback(
+      (index: number) => columns[index].size || DEFAULT_COL_WIDTH,
+      [columns]
+    ),
+  });
+
+  console.log(totalHeight);
+
+  useEffect(() => {
+    if (!selectedCell) return;
+    if (selectedCell.path) {
+      const rowIndex = tableRows.findIndex(
+        (row) => row._rowy_ref.path === selectedCell.path
+      );
+      if (rowIndex === -1) return;
+      scrollToRowIndex(rowIndex);
     }
-
-    const target = e.target as HTMLDivElement;
-    if (
-      target.getAttribute("role") !== "columnheader" &&
-      target.getAttribute("role") !== "gridcell"
-    )
-      return;
-
-    if (e.key === "Enter") {
-      setFocusInsideCell(true);
-      (target.querySelector("[tabindex]") as HTMLElement)?.focus();
-      return;
+    if (selectedCell.columnKey) {
+      const colIndex = columns.findIndex(
+        (col) => col.id === selectedCell.columnKey
+      );
+      if (colIndex === -1) return;
+      scrollToColIndex(colIndex);
     }
+  }, [selectedCell, tableRows, columns, scrollToRowIndex, scrollToColIndex]);
 
-    const colIndex = Number(target.getAttribute("aria-colindex")) - 1;
-    const rowIndex =
-      Number(target.parentElement!.getAttribute("aria-rowindex")) - 2;
+  const { handleKeyDown, focusInsideCell } = useKeyboardNavigation({
+    gridRef,
+    tableRows,
+    columns,
+  });
 
-    const rowId = target.getAttribute("data-rowId")!;
-    const colId = target.getAttribute("data-colId")!;
+  const paddingTop = virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0;
+  const paddingBottom =
+    virtualRows.length > 0
+      ? totalHeight - (virtualRows?.[virtualRows.length - 1]?.end || 0)
+      : 0;
 
-    const isHeader = rowId === "_rowy_header";
+  const paddingLeft = virtualCols.length > 0 ? virtualCols?.[0]?.start || 0 : 0;
+  const paddingRight =
+    virtualCols.length > 0
+      ? totalWidth - (virtualCols?.[virtualCols.length - 1]?.end || 0)
+      : 0;
 
-    let newColIndex = colIndex;
-    let newRowIndex = rowIndex;
+  const fetchMoreOnBottomReached = useThrottledCallback(
+    (containerElement?: HTMLDivElement | null) => {
+      console.log("fetchMoreOnBottomReached", containerElement);
+      if (!containerElement) return;
 
-    // const newSelectedCell: SelectedCell = selectedCell
-    //   ? { ...selectedCell }
-    //   : { path: rowId, columnKey: colId };
-
-    switch (e.key) {
-      case "ArrowUp":
-        if (e.ctrlKey || e.metaKey) newRowIndex = -1;
-        else if (rowIndex > -1) newRowIndex = rowIndex - 1;
-        break;
-
-      case "ArrowDown":
-        if (e.ctrlKey || e.metaKey) newRowIndex = tableRows.length - 1;
-        else if (rowIndex < tableRows.length - 1) newRowIndex = rowIndex + 1;
-        break;
-
-      case "ArrowLeft":
-        if (e.ctrlKey || e.metaKey) newColIndex = 0;
-        else if (colIndex > 0) newColIndex = colIndex - 1;
-        break;
-
-      case "ArrowRight":
-        if (e.ctrlKey || e.metaKey) newColIndex = columns.length - 1;
-        else if (colIndex < columns.length - 1) newColIndex = colIndex + 1;
-        break;
-
-      case "PageUp":
-        newRowIndex = Math.max(0, rowIndex - COLLECTION_PAGE_SIZE);
-        break;
-
-      case "PageDown":
-        newRowIndex = Math.min(
-          tableRows.length - 1,
-          rowIndex + COLLECTION_PAGE_SIZE
-        );
-        break;
-
-      case "Home":
-        newColIndex = 0;
-        if (e.ctrlKey || e.metaKey) newRowIndex = -1;
-        break;
-
-      case "End":
-        newColIndex = columns.length - 1;
-        if (e.ctrlKey || e.metaKey) newRowIndex = tableRows.length - 1;
-        break;
-    }
-
-    const newSelectedCell = {
-      path:
-        newRowIndex > -1
-          ? tableRows[newRowIndex]._rowy_ref.path
-          : "_rowy_header",
-      columnKey: columns[newColIndex].id! || columns[0].id!,
-    };
-    console.log(newRowIndex, newColIndex, newSelectedCell);
-
-    setSelectedCell(newSelectedCell);
-
-    // Find matching DOM element for the cell
-    const newCellEl = gridRef.current?.querySelector(
-      `[aria-rowindex="${newRowIndex + 2}"] [aria-colindex="${
-        newColIndex + 1
-      }"]`
-    );
-    // Focus the cell
-    if (newCellEl) (newCellEl as HTMLDivElement).focus();
-    setFocusInsideCell(false);
-  };
+      const { scrollHeight, scrollTop, clientHeight } = containerElement;
+      if (scrollHeight - scrollTop - clientHeight < 300) {
+        setTablePage((p) => p + 1);
+      }
+    },
+    250
+  );
 
   return (
-    <>
+    <div
+      ref={containerRef}
+      // onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
+      style={{ overflow: "auto", width: "100%", height: "100%" }}
+    >
       <StyledTable
         ref={gridRef}
         role="grid"
         aria-readonly={tableSettings.readOnly}
         aria-colcount={columns.length}
         aria-rowcount={tableRows.length + 1}
-        style={{ width: table.getTotalSize(), userSelect: "none" }}
+        style={{
+          width: table.getTotalSize(),
+          userSelect: "none",
+        }}
         onKeyDown={handleKeyDown}
       >
         <div
           className="thead"
           role="rowgroup"
-          style={{ position: "sticky", top: 0 }}
+          style={{ position: "sticky", top: 0, zIndex: 1 }}
         >
           {table.getHeaderGroups().map((headerGroup) => (
             <StyledRow key={headerGroup.id} role="row" aria-rowindex={1}>
@@ -322,8 +286,8 @@ export default function TableComponent() {
                 return (
                   <ColumnHeaderComponent
                     key={header.id}
-                    data-rowId={"_rowy_header"}
-                    data-colId={header.id}
+                    data-rowid={"_rowy_header"}
+                    data-colid={header.id}
                     role="columnheader"
                     tabIndex={isSelectedCell ? 0 : -1}
                     aria-colindex={header.index + 1}
@@ -367,47 +331,79 @@ export default function TableComponent() {
         </div>
 
         <div className="tbody" role="rowgroup">
-          {table.getRowModel().rows.map((row) => (
-            <StyledRow key={row.id} role="row" aria-rowindex={row.index + 2}>
-              {row.getVisibleCells().map((cell, cellIndex) => {
-                const isSelectedCell =
-                  selectedCell?.path === row.original._rowy_ref.path &&
-                  selectedCell?.columnKey === cell.column.id;
+          {paddingTop > 0 && (
+            <div role="presentation" style={{ height: `${paddingTop}px` }} />
+          )}
 
-                return (
-                  <StyledCell
-                    key={cell.id}
-                    data-rowId={row.id}
-                    data-colId={cell.column.id}
-                    role="gridcell"
-                    tabIndex={isSelectedCell && !focusInsideCell ? 0 : -1}
-                    aria-colindex={cellIndex + 1}
-                    aria-readonly={
-                      cell.column.columnDef.meta?.editable === false
-                    }
-                    aria-selected={isSelectedCell}
-                    style={{ width: cell.column.getSize() }}
-                    onClick={(e) => {
-                      setSelectedCell({
-                        path: row.original._rowy_ref.path,
-                        columnKey: cell.column.id,
-                      });
-                      (e.target as HTMLDivElement).focus();
-                    }}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    <button
-                      tabIndex={isSelectedCell && focusInsideCell ? 0 : -1}
+          {virtualRows.map((virtualRow) => {
+            const row = rows[virtualRow.index];
+
+            return (
+              <StyledRow key={row.id} role="row" aria-rowindex={row.index + 2}>
+                {paddingLeft > 0 && (
+                  <div
+                    role="presentation"
+                    style={{ width: `${paddingLeft}px` }}
+                  />
+                )}
+
+                {virtualCols.map((virtualCell) => {
+                  const cellIndex = virtualCell.index;
+                  const cell = row.getVisibleCells()[cellIndex];
+
+                  const isSelectedCell =
+                    selectedCell?.path === row.original._rowy_ref.path &&
+                    selectedCell?.columnKey === cell.column.id;
+
+                  return (
+                    <StyledCell
+                      key={cell.id}
+                      data-rowid={row.id}
+                      data-colid={cell.column.id}
+                      role="gridcell"
+                      tabIndex={isSelectedCell && !focusInsideCell ? 0 : -1}
+                      aria-colindex={cellIndex + 1}
+                      aria-readonly={
+                        cell.column.columnDef.meta?.editable === false
+                      }
+                      aria-selected={isSelectedCell}
+                      style={{ width: cell.column.getSize() }}
+                      onClick={(e) => {
+                        setSelectedCell({
+                          path: row.original._rowy_ref.path,
+                          columnKey: cell.column.id,
+                        });
+                        (e.target as HTMLDivElement).focus();
+                      }}
                     >
-                      {isSelectedCell ? "f" : "x"}
-                    </button>
-                  </StyledCell>
-                );
-              })}
-            </StyledRow>
-          ))}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                      <button
+                        tabIndex={isSelectedCell && focusInsideCell ? 0 : -1}
+                      >
+                        {isSelectedCell ? "f" : "x"}
+                      </button>
+                    </StyledCell>
+                  );
+                })}
+
+                {paddingRight > 0 && (
+                  <div
+                    role="presentation"
+                    style={{ width: `${paddingRight}px` }}
+                  />
+                )}
+              </StyledRow>
+            );
+          })}
+
+          {paddingBottom > 0 && (
+            <div role="presentation" style={{ height: `${paddingBottom}px` }} />
+          )}
         </div>
       </StyledTable>
-    </>
+    </div>
   );
 }

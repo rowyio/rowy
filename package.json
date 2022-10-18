@@ -65,6 +65,7 @@
     "react-router-hash-link": "^2.4.3",
     "react-scripts": "^5.0.0",
     "react-usestateref": "^1.0.8",
+    "react-virtual": "^2.10.4",
     "remark-gfm": "^3.0.1",
     "seedrandom": "^3.0.5",
     "stream-browserify": "^3.0.0",

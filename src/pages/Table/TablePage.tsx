@@ -101,12 +101,12 @@ export default function TablePage({
         <Suspense fallback={<TableSkeleton />}>
           <Box
             sx={{
-              overflow: "auto",
               height: `calc(100vh - ${TOP_BAR_HEIGHT}px - ${TABLE_TOOLBAR_HEIGHT}px)`,
-              width: {
-                xs: "100%",
-                sm: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
-              },
+              width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
+              // width: {
+              //   xs: "100%",
+              //   sm: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
+              // },
 
               '& [role="grid"]': {
                 paddingBottom: (theme) =>
