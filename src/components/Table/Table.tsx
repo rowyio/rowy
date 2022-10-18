@@ -167,7 +167,7 @@ export default function TableComponent() {
     columnResizeMode: "onChange",
     // debugRows: true,
   });
-  console.log(table, selectedCell);
+  // console.log(table, selectedCell);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     console.log(
@@ -193,12 +193,26 @@ export default function TableComponent() {
     ];
     if (LISTENED_KEYS.includes(e.key)) e.preventDefault();
 
+    if (e.key === "Escape") {
+      setFocusInsideCell(false);
+      (
+        gridRef.current?.querySelector("[aria-selected=true]") as HTMLDivElement
+      )?.focus();
+      return;
+    }
+
     const target = e.target as HTMLDivElement;
     if (
       target.getAttribute("role") !== "columnheader" &&
       target.getAttribute("role") !== "gridcell"
     )
       return;
+
+    if (e.key === "Enter") {
+      setFocusInsideCell(true);
+      (target.querySelector("[tabindex]") as HTMLElement)?.focus();
+      return;
+    }
 
     const colIndex = Number(target.getAttribute("aria-colindex")) - 1;
     const rowIndex =
@@ -218,19 +232,23 @@ export default function TableComponent() {
 
     switch (e.key) {
       case "ArrowUp":
-        if (rowIndex > -1) newRowIndex = rowIndex - 1;
+        if (e.ctrlKey || e.metaKey) newRowIndex = -1;
+        else if (rowIndex > -1) newRowIndex = rowIndex - 1;
         break;
 
       case "ArrowDown":
-        if (rowIndex < tableRows.length - 1) newRowIndex = rowIndex + 1;
+        if (e.ctrlKey || e.metaKey) newRowIndex = tableRows.length - 1;
+        else if (rowIndex < tableRows.length - 1) newRowIndex = rowIndex + 1;
         break;
 
       case "ArrowLeft":
-        if (colIndex > 0) newColIndex = colIndex - 1;
+        if (e.ctrlKey || e.metaKey) newColIndex = 0;
+        else if (colIndex > 0) newColIndex = colIndex - 1;
         break;
 
       case "ArrowRight":
-        if (colIndex < columns.length - 1) newColIndex = colIndex + 1;
+        if (e.ctrlKey || e.metaKey) newColIndex = columns.length - 1;
+        else if (colIndex < columns.length - 1) newColIndex = colIndex + 1;
         break;
 
       case "PageUp":
@@ -272,8 +290,9 @@ export default function TableComponent() {
         newColIndex + 1
       }"]`
     );
-    // Focus either the cell or the first focusable element in the cell
+    // Focus the cell
     if (newCellEl) (newCellEl as HTMLDivElement).focus();
+    setFocusInsideCell(false);
   };
 
   return (
@@ -295,7 +314,7 @@ export default function TableComponent() {
           {table.getHeaderGroups().map((headerGroup) => (
             <StyledRow key={headerGroup.id} role="row" aria-rowindex={1}>
               {headerGroup.headers.map((header) => {
-                const isFocusable =
+                const isSelectedCell =
                   (!selectedCell && header.index === 0) ||
                   (selectedCell?.path === "_rowy_header" &&
                     selectedCell?.columnKey === header.id);
@@ -306,11 +325,11 @@ export default function TableComponent() {
                     data-rowId={"_rowy_header"}
                     data-colId={header.id}
                     role="columnheader"
-                    tabIndex={isFocusable ? 0 : -1}
+                    tabIndex={isSelectedCell ? 0 : -1}
                     aria-colindex={header.index + 1}
                     aria-readonly={canEditColumn}
                     // TODO: aria-sort={"none" | "ascending" | "descending" | "other" | undefined}
-                    aria-selected={isFocusable}
+                    aria-selected={isSelectedCell}
                     label={header.column.columnDef.meta?.name || header.id}
                     type={header.column.columnDef.meta?.type}
                     style={{ width: header.getSize() }}
@@ -351,7 +370,7 @@ export default function TableComponent() {
           {table.getRowModel().rows.map((row) => (
             <StyledRow key={row.id} role="row" aria-rowindex={row.index + 2}>
               {row.getVisibleCells().map((cell, cellIndex) => {
-                const isFocusable =
+                const isSelectedCell =
                   selectedCell?.path === row.original._rowy_ref.path &&
                   selectedCell?.columnKey === cell.column.id;
 
@@ -361,12 +380,12 @@ export default function TableComponent() {
                     data-rowId={row.id}
                     data-colId={cell.column.id}
                     role="gridcell"
-                    tabIndex={isFocusable ? 0 : -1}
+                    tabIndex={isSelectedCell && !focusInsideCell ? 0 : -1}
                     aria-colindex={cellIndex + 1}
                     aria-readonly={
                       cell.column.columnDef.meta?.editable === false
                     }
-                    aria-selected={isFocusable}
+                    aria-selected={isSelectedCell}
                     style={{ width: cell.column.getSize() }}
                     onClick={(e) => {
                       setSelectedCell({
@@ -377,8 +396,10 @@ export default function TableComponent() {
                     }}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    <button tabIndex={isFocusable && focusInsideCell ? 0 : -1}>
-                      {isFocusable ? "f" : "x"}
+                    <button
+                      tabIndex={isSelectedCell && focusInsideCell ? 0 : -1}
+                    >
+                      {isSelectedCell ? "f" : "x"}
                     </button>
                   </StyledCell>
                 );

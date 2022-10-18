@@ -6,12 +6,12 @@ export const StyledTable = styled("div")(({ theme }) => ({
 
   "& [role='columnheader'], & [role='gridcell']": {
     "&[aria-selected='true']": {
-      outline: `1px solid ${theme.palette.primary.main}`,
-      outlineOffset: "-1px",
-    },
-    "&:focus": {
       outline: `2px solid ${theme.palette.primary.main}`,
       outlineOffset: "-2px",
+    },
+    "&:focus": {
+      outlineWidth: "3px",
+      outlineOffset: "-3px",
     },
   },
 }));
