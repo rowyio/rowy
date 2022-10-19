@@ -93,22 +93,13 @@ export default function TableComponent() {
 
   const canAddColumn = userRoles.includes("ADMIN");
   const canEditColumn = userRoles.includes("ADMIN");
-  const userDocHiddenFields =
-    userSettings.tables?.[formatSubTableName(tableId)]?.hiddenFields;
 
   // Get column defs from table schema
   // Also add end column for admins
   const columns = useMemo(() => {
     const _columns = tableColumnsOrdered
-      // .filter((column) => {
-      //   if (column.hidden) return false;
-      //   if (
-      //     Array.isArray(userDocHiddenFields) &&
-      //     userDocHiddenFields.includes(column.key)
-      //   )
-      //     return false;
-      //   return true;
-      // })
+      // Hide column for all users using table schema
+      .filter((column) => !column.hidden)
       .map((columnConfig) =>
         columnHelper.accessor(columnConfig.fieldName, {
           id: columnConfig.fieldName,
@@ -136,30 +127,41 @@ export default function TableComponent() {
         })
       );
 
-    // if (canAddColumn || !tableSettings.readOnly) {
-    //   _columns.push({
-    //     isNew: true,
-    //     key: "new",
-    //     fieldName: "_rowy_new",
-    //     name: "Add column",
-    //     type: FieldType.last,
-    //     index: _columns.length ?? 0,
-    //     width: 154,
-    //     headerRenderer: FinalColumnHeader,
-    //     headerCellClass: "final-column-header",
-    //     cellClass: "final-column-cell",
-    //     formatter: FinalColumn,
-    //     editable: false,
-    //   });
-    // }
+    if (canAddColumn || !tableSettings.readOnly) {
+      _columns.push(
+        columnHelper.display({
+          id: "_rowy_column_actions",
+          header: () => "Actions",
+          cell: () => <>Menu | Duplicate | Delete</>,
+        })
+        //   {
+        //   isNew: true,
+        //   key: "new",
+        //   fieldName: "_rowy_new",
+        //   name: "Add column",
+        //   type: FieldType.last,
+        //   index: _columns.length ?? 0,
+        //   width: 154,
+        //   headerRenderer: FinalColumnHeader,
+        //   headerCellClass: "final-column-header",
+        //   cellClass: "final-column-cell",
+        //   formatter: FinalColumn,
+        //   editable: false,
+        // }
+      );
+    }
 
     return _columns;
-  }, [
-    tableColumnsOrdered,
-    // userDocHiddenFields,
-    // tableSettings.readOnly,
-    // canAddColumn,
-  ]);
+  }, [tableColumnsOrdered, canAddColumn, tableSettings.readOnly]);
+
+  // Get user’s hidden columns from user document
+  const userDocHiddenFields =
+    userSettings.tables?.[formatSubTableName(tableId)]?.hiddenFields;
+  // Memoize into a VisibilityState
+  const columnVisibility = useMemo(() => {
+    if (!Array.isArray(userDocHiddenFields)) return {};
+    return userDocHiddenFields.reduce((a, c) => ({ ...a, [c]: false }), {});
+  }, [userDocHiddenFields]);
 
   const table = useReactTable({
     data: tableRows,
@@ -167,9 +169,11 @@ export default function TableComponent() {
     getCoreRowModel: getCoreRowModel(),
     getRowId,
     columnResizeMode: "onChange",
+    state: { columnVisibility },
     // debugRows: true,
   });
   const { rows } = table.getRowModel();
+  const leafColumns = table.getVisibleLeafColumns();
   // console.log(table, selectedCell);
 
   const {
@@ -193,15 +197,13 @@ export default function TableComponent() {
   } = useVirtual({
     parentRef: containerRef,
     horizontal: true,
-    size: columns.length,
+    size: leafColumns.length,
     overscan: 1,
     estimateSize: useCallback(
-      (index: number) => columns[index].size || DEFAULT_COL_WIDTH,
-      [columns]
+      (index: number) => leafColumns[index].columnDef.size || DEFAULT_COL_WIDTH,
+      [leafColumns]
     ),
   });
-
-  console.log(totalHeight);
 
   useEffect(() => {
     if (!selectedCell) return;
@@ -213,18 +215,24 @@ export default function TableComponent() {
       scrollToRowIndex(rowIndex);
     }
     if (selectedCell.columnKey) {
-      const colIndex = columns.findIndex(
+      const colIndex = leafColumns.findIndex(
         (col) => col.id === selectedCell.columnKey
       );
       if (colIndex === -1) return;
       scrollToColIndex(colIndex);
     }
-  }, [selectedCell, tableRows, columns, scrollToRowIndex, scrollToColIndex]);
+  }, [
+    selectedCell,
+    tableRows,
+    leafColumns,
+    scrollToRowIndex,
+    scrollToColIndex,
+  ]);
 
   const { handleKeyDown, focusInsideCell } = useKeyboardNavigation({
     gridRef,
     tableRows,
-    columns,
+    leafColumns,
   });
 
   const paddingTop = virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0;
@@ -296,7 +304,7 @@ export default function TableComponent() {
                     aria-selected={isSelectedCell}
                     label={header.column.columnDef.meta?.name || header.id}
                     type={header.column.columnDef.meta?.type}
-                    style={{ width: header.getSize() }}
+                    style={{ width: header.getSize(), borderRight: "none" }}
                     onClick={(e) => {
                       setSelectedCell({
                         path: "_rowy_header",

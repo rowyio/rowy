@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSetAtom } from "jotai";
-import { ColumnDef } from "@tanstack/react-table";
+import { Column } from "@tanstack/react-table";
 
 import { tableScope, selectedCellAtom } from "@src/atoms/tableScope";
 import { TableRow } from "@src/types/table";
@@ -9,13 +9,13 @@ import { COLLECTION_PAGE_SIZE } from "@src/config/db";
 export interface IUseKeyboardNavigationProps {
   gridRef: React.RefObject<HTMLDivElement>;
   tableRows: TableRow[];
-  columns: ColumnDef<TableRow, any>[];
+  leafColumns: Column<TableRow, any>[];
 }
 
 export function useKeyboardNavigation({
   gridRef,
   tableRows,
-  columns,
+  leafColumns,
 }: IUseKeyboardNavigationProps) {
   const setSelectedCell = useSetAtom(selectedCellAtom, tableScope);
   const [focusInsideCell, setFocusInsideCell] = useState(false);
@@ -84,8 +84,8 @@ export function useKeyboardNavigation({
         break;
 
       case "ArrowRight":
-        if (e.ctrlKey || e.metaKey) newColIndex = columns.length - 1;
-        else if (colIndex < columns.length - 1) newColIndex = colIndex + 1;
+        if (e.ctrlKey || e.metaKey) newColIndex = leafColumns.length - 1;
+        else if (colIndex < leafColumns.length - 1) newColIndex = colIndex + 1;
         break;
 
       case "PageUp":
@@ -105,18 +105,18 @@ export function useKeyboardNavigation({
         break;
 
       case "End":
-        newColIndex = columns.length - 1;
+        newColIndex = leafColumns.length - 1;
         if (e.ctrlKey || e.metaKey) newRowIndex = tableRows.length - 1;
         break;
     }
 
-    // Get `path` and `columnKey` from `tableRows` and `columns` respectively
+    // Get `path` and `columnKey` from `tableRows` and `leafColumns` respectively
     const newSelectedCell = {
       path:
         newRowIndex > -1
           ? tableRows[newRowIndex]._rowy_ref.path
           : "_rowy_header",
-      columnKey: columns[newColIndex].id! || columns[0].id!,
+      columnKey: leafColumns[newColIndex].id! || leafColumns[0].id!,
     };
 
     // Store in selectedCellAtom

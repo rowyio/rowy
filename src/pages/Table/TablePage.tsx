@@ -103,14 +103,14 @@ export default function TablePage({
             sx={{
               height: `calc(100vh - ${TOP_BAR_HEIGHT}px - ${TABLE_TOOLBAR_HEIGHT}px)`,
               width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
-              // width: {
-              //   xs: "100%",
-              //   sm: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
-              // },
 
               '& [role="grid"]': {
                 paddingBottom: (theme) =>
                   `max(env(safe-area-inset-bottom), ${theme.spacing(2)})`,
+                paddingLeft: (theme) =>
+                  `max(env(safe-area-inset-left), ${theme.spacing(2)})`,
+                paddingRight: (theme) =>
+                  `max(env(safe-area-inset-right), ${theme.spacing(2)})`,
               },
             }}
           >
