@@ -249,7 +249,6 @@ export default function TableComponent() {
 
   const fetchMoreOnBottomReached = useThrottledCallback(
     (containerElement?: HTMLDivElement | null) => {
-      console.log("fetchMoreOnBottomReached", containerElement);
       if (!containerElement) return;
 
       const { scrollHeight, scrollTop, clientHeight } = containerElement;
@@ -263,7 +262,7 @@ export default function TableComponent() {
   return (
     <div
       ref={containerRef}
-      // onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
+      onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
       style={{ overflow: "auto", width: "100%", height: "100%" }}
     >
       <StyledTable
@@ -272,10 +271,7 @@ export default function TableComponent() {
         aria-readonly={tableSettings.readOnly}
         aria-colcount={columns.length}
         aria-rowcount={tableRows.length + 1}
-        style={{
-          width: table.getTotalSize(),
-          userSelect: "none",
-        }}
+        style={{ width: table.getTotalSize(), userSelect: "none" }}
         onKeyDown={handleKeyDown}
       >
         <div
@@ -347,7 +343,12 @@ export default function TableComponent() {
             const row = rows[virtualRow.index];
 
             return (
-              <StyledRow key={row.id} role="row" aria-rowindex={row.index + 2}>
+              <StyledRow
+                key={row.id}
+                role="row"
+                aria-rowindex={row.index + 2}
+                style={{ height: tableSchema.rowHeight }}
+              >
                 {paddingLeft > 0 && (
                   <div
                     role="presentation"
@@ -388,11 +389,11 @@ export default function TableComponent() {
                         cell.column.columnDef.cell,
                         cell.getContext()
                       )}
-                      <button
+                      {/* <button
                         tabIndex={isSelectedCell && focusInsideCell ? 0 : -1}
                       >
                         {isSelectedCell ? "f" : "x"}
-                      </button>
+                      </button> */}
                     </StyledCell>
                   );
                 })}
