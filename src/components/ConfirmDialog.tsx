@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 
 import {
@@ -49,10 +49,15 @@ export default function ConfirmDialog({
 
   const handleClose = () => {
     setState({ open: false });
-    setDryText("");
+    setDisableConfirm(false);
   };
 
-  const [dryText, setDryText] = useState("");
+  const [disableConfirm, setDisableConfirm] = useState(
+    Boolean(confirmationCommand)
+  );
+  useEffect(() => {
+    setDisableConfirm(Boolean(confirmationCommand));
+  }, [confirmationCommand]);
 
   return (
     <Dialog
@@ -64,21 +69,24 @@ export default function ConfirmDialog({
       maxWidth={maxWidth}
       sx={{ cursor: "default", zIndex: (theme) => theme.zIndex.modal + 50 }}
     >
-      <MemoizedText>
-        <>
+      <>
+        <MemoizedText>
           <DialogTitle>{title}</DialogTitle>
+        </MemoizedText>
 
+        <MemoizedText>
           <DialogContent>
             {typeof body === "string" ? (
               <DialogContentText>{body}</DialogContentText>
             ) : (
               body
             )}
+
             {confirmationCommand && (
               <TextField
-                value={dryText}
-                onChange={(e) => setDryText(e.target.value)}
-                autoFocus
+                onChange={(e) =>
+                  setDisableConfirm(e.target.value !== confirmationCommand)
+                }
                 label={`Type “${confirmationCommand}” below to continue:`}
                 placeholder={confirmationCommand}
                 fullWidth
@@ -87,16 +95,18 @@ export default function ConfirmDialog({
               />
             )}
           </DialogContent>
+        </MemoizedText>
 
-          <DialogActions
-            sx={[
-              buttonLayout === "vertical" && {
-                flexDirection: "column",
-                alignItems: "stretch",
-                "& > :not(:first-of-type)": { ml: 0, mt: 1 },
-              },
-            ]}
-          >
+        <DialogActions
+          sx={[
+            buttonLayout === "vertical" && {
+              flexDirection: "column",
+              alignItems: "stretch",
+              "& > :not(:first-of-type)": { ml: 0, mt: 1 },
+            },
+          ]}
+        >
+          <MemoizedText>
             {!hideCancel && (
               <Button
                 onClick={() => {
@@ -107,6 +117,9 @@ export default function ConfirmDialog({
                 {cancel}
               </Button>
             )}
+          </MemoizedText>
+
+          <MemoizedText key={disableConfirm.toString()}>
             <Button
               onClick={() => {
                 if (handleConfirm) handleConfirm();
@@ -115,15 +128,13 @@ export default function ConfirmDialog({
               color={confirmColor || "primary"}
               variant="contained"
               autoFocus
-              disabled={
-                confirmationCommand ? dryText !== confirmationCommand : false
-              }
+              disabled={disableConfirm}
             >
               {confirm}
             </Button>
-          </DialogActions>
-        </>
-      </MemoizedText>
+          </MemoizedText>
+        </DialogActions>
+      </>
     </Dialog>
   );
 }
