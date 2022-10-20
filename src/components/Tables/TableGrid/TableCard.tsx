@@ -7,10 +7,9 @@ import {
   Typography,
   CardActions,
   Button,
+  Box,
 } from "@mui/material";
 import { Go as GoIcon } from "@src/assets/icons";
-
-import RenderedMarkdown from "@src/components/RenderedMarkdown";
 import { TableSettings } from "@src/types/table";
 
 export interface ITableCardProps extends TableSettings {
@@ -19,6 +18,7 @@ export interface ITableCardProps extends TableSettings {
 }
 
 export default function TableCard({
+  thumbnailURL,
   section,
   name,
   description,
@@ -37,27 +37,46 @@ export default function TableCard({
           </Typography>
         </CardContent>
       </CardActionArea>
-
-      <CardContent style={{ flexGrow: 1, paddingTop: 0 }}>
-        <Typography
-          color="textSecondary"
-          sx={{
-            minHeight: (theme) =>
-              (theme.typography.body2.lineHeight as number) * 2 + "em",
-            display: "flex",
-            flexDirection: "column",
-            gap: 1,
-          }}
-          component="div"
-        >
-          {description && (
-            <RenderedMarkdown
-              children={description}
-              //restrictionPreset="singleLine"
+      {thumbnailURL && (
+        <CardContent style={{ flexGrow: 1, paddingTop: 0 }}>
+          <Box
+            sx={{
+              paddingBottom: "56.25%",
+              position: "relative",
+              backgroundColor: "action.input",
+              borderRadius: 1,
+              overflow: "hidden",
+            }}
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+                backgroundImage: `url("${thumbnailURL}")`,
+                backgroundSize: "cover",
+                backgroundPosition: "center center",
+                backgroundRepeat: "no-repeat",
+              }}
             />
-          )}
-        </Typography>
-      </CardContent>
+          </Box>
+        </CardContent>
+      )}
+      {description && (
+        <CardContent style={{ flexGrow: 1, paddingTop: 0, paddingBottom: 0 }}>
+          <Typography
+            color="textSecondary"
+            sx={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+            component="div"
+          >
+            {description}
+          </Typography>
+        </CardContent>
+      )}
 
       <CardActions>
         <Button

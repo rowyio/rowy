@@ -37,6 +37,9 @@ const Filters = lazy(() => import("./Filters" /* webpackChunkName: "Filters" */)
 // prettier-ignore
 const ImportData = lazy(() => import("./ImportData/ImportData" /* webpackChunkName: "ImportData" */));
 // prettier-ignore
+const TableInformation = lazy(() => import("./TableInformation" /* webpackChunkName: "TableInformation" */));
+
+// prettier-ignore
 const ReExecute = lazy(() => import("./ReExecute" /* webpackChunkName: "ReExecute" */));
 
 export const TABLE_TOOLBAR_HEIGHT = 44;
@@ -147,6 +150,9 @@ export default function TableToolbar() {
           <TableSettings />
         </>
       )}
+      <Suspense fallback={<ButtonSkeleton />}>
+        <TableInformation />
+      </Suspense>
       <div className="end-spacer" />
     </Stack>
   );

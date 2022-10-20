@@ -103,6 +103,9 @@ export { FileTableBoxOutline as Project };
 import { TableColumn } from "mdi-material-ui";
 export { TableColumn };
 
+import { InformationOutline } from "mdi-material-ui";
+export { InformationOutline as TableInformation };
+
 export * from "./AddRow";
 export * from "./AddRowTop";
 export * from "./ChevronDown";
