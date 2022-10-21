@@ -3,6 +3,7 @@ import { alpha } from "@mui/material/styles";
 
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
+import { spreadSx } from "@src/utils/ui";
 
 export const COLUMN_HEADER_HEIGHT = 42;
 
@@ -68,6 +69,7 @@ export default function Column({
               },
             }
           : {},
+        ...spreadSx(props.sx),
       ]}
     >
       {type && <Grid item>{getFieldProp("icon", type)}</Grid>}

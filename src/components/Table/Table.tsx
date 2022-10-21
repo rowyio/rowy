@@ -19,7 +19,7 @@ import { StyledTable } from "./Styled/StyledTable";
 import { StyledRow } from "./Styled/StyledRow";
 import ColumnHeaderComponent from "./Column";
 
-import { LinearProgress } from "@mui/material";
+import { IconButton, LinearProgress } from "@mui/material";
 
 import TableContainer, { OUT_OF_ORDER_MARGIN } from "./TableContainer";
 import ColumnHeader, { COLUMN_HEADER_HEIGHT } from "./ColumnHeader";
@@ -63,7 +63,8 @@ import { useKeyboardNavigation } from "./useKeyboardNavigation";
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
-export const MAX_COL_WIDTH = 380;
+export const TABLE_PADDING = 16;
+export const TABLE_GUTTER = 8;
 
 declare module "@tanstack/table-core" {
   interface ColumnMeta<TData, TValue> extends ColumnConfig {}
@@ -132,22 +133,14 @@ export default function TableComponent() {
         columnHelper.display({
           id: "_rowy_column_actions",
           header: () => "Actions",
-          cell: () => <>Menu | Duplicate | Delete</>,
+          cell: () => (
+            <>
+              <IconButton>M</IconButton>
+              <IconButton>D</IconButton>
+              <IconButton>X</IconButton>
+            </>
+          ),
         })
-        //   {
-        //   isNew: true,
-        //   key: "new",
-        //   fieldName: "_rowy_new",
-        //   name: "Add column",
-        //   type: FieldType.last,
-        //   index: _columns.length ?? 0,
-        //   width: 154,
-        //   headerRenderer: FinalColumnHeader,
-        //   headerCellClass: "final-column-header",
-        //   cellClass: "final-column-cell",
-        //   formatter: FinalColumn,
-        //   editable: false,
-        // }
       );
     }
 
@@ -163,13 +156,23 @@ export default function TableComponent() {
     return userDocHiddenFields.reduce((a, c) => ({ ...a, [c]: false }), {});
   }, [userDocHiddenFields]);
 
+  // Get frozen columns
+  const columnPinning = useMemo(
+    () => ({
+      left: columns.filter((c) => c.meta?.fixed && c.id).map((c) => c.id!),
+    }),
+    [columns]
+  );
+  const lastFrozen: string | undefined =
+    columnPinning.left[columnPinning.left.length - 1];
+
   const table = useReactTable({
     data: tableRows,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getRowId,
     columnResizeMode: "onChange",
-    state: { columnVisibility },
+    state: { columnVisibility, columnPinning },
     // debugRows: true,
   });
   const { rows } = table.getRowModel();
@@ -184,6 +187,7 @@ export default function TableComponent() {
     parentRef: containerRef,
     size: tableRows.length,
     overscan: 10,
+    paddingEnd: TABLE_PADDING,
     estimateSize: useCallback(
       () => tableSchema.rowHeight || DEFAULT_ROW_HEIGHT,
       [tableSchema.rowHeight]
@@ -198,7 +202,9 @@ export default function TableComponent() {
     parentRef: containerRef,
     horizontal: true,
     size: leafColumns.length,
-    overscan: 1,
+    overscan: 10,
+    paddingStart: TABLE_PADDING,
+    paddingEnd: TABLE_PADDING,
     estimateSize: useCallback(
       (index: number) => leafColumns[index].columnDef.size || DEFAULT_COL_WIDTH,
       [leafColumns]
@@ -211,15 +217,13 @@ export default function TableComponent() {
       const rowIndex = tableRows.findIndex(
         (row) => row._rowy_ref.path === selectedCell.path
       );
-      if (rowIndex === -1) return;
-      scrollToRowIndex(rowIndex);
+      if (rowIndex > -1) scrollToRowIndex(rowIndex);
     }
     if (selectedCell.columnKey) {
       const colIndex = leafColumns.findIndex(
         (col) => col.id === selectedCell.columnKey
       );
-      if (colIndex === -1) return;
-      scrollToColIndex(colIndex);
+      if (colIndex > -1) scrollToColIndex(colIndex);
     }
   }, [
     selectedCell,
@@ -277,7 +281,12 @@ export default function TableComponent() {
         <div
           className="thead"
           role="rowgroup"
-          style={{ position: "sticky", top: 0, zIndex: 1 }}
+          style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 10,
+            padding: `0 ${TABLE_PADDING}px`,
+          }}
         >
           {table.getHeaderGroups().map((headerGroup) => (
             <StyledRow key={headerGroup.id} role="row" aria-rowindex={1}>
@@ -290,17 +299,25 @@ export default function TableComponent() {
                 return (
                   <ColumnHeaderComponent
                     key={header.id}
-                    data-rowid={"_rowy_header"}
-                    data-colid={header.id}
+                    data-row-id={"_rowy_header"}
+                    data-col-id={header.id}
+                    data-frozen={header.column.getIsPinned() || undefined}
+                    data-frozen-last={lastFrozen === header.id || undefined}
                     role="columnheader"
                     tabIndex={isSelectedCell ? 0 : -1}
                     aria-colindex={header.index + 1}
-                    aria-readonly={canEditColumn}
+                    aria-readonly={!canEditColumn}
                     // TODO: aria-sort={"none" | "ascending" | "descending" | "other" | undefined}
                     aria-selected={isSelectedCell}
                     label={header.column.columnDef.meta?.name || header.id}
                     type={header.column.columnDef.meta?.type}
-                    style={{ width: header.getSize(), borderRight: "none" }}
+                    style={{
+                      width: header.getSize(),
+                      left: header.column.getIsPinned()
+                        ? virtualCols[header.index].start - TABLE_PADDING
+                        : undefined,
+                    }}
+                    sx={{ "& + &": { borderLeft: "none" } }}
                     onClick={(e) => {
                       setSelectedCell({
                         path: "_rowy_header",
@@ -367,8 +384,12 @@ export default function TableComponent() {
                   return (
                     <StyledCell
                       key={cell.id}
-                      data-rowid={row.id}
-                      data-colid={cell.column.id}
+                      data-row-id={row.id}
+                      data-col-id={cell.column.id}
+                      data-frozen={cell.column.getIsPinned() || undefined}
+                      data-frozen-last={
+                        lastFrozen === cell.column.id || undefined
+                      }
                       role="gridcell"
                       tabIndex={isSelectedCell && !focusInsideCell ? 0 : -1}
                       aria-colindex={cellIndex + 1}
@@ -376,7 +397,24 @@ export default function TableComponent() {
                         cell.column.columnDef.meta?.editable === false
                       }
                       aria-selected={isSelectedCell}
-                      style={{ width: cell.column.getSize() }}
+                      style={{
+                        width: cell.column.getSize(),
+                        left: cell.column.getIsPinned()
+                          ? virtualCell.start - TABLE_PADDING
+                          : undefined,
+                        backgroundColor:
+                          cell.column.id === "_rowy_column_actions"
+                            ? "transparent"
+                            : undefined,
+                        borderBottomWidth:
+                          cell.column.id === "_rowy_column_actions"
+                            ? 0
+                            : undefined,
+                        borderRightWidth:
+                          cell.column.id === "_rowy_column_actions"
+                            ? 0
+                            : undefined,
+                      }}
                       onClick={(e) => {
                         setSelectedCell({
                           path: row.original._rowy_ref.path,

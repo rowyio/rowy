@@ -14,5 +14,20 @@ export const StyledTable = styled("div")(({ theme }) => ({
       outlineOffset: "-3px",
     },
   },
+
+  "& [data-frozen='left']": {
+    position: "sticky",
+    left: 0,
+    zIndex: 2,
+
+    "&[data-frozen-last='true']": {
+      boxShadow: theme.shadows[2]
+        .replace(/, 0 (\d+px)/g, ", $1 0")
+        .split("),")
+        .slice(1)
+        .join("),"),
+      clipPath: "inset(0 -4px 0 0)",
+    },
+  },
 }));
 StyledTable.displayName = "StyledTable";
