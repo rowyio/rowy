@@ -533,6 +533,32 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
           title: "Customization",
           content: (
             <>
+            <Stack>
+            <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={config.customName?.enabled}
+                    onChange={(e) =>
+                      onChange("customName.enabled")(e.target.checked)
+                    }
+                    name="customName.enabled"
+                  />
+                }
+                label="Customize label for action"
+                style={{ marginLeft: -11 }}
+              />
+              {config.customName?.enabled && (
+                <TextField
+                id="customName.actionName"
+                value={get(config, "customName.actionName")}
+                onChange={(e) =>
+                  onChange("customName.actionName")(e.target.value)
+                }
+                label="Action name:"
+                        className="labelHorizontal"
+                        inputProps={{ style: { width: "10ch" } }}
+                ></TextField>
+              )}
               <FormControlLabel
                 control={
                   <Checkbox
@@ -546,7 +572,7 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
                 label="Customize button icons with emoji"
                 style={{ marginLeft: -11 }}
               />
-
+              </Stack>
               {config.customIcons?.enabled && (
                 <Grid container spacing={2} sx={{ mt: { xs: 0, sm: -1 } }}>
                   <Grid item xs={12} sm={true}>
