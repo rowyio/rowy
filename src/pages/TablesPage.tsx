@@ -1,6 +1,6 @@
 import { useAtom, useSetAtom } from "jotai";
 import { find, groupBy, sortBy } from "lodash-es";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import {
   Container,
@@ -21,7 +21,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import AddIcon from "@mui/icons-material/Add";
-import { TableInformation as TableInformationIcon } from "@src/assets/icons";
+import InfoIcon from "@mui/icons-material/InfoOutlined";
 
 import FloatingSearch from "@src/components/FloatingSearch";
 import SlideTransition from "@src/components/Modal/SlideTransition";
@@ -57,7 +57,6 @@ export default function TablesPage() {
     tableSettingsDialogAtom,
     projectScope
   );
-  const navigate = useNavigate();
   useScrollToHash();
 
   const [results, query, handleQuery] = useBasicSearch(
@@ -163,14 +162,13 @@ export default function TablesPage() {
         color="secondary"
       />
       <IconButton
-        aria-label="Table Information"
+        aria-label="Table information"
         size={view === "list" ? "large" : undefined}
-        onClick={() => {
-          navigate(`${getLink(table)}#sideDrawer="table-information"`);
-        }}
+        component={Link}
+        to={`${getLink(table)}#sideDrawer="table-information"`}
         style={{ marginLeft: 0 }}
       >
-        <TableInformationIcon />
+        <InfoIcon />
       </IconButton>
     </>
   );

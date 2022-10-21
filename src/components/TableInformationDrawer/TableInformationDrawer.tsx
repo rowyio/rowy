@@ -107,7 +107,7 @@ export default function SideDrawer() {
                 alignItems="center"
                 py={1}
               >
-                <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                <Typography variant="h5" component="h2">
                   Information
                 </Typography>
               </Stack>

@@ -255,7 +255,7 @@ export const tableSettings = (
       step: "display",
       type: "tableThumbnail",
       name: "thumbnailFile",
-      label: "Thumbnail Image (optional)",
+      label: "Thumbnail image (optional)",
     },
     {
       step: "display",

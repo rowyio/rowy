@@ -1,15 +1,9 @@
 import { useMemo } from "react";
 import { format } from "date-fns";
+import { find } from "lodash-es";
 import MDEditor from "@uiw/react-md-editor";
 
-import {
-  Box,
-  Grid,
-  IconButton,
-  Stack,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Box, IconButton, Stack, Typography } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/EditOutlined";
 
@@ -21,13 +15,9 @@ import {
   tableSettingsDialogAtom,
   userRolesAtom,
 } from "@src/atoms/projectScope";
-import { find } from "lodash-es";
+import { DATE_TIME_FORMAT } from "@src/constants/dates";
 
-export interface IDetailsProps {
-  handleOpenTemplate?: any;
-}
-
-export default function Details({ handleOpenTemplate }: IDetailsProps) {
+export default function Details() {
   const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tables] = useAtom(tablesAtom, projectScope);
@@ -41,18 +31,13 @@ export default function Details({ handleOpenTemplate }: IDetailsProps) {
     [tables, tableSettings.id]
   );
 
-  const theme = useTheme();
-
   if (!settings) {
     return null;
   }
 
   const editButton = userRoles.includes("ADMIN") && (
     <IconButton
-      sx={{
-        position: "absolute",
-        right: 0,
-      }}
+      aria-label="Edit"
       onClick={() =>
         openTableSettingsDialog({
           mode: "update",
@@ -68,27 +53,26 @@ export default function Details({ handleOpenTemplate }: IDetailsProps) {
   const { description, details, _createdBy } = settings;
 
   return (
-    <Grid
-      container
-      flexDirection="column"
+    <Stack
+      direction="column"
       gap={3}
       sx={{
-        paddingTop: theme.spacing(3),
-        paddingRight: theme.spacing(3),
-        paddingBottom: theme.spacing(5),
+        paddingTop: 3,
+        paddingRight: 3,
+        paddingBottom: 5,
         "& > .MuiGrid-root": {
           position: "relative",
         },
       }}
     >
       {/* Description */}
-      <Grid container direction="column" gap={1}>
+      <Stack direction="column" gap={1}>
         <Stack
           direction="row"
           justifyContent="space-between"
-          alignItems="center"
+          alignItems="flex-end"
         >
-          <Typography variant="body1" sx={{ fontWeight: 500 }}>
+          <Typography variant="subtitle1" component="h3">
             Description
           </Typography>
           {editButton}
@@ -96,16 +80,16 @@ export default function Details({ handleOpenTemplate }: IDetailsProps) {
         <Typography variant="body2" color="text.secondary">
           {description ? description : "No description"}
         </Typography>
-      </Grid>
+      </Stack>
 
       {/* Details */}
-      <Grid container direction="column" gap={1}>
+      <Stack direction="column" gap={1}>
         <Stack
           direction="row"
           justifyContent="space-between"
-          alignItems="center"
+          alignItems="flex-end"
         >
-          <Typography variant="body1" sx={{ fontWeight: 500 }}>
+          <Typography variant="subtitle1" component="h3">
             Details
           </Typography>
           {editButton}
@@ -123,16 +107,11 @@ export default function Details({ handleOpenTemplate }: IDetailsProps) {
             <MDEditor.Markdown source={details} />
           </Box>
         )}
-      </Grid>
+      </Stack>
 
       {/* Table Audits */}
       {_createdBy && (
-        <Grid
-          container
-          sx={{
-            fontSize: theme.typography.body2,
-          }}
-        >
+        <Stack>
           <Typography
             variant="caption"
             color="text.secondary"
@@ -143,36 +122,13 @@ export default function Details({ handleOpenTemplate }: IDetailsProps) {
             <Typography variant="caption" color="text.primary">
               {_createdBy.displayName}
             </Typography>{" "}
-            at{" "}
+            on{" "}
             <Typography variant="caption" color="text.primary">
-              {format(_createdBy.timestamp.toDate(), "LLL d, yyyy · p")}
+              {format(_createdBy.timestamp.toDate(), DATE_TIME_FORMAT)}
             </Typography>
           </Typography>
-        </Grid>
+        </Stack>
       )}
-
-      {/* Template Settings */}
-      {/* {handleOpenTemplate && (
-        <Divider sx={{ my: 1.5 }} />
-         <Button
-      sx={{ width: "100%", boxShadow: "none", padding: 0 }}
-      onClick={handleOpenTemplate}
-      >
-      <Stack
-      direction="row"
-      justify-content="flex-start"
-      alignItems="center"
-      sx={{ width: "100%" }}
-      >
-      <ChevronLeft />
-      <ListItemText
-      primary="Template - Roadmap"
-      secondary={<StepsProgress steps={5} value={3} />}
-      sx={{ maxWidth: "188px" }}
-      />
-      </Stack
-    </Button> 
-      )} */}
-    </Grid>
+    </Stack>
   );
 }

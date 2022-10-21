@@ -37,8 +37,8 @@ export default function TableCard({
           </Typography>
         </CardContent>
       </CardActionArea>
-      {thumbnailURL && (
-        <CardContent style={{ flexGrow: 1, paddingTop: 0 }}>
+      <CardContent style={{ flexGrow: 1, paddingTop: 0 }}>
+        {thumbnailURL && (
           <Box
             sx={{
               paddingBottom: "56.25%",
@@ -60,10 +60,8 @@ export default function TableCard({
               }}
             />
           </Box>
-        </CardContent>
-      )}
-      {description && (
-        <CardContent style={{ flexGrow: 1, paddingTop: 0, paddingBottom: 0 }}>
+        )}
+        {description && (
           <Typography
             color="textSecondary"
             sx={{
@@ -75,8 +73,8 @@ export default function TableCard({
           >
             {description}
           </Typography>
-        </CardContent>
-      )}
+        )}
+      </CardContent>
 
       <CardActions>
         <Button
