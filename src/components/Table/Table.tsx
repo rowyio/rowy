@@ -1,10 +1,6 @@
 import { useMemo, useRef, useCallback, useState, useEffect } from "react";
 import { useAtom, useSetAtom } from "jotai";
-import {
-  useDebounce,
-  useDebouncedCallback,
-  useThrottledCallback,
-} from "use-debounce";
+import { useThrottledCallback } from "use-debounce";
 import { useSnackbar } from "notistack";
 import useMemoValue from "use-memo-value";
 import { DndProvider } from "react-dnd";
@@ -17,7 +13,6 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useVirtual } from "react-virtual";
 
 import { StyledTable } from "./Styled/StyledTable";
 import { StyledRow } from "./Styled/StyledRow";
@@ -55,7 +50,6 @@ import {
   updateColumnAtom,
   updateFieldAtom,
   selectedCellAtom,
-  SelectedCell,
 } from "@src/atoms/tableScope";
 import { COLLECTION_PAGE_SIZE } from "@src/config/db";
 
@@ -66,6 +60,7 @@ import { TableRow, ColumnConfig } from "@src/types/table";
 import { StyledCell } from "./Styled/StyledCell";
 import { useKeyboardNavigation } from "./useKeyboardNavigation";
 import { useSaveColumnSizing } from "./useSaveColumnSizing";
+import useVirtualization from "./useVirtualization";
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
@@ -195,85 +190,28 @@ export default function TableComponent() {
     onColumnSizingChange: setColumnSizing,
   }));
 
-  useSaveColumnSizing(columnSizing, canEditColumn);
-
   const { rows } = table.getRowModel();
   const leafColumns = table.getVisibleLeafColumns();
   // console.log(table, selectedCell);
-
-  const {
-    virtualItems: virtualRows,
-    totalSize: totalHeight,
-    scrollToIndex: scrollToRowIndex,
-  } = useVirtual({
-    parentRef: containerRef,
-    size: tableRows.length,
-    overscan: 10,
-    paddingEnd: TABLE_PADDING,
-    estimateSize: useCallback(
-      (index: number) =>
-        (tableSchema.rowHeight || DEFAULT_ROW_HEIGHT) +
-        (tableRows[index]._rowy_outOfOrder ? OUT_OF_ORDER_MARGIN : 0),
-      [tableSchema.rowHeight, tableRows]
-    ),
-  });
-
-  const {
-    virtualItems: virtualCols,
-    totalSize: totalWidth,
-    scrollToIndex: scrollToColIndex,
-  } = useVirtual({
-    parentRef: containerRef,
-    horizontal: true,
-    size: leafColumns.length,
-    overscan: 10,
-    paddingStart: TABLE_PADDING,
-    paddingEnd: TABLE_PADDING,
-    estimateSize: useCallback(
-      (index: number) => leafColumns[index].columnDef.size || DEFAULT_COL_WIDTH,
-      [leafColumns]
-    ),
-  });
-
-  useEffect(() => {
-    if (!selectedCell) return;
-    if (selectedCell.path) {
-      const rowIndex = tableRows.findIndex(
-        (row) => row._rowy_ref.path === selectedCell.path
-      );
-      if (rowIndex > -1) scrollToRowIndex(rowIndex);
-    }
-    if (selectedCell.columnKey) {
-      const colIndex = leafColumns.findIndex(
-        (col) => col.id === selectedCell.columnKey
-      );
-      if (colIndex > -1) scrollToColIndex(colIndex);
-    }
-  }, [
-    selectedCell,
-    tableRows,
-    leafColumns,
-    scrollToRowIndex,
-    scrollToColIndex,
-  ]);
 
   const { handleKeyDown, focusInsideCell } = useKeyboardNavigation({
     gridRef,
     tableRows,
     leafColumns,
   });
-
-  const paddingTop = virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0;
-  const paddingBottom =
-    virtualRows.length > 0
-      ? totalHeight - (virtualRows?.[virtualRows.length - 1]?.end || 0)
-      : 0;
-
-  const paddingLeft = virtualCols.length > 0 ? virtualCols?.[0]?.start || 0 : 0;
-  const paddingRight =
-    virtualCols.length > 0
-      ? totalWidth - (virtualCols?.[virtualCols.length - 1]?.end || 0)
-      : 0;
+  const {
+    virtualRows,
+    // totalHeight,
+    // scrollToRowIndex,
+    virtualCols,
+    // totalWidth,
+    // scrollToColIndex,
+    paddingTop,
+    paddingBottom,
+    paddingLeft,
+    paddingRight,
+  } = useVirtualization(containerRef, leafColumns);
+  useSaveColumnSizing(columnSizing, canEditColumn);
 
   const fetchMoreOnBottomReached = useThrottledCallback(
     (containerElement?: HTMLDivElement | null) => {

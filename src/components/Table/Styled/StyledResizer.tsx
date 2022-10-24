@@ -39,7 +39,7 @@ export const StyledResizer = styled("div", {
     height: "50%",
     width: 4,
     borderRadius: 2,
-    marginRight: 2,
+    marginRight: 3,
 
     background: isResizing
       ? theme.palette.primary.main

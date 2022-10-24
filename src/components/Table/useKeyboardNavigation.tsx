@@ -12,6 +12,11 @@ export interface IUseKeyboardNavigationProps {
   leafColumns: Column<TableRow, any>[];
 }
 
+/**
+ * Implementation of accessibility standards for data grids
+ * - https://www.w3.org/WAI/ARIA/apg/patterns/grid/
+ * - https://www.w3.org/WAI/ARIA/apg/example-index/grid/dataGrids
+ */
 export function useKeyboardNavigation({
   gridRef,
   tableRows,
