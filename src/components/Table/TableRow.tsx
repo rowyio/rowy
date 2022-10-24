@@ -16,7 +16,7 @@ export default function TableRow(props: RowRendererProps<any>) {
   if (props.row._rowy_outOfOrder)
     return (
       <Fragment key={props.row._rowy_ref.path}>
-        <OutOfOrderIndicator top={props.top} height={props.height} />
+        {/* <OutOfOrderIndicator top={props.top} height={props.height} /> */}
         <Row onContextMenu={handleContextMenu} {...props} />
       </Fragment>
     );

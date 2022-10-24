@@ -23,6 +23,7 @@ import { StyledTable } from "./Styled/StyledTable";
 import { StyledRow } from "./Styled/StyledRow";
 import { StyledResizer } from "./Styled/StyledResizer";
 import ColumnHeaderComponent from "./Column";
+import OutOfOrderIndicator from "./OutOfOrderIndicator";
 
 import { IconButton } from "@mui/material";
 
@@ -303,7 +304,13 @@ export default function TableComponent() {
         aria-readonly={tableSettings.readOnly}
         aria-colcount={columns.length}
         aria-rowcount={tableRows.length + 1}
-        style={{ width: table.getTotalSize(), userSelect: "none" }}
+        style={
+          {
+            width: table.getTotalSize(),
+            userSelect: "none",
+            "--row-height": `${tableSchema.rowHeight || DEFAULT_ROW_HEIGHT}px`,
+          } as any
+        }
         onKeyDown={handleKeyDown}
       >
         <div
@@ -317,7 +324,12 @@ export default function TableComponent() {
           }}
         >
           {table.getHeaderGroups().map((headerGroup) => (
-            <StyledRow key={headerGroup.id} role="row" aria-rowindex={1}>
+            <StyledRow
+              key={headerGroup.id}
+              role="row"
+              aria-rowindex={1}
+              style={{ height: DEFAULT_ROW_HEIGHT + 1 }}
+            >
               {headerGroup.headers.map((header) => {
                 const isSelectedCell =
                   (!selectedCell && header.index === 0) ||
@@ -375,6 +387,7 @@ export default function TableComponent() {
 
           {virtualRows.map((virtualRow) => {
             const row = rows[virtualRow.index];
+            const outOfOrder = row.original._rowy_outOfOrder;
 
             return (
               <StyledRow
@@ -382,12 +395,10 @@ export default function TableComponent() {
                 role="row"
                 aria-rowindex={row.index + 2}
                 style={{
-                  height: tableSchema.rowHeight,
-                  marginBottom: row.original._rowy_outOfOrder
-                    ? OUT_OF_ORDER_MARGIN
-                    : 0,
+                  height: "auto",
+                  marginBottom: outOfOrder ? OUT_OF_ORDER_MARGIN : 0,
                 }}
-                data-out-of-order={row.original._rowy_outOfOrder || undefined}
+                data-out-of-order={outOfOrder || undefined}
               >
                 {paddingLeft > 0 && (
                   <div
@@ -395,6 +406,8 @@ export default function TableComponent() {
                     style={{ width: `${paddingLeft}px` }}
                   />
                 )}
+
+                {outOfOrder && <OutOfOrderIndicator />}
 
                 {virtualCols.map((virtualCell) => {
                   const cellIndex = virtualCell.index;
@@ -446,10 +459,15 @@ export default function TableComponent() {
                         (e.target as HTMLDivElement).focus();
                       }}
                     >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      <div
+                        className="cell-contents"
+                        style={{ height: tableSchema.rowHeight }}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </div>
                       {/* <button
                         tabIndex={isSelectedCell && focusInsideCell ? 0 : -1}
                       >

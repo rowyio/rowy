@@ -5,13 +5,15 @@ export const StyledCell = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   "--cell-padding": theme.spacing(10 / 8),
-  padding: "0 var(--cell-padding)",
+
+  "& > .cell-contents": {
+    padding: "0 var(--cell-padding)",
+    lineHeight: "calc(var(--row-height) - 1px)",
+  },
 
   overflow: "visible",
   contain: "none",
   position: "relative",
-
-  lineHeight: "calc(var(--row-height) - 1px)",
 
   backgroundColor: theme.palette.background.paper,
 
