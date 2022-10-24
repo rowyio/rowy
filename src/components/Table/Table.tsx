@@ -95,7 +95,7 @@ export default function TableComponent() {
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
-  const setTablePage = useSetAtom(tablePageAtom, tableScope);
+  const [tablePage, setTablePage] = useAtom(tablePageAtom, tableScope);
   const [selectedCell, setSelectedCell] = useAtom(selectedCellAtom, tableScope);
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
@@ -324,6 +324,11 @@ export default function TableComponent() {
     },
     DEBOUNCE_DELAY
   );
+  // Check on mount and after fetch to see if the table is at the bottom
+  // for large screen heights
+  useEffect(() => {
+    fetchMoreOnBottomReached(containerRef.current);
+  }, [fetchMoreOnBottomReached, tablePage, tableNextPage.loading]);
 
   return (
     <div
