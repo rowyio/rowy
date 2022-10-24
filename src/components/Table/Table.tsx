@@ -68,10 +68,11 @@ import { formatSubTableName } from "@src/utils/table";
 import { TableRow, ColumnConfig } from "@src/types/table";
 import { StyledCell } from "./Styled/StyledCell";
 import { useKeyboardNavigation } from "./useKeyboardNavigation";
+import { useSaveColumnSizing } from "./useSaveColumnSizing";
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
-export const MIN_COL_WIDTH = 32;
+export const MIN_COL_WIDTH = 80;
 export const TABLE_PADDING = 16;
 export const TABLE_GUTTER = 8;
 export const DEBOUNCE_DELAY = 500;
@@ -84,8 +85,6 @@ const columnHelper = createColumnHelper<TableRow>();
 const getRowId = (row: TableRow) => row._rowy_ref.path || row._rowy_ref.id;
 
 export default function TableComponent() {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
   const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [userSettings] = useAtom(userSettingsAtom, projectScope);
 
@@ -199,43 +198,7 @@ export default function TableComponent() {
     onColumnSizingChange: setColumnSizing,
   }));
 
-  // Debounce for saving to schema
-  const [debouncedColumnSizing] = useDebounce(columnSizing, DEBOUNCE_DELAY, {
-    equalityFn: isEqual,
-  });
-  // Offer to save when column sizing changes
-  useEffect(() => {
-    if (!canEditColumn || isEmpty(debouncedColumnSizing)) return;
-
-    const snackbarId = enqueueSnackbar("Save column sizes for all users?", {
-      action: (
-        <LoadingButton
-          variant="contained"
-          color="primary"
-          onClick={handleSaveToSchema}
-        >
-          Save
-        </LoadingButton>
-      ),
-      anchorOrigin: { horizontal: "center", vertical: "top" },
-    });
-
-    async function handleSaveToSchema() {
-      const promises = Object.entries(debouncedColumnSizing).map(
-        ([key, value]) => updateColumn({ key, config: { width: value } })
-      );
-      await Promise.all(promises);
-      closeSnackbar(snackbarId);
-    }
-
-    return () => closeSnackbar(snackbarId);
-  }, [
-    debouncedColumnSizing,
-    canEditColumn,
-    enqueueSnackbar,
-    closeSnackbar,
-    updateColumn,
-  ]);
+  useSaveColumnSizing(columnSizing, canEditColumn);
 
   const { rows } = table.getRowModel();
   const leafColumns = table.getVisibleLeafColumns();

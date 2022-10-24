@@ -138,3 +138,5 @@ export function useKeyboardNavigation({
 
   return { handleKeyDown, focusInsideCell } as const;
 }
+
+export default useKeyboardNavigation;
