@@ -25,5 +25,9 @@ export const StyledCell = styled("div")(({ theme }) => ({
       .alpha(1)
       .toHslString(),
   },
+
+  "[data-out-of-order='true'] + [role='row'] &": {
+    borderTop: `1px solid ${theme.palette.divider}`,
+  },
 }));
 StyledCell.displayName = "StyledCell";

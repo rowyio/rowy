@@ -19,17 +19,13 @@ import {
 } from "@tanstack/react-table";
 import { useVirtual } from "react-virtual";
 
-import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
-import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
 import { StyledTable } from "./Styled/StyledTable";
 import { StyledRow } from "./Styled/StyledRow";
 import { StyledResizer } from "./Styled/StyledResizer";
 import ColumnHeaderComponent from "./Column";
 
-import { IconButton, LinearProgress, Button } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
+import { IconButton } from "@mui/material";
 
-import TableContainer, { OUT_OF_ORDER_MARGIN } from "./TableContainer";
 import ColumnHeader, { COLUMN_HEADER_HEIGHT } from "./ColumnHeader";
 import FinalColumnHeader from "./FinalColumnHeader";
 import FinalColumn from "./formatters/FinalColumn";
@@ -74,7 +70,7 @@ export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
 export const MIN_COL_WIDTH = 80;
 export const TABLE_PADDING = 16;
-export const TABLE_GUTTER = 8;
+export const OUT_OF_ORDER_MARGIN = 8;
 export const DEBOUNCE_DELAY = 500;
 
 declare module "@tanstack/table-core" {
@@ -214,8 +210,10 @@ export default function TableComponent() {
     overscan: 10,
     paddingEnd: TABLE_PADDING,
     estimateSize: useCallback(
-      () => tableSchema.rowHeight || DEFAULT_ROW_HEIGHT,
-      [tableSchema.rowHeight]
+      (index: number) =>
+        (tableSchema.rowHeight || DEFAULT_ROW_HEIGHT) +
+        (tableRows[index]._rowy_outOfOrder ? OUT_OF_ORDER_MARGIN : 0),
+      [tableSchema.rowHeight, tableRows]
     ),
   });
 
@@ -383,7 +381,13 @@ export default function TableComponent() {
                 key={row.id}
                 role="row"
                 aria-rowindex={row.index + 2}
-                style={{ height: tableSchema.rowHeight }}
+                style={{
+                  height: tableSchema.rowHeight,
+                  marginBottom: row.original._rowy_outOfOrder
+                    ? OUT_OF_ORDER_MARGIN
+                    : 0,
+                }}
+                data-out-of-order={row.original._rowy_outOfOrder || undefined}
               >
                 {paddingLeft > 0 && (
                   <div
