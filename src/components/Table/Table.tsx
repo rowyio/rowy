@@ -1,9 +1,15 @@
-import { useMemo, useRef, useCallback, Suspense, useEffect } from "react";
+import { useMemo, useRef, useCallback, useState, useEffect } from "react";
 import { useAtom, useSetAtom } from "jotai";
-import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
+import {
+  useDebounce,
+  useDebouncedCallback,
+  useThrottledCallback,
+} from "use-debounce";
+import { useSnackbar } from "notistack";
+import useMemoValue from "use-memo-value";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { findIndex } from "lodash-es";
+import { isEmpty, isEqual } from "lodash-es";
 
 import {
   createColumnHelper,
@@ -17,9 +23,11 @@ import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
 import { StyledTable } from "./Styled/StyledTable";
 import { StyledRow } from "./Styled/StyledRow";
+import { StyledResizer } from "./Styled/StyledResizer";
 import ColumnHeaderComponent from "./Column";
 
-import { IconButton, LinearProgress } from "@mui/material";
+import { IconButton, LinearProgress, Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 
 import TableContainer, { OUT_OF_ORDER_MARGIN } from "./TableContainer";
 import ColumnHeader, { COLUMN_HEADER_HEIGHT } from "./ColumnHeader";
@@ -63,8 +71,10 @@ import { useKeyboardNavigation } from "./useKeyboardNavigation";
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
+export const MIN_COL_WIDTH = 32;
 export const TABLE_PADDING = 16;
 export const TABLE_GUTTER = 8;
+export const DEBOUNCE_DELAY = 500;
 
 declare module "@tanstack/table-core" {
   interface ColumnMeta<TData, TValue> extends ColumnConfig {}
@@ -74,6 +84,8 @@ const columnHelper = createColumnHelper<TableRow>();
 const getRowId = (row: TableRow) => row._rowy_ref.path || row._rowy_ref.id;
 
 export default function TableComponent() {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [userSettings] = useAtom(userSettingsAtom, projectScope);
 
@@ -105,6 +117,9 @@ export default function TableComponent() {
         columnHelper.accessor(columnConfig.fieldName, {
           id: columnConfig.fieldName,
           meta: columnConfig,
+          size: columnConfig.width,
+          enableResizing: columnConfig.resizable !== false,
+          minSize: MIN_COL_WIDTH,
           // draggable: true,
           // resizable: true,
           // frozen: columnConfig.fixed,
@@ -166,15 +181,62 @@ export default function TableComponent() {
   const lastFrozen: string | undefined =
     columnPinning.left[columnPinning.left.length - 1];
 
+  // Call TanStack Table
   const table = useReactTable({
     data: tableRows,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getRowId,
     columnResizeMode: "onChange",
-    state: { columnVisibility, columnPinning },
-    // debugRows: true,
   });
+
+  const [columnSizing, setColumnSizing] = useState(
+    table.initialState.columnSizing
+  );
+  table.setOptions((prev) => ({
+    ...prev,
+    state: { ...prev.state, columnVisibility, columnPinning, columnSizing },
+    onColumnSizingChange: setColumnSizing,
+  }));
+
+  // Debounce for saving to schema
+  const [debouncedColumnSizing] = useDebounce(columnSizing, DEBOUNCE_DELAY, {
+    equalityFn: isEqual,
+  });
+  // Offer to save when column sizing changes
+  useEffect(() => {
+    if (!canEditColumn || isEmpty(debouncedColumnSizing)) return;
+
+    const snackbarId = enqueueSnackbar("Save column sizes for all users?", {
+      action: (
+        <LoadingButton
+          variant="contained"
+          color="primary"
+          onClick={handleSaveToSchema}
+        >
+          Save
+        </LoadingButton>
+      ),
+      anchorOrigin: { horizontal: "center", vertical: "top" },
+    });
+
+    async function handleSaveToSchema() {
+      const promises = Object.entries(debouncedColumnSizing).map(
+        ([key, value]) => updateColumn({ key, config: { width: value } })
+      );
+      await Promise.all(promises);
+      closeSnackbar(snackbarId);
+    }
+
+    return () => closeSnackbar(snackbarId);
+  }, [
+    debouncedColumnSizing,
+    canEditColumn,
+    enqueueSnackbar,
+    closeSnackbar,
+    updateColumn,
+  ]);
+
   const { rows } = table.getRowModel();
   const leafColumns = table.getVisibleLeafColumns();
   // console.log(table, selectedCell);
@@ -260,7 +322,7 @@ export default function TableComponent() {
         setTablePage((p) => p + 1);
       }
     },
-    250
+    DEBOUNCE_DELAY
   );
 
   return (
@@ -326,24 +388,13 @@ export default function TableComponent() {
                       (e.target as HTMLDivElement).focus();
                     }}
                   >
-                    {/* <div
-                    {...{
-                      onMouseDown: header.getResizeHandler(),
-                      onTouchStart: header.getResizeHandler(),
-                      className: `resizer ${
-                        header.column.getIsResizing() ? "isResizing" : ""
-                      }`,
-                      // style: {
-                      //   transform:
-                      //     columnResizeMode === 'onEnd' &&
-                      //     header.column.getIsResizing()
-                      //       ? `translateX(${
-                      //           table.getState().columnSizingInfo.deltaOffset
-                      //         }px)`
-                      //       : '',
-                      // },
-                    }}
-                  /> */}
+                    {header.column.getCanResize() && (
+                      <StyledResizer
+                        isResizing={header.column.getIsResizing()}
+                        onMouseDown={header.getResizeHandler()}
+                        onTouchStart={header.getResizeHandler()}
+                      />
+                    )}
                   </ColumnHeaderComponent>
                 );
               })}

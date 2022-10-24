@@ -11,6 +11,7 @@ export interface IColumnProps extends Partial<GridProps> {
   label: string;
   type?: FieldType;
   secondaryItem?: React.ReactNode;
+  children?: React.ReactNode;
 
   active?: boolean;
 }
@@ -19,6 +20,7 @@ export default function Column({
   label,
   type,
   secondaryItem,
+  children,
 
   active,
   ...props
@@ -35,6 +37,7 @@ export default function Column({
           height: COLUMN_HEADER_HEIGHT,
           border: (theme) => `1px solid ${theme.palette.divider}`,
           backgroundColor: "background.default",
+          position: "relative",
 
           py: 0,
           px: 1,
@@ -106,6 +109,8 @@ export default function Column({
           {secondaryItem}
         </Grid>
       )}
+
+      {children}
     </Grid>
   );
 }
