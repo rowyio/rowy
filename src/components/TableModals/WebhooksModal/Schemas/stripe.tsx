@@ -1,4 +1,4 @@
-import { Typography, Link, TextField } from "@mui/material";
+import { Typography, Link, TextField, Alert } from "@mui/material";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import { TableSettings } from "@src/types/table";
 import {
@@ -44,7 +44,6 @@ export const webhookStripe = {
     setWebhookObject: (w: IWebhook) => void,
     secrets: ISecret
   ) => {
-    console.log(secrets);
     return (
       <>
         <Typography gutterBottom>
@@ -66,6 +65,16 @@ export const webhookStripe = {
           <br />
           Then add the secret below.
         </Typography>
+
+        {webhookObject.auth.secretKey &&
+          !secrets.loading &&
+          !secrets.keys.includes(webhookObject.auth.secretKey) && (
+            <Alert severity="error" sx={{ height: "auto!important" }}>
+              Your previously selected key{" "}
+              <code>{webhookObject.auth.secretKey}</code> does not exist in
+              Secret Manager. Please select your key again.
+            </Alert>
+          )}
 
         <FormControl fullWidth margin={"normal"}>
           <InputLabel id="stripe-secret-key">Secret key</InputLabel>
