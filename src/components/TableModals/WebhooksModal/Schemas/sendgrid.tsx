@@ -1,7 +1,10 @@
 import { Typography, Link, TextField } from "@mui/material";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import { TableSettings } from "@src/types/table";
-import { IWebhook } from "@src/components/TableModals/WebhooksModal/utils";
+import {
+  IWebhook,
+  ISecret,
+} from "@src/components/TableModals/WebhooksModal/utils";
 
 export const webhookSendgrid = {
   name: "SendGrid",
@@ -37,7 +40,11 @@ export const webhookSendgrid = {
       return true;
     }`,
   },
-  auth: (webhookObject: IWebhook, setWebhookObject: (w: IWebhook) => void) => {
+  auth: (
+    webhookObject: IWebhook,
+    setWebhookObject: (w: IWebhook) => void,
+    secrets: ISecret
+  ) => {
     return (
       <>
         <Typography gutterBottom>

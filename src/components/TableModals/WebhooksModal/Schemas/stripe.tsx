@@ -1,7 +1,14 @@
 import { Typography, Link, TextField } from "@mui/material";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import { TableSettings } from "@src/types/table";
-import { IWebhook } from "@src/components/TableModals/WebhooksModal/utils";
+import {
+  IWebhook,
+  ISecret,
+} from "@src/components/TableModals/WebhooksModal/utils";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 export const webhookStripe = {
   name: "Stripe",
@@ -32,21 +39,20 @@ export const webhookStripe = {
   return true;
 }`,
   },
-  auth: (webhookObject: IWebhook, setWebhookObject: (w: IWebhook) => void) => {
+  auth: (
+    webhookObject: IWebhook,
+    setWebhookObject: (w: IWebhook) => void,
+    secrets: ISecret
+  ) => {
+    console.log(secrets);
     return (
       <>
         <Typography gutterBottom>
-          Get your{" "}
-          <Link
-            href="https://dashboard.stripe.com/apikeys"
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="inherit"
-          >
-            secret key
-            <InlineOpenInNewIcon />
-          </Link>{" "}
-          and{" "}
+          Select or add your secret key in the format of{" "}
+          <code>
+            {"{" + `"publicKey":"pk_...","secretKey": "sk_..."` + "}"}
+          </code>{" "}
+          and get your{" "}
           <Link
             href="https://dashboard.stripe.com/webhooks"
             target="_blank"
@@ -61,19 +67,34 @@ export const webhookStripe = {
           Then add the secret below.
         </Typography>
 
-        <TextField
-          id="stripe-secret-key"
-          label="Secret key"
-          value={webhookObject.auth.secretKey}
-          fullWidth
-          multiline
-          onChange={(e) => {
-            setWebhookObject({
-              ...webhookObject,
-              auth: { ...webhookObject.auth, secretKey: e.target.value },
-            });
-          }}
-        />
+        <FormControl fullWidth margin={"normal"}>
+          <InputLabel id="stripe-secret-key">Secret key</InputLabel>
+          <Select
+            labelId="stripe-secret-key"
+            id="stripe-secret-key"
+            label="Secret key"
+            variant="filled"
+            value={webhookObject.auth.secretKey}
+            onChange={(e) => {
+              setWebhookObject({
+                ...webhookObject,
+                auth: { ...webhookObject.auth, secretKey: e.target.value },
+              });
+            }}
+          >
+            {secrets.keys.map((secret) => {
+              return <MenuItem value={secret}>{secret}</MenuItem>;
+            })}
+            <MenuItem
+              onClick={() => {
+                const secretManagerLink = `https://console.cloud.google.com/security/secret-manager/create?project=${secrets.projectId}`;
+                window?.open?.(secretManagerLink, "_blank")?.focus();
+              }}
+            >
+              Add a key in Secret Manager
+            </MenuItem>
+          </Select>
+        </FormControl>
         <TextField
           id="stripe-signing-secret"
           label="Signing key"

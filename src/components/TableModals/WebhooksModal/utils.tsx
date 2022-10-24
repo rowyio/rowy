@@ -78,6 +78,12 @@ export interface IWebhook {
   auth?: any;
 }
 
+export interface ISecret {
+  loading: boolean;
+  keys: string[];
+  projectId: string;
+}
+
 export const webhookSchemas = {
   basic,
   typeform,
