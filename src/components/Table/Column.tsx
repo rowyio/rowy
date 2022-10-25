@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { Grid, GridProps, Typography } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 
@@ -16,20 +17,25 @@ export interface IColumnProps extends Partial<GridProps> {
   active?: boolean;
 }
 
-export default function Column({
-  label,
-  type,
-  secondaryItem,
-  children,
+export const Column = forwardRef(function Column(
+  {
+    label,
+    type,
+    secondaryItem,
+    children,
 
-  active,
-  ...props
-}: IColumnProps) {
+    active,
+    ...props
+  }: IColumnProps,
+  ref: React.ForwardedRef<HTMLDivElement>
+) {
   return (
     <Grid
+      ref={ref}
       container
       alignItems="center"
       wrap="nowrap"
+      aria-label={label}
       {...props}
       sx={[
         {
@@ -99,6 +105,7 @@ export default function Column({
 
             ml: 0.5,
           }}
+          aria-hidden
         >
           {label}
         </Typography>
@@ -113,4 +120,6 @@ export default function Column({
       {children}
     </Grid>
   );
-}
+});
+
+export default Column;

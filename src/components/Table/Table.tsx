@@ -1,11 +1,12 @@
-import { useMemo, useRef, useCallback, useState, useEffect } from "react";
+import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { useThrottledCallback } from "use-debounce";
-import { useSnackbar } from "notistack";
-import useMemoValue from "use-memo-value";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { isEmpty, isEqual } from "lodash-es";
+import {
+  DragDropContext,
+  DropResult,
+  Droppable,
+  Draggable,
+} from "react-beautiful-dnd";
 
 import {
   createColumnHelper,
@@ -20,7 +21,7 @@ import { StyledResizer } from "./Styled/StyledResizer";
 import ColumnHeaderComponent from "./Column";
 import OutOfOrderIndicator from "./OutOfOrderIndicator";
 
-import { IconButton } from "@mui/material";
+import { IconButton, Portal } from "@mui/material";
 
 import ColumnHeader, { COLUMN_HEADER_HEIGHT } from "./ColumnHeader";
 import FinalColumnHeader from "./FinalColumnHeader";
@@ -111,10 +112,6 @@ export default function TableComponent() {
           size: columnConfig.width,
           enableResizing: columnConfig.resizable !== false,
           minSize: MIN_COL_WIDTH,
-          // draggable: true,
-          // resizable: true,
-          // frozen: columnConfig.fixed,
-          // headerRenderer: ColumnHeader,
           // formatter:
           //   getFieldProp("TableCell", getFieldType(columnConfig)) ??
           //   function InDev() {
@@ -181,6 +178,9 @@ export default function TableComponent() {
     columnResizeMode: "onChange",
   });
 
+  // Store local columnSizing state so we can save it to table schema
+  // in `useSaveColumnSizing`. This could be generalized by storing the
+  // entire table state.
   const [columnSizing, setColumnSizing] = useState(
     table.initialState.columnSizing
   );
@@ -192,7 +192,6 @@ export default function TableComponent() {
 
   const { rows } = table.getRowModel();
   const leafColumns = table.getVisibleLeafColumns();
-  // console.log(table, selectedCell);
 
   const { handleKeyDown, focusInsideCell } = useKeyboardNavigation({
     gridRef,
@@ -212,6 +211,22 @@ export default function TableComponent() {
     paddingRight,
   } = useVirtualization(containerRef, leafColumns);
   useSaveColumnSizing(columnSizing, canEditColumn);
+
+  const handleDropColumn = useCallback(
+    (result: DropResult) => {
+      if (result.destination?.index === undefined || !result.draggableId)
+        return;
+
+      console.log(result.draggableId, result.destination.index);
+
+      updateColumn({
+        key: result.draggableId,
+        index: result.destination.index,
+        config: {},
+      });
+    },
+    [updateColumn]
+  );
 
   const fetchMoreOnBottomReached = useThrottledCallback(
     (containerElement?: HTMLDivElement | null) => {
@@ -261,61 +276,109 @@ export default function TableComponent() {
             padding: `0 ${TABLE_PADDING}px`,
           }}
         >
-          {table.getHeaderGroups().map((headerGroup) => (
-            <StyledRow
-              key={headerGroup.id}
-              role="row"
-              aria-rowindex={1}
-              style={{ height: DEFAULT_ROW_HEIGHT + 1 }}
-            >
-              {headerGroup.headers.map((header) => {
-                const isSelectedCell =
-                  (!selectedCell && header.index === 0) ||
-                  (selectedCell?.path === "_rowy_header" &&
-                    selectedCell?.columnKey === header.id);
-
-                return (
-                  <ColumnHeaderComponent
-                    key={header.id}
-                    data-row-id={"_rowy_header"}
-                    data-col-id={header.id}
-                    data-frozen={header.column.getIsPinned() || undefined}
-                    data-frozen-last={lastFrozen === header.id || undefined}
-                    role="columnheader"
-                    tabIndex={isSelectedCell ? 0 : -1}
-                    aria-colindex={header.index + 1}
-                    aria-readonly={!canEditColumn}
-                    // TODO: aria-sort={"none" | "ascending" | "descending" | "other" | undefined}
-                    aria-selected={isSelectedCell}
-                    label={header.column.columnDef.meta?.name || header.id}
-                    type={header.column.columnDef.meta?.type}
-                    style={{
-                      width: header.getSize(),
-                      left: header.column.getIsPinned()
-                        ? virtualCols[header.index].start - TABLE_PADDING
-                        : undefined,
-                    }}
-                    sx={{ "& + &": { borderLeft: "none" } }}
-                    onClick={(e) => {
-                      setSelectedCell({
-                        path: "_rowy_header",
-                        columnKey: header.id,
-                      });
-                      (e.target as HTMLDivElement).focus();
-                    }}
+          <DragDropContext onDragEnd={handleDropColumn}>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <Droppable droppableId="droppable-column" direction="horizontal">
+                {(provided) => (
+                  <StyledRow
+                    key={headerGroup.id}
+                    role="row"
+                    aria-rowindex={1}
+                    style={{ height: DEFAULT_ROW_HEIGHT + 1 }}
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
                   >
-                    {header.column.getCanResize() && (
-                      <StyledResizer
-                        isResizing={header.column.getIsResizing()}
-                        onMouseDown={header.getResizeHandler()}
-                        onTouchStart={header.getResizeHandler()}
-                      />
-                    )}
-                  </ColumnHeaderComponent>
-                );
-              })}
-            </StyledRow>
-          ))}
+                    {headerGroup.headers.map((header) => {
+                      const isSelectedCell =
+                        (!selectedCell && header.index === 0) ||
+                        (selectedCell?.path === "_rowy_header" &&
+                          selectedCell?.columnKey === header.id);
+
+                      return (
+                        <Draggable
+                          key={header.id}
+                          draggableId={header.id}
+                          index={header.index}
+                          isDragDisabled={!canEditColumn}
+                          disableInteractiveElementBlocking
+                        >
+                          {(provided, snapshot) => (
+                            <ColumnHeaderComponent
+                              key={header.id}
+                              data-row-id={"_rowy_header"}
+                              data-col-id={header.id}
+                              data-frozen={
+                                header.column.getIsPinned() || undefined
+                              }
+                              data-frozen-last={
+                                lastFrozen === header.id || undefined
+                              }
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              role="columnheader"
+                              tabIndex={isSelectedCell ? 0 : -1}
+                              aria-colindex={header.index + 1}
+                              aria-readonly={!canEditColumn}
+                              // TODO: aria-sort={"none" | "ascending" | "descending" | "other" | undefined}
+                              aria-selected={isSelectedCell}
+                              label={
+                                header.column.columnDef.meta?.name || header.id
+                              }
+                              type={header.column.columnDef.meta?.type}
+                              style={{
+                                width: header.getSize(),
+                                left: header.column.getIsPinned()
+                                  ? virtualCols[header.index].start -
+                                    TABLE_PADDING
+                                  : undefined,
+                                ...provided.draggableProps.style,
+                              }}
+                              sx={[
+                                snapshot.isDragging
+                                  ? {}
+                                  : { "& + &": { borderLeft: "none" } },
+                              ]}
+                              onClick={(e) => {
+                                setSelectedCell({
+                                  path: "_rowy_header",
+                                  columnKey: header.id,
+                                });
+                                (e.target as HTMLDivElement).focus();
+                              }}
+                            >
+                              <div
+                                {...provided.dragHandleProps}
+                                tabIndex={
+                                  isSelectedCell && focusInsideCell ? 0 : -1
+                                }
+                                aria-describedby={
+                                  isSelectedCell && focusInsideCell
+                                    ? provided.dragHandleProps?.[
+                                        "aria-describedby"
+                                      ]
+                                    : undefined
+                                }
+                                style={{ position: "absolute", inset: 0 }}
+                              />
+
+                              {header.column.getCanResize() && (
+                                <StyledResizer
+                                  isResizing={header.column.getIsResizing()}
+                                  onMouseDown={header.getResizeHandler()}
+                                  onTouchStart={header.getResizeHandler()}
+                                />
+                              )}
+                            </ColumnHeaderComponent>
+                          )}
+                        </Draggable>
+                      );
+                    })}
+                    {provided.placeholder}
+                  </StyledRow>
+                )}
+              </Droppable>
+            ))}
+          </DragDropContext>
         </div>
 
         <div className="tbody" role="rowgroup">
@@ -371,6 +434,7 @@ export default function TableComponent() {
                         cell.column.columnDef.meta?.editable === false
                       }
                       aria-selected={isSelectedCell}
+                      aria-describedby="rowy-table-cell-description"
                       style={{
                         width: cell.column.getSize(),
                         left: cell.column.getIsPinned()
@@ -430,6 +494,12 @@ export default function TableComponent() {
           )}
         </div>
       </StyledTable>
+
+      <Portal>
+        <div id="rowy-table-cell-description" style={{ display: "none" }}>
+          Press Enter to edit.
+        </div>
+      </Portal>
     </div>
   );
 }
