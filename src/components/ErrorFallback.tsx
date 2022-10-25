@@ -44,12 +44,21 @@ export function ErrorFallbackContents({
           size={props.basic ? "small" : "medium"}
           href={
             EXTERNAL_LINKS.gitHub +
-            "/discussions/new?labels=bug&category=support-q-a&title=" +
-            encodeURIComponent("Error: " + error.message.replace("\n", " ")) +
-            "&body=" +
-            encodeURIComponent(
-              "👉 **Please describe how to reproduce this bug here.**"
-            )
+            "/discussions/new?" +
+            new URLSearchParams({
+              labels: "bug",
+              category: "support-q-a",
+              title: [
+                "Error",
+                (error as any).code,
+                (error as any).status,
+                error.message,
+              ]
+                .filter(Boolean)
+                .join(": ")
+                .replace(/\n/g, " "),
+              body: "👉 **Please describe how to reproduce this bug here.**",
+            }).toString()
           }
           target="_blank"
           rel="noopener noreferrer"
