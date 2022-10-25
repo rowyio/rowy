@@ -13,7 +13,7 @@ import EmptyState, { IEmptyStateProps } from "@src/components/EmptyState";
 import AccessDenied from "@src/components/AccessDenied";
 
 import { ROUTES } from "@src/constants/routes";
-import meta from "@root/package.json";
+import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 
 export const ERROR_TABLE_NOT_FOUND = "Table not found";
 
@@ -43,9 +43,13 @@ export function ErrorFallbackContents({
         <Button
           size={props.basic ? "small" : "medium"}
           href={
-            meta.repository.url.replace(".git", "") +
-            "/issues/new?labels=bug&template=bug_report.md&title=Error: " +
-            error.message.replace("\n", " ")
+            EXTERNAL_LINKS.gitHub +
+            "/discussions/new?labels=bug&category=support-q-a&title=" +
+            encodeURIComponent("Error: " + error.message.replace("\n", " ")) +
+            "&body=" +
+            encodeURIComponent(
+              "👉 **Please describe how to reproduce this bug here.**"
+            )
           }
           target="_blank"
           rel="noopener noreferrer"
