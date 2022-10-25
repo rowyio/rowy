@@ -70,6 +70,18 @@ export type TableSettings = {
 
   section: string;
   description?: string;
+  details?: string;
+  thumbnailURL?: string;
+
+  _createdBy?: {
+    displayName?: string;
+    email?: string;
+    emailVerified: boolean;
+    isAnonymous: boolean;
+    photoURL?: string;
+    uid: string;
+    timestamp: firebase.firestore.Timestamp;
+  };
 
   tableType: "primaryCollection" | "collectionGroup";
 

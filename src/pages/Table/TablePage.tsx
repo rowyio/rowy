@@ -8,6 +8,7 @@ import { Box, Fade } from "@mui/material";
 import ErrorFallback, {
   InlineErrorFallback,
 } from "@src/components/ErrorFallback";
+import TableInformationDrawer from "@src/components/TableInformationDrawer/TableInformationDrawer";
 import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkeleton";
 import TableSkeleton from "@src/components/Table/TableSkeleton";
 import EmptyTable from "@src/components/Table/EmptyTable";
@@ -119,6 +120,12 @@ export default function TablePage({
       <ErrorBoundary FallbackComponent={InlineErrorFallback}>
         <Suspense fallback={null}>
           {!disableSideDrawer && <SideDrawer dataGridRef={dataGridRef} />}
+        </Suspense>
+      </ErrorBoundary>
+
+      <ErrorBoundary FallbackComponent={InlineErrorFallback}>
+        <Suspense fallback={null}>
+          <TableInformationDrawer />
         </Suspense>
       </ErrorBoundary>
 

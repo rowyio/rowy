@@ -27,10 +27,14 @@ export default function EmptyTable() {
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   // const { tableState, importWizardRef, columnMenuRef } = useProjectContext();
-
+  // check if theres any rows, and if rows include fields other than rowy_ref
+  const hasData =
+    tableRows.length > 0
+      ? tableRows.some((row) => Object.keys(row).length > 1)
+      : false;
   let contents = <></>;
 
-  if (tableRows.length > 0) {
+  if (hasData) {
     contents = (
       <>
         <div>

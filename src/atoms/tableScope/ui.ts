@@ -122,6 +122,12 @@ export const importAirtableAtom = atom<{
 }>({ airtableData: null, apiKey: "", baseId: "", tableId: "" });
 
 /** Store side drawer open state */
+export const sideDrawerAtom = atomWithHash<"table-information" | null>(
+  "sideDrawer",
+  null,
+  { replaceState: true }
+);
+/** Store side drawer open state */
 export const sideDrawerOpenAtom = atom(false);
 
 export type SelectedCell = {

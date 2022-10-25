@@ -122,7 +122,9 @@ export default function SideDrawer({
       )}
       variant="permanent"
       anchor="right"
-      PaperProps={{ elevation: 4, component: "aside" } as any}
+      PaperProps={
+        { elevation: 4, component: "aside", "aria-label": "Side drawer" } as any
+      }
     >
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <div className="sidedrawer-contents">

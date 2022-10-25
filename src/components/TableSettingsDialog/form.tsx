@@ -244,7 +244,23 @@ export const tableSettings = (
       type: FieldType.paragraph,
       name: "description",
       label: "Description (optional)",
-      minRows: 2,
+    },
+    {
+      step: "display",
+      type: "tableDetails",
+      name: "details",
+      label: "Details (optional)",
+    },
+    {
+      step: "display",
+      type: "tableThumbnail",
+      name: "thumbnailFile",
+      label: "Thumbnail image (optional)",
+    },
+    {
+      step: "display",
+      type: FieldType.hidden,
+      name: "thumbnailURL",
     },
 
     // Step 3: Access controls
