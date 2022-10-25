@@ -58,6 +58,9 @@ export function useKeyboardNavigation({
     )
       return;
 
+    // If Tab, ignore so we can exit the table
+    if (e.key === "Tab") return;
+
     // Enter: enter cell
     if (e.key === "Enter") {
       setFocusInsideCell(true);

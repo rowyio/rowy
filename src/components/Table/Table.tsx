@@ -139,13 +139,13 @@ export default function TableComponent() {
         columnHelper.display({
           id: "_rowy_column_actions",
           header: () => "Actions",
-          cell: () => (
-            <>
-              <IconButton>M</IconButton>
-              <IconButton>D</IconButton>
-              <IconButton>X</IconButton>
-            </>
-          ),
+          // cell: () => (
+          //   <>
+          //     <IconButton>M</IconButton>
+          //     <IconButton>D</IconButton>
+          //     <IconButton>X</IconButton>
+          //   </>
+          // ),
         })
       );
     }
