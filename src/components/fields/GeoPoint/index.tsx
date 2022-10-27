@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import { GeoPoint } from "firebase/firestore";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
 
@@ -26,5 +27,17 @@ export const config: IFieldConfig = {
   TableCell: withBasicCell(TableCell),
   TableEditor: withSideDrawerEditor(TableCell),
   SideDrawerField,
+  csvImportParser: (value: string) => {
+    try {
+      const { latitude, longitude } = JSON.parse(value);
+      if (latitude && longitude) {
+        return new GeoPoint(latitude, longitude);
+      }
+      throw new Error();
+    } catch (e) {
+      console.error("Invalid Geopoint value");
+      return null;
+    }
+  },
 };
 export default config;

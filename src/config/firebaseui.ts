@@ -14,9 +14,15 @@ import githubLogo from "@src/assets/logos/github.svg";
 import appleLogo from "@src/assets/logos/apple.svg";
 import yahooLogo from "@src/assets/logos/yahoo.svg";
 
+import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
+
 export const authOptions = {
   google: {
     provider: GoogleAuthProvider.PROVIDER_ID,
+    customParameters: {
+      // Forces account selection even when one account is available
+      prompt: "select_account",
+    },
   },
   twitter: {
     provider: TwitterAuthProvider.PROVIDER_ID,
@@ -59,6 +65,8 @@ export const defaultUiConfig: firebaseui.auth.Config = {
   signInFlow: "popup",
   signInSuccessUrl: "/",
   signInOptions: [authOptions.google],
+  tosUrl: EXTERNAL_LINKS.terms,
+  privacyPolicyUrl: EXTERNAL_LINKS.privacy,
 };
 
 export const getSignInOptions = (

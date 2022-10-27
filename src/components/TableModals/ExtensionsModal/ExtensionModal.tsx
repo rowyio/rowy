@@ -12,7 +12,7 @@ import Step2RequiredFields from "./Step2RequiredFields";
 import Step3Conditions from "./Step3Conditions";
 import Step4Body from "./Step4Body";
 
-import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
+import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
 import { extensionNames, IExtension } from "./utils";
 
 type StepValidation = Record<"condition" | "extensionBody", boolean>;
@@ -39,7 +39,7 @@ export default function ExtensionModal({
   mode,
   extensionObject: initialObject,
 }: IExtensionModalProps) {
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
 
   const [extensionObject, setExtensionObject] =
     useState<IExtension>(initialObject);

@@ -31,14 +31,14 @@ import MenuContents, { IMenuContentsProps } from "./MenuContents";
 import ColumnHeader from "@src/components/Table/Column";
 
 import {
-  globalScope,
+  projectScope,
   userRolesAtom,
   userSettingsAtom,
   updateUserSettingsAtom,
   confirmDialogAtom,
   rowyRunAtom,
   altPressAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableIdAtom,
@@ -74,11 +74,11 @@ export interface IMenuModalProps {
 }
 
 export default function ColumnMenu() {
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
-  const [userSettings] = useAtom(userSettingsAtom, globalScope);
-  const [updateUserSettings] = useAtom(updateUserSettingsAtom, globalScope);
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
+  const [updateUserSettings] = useAtom(updateUserSettingsAtom, projectScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
   const [tableId] = useAtom(tableIdAtom, tableScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
@@ -92,7 +92,7 @@ export default function ColumnMenu() {
   );
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
 
-  const [altPress] = useAtom(altPressAtom, globalScope);
+  const [altPress] = useAtom(altPressAtom, projectScope);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   if (!columnMenu) return null;
@@ -329,6 +329,7 @@ export default function ColumnMenu() {
                 </>
               ),
               handleConfirm: handleEvaluateAll,
+              confirm: "Evaluate",
             }),
     },
   ];

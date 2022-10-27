@@ -7,11 +7,11 @@ import { IconButton, Menu, MenuItem, DialogContentText } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
 import {
-  globalScope,
+  projectScope,
   confirmDialogAtom,
   updateTableAtom,
   deleteTableAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { TableSettings } from "@src/types/table";
 import { ROUTES } from "@src/constants/routes";
 import { analytics, logEvent } from "@src/analytics";
@@ -27,10 +27,10 @@ export default function DeleteMenu({ clearDialog, data }: IDeleteMenuProps) {
   const handleClose = () => setAnchorEl(null);
 
   const navigate = useNavigate();
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-  const [updateTable] = useAtom(updateTableAtom, globalScope);
+  const [updateTable] = useAtom(updateTableAtom, projectScope);
   const handleResetStructure = async () => {
     const snack = enqueueSnackbar("Resetting columns…", { persist: true });
     await updateTable!(
@@ -42,7 +42,7 @@ export default function DeleteMenu({ clearDialog, data }: IDeleteMenuProps) {
     enqueueSnackbar("Columns reset");
   };
 
-  const [deleteTable] = useAtom(deleteTableAtom, globalScope);
+  const [deleteTable] = useAtom(deleteTableAtom, projectScope);
   const handleDelete = async () => {
     const snack = enqueueSnackbar("Deleting table…", { persist: true });
     await deleteTable!(data!.id);

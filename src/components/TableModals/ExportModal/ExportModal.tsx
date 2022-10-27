@@ -20,7 +20,7 @@ import Modal from "@src/components/Modal";
 import ExportDetails from "./ModalContentsExport";
 import DownloadDetails from "./ModalContentsDownload";
 
-import { globalScope } from "@src/atoms/globalScope";
+import { projectScope } from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -40,7 +40,7 @@ export interface IExportModalContentsProps {
 export default function Export({ onClose }: ITableModalProps) {
   const [mode, setMode] = useState<"Export" | "Download">("Export");
 
-  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
+  const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableFilters] = useAtom(tableFiltersAtom, tableScope);
   const [tableSorts] = useAtom(tableSortsAtom, tableScope);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 
 import {
@@ -10,15 +10,21 @@ import {
   TextField,
   Button,
 } from "@mui/material";
+import MemoizedText from "@src/components/Modal/MemoizedText";
 
-import { SlideTransitionMui } from "@src/components/Modal/SlideTransition";
-import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
+import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
+
+export interface IConfirmDialogProps {
+  scope?: Parameters<typeof useAtom>[1];
+}
 
 /**
  * Display a confirm dialog using `confirmDialogAtom` in `globalState`
  * @see {@link confirmDialogAtom | Usage example}
  */
-export default function ConfirmDialog() {
+export default function ConfirmDialog({
+  scope = projectScope,
+}: IConfirmDialogProps) {
   const [
     {
       open,
@@ -36,12 +42,22 @@ export default function ConfirmDialog() {
       hideCancel,
 
       maxWidth = "xs",
+      buttonLayout = "horizontal",
     },
     setState,
-  ] = useAtom(confirmDialogAtom, globalScope);
-  const handleClose = () => setState({ open: false });
+  ] = useAtom(confirmDialogAtom, scope);
 
-  const [dryText, setDryText] = useState("");
+  const handleClose = () => {
+    setState({ open: false });
+    setDisableConfirm(false);
+  };
+
+  const [disableConfirm, setDisableConfirm] = useState(
+    Boolean(confirmationCommand)
+  );
+  useEffect(() => {
+    setDisableConfirm(Boolean(confirmationCommand));
+  }, [confirmationCommand]);
 
   return (
     <Dialog
@@ -51,57 +67,74 @@ export default function ConfirmDialog() {
         else handleClose();
       }}
       maxWidth={maxWidth}
-      TransitionComponent={SlideTransitionMui}
       sx={{ cursor: "default", zIndex: (theme) => theme.zIndex.modal + 50 }}
     >
-      <DialogTitle>{title}</DialogTitle>
+      <>
+        <MemoizedText>
+          <DialogTitle>{title}</DialogTitle>
+        </MemoizedText>
 
-      <DialogContent>
-        {typeof body === "string" ? (
-          <DialogContentText>{body}</DialogContentText>
-        ) : (
-          body
-        )}
-        {confirmationCommand && (
-          <TextField
-            value={dryText}
-            onChange={(e) => setDryText(e.target.value)}
-            autoFocus
-            label={`Type ${confirmationCommand} below to continue:`}
-            placeholder={confirmationCommand}
-            fullWidth
-            id="dryText"
-            sx={{ mt: 3 }}
-          />
-        )}
-      </DialogContent>
+        <MemoizedText>
+          <DialogContent>
+            {typeof body === "string" ? (
+              <DialogContentText>{body}</DialogContentText>
+            ) : (
+              body
+            )}
 
-      <DialogActions>
-        {!hideCancel && (
-          <Button
-            onClick={() => {
-              if (handleCancel) handleCancel();
-              handleClose();
-            }}
-          >
-            {cancel}
-          </Button>
-        )}
-        <Button
-          onClick={() => {
-            if (handleConfirm) handleConfirm();
-            handleClose();
-          }}
-          color={confirmColor || "primary"}
-          variant="contained"
-          autoFocus
-          disabled={
-            confirmationCommand ? dryText !== confirmationCommand : false
-          }
+            {confirmationCommand && (
+              <TextField
+                onChange={(e) =>
+                  setDisableConfirm(e.target.value !== confirmationCommand)
+                }
+                label={`Type “${confirmationCommand}” below to continue:`}
+                placeholder={confirmationCommand}
+                fullWidth
+                id="dryText"
+                sx={{ mt: 3 }}
+              />
+            )}
+          </DialogContent>
+        </MemoizedText>
+
+        <DialogActions
+          sx={[
+            buttonLayout === "vertical" && {
+              flexDirection: "column",
+              alignItems: "stretch",
+              "& > :not(:first-of-type)": { ml: 0, mt: 1 },
+            },
+          ]}
         >
-          {confirm}
-        </Button>
-      </DialogActions>
+          <MemoizedText>
+            {!hideCancel && (
+              <Button
+                onClick={() => {
+                  if (handleCancel) handleCancel();
+                  handleClose();
+                }}
+              >
+                {cancel}
+              </Button>
+            )}
+          </MemoizedText>
+
+          <MemoizedText key={disableConfirm.toString()}>
+            <Button
+              onClick={() => {
+                if (handleConfirm) handleConfirm();
+                handleClose();
+              }}
+              color={confirmColor || "primary"}
+              variant="contained"
+              autoFocus
+              disabled={disableConfirm}
+            >
+              {confirm}
+            </Button>
+          </MemoizedText>
+        </DialogActions>
+      </>
     </Dialog>
   );
 }

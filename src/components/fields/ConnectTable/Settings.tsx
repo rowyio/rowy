@@ -17,20 +17,20 @@ import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import WarningIcon from "@mui/icons-material/WarningAmberOutlined";
 
 import {
-  globalScope,
+  projectScope,
   getTableSchemaAtom,
   tablesAtom,
   projectSettingsAtom,
   rowyRunModalAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { FieldType } from "@src/constants/fields";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 export default function Settings({ onChange, config }: ISettingsProps) {
-  const [tables] = useAtom(tablesAtom, globalScope);
-  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
-  const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
-  const [getTableSchema] = useAtom(getTableSchemaAtom, globalScope);
+  const [tables] = useAtom(tablesAtom, projectScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, projectScope);
+  const [getTableSchema] = useAtom(getTableSchemaAtom, projectScope);
 
   useEffect(() => {
     if (!projectSettings.rowyRunUrl)

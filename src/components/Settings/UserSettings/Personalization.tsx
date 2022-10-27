@@ -14,8 +14,8 @@ export default function Personalization({
 }: IUserSettingsChildProps) {
   const [customizedThemeColor, setCustomizedThemeColor] = useState(
     Boolean(
-      settings.theme?.light?.palette?.primary?.main ||
-        settings.theme?.dark?.palette?.primary?.main
+      (settings.theme?.light?.palette?.primary as any)?.main ||
+        (settings.theme?.dark?.palette?.primary as any)?.main
     )
   );
 
@@ -52,8 +52,10 @@ export default function Personalization({
       <Collapse in={customizedThemeColor} style={{ marginTop: 0 }}>
         <Suspense fallback={<Loading style={{ height: "auto" }} />}>
           <ThemeColorPicker
-            currentLight={settings.theme?.light?.palette?.primary?.main}
-            currentDark={settings.theme?.dark?.palette?.primary?.main}
+            currentLight={
+              (settings.theme?.light?.palette?.primary as any)?.main
+            }
+            currentDark={(settings.theme?.dark?.palette?.primary as any)?.main}
             handleSave={handleSave}
           />
         </Suspense>
