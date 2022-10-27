@@ -89,15 +89,18 @@ export default function RuntimeOptions({
               label="Timeout"
               fullWidth
               InputProps={{
-                inputMode: "numeric",
-                onChange: (e) =>
-                  !isNaN(Number(e.target.value)) &&
-                  handleUpdate({
-                    timeoutSeconds: Number(e.target.value),
-                  }),
                 endAdornment: (
                   <InputAdornment position="end">seconds</InputAdornment>
                 ),
+              }}
+              onChange={(e) =>
+                !isNaN(Number(e.target.value)) &&
+                handleUpdate({
+                  timeoutSeconds: Number(e.target.value),
+                })
+              }
+              inputProps={{
+                inputMode: "numeric",
               }}
               error={errors.timeoutSeconds}
               helperText={
