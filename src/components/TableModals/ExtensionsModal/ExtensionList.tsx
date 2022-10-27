@@ -48,7 +48,7 @@ export default function ExtensionList({
     );
 
   return (
-    <List disablePadding>
+    <List style={{ minHeight: 89 * 3 - 1 }} disablePadding>
       {extensions.map((extensionObject, index) => (
         <ListItem
           disableGutters
