@@ -22,6 +22,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
             if (input > 20) { input = 20 }
             onChange("max")(input);
           }}
+          inputProps={{ min: 1, max: 20 }}
         />
       </Grid>
       <Grid item xs={6}>
