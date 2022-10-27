@@ -4,7 +4,10 @@ import type {
   DocumentData,
   DocumentReference,
 } from "firebase/firestore";
-import { IExtension } from "@src/components/TableModals/ExtensionsModal/utils";
+import {
+  IExtension,
+  IRuntimeOptions,
+} from "@src/components/TableModals/ExtensionsModal/utils";
 import { IWebhook } from "@src/components/TableModals/WebhooksModal/utils";
 
 /**
@@ -104,6 +107,7 @@ export type TableSchema = {
   extensionObjects?: IExtension[];
   compiledExtension?: string;
   webhooks?: IWebhook[];
+  runtimeOptions?: IRuntimeOptions;
 
   /** @deprecated Migrate to Extensions */
   sparks?: string;
