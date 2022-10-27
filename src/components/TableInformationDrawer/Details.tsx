@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { format } from "date-fns";
-import { find } from "lodash-es";
+import { find, isEqual } from "lodash-es";
 import MDEditor from "@uiw/react-md-editor";
 
 import {
@@ -44,6 +44,7 @@ export default function Details() {
   const [localDescription, setLocalDescription] = useState(description ?? "");
   const [localDetails, setLocalDetails] = useState(details ?? "");
   const [editDetails, setEditDetails] = useState(false);
+  const [mdFullScreen, setMdFullScreen] = useState(false);
 
   const [saveState, setSaveState] = useState<
     "" | "unsaved" | "saving" | "saved"
@@ -113,12 +114,17 @@ export default function Details() {
               sx={{
                 color: "text.secondary",
               }}
+              autoFocus={true}
               value={localDescription}
               onChange={(e) => {
                 setLocalDescription(e.target.value);
-                setSaveState("unsaved");
+                saveState !== "unsaved" && setSaveState("unsaved");
               }}
-              onBlur={() => handleSave()}
+              onBlur={() =>
+                isEqual(description, localDescription)
+                  ? setSaveState("")
+                  : handleSave()
+              }
               rows={2}
               minRows={2}
             />
@@ -151,28 +157,58 @@ export default function Details() {
             )}
           </Stack>
           <Box
+            data-color-mode={theme.palette.mode}
             sx={{
               color: "text.secondary",
-              fontSize: `${theme.typography.body2.fontSize} !important`,
+              ...theme.typography.body2,
               "& .w-md-editor": {
                 backgroundColor: `${theme.palette.action.input} !important`,
               },
               "& .w-md-editor-fullscreen": {
                 backgroundColor: `${theme.palette.background.paper} !important`,
               },
+              "& .w-md-editor-toolbar": {
+                display: "flex",
+                gap: 1,
+              },
+              "& .w-md-editor-toolbar > ul": {
+                display: "flex",
+                alignItems: "center",
+              },
+              "& .w-md-editor-toolbar > ul:first-of-type": {
+                overflowX: "auto",
+                marginRight: theme.spacing(1),
+              },
+              "& :is(h1, h2, h3, h4, h5, h6)": {
+                marginY: `${theme.spacing(1.5)} !important`,
+                borderBottom: "none !important",
+              },
+              "& details summary": {
+                marginBottom: theme.spacing(1),
+              },
             }}
           >
             {editDetails ? (
               <MDEditor
                 style={{ margin: 1 }}
-                toolbarHeight={58}
                 value={localDetails}
+                preview={mdFullScreen ? "live" : "edit"}
+                commandsFilter={(command) => {
+                  if (command.name === "fullscreen") {
+                    command.execute = () => setMdFullScreen(!mdFullScreen);
+                  }
+                  return command;
+                }}
                 textareaProps={{
+                  autoFocus: true,
                   onChange: (e) => {
                     setLocalDetails(e.target.value ?? "");
-                    setSaveState("unsaved");
+                    saveState !== "unsaved" && setSaveState("unsaved");
                   },
-                  onBlur: () => handleSave(),
+                  onBlur: () =>
+                    isEqual(details, localDetails)
+                      ? setSaveState("")
+                      : handleSave(),
                 }}
               />
             ) : !localDetails ? (
