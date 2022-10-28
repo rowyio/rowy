@@ -62,7 +62,7 @@ export default function Navigation({ children }: React.PropsWithChildren<{}>) {
               <Loading fullScreen style={{ marginTop: -TOP_BAR_HEIGHT }} />
             }
           >
-            <div style={{ flexGrow: 1, maxWidth: "100%" }}>
+            <div style={{ flexGrow: 1, minWidth: 0 }}>
               <Outlet />
               {children}
             </div>

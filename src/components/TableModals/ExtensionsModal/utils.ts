@@ -52,6 +52,12 @@ export interface IExtension {
   trackedFields?: string[];
 }
 
+// https://firebase.google.com/docs/functions/manage-functions#set_runtime_options
+export interface IRuntimeOptions {
+  memory?: "128MB" | "256MB" | "512MB" | "1GB" | "2GB" | "4GB" | "8GB";
+  timeoutSeconds?: number;
+}
+
 export const triggerTypes: ExtensionTrigger[] = ["create", "update", "delete"];
 
 const extensionBodyTemplate = {

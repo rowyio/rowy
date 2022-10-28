@@ -15,10 +15,15 @@ import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 /**
  * Lock pages for admins only
  */
-export default function AdminRoute({ children }: PropsWithChildren<{}>) {
+export default function AdminRoute({
+  children,
+  fallback,
+}: PropsWithChildren<{ fallback?: React.ReactNode }>) {
   const [userRoles] = useAtom(userRolesAtom, projectScope);
 
-  if (!userRoles.includes("ADMIN"))
+  if (!userRoles.includes("ADMIN")) {
+    if (fallback) return fallback as JSX.Element;
+
     return (
       <EmptyState
         role="alert"
@@ -39,6 +44,7 @@ export default function AdminRoute({ children }: PropsWithChildren<{}>) {
         style={{ marginTop: -TOP_BAR_HEIGHT, marginBottom: -TOP_BAR_HEIGHT }}
       />
     );
+  }
 
   return children as JSX.Element;
 }

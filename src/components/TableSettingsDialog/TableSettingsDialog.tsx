@@ -38,6 +38,10 @@ import {
   getTableSchemaPath,
   getTableBuildFunctionPathname,
 } from "@src/utils/table";
+import { firebaseStorageAtom } from "@src/sources/ProjectSourceFirebase";
+import { uploadTableThumbnail } from "./utils";
+import TableThumbnail from "./TableThumbnail";
+import TableDetails from "./TableDetails";
 
 const customComponents = {
   tableName: {
@@ -55,6 +59,12 @@ const customComponents = {
     defaultValue: "",
     validation: [["string"]],
   },
+  tableThumbnail: {
+    component: TableThumbnail,
+  },
+  tableDetails: {
+    component: TableDetails,
+  },
 };
 
 export default function TableSettingsDialog() {
@@ -67,6 +77,7 @@ export default function TableSettingsDialog() {
   const [projectRoles] = useAtom(projectRolesAtom, projectScope);
   const [tables] = useAtom(tablesAtom, projectScope);
   const [rowyRun] = useAtom(rowyRunAtom, projectScope);
+  const [firebaseStorage] = useAtom(firebaseStorageAtom, projectScope);
 
   const navigate = useNavigate();
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
@@ -96,15 +107,26 @@ export default function TableSettingsDialog() {
 
   if (!open) return null;
 
-  const handleSubmit = async (v: TableSettings & AdditionalTableSettings) => {
+  const handleSubmit = async (
+    v: TableSettings & AdditionalTableSettings & { thumbnailFile: File }
+  ) => {
     const {
       _schemaSource,
       _initialColumns,
       _schema,
       _suggestedRules,
+      thumbnailFile,
       ...values
     } = v;
-    const data = { ...values };
+
+    let thumbnailURL = values.thumbnailURL;
+    if (thumbnailFile) {
+      thumbnailURL = await uploadTableThumbnail(firebaseStorage)(
+        values.id,
+        thumbnailFile
+      );
+    }
+    const data = { ...values, thumbnailURL };
 
     const hasExtensions = !isEmpty(get(data, "_schema.extensionObjects"));
     const hasWebhooks = !isEmpty(get(data, "_schema.webhooks"));

@@ -41,7 +41,7 @@ export default function DebugPage() {
       {userRoles.includes("ADMIN") && <UserManagementSourceFirebase />}
 
       <Stack spacing={4}>
-        <SettingsSection title="Firestore config">
+        <SettingsSection title="Firestore config" transitionTimeout={0 * 100}>
           <Button
             href={`https://console.firebase.google.com/project/${projectId}/firestore/data/~2F${CONFIG.replace(
               /\//g,
@@ -83,7 +83,10 @@ export default function DebugPage() {
         </SettingsSection>
 
         {userRoles.includes("ADMIN") && (
-          <SettingsSection title="Reset table filters">
+          <SettingsSection
+            title="Reset table filters"
+            transitionTimeout={1 * 100}
+          >
             <Button
               onClick={async () => {
                 if (!updateUser)
@@ -167,7 +170,7 @@ export default function DebugPage() {
 
         <SettingsSection
           title="Local Firestore instance"
-          transitionTimeout={1 * 100}
+          transitionTimeout={2 * 100}
         >
           <Button
             onClick={async () => {

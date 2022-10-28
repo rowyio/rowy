@@ -10,6 +10,7 @@ import ActionFab from "./ActionFab";
 import { tableScope, tableRowsAtom } from "@src/atoms/tableScope";
 import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
 import { sanitiseCallableName, isUrl } from "./utils";
+import { getActionName } from "./TableCell"
 
 export default function Action({
   column,
@@ -60,7 +61,7 @@ export default function Action({
         ) : hasRan ? (
           value.status
         ) : (
-          sanitiseCallableName(column.key)
+          sanitiseCallableName(getActionName(column))
         )}
       </Box>
 
