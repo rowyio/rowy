@@ -7,7 +7,6 @@ import { get } from "lodash-es";
 import Icon from "./Icon"
 
 
-
 export default function Rating({
   row,
   column,
@@ -38,6 +37,7 @@ export default function Rating({
       disabled={disabled}
       onChange={(_, newValue) => onSubmit(newValue)}
       emptyIcon={<Icon config={column.config} isEmpty={true} style={{ opacity: 0.55 }} />}
+
       max={max}
       precision={precision}
       sx={{ mx: -0.25 }}

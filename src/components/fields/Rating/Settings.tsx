@@ -8,6 +8,7 @@ import MuiRating from "@mui/material/Rating";
 import { get } from "lodash-es";
 import Icon from "./Icon"
 
+
 export default function Settings({ onChange, config }: ISettingsProps) {
   return (
     <Grid container spacing={2} justifyItems="end" direction={"row"}>
@@ -23,6 +24,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
             if (input > 20) { input = 20 }
             onChange("max")(input);
           }}
+          inputProps={{ min: 1, max: 20 }}
         />
       </Grid>
       <Grid item xs={6}>

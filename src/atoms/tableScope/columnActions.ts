@@ -75,7 +75,7 @@ export const updateColumnAtom = atom(
       throw new Error(`Column with key "${key}" not found`);
 
     // If column is not being reordered, just update the config
-    if (!index) {
+    if (index === undefined) {
       tableColumnsOrdered[currentIndex] = {
         ...tableColumnsOrdered[currentIndex],
         ...config,
@@ -92,6 +92,8 @@ export const updateColumnAtom = atom(
         index,
       });
     }
+
+    console.log(tableColumnsOrdered);
 
     // Reduce array into single object with updated indexes
     const updatedColumns = tableColumnsOrdered.reduce(tableColumnsReducer, {});

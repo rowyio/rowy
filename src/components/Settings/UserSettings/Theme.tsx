@@ -12,19 +12,19 @@ import {
 } from "@mui/material";
 
 import {
-  globalScope,
+  projectScope,
   themeAtom,
   themeOverriddenAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 
 export default function Theme({
   settings,
   updateSettings,
 }: IUserSettingsChildProps) {
-  const [theme, setTheme] = useAtom(themeAtom, globalScope);
+  const [theme, setTheme] = useAtom(themeAtom, projectScope);
   const [themeOverridden, setThemeOverridden] = useAtom(
     themeOverriddenAtom,
-    globalScope
+    projectScope
   );
 
   return (
@@ -62,7 +62,9 @@ export default function Theme({
       <FormControlLabel
         control={
           <Checkbox
-            defaultChecked={Boolean(settings.theme?.dark?.palette?.darker)}
+            defaultChecked={Boolean(
+              (settings.theme?.dark?.palette as any)?.darker
+            )}
             onChange={(e) => {
               updateSettings({
                 theme: merge(settings.theme, {

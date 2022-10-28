@@ -19,7 +19,7 @@ import DoneIcon from "@mui/icons-material/Done";
 
 import SetupItem from "@src/components/Setup/SetupItem";
 
-import { globalScope, projectIdAtom } from "@src/atoms/globalScope";
+import { projectScope, projectIdAtom } from "@src/atoms/projectScope";
 import { CONFIG } from "@src/config/dbPaths";
 import {
   RULES_START,
@@ -44,7 +44,7 @@ export default {
 } as ISetupStep;
 
 function StepRules({ isComplete, setComplete }: ISetupStepBodyProps) {
-  const [projectId] = useAtom(projectIdAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
   const { enqueueSnackbar } = useSnackbar();
 
   const [adminRule, setAdminRule] = useState(true);

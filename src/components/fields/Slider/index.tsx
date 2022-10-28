@@ -35,5 +35,17 @@ export const config: IFieldConfig = {
     operators: filterOperators,
   },
   SideDrawerField,
+  csvImportParser: (value: string) => {
+    try {
+      const parsed = parseInt(value);
+      if (isNaN(parsed)) {
+        throw new Error("Invalid slider value!");
+      }
+      return parsed;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  },
 };
 export default config;

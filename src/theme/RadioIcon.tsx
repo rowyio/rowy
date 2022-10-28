@@ -61,6 +61,7 @@ export default function RadioIcon() {
           },
         },
       }}
+      className="radio-icon"
     />
   );
 }

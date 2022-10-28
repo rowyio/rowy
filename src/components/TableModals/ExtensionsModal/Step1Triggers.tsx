@@ -14,9 +14,9 @@ import MultiSelect from "@rowy/multiselect";
 import ColumnSelect from "@src/components/Table/ColumnSelect";
 
 import {
-  globalScope,
+  projectScope,
   compatibleRowyRunVersionAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { FieldType } from "@src/constants/fields";
 import { triggerTypes } from "./utils";
 
@@ -26,7 +26,7 @@ export default function Step1Triggers({
 }: IExtensionModalStepProps) {
   const [compatibleRowyRunVersion] = useAtom(
     compatibleRowyRunVersionAtom,
-    globalScope
+    projectScope
   );
 
   return (

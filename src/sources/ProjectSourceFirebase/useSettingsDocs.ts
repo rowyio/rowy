@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 
 import {
-  globalScope,
+  projectScope,
   projectSettingsAtom,
   updateProjectSettingsAtom,
   publicSettingsAtom,
@@ -9,7 +9,7 @@ import {
   currentUserAtom,
   userSettingsAtom,
   updateUserSettingsAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 
 import useFirestoreDocWithAtom from "@src/hooks/useFirestoreDocWithAtom";
 import { SETTINGS, PUBLIC_SETTINGS, USERS } from "@src/config/dbPaths";
@@ -19,10 +19,10 @@ import { SETTINGS, PUBLIC_SETTINGS, USERS } from "@src/config/dbPaths";
  * Also sets functions to update those documents.
  */
 export function useSettingsDocs() {
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
 
   // Store public settings in atom
-  useFirestoreDocWithAtom(publicSettingsAtom, globalScope, PUBLIC_SETTINGS, {
+  useFirestoreDocWithAtom(publicSettingsAtom, projectScope, PUBLIC_SETTINGS, {
     updateDataAtom: updatePublicSettingsAtom,
   });
 
@@ -30,7 +30,7 @@ export function useSettingsDocs() {
   // If they have no access, display AccessDenied screen via ErrorBoundary.
   useFirestoreDocWithAtom(
     projectSettingsAtom,
-    globalScope,
+    projectScope,
     currentUser ? SETTINGS : undefined,
     { updateDataAtom: updateProjectSettingsAtom }
   );
@@ -39,7 +39,7 @@ export function useSettingsDocs() {
     JSON.parse((currentUser as any)?.reloadUserInfo?.customAttributes ?? "{}")
       ?.roles ?? [];
   // Store user settings in atom when a user is signed in
-  useFirestoreDocWithAtom(userSettingsAtom, globalScope, USERS, {
+  useFirestoreDocWithAtom(userSettingsAtom, projectScope, USERS, {
     pathSegments: [currentUser?.uid],
     createIfNonExistent: currentUser
       ? {

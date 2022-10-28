@@ -4,7 +4,10 @@ import type {
   DocumentData,
   DocumentReference,
 } from "firebase/firestore";
-import { IExtension } from "@src/components/TableModals/ExtensionsModal/utils";
+import {
+  IExtension,
+  IRuntimeOptions,
+} from "@src/components/TableModals/ExtensionsModal/utils";
 import { IWebhook } from "@src/components/TableModals/WebhooksModal/utils";
 
 /**
@@ -70,6 +73,18 @@ export type TableSettings = {
 
   section: string;
   description?: string;
+  details?: string;
+  thumbnailURL?: string;
+
+  _createdBy?: {
+    displayName?: string;
+    email?: string;
+    emailVerified: boolean;
+    isAnonymous: boolean;
+    photoURL?: string;
+    uid: string;
+    timestamp: firebase.firestore.Timestamp;
+  };
 
   tableType: "primaryCollection" | "collectionGroup";
 
@@ -92,6 +107,7 @@ export type TableSchema = {
   extensionObjects?: IExtension[];
   compiledExtension?: string;
   webhooks?: IWebhook[];
+  runtimeOptions?: IRuntimeOptions;
 
   /** @deprecated Migrate to Extensions */
   sparks?: string;

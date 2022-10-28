@@ -16,20 +16,20 @@ import MultiSelect from "@rowy/multiselect";
 import Modal from "@src/components/Modal";
 
 import {
-  globalScope,
+  projectScope,
   projectRolesAtom,
   projectSettingsAtom,
   rowyRunAtom,
   rowyRunModalAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { ROUTES } from "@src/constants/routes";
 import { runRoutes } from "@src/constants/runRoutes";
 
 export default function InviteUser() {
-  const [projectRoles] = useAtom(projectRolesAtom, globalScope);
-  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
-  const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
+  const [projectRoles] = useAtom(projectRolesAtom, projectScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, projectScope);
   const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState(false);

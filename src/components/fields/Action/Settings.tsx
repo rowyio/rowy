@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { get } from "lodash-es";
 import stringify from "json-stable-stringify-without-jsonify";
 import { Link } from "react-router-dom";
@@ -32,12 +32,13 @@ import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import FormFieldSnippets from "./FormFieldSnippets";
 
 import {
-  globalScope,
+  projectScope,
   projectIdAtom,
   projectRolesAtom,
   projectSettingsAtom,
   compatibleRowyRunVersionAtom,
-} from "@src/atoms/globalScope";
+  rowyRunModalAtom,
+} from "@src/atoms/projectScope";
 import { tableScope, tableColumnsOrderedAtom } from "@src/atoms/tableScope";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 
@@ -59,14 +60,19 @@ const CodeEditor = lazy(
 );
 
 const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
-  const [projectId] = useAtom(projectIdAtom, globalScope);
-  const [roles] = useAtom(projectRolesAtom, globalScope);
-  const [settings] = useAtom(projectSettingsAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
+  const [roles] = useAtom(projectRolesAtom, projectScope);
+  const [settings] = useAtom(projectSettingsAtom, projectScope);
   const [compatibleRowyRunVersion] = useAtom(
     compatibleRowyRunVersionAtom,
-    globalScope
+    projectScope
   );
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
+
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, projectScope);
+  useEffect(() => {
+    if (!settings.rowyRunUrl) openRowyRunModal({ feature: "Action fields" });
+  }, [settings.rowyRunUrl]);
 
   // const [activeStep, setActiveStep] = useState<
   //   "requirements" | "friction" | "action" | "undo" | "customization"
@@ -88,7 +94,7 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
     Array.isArray(config.params) ? config.params : [],
     { space: 2 }
   );
-  const [codeValid, setCodeValid] = useState(true);
+  const [codeErrorMessage, setCodeErrorMessage] = useState<string | null>(null);
 
   const scriptExtraLibs = [
     [
@@ -96,14 +102,16 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
       "    /**",
       "     * actionParams are provided by dialog popup form",
       "     */",
-      (config.params ?? []).filter(Boolean).map((param: any) => {
-        const validationKeys = Object.keys(param.validation ?? {});
-        if (validationKeys.includes("string")) {
-          return `static ${param.name}: string`;
-        } else if (validationKeys.includes("array")) {
-          return `static ${param.name}: any[]`;
-        } else return `static ${param.name}: any`;
-      }),
+      (Array.isArray(config.params) ? config.params : [])
+        .filter(Boolean)
+        .map((param: any) => {
+          const validationKeys = Object.keys(param.validation ?? {});
+          if (validationKeys.includes("string")) {
+            return `static ${param.name}: string`;
+          } else if (validationKeys.includes("array")) {
+            return `static ${param.name}: any[]`;
+          } else return `static ${param.name}: any`;
+        }),
       "}",
     ].join("\n"),
     actionDefs,
@@ -256,25 +264,25 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
                       value={formattedParamsJson}
                       onChange={(v) => {
                         try {
-                          if (v) {
-                            const parsed = JSON.parse(v);
+                          const parsed = JSON.parse(v ?? "");
+                          if (Array.isArray(parsed)) {
                             onChange("params")(parsed);
+                            setCodeErrorMessage(null);
+                          } else {
+                            setCodeErrorMessage("Form fields must be array");
                           }
                         } catch (e) {
                           console.log(`Failed to parse JSON: ${e}`);
-                          setCodeValid(false);
+                          setCodeErrorMessage("Invalid JSON");
                         }
                       }}
-                      onValidStatusUpdate={({ isValid }) =>
-                        setCodeValid(isValid)
-                      }
-                      error={!codeValid}
+                      error={!!codeErrorMessage}
                     />
                   </Suspense>
 
-                  {!codeValid && (
+                  {codeErrorMessage && (
                     <FormHelperText error variant="filled">
-                      Invalid JSON
+                      {codeErrorMessage}
                     </FormHelperText>
                   )}
                 </FormControl>
@@ -406,7 +414,16 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
                     </Suspense>
                     <CodeEditorHelper
                       docLink={WIKI_LINKS.fieldTypesAction + "#script"}
-                      additionalVariables={[]}
+                      additionalVariables={[
+                        {
+                          key: "row",
+                          description: `row has the value of doc.data() it has type definitions using this table's schema, but you can access any field in the document.`,
+                        },
+                        {
+                          key: "ref",
+                          description: `reference object that represents the reference to the current row in firestore db (ie: doc.ref).`,
+                        },
+                      ]}
                     />
                   </FormControl>
 
@@ -522,7 +539,16 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
                   </Suspense>
                   <CodeEditorHelper
                     docLink={WIKI_LINKS.fieldTypesAction + "#script"}
-                    additionalVariables={[]}
+                    additionalVariables={[
+                      {
+                        key: "row",
+                        description: `row has the value of doc.data() it has type definitions using this table's schema, but you can access any field in the document.`,
+                      },
+                      {
+                        key: "ref",
+                        description: `reference object that represents the reference to the current row in firestore db (ie: doc.ref).`,
+                      },
+                    ]}
                   />
                 </FormControl>
               </Stack>
@@ -533,6 +559,32 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
           title: "Customization",
           content: (
             <>
+            <Stack>
+            <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={config.customName?.enabled}
+                    onChange={(e) =>
+                      onChange("customName.enabled")(e.target.checked)
+                    }
+                    name="customName.enabled"
+                  />
+                }
+                label="Customize label for action"
+                style={{ marginLeft: -11 }}
+              />
+              {config.customName?.enabled && (
+                <TextField
+                id="customName.actionName"
+                value={get(config, "customName.actionName")}
+                onChange={(e) =>
+                  onChange("customName.actionName")(e.target.value)
+                }
+                label="Action name:"
+                        className="labelHorizontal"
+                        inputProps={{ style: { width: "10ch" } }}
+                ></TextField>
+              )}
               <FormControlLabel
                 control={
                   <Checkbox
@@ -546,7 +598,7 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
                 label="Customize button icons with emoji"
                 style={{ marginLeft: -11 }}
               />
-
+              </Stack>
               {config.customIcons?.enabled && (
                 <Grid container spacing={2} sx={{ mt: { xs: 0, sm: -1 } }}>
                   <Grid item xs={12} sm={true}>
