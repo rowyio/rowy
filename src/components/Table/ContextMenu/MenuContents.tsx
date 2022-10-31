@@ -62,182 +62,188 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
   if (!tableSchema.columns || !selectedCell) return null;
 
   const selectedColumn = tableSchema.columns[selectedCell.columnKey];
-  const menuActions = getFieldProp("contextMenuActions", selectedColumn.type);
+  const row = find(tableRows, ["_rowy_ref.path", selectedCell.path]);
+
+  if (!row) return null;
 
   const actionGroups: IContextMenuItem[][] = [];
-  const row = find(tableRows, ["_rowy_ref.path", selectedCell.path]);
-  // Field type actions
-  const fieldTypeActions = menuActions
-    ? menuActions(selectedCell, onClose)
-    : [];
-  if (fieldTypeActions.length > 0) actionGroups.push(fieldTypeActions);
 
-  if (selectedColumn.type === FieldType.derivative) {
-    const renderedFieldMenuActions = getFieldProp(
-      "contextMenuActions",
-      selectedColumn.config?.renderFieldType
-    );
-    if (renderedFieldMenuActions) {
-      actionGroups.push(renderedFieldMenuActions(selectedCell, onClose));
-    }
-  }
-
-  // Cell actions
-  // TODO: Add copy and paste here
-  const cellValue = row?.[selectedCell.columnKey];
-  const handleClearValue = () =>
-    updateField({
-      path: selectedCell.path,
-      fieldName: selectedColumn.fieldName,
-      value: null,
-      deleteField: true,
+  const handleDuplicate = () => {
+    addRow({
+      row,
+      setId: addRowIdType === "custom" ? "decrement" : addRowIdType,
     });
-  const columnFilters = getFieldProp("filter", selectedColumn.type);
-  const handleFilterValue = () => {
-    openTableFiltersPopover({
-      defaultQuery: {
-        key: selectedColumn.fieldName,
-        operator: columnFilters!.operators[0]?.value || "==",
-        value: cellValue,
-      },
-    });
-    onClose();
   };
-  const cellActions = [
+  const handleDelete = () => deleteRow(row._rowy_ref.path);
+  const rowActions: IContextMenuItem[] = [
     {
-      label: altPress ? "Clear value" : "Clear value…",
-      color: "error",
-      icon: <ClearIcon />,
+      label: "Copy ID",
+      icon: <CopyIcon />,
+      onClick: () => {
+        navigator.clipboard.writeText(row._rowy_ref.id);
+        onClose();
+      },
+    },
+    {
+      label: "Copy path",
+      icon: <CopyIcon />,
+      onClick: () => {
+        navigator.clipboard.writeText(row._rowy_ref.path);
+        onClose();
+      },
+    },
+    {
+      label: "Open in Firebase Console",
+      icon: <OpenIcon />,
+      onClick: () => {
+        window.open(
+          `https://console.firebase.google.com/project/${projectId}/firestore/data/~2F${row._rowy_ref.path.replace(
+            /\//g,
+            "~2F"
+          )}`
+        );
+        onClose();
+      },
+    },
+    { label: "Divider", divider: true },
+    {
+      label: "Duplicate",
+      icon: <DuplicateIcon />,
       disabled:
-        selectedColumn.editable === false ||
-        !row ||
-        cellValue ||
-        getFieldProp("group", selectedColumn.type) === "Auditing",
+        tableSettings.tableType === "collectionGroup" ||
+        (!userRoles.includes("ADMIN") && tableSettings.readOnly),
       onClick: altPress
-        ? handleClearValue
+        ? handleDuplicate
         : () => {
             confirm({
-              title: "Clear cell value?",
-              body: "The cell’s value cannot be recovered after",
-              confirm: "Delete",
-              confirmColor: "error",
-              handleConfirm: handleClearValue,
+              title: "Duplicate row?",
+              body: (
+                <>
+                  Row path:
+                  <br />
+                  <code style={{ userSelect: "all", wordBreak: "break-all" }}>
+                    {row._rowy_ref.path}
+                  </code>
+                </>
+              ),
+              confirm: "Duplicate",
+              handleConfirm: handleDuplicate,
             });
             onClose();
           },
     },
     {
-      label: "Filter value",
-      icon: <FilterIcon />,
-      disabled: !columnFilters || cellValue === undefined,
-      onClick: handleFilterValue,
+      label: altPress ? "Delete" : "Delete…",
+      color: "error",
+      icon: <DeleteIcon />,
+      disabled: !userRoles.includes("ADMIN") && tableSettings.readOnly,
+      onClick: altPress
+        ? handleDelete
+        : () => {
+            confirm({
+              title: "Delete row?",
+              body: (
+                <>
+                  Row path:
+                  <br />
+                  <code style={{ userSelect: "all", wordBreak: "break-all" }}>
+                    {row._rowy_ref.path}
+                  </code>
+                </>
+              ),
+              confirm: "Delete",
+              confirmColor: "error",
+              handleConfirm: handleDelete,
+            });
+            onClose();
+          },
     },
   ];
-  actionGroups.push(cellActions);
 
-  // Row actions
-  if (row) {
-    const handleDuplicate = () => {
-      addRow({
-        row,
-        setId: addRowIdType === "custom" ? "decrement" : addRowIdType,
+  if (selectedColumn) {
+    const menuActions = getFieldProp(
+      "contextMenuActions",
+      selectedColumn?.type
+    );
+
+    // Field type actions
+    const fieldTypeActions = menuActions
+      ? menuActions(selectedCell, onClose)
+      : [];
+    if (fieldTypeActions.length > 0) actionGroups.push(fieldTypeActions);
+
+    if (selectedColumn?.type === FieldType.derivative) {
+      const renderedFieldMenuActions = getFieldProp(
+        "contextMenuActions",
+        selectedColumn.config?.renderFieldType
+      );
+      if (renderedFieldMenuActions) {
+        actionGroups.push(renderedFieldMenuActions(selectedCell, onClose));
+      }
+    }
+
+    // Cell actions
+    // TODO: Add copy and paste here
+    const cellValue = row?.[selectedCell.columnKey];
+    const handleClearValue = () =>
+      updateField({
+        path: selectedCell.path,
+        fieldName: selectedColumn.fieldName,
+        value: null,
+        deleteField: true,
       });
+    const columnFilters = getFieldProp("filter", selectedColumn?.type);
+    const handleFilterValue = () => {
+      openTableFiltersPopover({
+        defaultQuery: {
+          key: selectedColumn.fieldName,
+          operator: columnFilters!.operators[0]?.value || "==",
+          value: cellValue,
+        },
+      });
+      onClose();
     };
-    const handleDelete = () => deleteRow(row._rowy_ref.path);
-    const rowActions = [
+    const cellActions = [
+      {
+        label: altPress ? "Clear value" : "Clear value…",
+        color: "error",
+        icon: <ClearIcon />,
+        disabled:
+          selectedColumn?.editable === false ||
+          !row ||
+          cellValue ||
+          getFieldProp("group", selectedColumn?.type) === "Auditing",
+        onClick: altPress
+          ? handleClearValue
+          : () => {
+              confirm({
+                title: "Clear cell value?",
+                body: "The cell’s value cannot be recovered after",
+                confirm: "Delete",
+                confirmColor: "error",
+                handleConfirm: handleClearValue,
+              });
+              onClose();
+            },
+      },
+      {
+        label: "Filter value",
+        icon: <FilterIcon />,
+        disabled: !columnFilters || cellValue === undefined,
+        onClick: handleFilterValue,
+      },
+    ];
+    actionGroups.push(cellActions);
+
+    // Row actions as sub-menu
+    actionGroups.push([
       {
         label: "Row",
         icon: <RowIcon />,
-        subItems: [
-          {
-            label: "Copy ID",
-            icon: <CopyIcon />,
-            onClick: () => {
-              navigator.clipboard.writeText(row._rowy_ref.id);
-              onClose();
-            },
-          },
-          {
-            label: "Copy path",
-            icon: <CopyIcon />,
-            onClick: () => {
-              navigator.clipboard.writeText(row._rowy_ref.path);
-              onClose();
-            },
-          },
-          {
-            label: "Open in Firebase Console",
-            icon: <OpenIcon />,
-            onClick: () => {
-              window.open(
-                `https://console.firebase.google.com/project/${projectId}/firestore/data/~2F${row._rowy_ref.path.replace(
-                  /\//g,
-                  "~2F"
-                )}`
-              );
-              onClose();
-            },
-          },
-          { label: "Divider", divider: true },
-          {
-            label: "Duplicate",
-            icon: <DuplicateIcon />,
-            disabled:
-              tableSettings.tableType === "collectionGroup" ||
-              (!userRoles.includes("ADMIN") && tableSettings.readOnly),
-            onClick: altPress
-              ? handleDuplicate
-              : () => {
-                  confirm({
-                    title: "Duplicate row?",
-                    body: (
-                      <>
-                        Row path:
-                        <br />
-                        <code
-                          style={{ userSelect: "all", wordBreak: "break-all" }}
-                        >
-                          {row._rowy_ref.path}
-                        </code>
-                      </>
-                    ),
-                    confirm: "Duplicate",
-                    handleConfirm: handleDuplicate,
-                  });
-                  onClose();
-                },
-          },
-          {
-            label: altPress ? "Delete" : "Delete…",
-            color: "error",
-            icon: <DeleteIcon />,
-            disabled: !userRoles.includes("ADMIN") && tableSettings.readOnly,
-            onClick: altPress
-              ? handleDelete
-              : () => {
-                  confirm({
-                    title: "Delete row?",
-                    body: (
-                      <>
-                        Row path:
-                        <br />
-                        <code
-                          style={{ userSelect: "all", wordBreak: "break-all" }}
-                        >
-                          {row._rowy_ref.path}
-                        </code>
-                      </>
-                    ),
-                    confirm: "Delete",
-                    confirmColor: "error",
-                    handleConfirm: handleDelete,
-                  });
-                  onClose();
-                },
-          },
-        ],
+        subItems: rowActions,
       },
-    ];
+    ]);
+  } else {
     actionGroups.push(rowActions);
   }
 

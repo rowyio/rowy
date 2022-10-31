@@ -19,12 +19,11 @@ import StyledTable from "./Styled/StyledTable";
 import StyledRow from "./Styled/StyledRow";
 import ColumnHeader from "./ColumnHeader";
 import StyledResizer from "./Styled/StyledResizer";
+import FinalColumnHeader from "./FinalColumn/FinalColumnHeader";
+import FinalColumn from "./FinalColumn/FinalColumn";
 import OutOfOrderIndicator from "./OutOfOrderIndicator";
 import ContextMenu from "./ContextMenu";
 
-import FinalColumnHeader from "./FinalColumnHeader";
-import FinalColumn from "./formatters/FinalColumn";
-// import TableRow from "./TableRow";
 import EmptyState from "@src/components/EmptyState";
 // import BulkActions from "./BulkActions";
 import AddRow from "@src/components/TableToolbar/AddRow";
@@ -133,7 +132,7 @@ export default function TableComponent() {
       _columns.push(
         columnHelper.display({
           id: "_rowy_column_actions",
-          header: () => "Actions",
+          cell: FinalColumn as any,
           // cell: () => (
           //   <>
           //     <IconButton>M</IconButton>
@@ -287,12 +286,26 @@ export default function TableComponent() {
                     ref={provided.innerRef}
                   >
                     {headerGroup.headers.map((header) => {
-                      if (!header.column.columnDef.meta) return null;
-
                       const isSelectedCell =
                         (!selectedCell && header.index === 0) ||
                         (selectedCell?.path === "_rowy_header" &&
                           selectedCell?.columnKey === header.id);
+
+                      if (header.id === "_rowy_column_actions")
+                        return (
+                          <FinalColumnHeader
+                            key={header.id}
+                            data-row-id={"_rowy_header"}
+                            data-col-id={header.id}
+                            tabIndex={isSelectedCell ? 0 : -1}
+                            focusInsideCell={isSelectedCell && focusInsideCell}
+                            aria-colindex={header.index + 1}
+                            aria-readonly={!canEditColumn}
+                            aria-selected={isSelectedCell}
+                          />
+                        );
+
+                      if (!header.column.columnDef.meta) return null;
 
                       return (
                         <Draggable
@@ -477,10 +490,10 @@ export default function TableComponent() {
                         className="cell-contents"
                         style={{ height: tableSchema.rowHeight }}
                       >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+                        {flexRender(cell.column.columnDef.cell, {
+                          ...cell.getContext(),
+                          focusInsideCell: isSelectedCell && focusInsideCell,
+                        })}
                       </div>
                       {/* <button
                         tabIndex={isSelectedCell && focusInsideCell ? 0 : -1}

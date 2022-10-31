@@ -1,9 +1,10 @@
 import { useAtom, useSetAtom } from "jotai";
-import type { FormatterProps } from "react-data-grid";
+import type { CellContext } from "@tanstack/table-core";
 
 import { Stack, Tooltip, IconButton, alpha } from "@mui/material";
 import { CopyCells as CopyCellsIcon } from "@src/assets/icons";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import MenuIcon from "@mui/icons-material/MoreHoriz";
 
 import {
   projectScope,
@@ -17,10 +18,14 @@ import {
   tableSettingsAtom,
   addRowAtom,
   deleteRowAtom,
+  contextMenuTargetAtom,
 } from "@src/atoms/tableScope";
 import { TableRow } from "@src/types/table";
 
-export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
+export default function FinalColumn({
+  row,
+  focusInsideCell,
+}: CellContext<TableRow, any> & { focusInsideCell: boolean }) {
   const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [addRowIdType] = useAtom(tableAddRowIdTypeAtom, projectScope);
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
@@ -28,12 +33,13 @@ export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const addRow = useSetAtom(addRowAtom, tableScope);
   const deleteRow = useSetAtom(deleteRowAtom, tableScope);
+  const setContextMenuTarget = useSetAtom(contextMenuTargetAtom, tableScope);
 
   const [altPress] = useAtom(altPressAtom, projectScope);
-  const handleDelete = () => deleteRow(row._rowy_ref.path);
+  const handleDelete = () => deleteRow(row.original._rowy_ref.path);
   const handleDuplicate = () => {
     addRow({
-      row,
+      row: row.original,
       setId: addRowIdType === "custom" ? "decrement" : addRowIdType,
     });
   };
@@ -42,7 +48,26 @@ export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
     return null;
 
   return (
-    <Stack direction="row" spacing={0.5}>
+    <Stack
+      direction="row"
+      alignItems="center"
+      style={{ height: "100%" }}
+      gap={0.5}
+    >
+      <Tooltip title="Row menu">
+        <IconButton
+          size="small"
+          color="inherit"
+          onClick={(e) => {
+            setContextMenuTarget(e.target as HTMLElement);
+          }}
+          className="row-hover-iconButton"
+          tabIndex={focusInsideCell ? 0 : -1}
+        >
+          <MenuIcon />
+        </IconButton>
+      </Tooltip>
+
       <Tooltip title="Duplicate row">
         <IconButton
           size="small"
@@ -61,7 +86,7 @@ export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
                         <code
                           style={{ userSelect: "all", wordBreak: "break-all" }}
                         >
-                          {row._rowy_ref.path}
+                          {row.original._rowy_ref.path}
                         </code>
                       </>
                     ),
@@ -70,8 +95,8 @@ export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
                   });
                 }
           }
-          aria-label="Duplicate row"
           className="row-hover-iconButton"
+          tabIndex={focusInsideCell ? 0 : -1}
         >
           <CopyCellsIcon />
         </IconButton>
@@ -94,7 +119,7 @@ export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
                         <code
                           style={{ userSelect: "all", wordBreak: "break-all" }}
                         >
-                          {row._rowy_ref.path}
+                          {row.original._rowy_ref.path}
                         </code>
                       </>
                     ),
@@ -104,19 +129,20 @@ export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
                   });
                 }
           }
-          aria-label={`Delete row${altPress ? "" : "…"}`}
           className="row-hover-iconButton"
+          tabIndex={focusInsideCell ? 0 : -1}
           sx={{
-            ".rdg-row:hover .row-hover-iconButton&&": {
-              color: "error.main",
-              backgroundColor: (theme) =>
-                alpha(
-                  theme.palette.error.main,
-                  theme.palette.action.hoverOpacity * 2
-                ),
-            },
+            "[role='row']:hover .row-hover-iconButton&&, .row-hover-iconButton&&:focus":
+              {
+                color: "error.main",
+                backgroundColor: (theme) =>
+                  alpha(
+                    theme.palette.error.main,
+                    theme.palette.action.hoverOpacity * 2
+                  ),
+              },
           }}
-          disabled={!row._rowy_ref.path}
+          disabled={!row.original._rowy_ref.path}
         >
           <DeleteIcon />
         </IconButton>

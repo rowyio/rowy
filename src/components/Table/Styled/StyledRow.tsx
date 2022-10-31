@@ -1,4 +1,4 @@
-import { styled } from "@mui/material";
+import { styled, alpha } from "@mui/material";
 
 import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
 
@@ -30,6 +30,20 @@ export const StyledRow = styled("div")(({ theme }) => ({
       borderBottomRightRadius: theme.shape.borderRadius,
     },
   },
+
+  "& .MuiIconButton-root.row-hover-iconButton, .MuiIconButton-root.row-hover-iconButton:focus":
+    {
+      color: theme.palette.text.disabled,
+      transitionDuration: "0s",
+    },
+  "&:hover .MuiIconButton-root.row-hover-iconButton, .MuiIconButton-root.row-hover-iconButton:focus":
+    {
+      color: theme.palette.text.primary,
+      backgroundColor: alpha(
+        theme.palette.action.hover,
+        theme.palette.action.hoverOpacity * 1.5
+      ),
+    },
 }));
 StyledRow.displayName = "StyledRow";
 

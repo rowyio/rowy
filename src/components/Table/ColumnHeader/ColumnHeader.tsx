@@ -96,6 +96,7 @@ export const ColumnHeader = forwardRef(function ColumnHeader(
           "& svg, & button": { display: "block", zIndex: 1 },
           border: (theme) => `1px solid ${theme.palette.divider}`,
 
+          backgroundColor: "background.default",
           color: "text.secondary",
           transition: (theme) =>
             theme.transitions.create("color", {
@@ -112,7 +113,6 @@ export const ColumnHeader = forwardRef(function ColumnHeader(
         },
         ...spreadSx(props.sx),
       ]}
-      className="column-header"
     >
       {width > 140 && (
         <Tooltip
