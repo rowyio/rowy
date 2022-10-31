@@ -109,7 +109,7 @@ export default function SideDrawer({
   //   }
   // }, [cell]);
 
-  const disabled = !open && !cell; // && !urlDocState.doc;
+  const disabled = (!open && !cell) || selectedCellRowIndex <= -1; // && !urlDocState.doc;
   useEffect(() => {
     if (disabled && setOpen) setOpen(false);
   }, [disabled, setOpen]);
