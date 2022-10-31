@@ -17,6 +17,8 @@ import {
 import { TableRow } from "@src/types/table";
 import { Column } from "@tanstack/react-table";
 
+import { MIN_COL_WIDTH } from "./Table";
+
 /**
  * Virtualizes rows and columns,
  * and scrolls to selected cell
@@ -60,7 +62,11 @@ export function useVirtualization(
     paddingStart: TABLE_PADDING,
     paddingEnd: TABLE_PADDING,
     estimateSize: useCallback(
-      (index: number) => leafColumns[index].columnDef.size || DEFAULT_COL_WIDTH,
+      (index: number) =>
+        Math.max(
+          MIN_COL_WIDTH,
+          leafColumns[index].columnDef.size || DEFAULT_COL_WIDTH
+        ),
       [leafColumns]
     ),
   });
