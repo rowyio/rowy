@@ -9,6 +9,7 @@ export const StyledResizer = styled("div", {
   shouldForwardProp: (prop) => prop !== "isResizing",
 })<IStyledResizerProps>(({ theme, isResizing }) => ({
   position: "absolute",
+  zIndex: 5,
   right: 0,
   top: 0,
   height: "100%",
@@ -39,7 +40,7 @@ export const StyledResizer = styled("div", {
     height: "50%",
     width: 4,
     borderRadius: 2,
-    marginRight: 3,
+    marginRight: 2,
 
     background: isResizing
       ? theme.palette.primary.main
@@ -51,3 +52,5 @@ export const StyledResizer = styled("div", {
   },
 }));
 StyledResizer.displayName = "StyledResizer";
+
+export default StyledResizer;

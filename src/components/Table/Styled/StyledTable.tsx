@@ -31,3 +31,5 @@ export const StyledTable = styled("div")(({ theme }) => ({
   },
 }));
 StyledTable.displayName = "StyledTable";
+
+export default StyledTable;

@@ -2,28 +2,26 @@ import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { useThrottledCallback } from "use-debounce";
 import {
-  DragDropContext,
-  DropResult,
-  Droppable,
-  Draggable,
-} from "react-beautiful-dnd";
-
-import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import {
+  DragDropContext,
+  DropResult,
+  Droppable,
+  Draggable,
+} from "react-beautiful-dnd";
+import { Portal } from "@mui/material";
 
-import { StyledTable } from "./Styled/StyledTable";
-import { StyledRow } from "./Styled/StyledRow";
-import { StyledResizer } from "./Styled/StyledResizer";
-import ColumnHeaderComponent from "./Column";
+import StyledTable from "./Styled/StyledTable";
+import StyledRow from "./Styled/StyledRow";
+import ColumnHeader from "./ColumnHeader";
+import StyledResizer from "./Styled/StyledResizer";
 import OutOfOrderIndicator from "./OutOfOrderIndicator";
+import ContextMenu from "./ContextMenu";
 
-import { IconButton, Portal } from "@mui/material";
-
-import ColumnHeader, { COLUMN_HEADER_HEIGHT } from "./ColumnHeader";
 import FinalColumnHeader from "./FinalColumnHeader";
 import FinalColumn from "./formatters/FinalColumn";
 // import TableRow from "./TableRow";
@@ -31,8 +29,6 @@ import EmptyState from "@src/components/EmptyState";
 // import BulkActions from "./BulkActions";
 import AddRow from "@src/components/TableToolbar/AddRow";
 import { AddRow as AddRowIcon } from "@src/assets/icons";
-import Loading from "@src/components/Loading";
-import ContextMenu from "./ContextMenu";
 
 import {
   projectScope,
@@ -291,6 +287,8 @@ export default function TableComponent() {
                     ref={provided.innerRef}
                   >
                     {headerGroup.headers.map((header) => {
+                      if (!header.column.columnDef.meta) return null;
+
                       const isSelectedCell =
                         (!selectedCell && header.index === 0) ||
                         (selectedCell?.path === "_rowy_header" &&
@@ -305,7 +303,7 @@ export default function TableComponent() {
                           disableInteractiveElementBlocking
                         >
                           {(provided, snapshot) => (
-                            <ColumnHeaderComponent
+                            <ColumnHeader
                               key={header.id}
                               data-row-id={"_rowy_header"}
                               data-col-id={header.id}
@@ -317,16 +315,11 @@ export default function TableComponent() {
                               }
                               ref={provided.innerRef}
                               {...provided.draggableProps}
-                              role="columnheader"
                               tabIndex={isSelectedCell ? 0 : -1}
                               aria-colindex={header.index + 1}
                               aria-readonly={!canEditColumn}
-                              // TODO: aria-sort={"none" | "ascending" | "descending" | "other" | undefined}
                               aria-selected={isSelectedCell}
-                              label={
-                                header.column.columnDef.meta?.name || header.id
-                              }
-                              type={header.column.columnDef.meta?.type}
+                              column={header.column.columnDef.meta!}
                               style={{
                                 width: header.getSize(),
                                 left: header.column.getIsPinned()
@@ -335,6 +328,7 @@ export default function TableComponent() {
                                   : undefined,
                                 ...provided.draggableProps.style,
                               }}
+                              width={header.getSize()}
                               sx={[
                                 snapshot.isDragging
                                   ? {}
@@ -347,6 +341,9 @@ export default function TableComponent() {
                                 });
                                 (e.target as HTMLDivElement).focus();
                               }}
+                              focusInsideCell={
+                                isSelectedCell && focusInsideCell
+                              }
                             >
                               <div
                                 {...provided.dragHandleProps}
@@ -360,7 +357,11 @@ export default function TableComponent() {
                                       ]
                                     : undefined
                                 }
-                                style={{ position: "absolute", inset: 0 }}
+                                style={{
+                                  position: "absolute",
+                                  inset: 0,
+                                  zIndex: 0,
+                                }}
                               />
 
                               {header.column.getCanResize() && (
@@ -370,7 +371,7 @@ export default function TableComponent() {
                                   onTouchStart={header.getResizeHandler()}
                                 />
                               )}
-                            </ColumnHeaderComponent>
+                            </ColumnHeader>
                           )}
                         </Draggable>
                       );

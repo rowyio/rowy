@@ -32,3 +32,5 @@ export const StyledRow = styled("div")(({ theme }) => ({
   },
 }));
 StyledRow.displayName = "StyledRow";
+
+export default StyledRow;
