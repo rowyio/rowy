@@ -57,7 +57,7 @@ export function ErrorFallbackContents({
                 .filter(Boolean)
                 .join(": ")
                 .replace(/\n/g, " "),
-              body: "👉 **Please describe how to reproduce this bug here.**",
+              body: "👉 **Please describe the steps that you took that led to this bug.**",
             }).toString()
           }
           target="_blank"
