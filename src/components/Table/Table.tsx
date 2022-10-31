@@ -340,6 +340,7 @@ export default function TableComponent() {
                                     TABLE_PADDING
                                   : undefined,
                                 ...provided.draggableProps.style,
+                                zIndex: header.column.getIsPinned() ? 11 : 10,
                               }}
                               width={header.getSize()}
                               sx={[
