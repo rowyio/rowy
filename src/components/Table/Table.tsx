@@ -51,6 +51,7 @@ import {
   updateColumnAtom,
   updateFieldAtom,
   selectedCellAtom,
+  contextMenuTargetAtom,
 } from "@src/atoms/tableScope";
 import { COLLECTION_PAGE_SIZE } from "@src/config/db";
 
@@ -89,6 +90,7 @@ export default function TableComponent() {
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
   const [tablePage, setTablePage] = useAtom(tablePageAtom, tableScope);
   const [selectedCell, setSelectedCell] = useAtom(selectedCellAtom, tableScope);
+  const setContextMenuTarget = useSetAtom(contextMenuTargetAtom, tableScope);
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
@@ -460,6 +462,15 @@ export default function TableComponent() {
                         });
                         (e.target as HTMLDivElement).focus();
                       }}
+                      onContextMenu={(e) => {
+                        e.preventDefault();
+                        setSelectedCell({
+                          path: row.original._rowy_ref.path,
+                          columnKey: cell.column.id,
+                        });
+                        (e.target as HTMLDivElement).focus();
+                        setContextMenuTarget(e.target as HTMLElement);
+                      }}
                     >
                       <div
                         className="cell-contents"
@@ -500,6 +511,8 @@ export default function TableComponent() {
           Press Enter to edit.
         </div>
       </Portal>
+
+      <ContextMenu />
     </div>
   );
 }
