@@ -6,7 +6,7 @@ import ColorIcon from "@mui/icons-material/Colorize";
 import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
 import InlineCell from "./InlineCell";
 import NullEditor from "@src/components/Table/editors/NullEditor";
-import { filterOperators } from "./filters";
+import { filterOperators, valueFormatter } from "./filters";
 
 const PopoverCell = lazy(
   () => import("./PopoverCell" /* webpackChunkName: "PopoverCell-Color" */)
@@ -32,7 +32,8 @@ export const config: IFieldConfig = {
   TableEditor: NullEditor as any,
   SideDrawerField,
   filter: {
-    operators: filterOperators
+    operators: filterOperators,
+    valueFormatter
   },
 };
 export default config;
