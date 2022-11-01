@@ -26,17 +26,9 @@ import ContextMenu from "./ContextMenu";
 
 import EmptyState from "@src/components/EmptyState";
 // import BulkActions from "./BulkActions";
-import AddRow from "@src/components/TableToolbar/AddRow";
-import { AddRow as AddRowIcon } from "@src/assets/icons";
 
 import {
-  projectScope,
-  userRolesAtom,
-  userSettingsAtom,
-} from "@src/atoms/projectScope";
-import {
   tableScope,
-  tableIdAtom,
   tableSettingsAtom,
   tableSchemaAtom,
   tableColumnsOrderedAtom,
@@ -52,7 +44,6 @@ import { COLLECTION_PAGE_SIZE } from "@src/config/db";
 
 import { getFieldType, getFieldProp } from "@src/components/fields";
 import { FieldType } from "@src/constants/fields";
-import { formatSubTableName } from "@src/utils/table";
 import { TableRow, ColumnConfig } from "@src/types/table";
 import { StyledCell } from "./Styled/StyledCell";
 import { useKeyboardNavigation } from "./useKeyboardNavigation";
@@ -73,11 +64,21 @@ declare module "@tanstack/table-core" {
 const columnHelper = createColumnHelper<TableRow>();
 const getRowId = (row: TableRow) => row._rowy_ref.path || row._rowy_ref.id;
 
-export default function TableComponent() {
-  const [userRoles] = useAtom(userRolesAtom, projectScope);
-  const [userSettings] = useAtom(userSettingsAtom, projectScope);
+export interface ITableProps {
+  canAddColumn: boolean;
+  canEditColumn: boolean;
+  canEditCell: boolean;
+  hiddenColumns?: string[];
+  emptyState?: React.ReactNode;
+}
 
-  const [tableId] = useAtom(tableIdAtom, tableScope);
+export default function Table({
+  canAddColumn,
+  canEditColumn,
+  canEditCell,
+  hiddenColumns,
+  emptyState,
+}: ITableProps) {
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
@@ -92,9 +93,6 @@ export default function TableComponent() {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
-
-  const canAddColumn = userRoles.includes("ADMIN");
-  const canEditColumn = userRoles.includes("ADMIN");
 
   // Get column defs from table schema
   // Also add end column for admins
@@ -124,7 +122,6 @@ export default function TableComponent() {
           //   tableSettings.readOnly && !userRoles.includes("ADMIN")
           //     ? false
           //     : columnConfig.editable ?? true,
-          // width: columnConfig.width ?? DEFAULT_COL_WIDTH,
         })
       );
 
@@ -133,13 +130,6 @@ export default function TableComponent() {
         columnHelper.display({
           id: "_rowy_column_actions",
           cell: FinalColumn as any,
-          // cell: () => (
-          //   <>
-          //     <IconButton>M</IconButton>
-          //     <IconButton>D</IconButton>
-          //     <IconButton>X</IconButton>
-          //   </>
-          // ),
         })
       );
     }
@@ -147,14 +137,11 @@ export default function TableComponent() {
     return _columns;
   }, [tableColumnsOrdered, canAddColumn, tableSettings.readOnly]);
 
-  // Get user’s hidden columns from user document
-  const userDocHiddenFields =
-    userSettings.tables?.[formatSubTableName(tableId)]?.hiddenFields;
-  // Memoize into a VisibilityState
+  // Get user’s hidden columns from props and memoize into a VisibilityState
   const columnVisibility = useMemo(() => {
-    if (!Array.isArray(userDocHiddenFields)) return {};
-    return userDocHiddenFields.reduce((a, c) => ({ ...a, [c]: false }), {});
-  }, [userDocHiddenFields]);
+    if (!Array.isArray(hiddenColumns)) return {};
+    return hiddenColumns.reduce((a, c) => ({ ...a, [c]: false }), {});
+  }, [hiddenColumns]);
 
   // Get frozen columns
   const columnPinning = useMemo(
@@ -197,11 +184,7 @@ export default function TableComponent() {
   });
   const {
     virtualRows,
-    // totalHeight,
-    // scrollToRowIndex,
     virtualCols,
-    // totalWidth,
-    // scrollToColIndex,
     paddingTop,
     paddingBottom,
     paddingLeft,
@@ -518,6 +501,9 @@ export default function TableComponent() {
           {paddingBottom > 0 && (
             <div role="presentation" style={{ height: `${paddingBottom}px` }} />
           )}
+
+          {tableRows.length === 0 &&
+            (emptyState ?? <EmptyState sx={{ py: 8 }} />)}
         </div>
       </StyledTable>
 

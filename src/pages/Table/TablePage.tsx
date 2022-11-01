@@ -18,9 +18,19 @@ import SideDrawer from "@src/components/SideDrawer";
 import ColumnMenu from "@src/components/ColumnMenu";
 import ColumnModals from "@src/components/ColumnModals";
 import TableModals from "@src/components/TableModals";
+import EmptyState from "@src/components/EmptyState";
+import AddRow from "@src/components/TableToolbar/AddRow";
+import { AddRow as AddRowIcon } from "@src/assets/icons";
 
 import {
+  projectScope,
+  userRolesAtom,
+  userSettingsAtom,
+} from "@src/atoms/projectScope";
+import {
   tableScope,
+  tableIdAtom,
+  tableSettingsAtom,
   tableSchemaAtom,
   columnModalAtom,
   tableModalAtom,
@@ -30,10 +40,8 @@ import ActionParamsProvider from "@src/components/fields/Action/FormDialog/Provi
 import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
-import {
-  DRAWER_COLLAPSED_WIDTH,
-  DRAWER_WIDTH,
-} from "@src/components/SideDrawer";
+import { DRAWER_COLLAPSED_WIDTH } from "@src/components/SideDrawer";
+import { formatSubTableName } from "@src/utils/table";
 
 // prettier-ignore
 const BuildLogsSnack = lazy(() => import("@src/components/TableModals/CloudLogsModal/BuildLogs/BuildLogsSnack" /* webpackChunkName: "TableModals-BuildLogsSnack" */));
@@ -53,8 +61,18 @@ export default function TablePage({
   disableModals,
   disableSideDrawer,
 }: ITablePageProps) {
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
+  const [tableId] = useAtom(tableIdAtom, tableScope);
+  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const snackLogContext = useSnackLogContext();
+
+  // Set permissions here so we can pass them to the Table component, which
+  // shouldn’t access projectScope at all, to separate concerns.
+  const canAddColumn = userRoles.includes("ADMIN");
+  const canEditColumn = userRoles.includes("ADMIN");
+  const canEditCell = userRoles.includes("ADMIN") || !tableSettings.readOnly;
 
   // Warn user about leaving when they have a table modal open
   useBeforeUnload(columnModalAtom, tableScope);
@@ -104,6 +122,7 @@ export default function TablePage({
             sx={{
               height: `calc(100vh - ${TOP_BAR_HEIGHT}px - ${TABLE_TOOLBAR_HEIGHT}px)`,
               width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
+              position: "relative",
 
               '& [role="grid"]': {
                 marginBottom: `env(safe-area-inset-bottom)`,
@@ -112,7 +131,27 @@ export default function TablePage({
               },
             }}
           >
-            <Table />
+            <Table
+              canAddColumn={canAddColumn}
+              canEditColumn={canEditColumn}
+              canEditCell={canEditCell}
+              hiddenColumns={
+                userSettings.tables?.[formatSubTableName(tableId)]?.hiddenFields
+              }
+              emptyState={
+                <EmptyState
+                  Icon={AddRowIcon}
+                  message="Add a row to get started"
+                  description={
+                    <div>
+                      <br />
+                      <AddRow />
+                    </div>
+                  }
+                  style={{ position: "absolute", inset: 0 }}
+                />
+              }
+            />
           </Box>
         </Suspense>
       </ErrorBoundary>
