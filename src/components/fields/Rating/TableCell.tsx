@@ -1,9 +1,6 @@
 import { IHeavyCellProps } from "@src/components/fields/types";
 
 import MuiRating from "@mui/material/Rating";
-import RatingIcon from "@mui/icons-material/Star";
-import RatingOutlineIcon from "@mui/icons-material/StarBorder"
-import { get } from "lodash-es";
 import Icon from "./Icon"
 
 
@@ -37,7 +34,7 @@ export default function Rating({
       size="small"
       disabled={disabled}
       onChange={(_, newValue) => onSubmit(newValue)}
-      emptyIcon={<Icon config={column.config} isEmpty={true} style={{ opacity: 0.55 }} />}
+      emptyIcon={<Icon config={column.config} isEmpty={true} />}
       max={max}
       precision={precision}
       sx={{ mx: -0.25 }}

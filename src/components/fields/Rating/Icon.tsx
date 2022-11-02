@@ -3,13 +3,16 @@ import RatingOutlineIcon from "@mui/icons-material/StarBorder"
 import { get } from "lodash-es";
 
 
-export default function Icon(config: any, isEmpty: Boolean) {
-// console.log(config)
- if (isEmpty) {
-    //console.log(getStateOutline(config))
-    return getStateOutline(config.config)
+export interface IIconProps{
+  config: any,
+  isEmpty: boolean
+}
+
+export default function ({config, isEmpty} : IIconProps) {
+if (isEmpty) {
+    return getStateOutline(config)
  } else {
-    return getStateIcon(config.config)
+    return getStateIcon(config)
 }
 } 
 

@@ -1,6 +1,4 @@
 import { ISettingsProps } from "@src/components/fields/types";
-import RatingIcon from "@mui/icons-material/Star";
-import RatingOutlineIcon from "@mui/icons-material/StarBorder"
 import { InputLabel, TextField, Grid, FormControlLabel, Checkbox, Stack } from "@mui/material";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -82,7 +80,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
               onClick={(e) => e.stopPropagation()}
               icon={<Icon config={config} isEmpty={false} />}
               size="small"
-              emptyIcon={<Icon config={config} isEmpty={true} style={{ opacity: 0.55 }} />}
+              emptyIcon={<Icon config={config} isEmpty={true} />}
               max={get(config, "max")}
               precision={get(config, "precision")}
               sx={{ pt: 0.5 }}

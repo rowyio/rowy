@@ -29,7 +29,7 @@ export default function Rating({
           onSubmit();
         }}
         icon={<Icon config={column.config} isEmpty={false}/>}
-        emptyIcon={<Icon config={column.config} isEmpty={true} style={{opacity: 0.5}}/>}
+        emptyIcon={<Icon config={column.config} isEmpty={true} />}
         size="small"
         max={max}
         precision={precision}
