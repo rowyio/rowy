@@ -169,7 +169,9 @@ export type TableFilter = {
     | "date-before-equal"
     | "date-after-equal"
     | "time-minute-equal"
-    | "id-equal";
+    | "id-equal"
+    | "color-equal"
+    | "color-not-equal";
   value: any;
 };
 
