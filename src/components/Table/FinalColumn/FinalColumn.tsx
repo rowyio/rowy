@@ -1,5 +1,5 @@
 import { useAtom, useSetAtom } from "jotai";
-import type { CellContext } from "@tanstack/table-core";
+import type { TableCellProps } from "@src/components/Table";
 
 import { Stack, Tooltip, IconButton, alpha } from "@mui/material";
 import { CopyCells as CopyCellsIcon } from "@src/assets/icons";
@@ -20,12 +20,8 @@ import {
   deleteRowAtom,
   contextMenuTargetAtom,
 } from "@src/atoms/tableScope";
-import { TableRow } from "@src/types/table";
 
-export default function FinalColumn({
-  row,
-  focusInsideCell,
-}: CellContext<TableRow, any> & { focusInsideCell: boolean }) {
+export default function FinalColumn({ row, focusInsideCell }: TableCellProps) {
   const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [addRowIdType] = useAtom(tableAddRowIdTypeAtom, projectScope);
   const confirm = useSetAtom(confirmDialogAtom, projectScope);

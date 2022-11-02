@@ -1,4 +1,5 @@
 import { FieldType } from "@src/constants/fields";
+import type { TableCellProps } from "@src/components/Table";
 import { FormatterProps, EditorProps } from "react-data-grid";
 import { Control, UseFormReturn } from "react-hook-form";
 import { PopoverProps } from "@mui/material";
@@ -28,7 +29,7 @@ export interface IFieldConfig {
     selectedCell: SelectedCell,
     reset: () => void
   ) => IContextMenuItem[];
-  TableCell: React.ComponentType<FormatterProps<TableRow>>;
+  TableCell: React.ComponentType<TableCellProps>;
   TableEditor: React.ComponentType<EditorProps<TableRow, any>>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;
   settings?: React.ComponentType<ISettingsProps>;
@@ -49,10 +50,9 @@ export interface IBasicCellProps {
   type: FieldType;
   name: string;
 }
-export interface IHeavyCellProps
-  extends IBasicCellProps,
-    FormatterProps<TableRow> {
-  column: FormatterProps<TableRow>["column"] & { config?: Record<string, any> };
+export interface IHeavyCellProps extends IBasicCellProps {
+  row: TableRow;
+  column: ColumnConfig;
   onSubmit: (value: any) => void;
   docRef: TableRowRef;
   disabled: boolean;

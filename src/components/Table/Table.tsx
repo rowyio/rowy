@@ -6,6 +6,7 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
+  CellContext,
 } from "@tanstack/react-table";
 import {
   DragDropContext,
@@ -14,6 +15,7 @@ import {
   Draggable,
 } from "react-beautiful-dnd";
 import { Portal } from "@mui/material";
+import { ErrorBoundary } from "react-error-boundary";
 
 import StyledTable from "./Styled/StyledTable";
 import StyledRow from "./Styled/StyledRow";
@@ -23,8 +25,10 @@ import FinalColumnHeader from "./FinalColumn/FinalColumnHeader";
 import FinalColumn from "./FinalColumn/FinalColumn";
 import OutOfOrderIndicator from "./OutOfOrderIndicator";
 import ContextMenu from "./ContextMenu";
+import CellValidation from "./CellValidation";
 
 import EmptyState from "@src/components/EmptyState";
+import { InlineErrorFallback } from "@src/components/ErrorFallback";
 // import BulkActions from "./BulkActions";
 
 import {
@@ -56,6 +60,10 @@ export const MIN_COL_WIDTH = 80;
 export const TABLE_PADDING = 16;
 export const OUT_OF_ORDER_MARGIN = 8;
 export const DEBOUNCE_DELAY = 500;
+
+export type TableCellProps = CellContext<TableRow, any> & {
+  focusInsideCell: boolean;
+};
 
 declare module "@tanstack/table-core" {
   interface ColumnMeta<TData, TValue> extends ColumnConfig {}
@@ -107,21 +115,7 @@ export default function Table({
           size: columnConfig.width,
           enableResizing: columnConfig.resizable !== false,
           minSize: MIN_COL_WIDTH,
-          // formatter:
-          //   getFieldProp("TableCell", getFieldType(columnConfig)) ??
-          //   function InDev() {
-          //     return null;
-          //   },
-          // editor:
-          //   getFieldProp("TableEditor", getFieldType(columnConfig)) ??
-          //   function InDev() {
-          //     return null;
-          //   },
-          // ...columnConfig,
-          // editable:
-          //   tableSettings.readOnly && !userRoles.includes("ADMIN")
-          //     ? false
-          //     : columnConfig.editable ?? true,
+          cell: getFieldProp("TableCell", getFieldType(columnConfig)),
         })
       );
 
@@ -419,7 +413,7 @@ export default function Table({
                     selectedCell?.columnKey === cell.column.id;
 
                   return (
-                    <StyledCell
+                    <CellValidation
                       key={cell.id}
                       data-row-id={row.id}
                       data-col-id={cell.column.id}
@@ -431,12 +425,17 @@ export default function Table({
                       tabIndex={isSelectedCell && !focusInsideCell ? 0 : -1}
                       aria-colindex={cellIndex + 1}
                       aria-readonly={
+                        !canEditCell &&
                         cell.column.columnDef.meta?.editable === false
                       }
+                      aria-required={Boolean(
+                        cell.column.columnDef.meta!.config?.required
+                      )}
                       aria-selected={isSelectedCell}
                       aria-describedby="rowy-table-cell-description"
                       style={{
                         width: cell.column.getSize(),
+                        height: tableSchema.rowHeight,
                         left: cell.column.getIsPinned()
                           ? virtualCell.start - TABLE_PADDING
                           : undefined,
@@ -469,22 +468,24 @@ export default function Table({
                         (e.target as HTMLDivElement).focus();
                         setContextMenuTarget(e.target as HTMLElement);
                       }}
+                      value={cell.getValue()}
+                      required={cell.column.columnDef.meta!.config?.required}
+                      validationRegex={
+                        cell.column.columnDef.meta!.config?.validationRegex
+                      }
                     >
                       <div
                         className="cell-contents"
                         style={{ height: tableSchema.rowHeight }}
                       >
-                        {flexRender(cell.column.columnDef.cell, {
-                          ...cell.getContext(),
-                          focusInsideCell: isSelectedCell && focusInsideCell,
-                        })}
+                        <ErrorBoundary fallbackRender={InlineErrorFallback}>
+                          {flexRender(cell.column.columnDef.cell, {
+                            ...cell.getContext(),
+                            focusInsideCell: isSelectedCell && focusInsideCell,
+                          })}
+                        </ErrorBoundary>
                       </div>
-                      {/* <button
-                        tabIndex={isSelectedCell && focusInsideCell ? 0 : -1}
-                      >
-                        {isSelectedCell ? "f" : "x"}
-                      </button> */}
-                    </StyledCell>
+                    </CellValidation>
                   );
                 })}
 

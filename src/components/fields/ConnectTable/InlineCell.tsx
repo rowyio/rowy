@@ -32,7 +32,7 @@ export const ConnectTable = forwardRef(function ConnectTable(
           value.map((item: any) => (
             <Grid item key={item.docPath}>
               <Chip
-                label={config.primaryKeys
+                label={(config.primaryKeys ?? [])
                   .map((key: string) => item.snapshot[key])
                   .join(" ")}
               />
@@ -41,7 +41,7 @@ export const ConnectTable = forwardRef(function ConnectTable(
         ) : value ? (
           <Grid item>
             <Chip
-              label={config.primaryKeys
+              label={(config.primaryKeys ?? [])
                 .map((key: string) => value.snapshot[key])
                 .join(" ")}
             />

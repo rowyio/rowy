@@ -1,18 +1,14 @@
 import { Suspense, useState, useEffect, useRef } from "react";
 import { useSetAtom } from "jotai";
-import { find, get } from "lodash-es";
-import { FormatterProps } from "react-data-grid";
+import { get } from "lodash-es";
+import type { TableCellProps } from "@src/components/Table";
 import {
   IBasicCellProps,
   IPopoverInlineCellProps,
   IPopoverCellProps,
 } from "@src/components/fields/types";
-import { ErrorBoundary } from "react-error-boundary";
 
 import { Popover, PopoverProps } from "@mui/material";
-
-import { InlineErrorFallback } from "@src/components/ErrorFallback";
-import CellValidation from "@src/components/Table/CellValidation";
 
 import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
@@ -39,12 +35,10 @@ export default function withPopoverCell(
   PopoverCellComponent: React.ComponentType<IPopoverCellProps>,
   options?: IPopoverCellOptions
 ) {
-  return function PopoverCell(props: FormatterProps<any>) {
+  return function PopoverCell({ row, column, getValue }: TableCellProps) {
     const { transparent, ...popoverProps } = options ?? {};
 
     const updateField = useSetAtom(updateFieldAtom, tableScope);
-
-    const { validationRegex, required } = (props.column as any).config;
 
     // Initially display BasicCell to improve scroll performance
     const [displayedComponent, setDisplayedComponent] = useState<
@@ -64,7 +58,7 @@ export default function withPopoverCell(
     const inlineCellRef = useRef<any>(null);
 
     // TODO: Investigate if this still needs to be a state
-    const value = get(props.row, props.column.key);
+    const value = getValue();
     const [localValue, setLocalValue] = useState(value);
     useEffect(() => {
       setLocalValue(value);
@@ -73,29 +67,19 @@ export default function withPopoverCell(
     // Declare basicCell here so props can be reused by HeavyCellComponent
     const basicCellProps = {
       value: localValue,
-      name: props.column.name as string,
-      type: (props.column as any).type as FieldType,
+      name: column.columnDef.meta!.name,
+      type: column.columnDef.meta!.type,
     };
 
     if (displayedComponent === "basic")
-      return (
-        <ErrorBoundary FallbackComponent={InlineErrorFallback}>
-          <CellValidation
-            value={value}
-            required={required}
-            validationRegex={validationRegex}
-          >
-            <BasicCellComponent {...basicCellProps} />
-          </CellValidation>
-        </ErrorBoundary>
-      );
+      return <BasicCellComponent {...basicCellProps} />;
 
     // This is where we update the documents
     const handleSubmit = (value: any) => {
       if (options?.readOnly) return;
       updateField({
-        path: props.row._rowy_ref.path,
-        fieldName: props.column.key,
+        path: row.original._rowy_ref.path,
+        fieldName: column.id,
         value,
         deleteField: value === undefined,
       });
@@ -113,12 +97,12 @@ export default function withPopoverCell(
 
     // Declare inlineCell and props here so it can be reused later
     const commonCellProps = {
-      ...props,
       ...basicCellProps,
-      column: props.column,
+      row: row.original,
+      column: column.columnDef.meta!,
       onSubmit: handleSubmit,
-      disabled: props.column.editable === false,
-      docRef: props.row._rowy_ref,
+      disabled: column.columnDef.meta!.editable === false,
+      docRef: row.original._rowy_ref,
       showPopoverCell,
       ref: inlineCellRef,
     };
@@ -126,31 +110,14 @@ export default function withPopoverCell(
       <InlineCellComponent {...commonCellProps} ref={inlineCellRef} />
     );
 
-    if (displayedComponent === "inline")
-      return (
-        <ErrorBoundary FallbackComponent={InlineErrorFallback}>
-          <CellValidation
-            value={value}
-            required={required}
-            validationRegex={validationRegex}
-          >
-            {inlineCell}
-          </CellValidation>
-        </ErrorBoundary>
-      );
+    if (displayedComponent === "inline") return inlineCell;
 
     const parentRef = inlineCellRef.current?.parentElement;
 
     if (displayedComponent === "popover")
       return (
-        <ErrorBoundary FallbackComponent={InlineErrorFallback}>
-          <CellValidation
-            value={value}
-            required={required}
-            validationRegex={validationRegex}
-          >
-            {inlineCell}
-          </CellValidation>
+        <>
+          {inlineCell}
 
           <Suspense fallback={null}>
             <Popover
@@ -175,7 +142,7 @@ export default function withPopoverCell(
               />
             </Popover>
           </Suspense>
-        </ErrorBoundary>
+        </>
       );
 
     // Should not reach this line

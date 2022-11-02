@@ -133,26 +133,28 @@ export type ColumnConfig = {
   /** Prevent column resizability */
   resizable?: boolean = true;
 
-  config?: {
+  config?: Partial<{
     /** Set column to required */
-    required?: boolean;
+    required: boolean;
     /** Set column default value */
-    defaultValue?: {
+    defaultValue: {
       type: "undefined" | "null" | "static" | "dynamic";
       value?: any;
       script?: string;
       dynamicValueFn?: string;
     };
+    /** Regex used in CellValidation */
+    validationRegex: string;
     /** FieldType to render for Derivative fields */
-    renderFieldType?: FieldType;
+    renderFieldType: FieldType;
     /** For sub-table fields */
-    parentLabel?: string[];
+    parentLabel: string[];
 
-    primaryKeys?: string[];
+    primaryKeys: string[];
 
     /** Column-specific config */
     [key: string]: any;
-  };
+  }>;
 };
 
 export type TableFilter = {

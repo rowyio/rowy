@@ -1,16 +1,11 @@
 import { Suspense, useState, useEffect } from "react";
 import { useSetAtom } from "jotai";
 import { get } from "lodash-es";
-import { FormatterProps } from "react-data-grid";
-import { ErrorBoundary } from "react-error-boundary";
+import type { TableCellProps } from "@src/components/Table";
 import { IBasicCellProps, IHeavyCellProps } from "@src/components/fields/types";
-
-import { InlineErrorFallback } from "@src/components/ErrorFallback";
-import CellValidation from "@src/components/Table/CellValidation";
 
 import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
-import { TableRow } from "@src/types/table";
 
 /**
  * HOC to wrap table cell components.
@@ -24,10 +19,8 @@ export default function withHeavyCell(
   HeavyCellComponent: React.ComponentType<IHeavyCellProps>,
   readOnly: boolean = false
 ) {
-  return function HeavyCell(props: FormatterProps<TableRow>) {
+  return function HeavyCell({ row, column, getValue }: TableCellProps) {
     const updateField = useSetAtom(updateFieldAtom, tableScope);
-
-    const { validationRegex, required } = (props.column as any).config;
 
     // Initially display BasicCell to improve scroll performance
     const [displayedComponent, setDisplayedComponent] = useState<
@@ -41,7 +34,7 @@ export default function withHeavyCell(
     }, []);
 
     // TODO: Investigate if this still needs to be a state
-    const value = get(props.row, props.column.key);
+    const value = getValue();
     const [localValue, setLocalValue] = useState(value);
     useEffect(() => {
       setLocalValue(value);
@@ -50,29 +43,18 @@ export default function withHeavyCell(
     // Declare basicCell here so props can be reused by HeavyCellComponent
     const basicCellProps = {
       value: localValue,
-      name: props.column.name as string,
-      type: (props.column as any).type as FieldType,
+      name: column.columnDef.meta!.name,
+      type: column.columnDef.meta!.type,
     };
     const basicCell = <BasicCellComponent {...basicCellProps} />;
 
-    if (displayedComponent === "basic")
-      return (
-        <ErrorBoundary FallbackComponent={InlineErrorFallback}>
-          <CellValidation
-            value={value}
-            required={required}
-            validationRegex={validationRegex}
-          >
-            {basicCell}
-          </CellValidation>
-        </ErrorBoundary>
-      );
+    if (displayedComponent === "basic") return basicCell;
 
     const handleSubmit = (value: any) => {
       if (readOnly) return;
       updateField({
-        path: props.row._rowy_ref.path,
-        fieldName: props.column.key,
+        path: row.original._rowy_ref.path,
+        fieldName: column.id,
         value,
       });
       setLocalValue(value);
@@ -80,23 +62,16 @@ export default function withHeavyCell(
 
     if (displayedComponent === "heavy")
       return (
-        <ErrorBoundary FallbackComponent={InlineErrorFallback}>
-          <Suspense fallback={basicCell}>
-            <CellValidation
-              value={value}
-              required={required}
-              validationRegex={validationRegex}
-            >
-              <HeavyCellComponent
-                {...props}
-                {...basicCellProps}
-                docRef={props.row._rowy_ref}
-                onSubmit={handleSubmit}
-                disabled={props.column.editable === false}
-              />
-            </CellValidation>
-          </Suspense>
-        </ErrorBoundary>
+        <Suspense fallback={basicCell}>
+          <HeavyCellComponent
+            {...basicCellProps}
+            row={row.original}
+            column={column.columnDef.meta!}
+            docRef={row.original._rowy_ref}
+            onSubmit={handleSubmit}
+            disabled={column.columnDef.meta!.editable === false}
+          />
+        </Suspense>
       );
 
     // Should not reach this line

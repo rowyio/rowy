@@ -2,29 +2,8 @@ import { styled } from "@mui/material/styles";
 import ErrorIcon from "@mui/icons-material/ErrorOutline";
 import WarningIcon from "@mui/icons-material/WarningAmber";
 
+import StyledCell from "./Styled/StyledCell";
 import RichTooltip from "@src/components/RichTooltip";
-
-const Root = styled("div", { shouldForwardProp: (prop) => prop !== "error" })(
-  ({ theme, ...props }) => ({
-    width: "100%",
-    height: "100%",
-    padding: "var(--cell-padding)",
-    position: "relative",
-
-    overflow: "hidden",
-    contain: "strict",
-    display: "flex",
-    alignItems: "center",
-
-    ...((props as any).error
-      ? {
-          ".rdg-cell:not([aria-selected=true]) &": {
-            boxShadow: `inset 0 0 0 2px ${theme.palette.error.main}`,
-          },
-        }
-      : {}),
-  })
-);
 
 const Dot = styled("div")(({ theme }) => ({
   position: "absolute",
@@ -40,7 +19,7 @@ const Dot = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.error.main,
 
   boxShadow: `0 0 0 4px var(--background-color)`,
-  ".rdg-row:hover &": {
+  "[role='row']:hover &": {
     boxShadow: `0 0 0 4px var(--row-hover-background-color)`,
   },
 }));
@@ -60,13 +39,14 @@ export default function CellValidation({
   required,
   validationRegex,
   children,
+  ...props
 }: ICellValidationProps) {
   const isInvalid = validationRegex && !new RegExp(validationRegex).test(value);
   const isMissing = required && value === undefined;
 
   if (isInvalid)
     return (
-      <>
+      <StyledCell aria-invalid="true" {...props}>
         <RichTooltip
           icon={<ErrorIcon fontSize="inherit" color="error" />}
           title="Invalid data"
@@ -74,14 +54,13 @@ export default function CellValidation({
           placement="right"
           render={({ openTooltip }) => <Dot onClick={openTooltip} />}
         />
-
-        <Root {...({ error: true } as any)}>{children}</Root>
-      </>
+        {children}
+      </StyledCell>
     );
 
   if (isMissing)
     return (
-      <>
+      <StyledCell aria-invalid="true" {...props}>
         <RichTooltip
           icon={<WarningIcon fontSize="inherit" color="warning" />}
           title="Required field"
@@ -89,10 +68,9 @@ export default function CellValidation({
           placement="right"
           render={({ openTooltip }) => <Dot onClick={openTooltip} />}
         />
-
-        <Root {...({ error: true } as any)}>{children}</Root>
-      </>
+        {children}
+      </StyledCell>
     );
 
-  return <Root>{children}</Root>;
+  return <StyledCell {...props}>{children}</StyledCell>;
 }

@@ -12,7 +12,7 @@ export const StyledCell = styled("div")(({ theme }) => ({
   },
 
   overflow: "visible",
-  contain: "none",
+  contain: "strict",
   position: "relative",
 
   backgroundColor: theme.palette.background.paper,
@@ -31,5 +31,11 @@ export const StyledCell = styled("div")(({ theme }) => ({
   "[data-out-of-order='true'] + [role='row'] &": {
     borderTop: `1px solid ${theme.palette.divider}`,
   },
+
+  "&[aria-invalid='true']": {
+    boxShadow: `inset 0 0 0 2px ${theme.palette.error.main}`,
+  },
 }));
 StyledCell.displayName = "StyledCell";
+
+export default StyledCell;
