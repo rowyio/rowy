@@ -379,13 +379,14 @@ export const tableFiltersToFirestoreFilters = (filters: TableFilter[]) => {
       continue;
     } else if (filter.operator === "color-equal") {
       firestoreFilters.push(where(filter.key.concat(".hex"), "==", filter.value.hex.toString()))
+      continue
     } else if (filter.operator === "color-not-equal") {
-      firestoreFilters.push(where(filter.key + ".hex", "!=", filter.value.hex.toString()))
-    } else {
-      firestoreFilters.push(
-        where(filter.key, filter.operator as WhereFilterOp, filter.value)
-      );
+      firestoreFilters.push(where(filter.key.concat(".hex"), "!=", filter.value.hex.toString()))
+      continue
     }
+    firestoreFilters.push(
+      where(filter.key, filter.operator as WhereFilterOp, filter.value)
+    );
   }
   return firestoreFilters;
 };
