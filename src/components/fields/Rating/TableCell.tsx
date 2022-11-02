@@ -4,7 +4,6 @@ import MuiRating from "@mui/material/Rating";
 import Icon from "./Icon"
 
 
-
 export default function Rating({
   row,
   column,

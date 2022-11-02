@@ -6,6 +6,7 @@ import "@mui/lab";
 import { fieldSx } from "@src/components/SideDrawer/utils";
 import Icon from "./Icon"
 
+
 export default function Rating({
   column,
   value,
