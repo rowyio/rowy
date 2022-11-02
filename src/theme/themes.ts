@@ -1,14 +1,16 @@
 import { createTheme, ThemeOptions } from "@mui/material/styles";
 import { merge } from "lodash-es";
 
-import { typography } from "@src/theme/typography";
-import { colorsLight, colorsDark } from "@src/theme/colors";
-import { components } from "@src/theme/components";
+import { breakpoints } from "./breakpoints";
+import { typography } from "./typography";
+import { colorsLight, colorsDark } from "./colors";
+import { components } from "./components";
 
 export const customizableLightTheme = (customization: ThemeOptions) => {
   const customizedLightThemeBase = createTheme(
     merge(
       {},
+      breakpoints,
       typography((customization?.typography as any) ?? {}),
       colorsLight((customization?.palette?.primary as any)?.main)
     )
@@ -28,6 +30,7 @@ export const customizableDarkTheme = (customization: ThemeOptions) => {
   const customizedDarkThemeBase = createTheme(
     merge(
       {},
+      breakpoints,
       typography((customization?.typography as any) ?? {}),
       colorsDark(
         (customization?.palette?.primary as any)?.main,

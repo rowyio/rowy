@@ -2,19 +2,19 @@ import { useAtom } from "jotai";
 import { Link } from "react-router-dom";
 
 import { Button } from "@mui/material";
-import { Go as GoIcon } from "@src/assets/icons";
-import HomeIcon from "@mui/icons-material/HomeOutlined";
+import { Go as GoIcon, Tables as TablesIcon } from "@src/assets/icons";
 
 import AuthLayout from "@src/layouts/AuthLayout";
-import Navigation, { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
+import Navigation from "@src/layouts/Navigation";
+import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 import EmptyState from "@src/components/EmptyState";
 
 import meta from "@root/package.json";
 import { ROUTES } from "@src/constants/routes";
-import { globalScope, currentUserAtom } from "@src/atoms/globalScope";
+import { projectScope, currentUserAtom } from "@src/atoms/projectScope";
 
 export default function NotFound() {
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
 
   if (currentUser)
     return (
@@ -28,12 +28,12 @@ export default function NotFound() {
               sx={{ mt: 3 }}
               component={Link}
               to={ROUTES.home}
-              startIcon={<HomeIcon />}
+              startIcon={<TablesIcon />}
             >
-              Home
+              Tables
             </Button>
           }
-          style={{ marginTop: -APP_BAR_HEIGHT }}
+          style={{ marginTop: -TOP_BAR_HEIGHT }}
         />
       </Navigation>
     );

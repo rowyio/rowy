@@ -8,6 +8,7 @@ import { Fade } from "@mui/material";
 import ErrorFallback, {
   InlineErrorFallback,
 } from "@src/components/ErrorFallback";
+import TableInformationDrawer from "@src/components/TableInformationDrawer/TableInformationDrawer";
 import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkeleton";
 import TableSkeleton from "@src/components/Table/TableSkeleton";
 import EmptyTable from "@src/components/Table/EmptyTable";
@@ -34,13 +35,18 @@ const BuildLogsSnack = lazy(() => import("@src/components/TableModals/CloudLogsM
 export interface ITablePageProps {
   /** Disable modals on this table when a sub-table is open and it’s listening to URL state */
   disableModals?: boolean;
+  /** Disable side drawer */
+  disableSideDrawer?: boolean;
 }
 
 /**
  * TablePage renders all the UI for the table.
  * Must be wrapped by either `ProvidedTablePage` or `ProvidedSubTablePage`.
  */
-export default function TablePage({ disableModals }: ITablePageProps) {
+export default function TablePage({
+  disableModals,
+  disableSideDrawer,
+}: ITablePageProps) {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const snackLogContext = useSnackLogContext();
 
@@ -63,7 +69,7 @@ export default function TablePage({ disableModals }: ITablePageProps) {
     return (
       <Suspense fallback={null}>
         <Fade in style={{ transitionDelay: "500ms" }}>
-          <div>
+          <div className="empty-table-container">
             <EmptyTable />
 
             <Suspense fallback={null}>
@@ -94,7 +100,13 @@ export default function TablePage({ disableModals }: ITablePageProps) {
 
       <ErrorBoundary FallbackComponent={InlineErrorFallback}>
         <Suspense fallback={null}>
-          <SideDrawer dataGridRef={dataGridRef} />
+          {!disableSideDrawer && <SideDrawer dataGridRef={dataGridRef} />}
+        </Suspense>
+      </ErrorBoundary>
+
+      <ErrorBoundary FallbackComponent={InlineErrorFallback}>
+        <Suspense fallback={null}>
+          <TableInformationDrawer />
         </Suspense>
       </ErrorBoundary>
 

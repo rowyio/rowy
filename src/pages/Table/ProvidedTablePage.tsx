@@ -1,9 +1,9 @@
-import { Suspense, useMemo } from "react";
+import { Suspense } from "react";
 import { useAtom, Provider } from "jotai";
 import { DebugAtoms } from "@src/atoms/utils";
 import { useParams, useOutlet } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
-import { find } from "lodash-es";
+import { find, isEmpty } from "lodash-es";
 
 import ErrorFallback, {
   ERROR_TABLE_NOT_FOUND,
@@ -14,15 +14,19 @@ import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkele
 import TableSkeleton from "@src/components/Table/TableSkeleton";
 
 import {
-  globalScope,
+  projectScope,
+  projectIdAtom,
   currentUserAtom,
+  projectSettingsAtom,
   tablesAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableIdAtom,
   tableSettingsAtom,
 } from "@src/atoms/tableScope";
+import { SyncAtomValue } from "@src/atoms/utils";
+import useDocumentTitle from "@src/hooks/useDocumentTitle";
 
 /**
  * Wraps `TablePage` with the data for a top-level table.
@@ -31,11 +35,26 @@ import {
 export default function ProvidedTablePage() {
   const { id } = useParams();
   const outlet = useOutlet();
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
-  const [tables] = useAtom(tablesAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
+  const [tables] = useAtom(tablesAtom, projectScope);
 
-  const tableSettings = useMemo(() => find(tables, ["id", id]), [tables, id]);
-  if (!tableSettings) throw new Error(ERROR_TABLE_NOT_FOUND + ": " + id);
+  const tableSettings = find(tables, ["id", id]);
+  useDocumentTitle(projectId, tableSettings ? tableSettings.name : "Not found");
+
+  if (!tableSettings) {
+    if (isEmpty(projectSettings)) {
+      return (
+        <>
+          <TableToolbarSkeleton />
+          <TableSkeleton />
+        </>
+      );
+    } else {
+      throw new Error(ERROR_TABLE_NOT_FOUND + ": " + id);
+    }
+  }
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
@@ -57,6 +76,12 @@ export default function ProvidedTablePage() {
           ]}
         >
           <DebugAtoms scope={tableScope} />
+          <SyncAtomValue
+            atom={tableSettingsAtom}
+            scope={tableScope}
+            value={tableSettings}
+          />
+
           <TableSourceFirestore />
           <Suspense
             fallback={

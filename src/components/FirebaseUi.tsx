@@ -9,7 +9,7 @@ import { makeStyles } from "tss-react/mui";
 import { Typography } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 
-import { globalScope, publicSettingsAtom } from "@src/atoms/globalScope";
+import { projectScope, publicSettingsAtom } from "@src/atoms/projectScope";
 import { firebaseAuthAtom } from "@src/sources/ProjectSourceFirebase";
 import { defaultUiConfig, getSignInOptions } from "@src/config/firebaseui";
 
@@ -29,9 +29,20 @@ const useStyles = makeStyles()((theme) => ({
       color: theme.palette.text.secondary,
       fontFamily: theme.typography.fontFamily,
     },
-    "& .firebaseui-tos": {
+    "& .firebaseui-provider-sign-in-footer > .firebaseui-tos": {
       ...(theme.typography.caption as any),
       color: theme.palette.text.disabled,
+      textAlign: "left",
+      marginTop: theme.spacing(1),
+      marginBottom: 0,
+      "& .firebaseui-link": {
+        textDecorationColor: theme.palette.divider,
+        "&:hover": { textDecorationColor: "currentcolor" },
+      },
+    },
+    "& .firebaseui-link": {
+      color: "inherit",
+      textDecoration: "underline",
     },
     "& .firebaseui-country-selector": {
       color: theme.palette.text.primary,
@@ -206,8 +217,8 @@ export interface IFirebaseUiProps {
 
 export default function FirebaseUi(props: IFirebaseUiProps) {
   const { classes, cx } = useStyles();
-  const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
-  const [publicSettings] = useAtom(publicSettingsAtom, globalScope);
+  const [firebaseAuth] = useAtom(firebaseAuthAtom, projectScope);
+  const [publicSettings] = useAtom(publicSettingsAtom, projectScope);
 
   const signInOptions: typeof publicSettings.signInOptions = useMemo(
     () =>
@@ -259,9 +270,10 @@ export default function FirebaseUi(props: IFirebaseUiProps) {
       <Typography
         variant="button"
         display="block"
-        textAlign="center"
         color="textSecondary"
-        sx={{ mt: -1, mb: -3 }}
+        sx={{
+          "&&": { mt: -1, mb: -3, textAlign: "center", alignSelf: "center" },
+        }}
       >
         Continue with
       </Typography>

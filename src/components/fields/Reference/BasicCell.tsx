@@ -4,10 +4,10 @@ import { IBasicCellProps } from "@src/components/fields/types";
 import { Stack, IconButton } from "@mui/material";
 import LaunchIcon from "@mui/icons-material/Launch";
 
-import { globalScope, projectIdAtom } from "@src/atoms/globalScope";
+import { projectScope, projectIdAtom } from "@src/atoms/projectScope";
 
 export default function Reference({ value }: IBasicCellProps) {
-  const [projectId] = useAtom(projectIdAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
 
   const path = value?.path ?? "";
   if (!path) return null;

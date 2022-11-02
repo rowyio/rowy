@@ -15,6 +15,8 @@ const WebhooksModal = lazy(() => import("./WebhooksModal" /* webpackChunkName: "
 const ImportExistingWizard = lazy(() => import("./ImportExistingWizard" /* webpackChunkName: "TableModals-ImportExistingWizard" */));
 // prettier-ignore
 const ImportCsvWizard = lazy(() => import("./ImportCsvWizard" /* webpackChunkName: "TableModals-ImportCsvWizard" */));
+// prettier-ignore
+const ImportAirtableWizard = lazy(() => import("./ImportAirtableWizard" /* webpackChunkName: "TableModals-ImportAirtableWizard" */));
 
 export interface ITableModalProps {
   onClose: () => void;
@@ -34,6 +36,8 @@ export default function TableModals() {
   if (tableModal === "importExisting")
     return <ImportExistingWizard onClose={onClose} />;
   if (tableModal === "importCsv") return <ImportCsvWizard onClose={onClose} />;
+  if (tableModal === "importAirtable")
+    return <ImportAirtableWizard onClose={onClose} />;
 
   return null;
 }
