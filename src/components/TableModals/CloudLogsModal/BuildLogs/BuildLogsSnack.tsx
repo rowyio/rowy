@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { throttle } from "lodash-es";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
 import { Typography, Box, Tooltip, IconButton } from "@mui/material";
 import ExpandIcon from "@mui/icons-material/ExpandLess";
@@ -14,11 +14,16 @@ import CircularProgressOptical from "@src/components/CircularProgressOptical";
 import { isTargetInsideBox } from "@src/utils/ui";
 import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 import useBuildLogs from "./useBuildLogs";
+import { projectScope, navOpenAtom } from "@src/atoms/projectScope";
 import {
   tableScope,
   tableModalAtom,
   cloudLogFiltersAtom,
 } from "@src/atoms/tableScope";
+import {
+  NAV_DRAWER_WIDTH,
+  NAV_DRAWER_COLLAPSED_WIDTH,
+} from "@src/layouts/Navigation/NavDrawer";
 
 export interface IBuildLogsSnackProps {
   onClose: () => void;
@@ -33,6 +38,8 @@ export default function BuildLogsSnack({
   const { latestLog } = useBuildLogs();
   const setModal = useSetAtom(tableModalAtom, tableScope);
   const setCloudLogFilters = useSetAtom(cloudLogFiltersAtom, tableScope);
+  const [navOpen] = useAtom(navOpenAtom, projectScope);
+
   const latestActiveLog =
     latestLog?.startTimeStamp > snackLogContext.latestBuildTimestamp - 5000 ||
     latestLog?.startTimeStamp > snackLogContext.latestBuildTimestamp + 5000
@@ -83,9 +90,15 @@ export default function BuildLogsSnack({
     <Box
       sx={{
         position: "absolute",
-        left: (theme) => theme.spacing(2),
-        bottom: (theme) => theme.spacing(2),
+        left: {
+          xs: `max(env(safe-area-inset-left), 8px)`,
+          md: `max(env(safe-area-inset-left), ${
+            (navOpen ? NAV_DRAWER_WIDTH : NAV_DRAWER_COLLAPSED_WIDTH) + 8
+          }px)`,
+        },
+        bottom: `max(env(safe-area-inset-left), 8px)`,
         backgroundColor: "#282829",
+        colorScheme: "dark",
         boxShadow: 6,
         color: "#fff",
         width: 650,

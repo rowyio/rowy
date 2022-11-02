@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import useMemoValue from "use-memo-value";
 import { useAtom, PrimitiveAtom, useSetAtom, SetStateAction } from "jotai";
-import { Scope } from "jotai/core/atom";
 import { set } from "lodash-es";
 import {
   Firestore,
@@ -26,7 +25,7 @@ import {
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
-import { globalScope } from "@src/atoms/globalScope";
+import { projectScope } from "@src/atoms/projectScope";
 import {
   UpdateCollectionDocFunction,
   DeleteCollectionDocFunction,
@@ -67,7 +66,7 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
 
 /**
  * Attaches a listener for a Firestore collection and unsubscribes on unmount.
- * Gets the Firestore instance initiated in globalScope.
+ * Gets the Firestore instance initiated in projectScope.
  * Updates an atom and Suspends that atom until the first snapshot is received.
  *
  * @param dataAtom - Atom to store data in
@@ -77,7 +76,7 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
  */
 export function useFirestoreCollectionWithAtom<T = TableRow>(
   dataAtom: PrimitiveAtom<T[]>,
-  dataScope: Scope | undefined,
+  dataScope: Parameters<typeof useAtom>[1] | undefined,
   path: string | undefined,
   options?: IUseFirestoreCollectionWithAtomOptions<T>
 ) {
@@ -96,7 +95,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     nextPageAtom,
   } = options || {};
 
-  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
+  const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
   const setDataAtom = useSetAtom(dataAtom, dataScope);
   const handleError = useErrorHandler();
 

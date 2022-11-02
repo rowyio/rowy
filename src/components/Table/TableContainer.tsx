@@ -1,6 +1,6 @@
 import { colord } from "colord";
 import { styled, alpha, darken, lighten } from "@mui/material";
-import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
+import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
 import {
   DRAWER_COLLAPSED_WIDTH,
@@ -15,7 +15,7 @@ export const TableContainer = styled("div", {
   display: "flex",
   position: "relative",
   flexDirection: "column",
-  height: `calc(100vh - ${APP_BAR_HEIGHT}px - ${TABLE_TOOLBAR_HEIGHT}px)`,
+  height: `calc(100vh - ${TOP_BAR_HEIGHT}px - ${TABLE_TOOLBAR_HEIGHT}px)`,
 
   "& .left-scroll-divider": {
     position: "absolute",

@@ -10,12 +10,12 @@ import Logo from "@src/assets/Logo";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import meta from "@root/package.json";
-import { globalScope, projectIdAtom } from "@src/atoms/globalScope";
+import { projectScope, projectIdAtom } from "@src/atoms/projectScope";
 import useUpdateCheck from "@src/hooks/useUpdateCheck";
 import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
 
 export default function About() {
-  const [projectId] = useAtom(projectIdAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
 
   const [latestUpdate, checkForUpdates, loading] = useUpdateCheck();
 

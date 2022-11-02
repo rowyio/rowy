@@ -2,7 +2,7 @@ import { IBasicCellProps } from "@src/components/fields/types";
 import { Typography } from "@mui/material";
 
 export default function GeoPoint({ value }: IBasicCellProps) {
-  if (value === undefined) return null;
+  if (!value) return null;
   const { latitude, longitude } = value;
 
   if (latitude === undefined || longitude === undefined)

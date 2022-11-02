@@ -22,7 +22,7 @@ import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 import Thumbnail from "@src/components/Thumbnail";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
-import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
+import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
 import {
   tableSchemaAtom,
   tableScope,
@@ -92,7 +92,7 @@ export default function Image_({
   disabled,
   docRef,
 }: IHeavyCellProps) {
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const { uploaderState, upload, deleteUpload } = useUploader();
@@ -126,9 +126,8 @@ export default function Image_({
     [value]
   );
 
-  const handleDelete = (ref: string) => () => {
+  const handleDelete = (index: number) => () => {
     const newValue = [...value];
-    const index = findIndex(newValue, ["ref", ref]);
     const toBeDeleted = newValue.splice(index, 1);
     toBeDeleted.length && deleteUpload(toBeDeleted[0]);
     onSubmit(newValue);
@@ -184,7 +183,7 @@ export default function Image_({
       >
         <Grid container spacing={0.5} wrap="nowrap">
           {Array.isArray(value) &&
-            value.map((file: FileValue) => (
+            value.map((file: FileValue, i) => (
               <Grid item key={file.downloadURL}>
                 {disabled ? (
                   <Tooltip title="Open">
@@ -225,7 +224,7 @@ export default function Image_({
                             body: "This image cannot be recovered after",
                             confirm: "Delete",
                             confirmColor: "error",
-                            handleConfirm: handleDelete(file.ref),
+                            handleConfirm: handleDelete(i),
                           });
                         }}
                       >

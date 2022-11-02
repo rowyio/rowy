@@ -26,11 +26,10 @@ import Loading from "@src/components/Loading";
 import ContextMenu from "./ContextMenu";
 
 import {
-  globalScope,
+  projectScope,
   userRolesAtom,
   userSettingsAtom,
-  navPinnedAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableIdAtom,
@@ -64,9 +63,8 @@ export default function Table({
 }: {
   dataGridRef?: React.MutableRefObject<DataGridHandle | null>;
 }) {
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
-  const [userSettings] = useAtom(userSettingsAtom, globalScope);
-  const [navPinned] = useAtom(navPinnedAtom, globalScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
 
   const [tableId] = useAtom(tableIdAtom, tableScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
@@ -116,11 +114,7 @@ export default function Table({
           tableSettings.readOnly && !userRoles.includes("ADMIN")
             ? false
             : column.editable ?? true,
-        width: (column.width as number)
-          ? (column.width as number) > MAX_COL_WIDTH
-            ? MAX_COL_WIDTH
-            : (column.width as number)
-          : DEFAULT_COL_WIDTH,
+        width: column.width ?? DEFAULT_COL_WIDTH,
       }));
 
     if (userRoles.includes("ADMIN") || !tableSettings.readOnly) {
@@ -182,14 +176,22 @@ export default function Table({
     (event: React.UIEvent<HTMLDivElement>) => {
       // Select corresponding header cell when scrolled to prevent jumping
       dataGridRef?.current?.selectCell({
-        idx: selectedColumnIndex || 0,
+        idx:
+          selectedColumnIndex > -1 ? selectedColumnIndex : columns.length - 1,
         rowIdx: -1,
       });
+      // console.log(
+      //   "scroll",
+      //   dataGridRef?.current,
+      //   selectedColumnIndex,
+      //   columns.length
+      // );
 
       const target = event.target as HTMLDivElement;
 
-      if (navPinned && !columns[0].fixed)
-        setShowLeftScrollDivider(target.scrollLeft > 16);
+      // TODO:
+      // if (navPinned && !columns[0].fixed)
+      //   setShowLeftScrollDivider(target.scrollLeft > 16);
 
       const offset = 800;
       const isAtBottom =

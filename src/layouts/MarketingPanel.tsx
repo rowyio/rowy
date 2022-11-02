@@ -1,5 +1,4 @@
 import { Stack, Paper, Typography, Button } from "@mui/material";
-import { alpha } from "@mui/material/styles";
 import { Discord as DiscordIcon } from "@src/assets/icons";
 import TwitterIcon from "@mui/icons-material/Twitter";
 
@@ -9,7 +8,7 @@ import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 export default function Marketing() {
   return (
     <Paper
-      elevation={4}
+      elevation={0}
       square
       sx={{
         display: { xs: "none", md: "block" },
@@ -18,8 +17,7 @@ export default function Marketing() {
         gridColumn: 1,
         gridRow: "1 / 4",
 
-        backgroundColor: (theme) => alpha(theme.palette.background.paper, 0.5),
-        backdropFilter: "blur(20px) saturate(150%)",
+        bgcolor: "background.default",
 
         pt: (theme) => `max(env(safe-area-inset-top), ${theme.spacing(8)})`,
         pb: (theme) => `max(env(safe-area-inset-bottom), ${theme.spacing(8)})`,
