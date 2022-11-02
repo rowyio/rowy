@@ -1,21 +1,8 @@
 import { IHeavyCellProps } from "@src/components/fields/types";
 
 import MuiRating from "@mui/material/Rating";
-import RatingIcon from "@mui/icons-material/Star";
-import RatingOutlineIcon from "@mui/icons-material/StarBorder"
-import { get } from "lodash-es";
+import Icon from "./Icon"
 
-
-export const getStateIcon = (config: any) => {
-  // only use the config to get the custom rating icon if enabled via toggle
-  if (!get(config, "customIcons.enabled")) { return <RatingIcon /> }
-  return get(config, "customIcons.rating") || <RatingIcon />;
-};
-
-export const getStateOutline = (config: any) => {
-  if (!get(config, "customIcons.enabled")) { return <RatingOutlineIcon /> }
-  return get(config, "customIcons.rating") || <RatingOutlineIcon />;
-}
 
 export default function Rating({
   row,
@@ -42,11 +29,11 @@ export default function Rating({
       name={`${row.id}-${column.key}`}
       value={typeof value === "number" ? value : 0}
       onClick={(e) => e.stopPropagation()}
-      icon={getStateIcon(column.config)}
+      icon={<Icon config={column.config} isEmpty={false} />}
       size="small"
       disabled={disabled}
       onChange={(_, newValue) => onSubmit(newValue)}
-      emptyIcon={getStateOutline(column.config)}
+      emptyIcon={<Icon config={column.config} isEmpty={true} />}
       max={max}
       precision={precision}
       sx={{ mx: -0.25 }}
