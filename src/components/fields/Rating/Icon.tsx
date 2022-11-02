@@ -8,7 +8,7 @@ export interface IIconProps{
   isEmpty: boolean
 }
 
-export default function ({config, isEmpty} : IIconProps) {
+export default function Icon({config, isEmpty} : IIconProps) {
 if (isEmpty) {
     return getStateOutline(config)
  } else {
