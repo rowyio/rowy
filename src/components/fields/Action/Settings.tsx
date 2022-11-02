@@ -293,13 +293,13 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
                 </FormLabel>
                 <RadioGroup
                   aria-label="Action will run"
-                  name="isActionScript"
+                  name="isCloudFunction"
                   value={
-                    config.isActionScript ? "actionScript" : "cloudFunction"
+                    config.isCloudFunction ? "cloudFunction" : "actionScript"
                   }
                   onChange={(e) =>
-                    onChange("isActionScript")(
-                      e.target.value === "actionScript"
+                    onChange("isCloudFunction")(
+                      e.target.value === "cloudFunction"
                     )
                   }
                 >
@@ -351,7 +351,7 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
                 </RadioGroup>
               </FormControl>
 
-              {!config.isActionScript ? (
+              {config.isCloudFunction ? (
                 <TextField
                   id="callableName"
                   label="Callable name"
@@ -475,7 +475,7 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
             </Stack>
           ),
         },
-        config.isActionScript &&
+        !config.isCloudFunction &&
           get(config, "undo.enabled") && {
             id: "undo",
             title: "Undo action",
