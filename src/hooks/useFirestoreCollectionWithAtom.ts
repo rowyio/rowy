@@ -198,7 +198,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
           }
           // on each new snapshot, use the query to get and set the document count from the server
           getCountFromServer(memoizedQuery.query).then((value) => {
-            setServerDocCountAtom(value._data.count)
+            setServerDocCountAtom(value.data().count)
           })
         } catch (error) {
           if (onError) onError(error as FirestoreError);
