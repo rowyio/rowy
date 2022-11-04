@@ -213,3 +213,6 @@ export type AuditChangeFunction = (
  * @param data - Optional additional data to log
  */
 export const auditChangeAtom = atom<AuditChangeFunction | undefined>(undefined);
+
+/** Store total  number of rows in firestore collection */
+export const serverDocCountAtom = atom(0)

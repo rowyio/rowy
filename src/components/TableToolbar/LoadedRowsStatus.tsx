@@ -7,6 +7,7 @@ import {
   tableScope,
   tableRowsAtom,
   tableNextPageAtom,
+  serverDocCountAtom
 } from "@src/atoms/tableScope";
 
 const StatusText = forwardRef(function StatusText(
@@ -26,9 +27,8 @@ const StatusText = forwardRef(function StatusText(
 });
 
 function LoadedRowsStatus() {
-  const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
-
+  const [serverDocCount] = useAtom(serverDocCountAtom, tableScope)
   if (tableNextPage.loading) return <StatusText>Loading more…</StatusText>;
 
   return (
@@ -42,7 +42,7 @@ function LoadedRowsStatus() {
     >
       <StatusText>
         Loaded {!tableNextPage.available && "all "}
-        {tableRows.length} row{tableRows.length !== 1 && "s"}
+        {serverDocCount} row{serverDocCount !== 1 && "s"}
       </StatusText>
     </Tooltip>
   );

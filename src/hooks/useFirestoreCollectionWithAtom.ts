@@ -23,6 +23,7 @@ import {
   QueryConstraint,
   WhereFilterOp,
   documentId,
+  getCountFromServer
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
@@ -63,6 +64,8 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
   deleteDocAtom?: PrimitiveAtom<DeleteCollectionDocFunction | undefined>;
   /** Update this atom when we’re loading the next page, and if there is a next page available. Uses same scope as `dataScope`. */
   nextPageAtom?: PrimitiveAtom<NextPageState>;
+  /** Set this atom's value to the number of docs in the collection on each new snapshot */
+  serverDocCountAtom?: PrimitiveAtom<number> | undefined;
 }
 
 /**
@@ -94,6 +97,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     updateDocAtom,
     deleteDocAtom,
     nextPageAtom,
+    serverDocCountAtom
   } = options || {};
 
   const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
@@ -117,9 +121,10 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     void
   >(nextPageAtom || (dataAtom as any), dataScope);
 
+  const setServerDocCountAtom = useSetAtom(serverDocCountAtom || (dataAtom as any), dataScope)
+
   // Store if we’re at the last page to prevent a new query from being created
   const [isLastPage, setIsLastPage] = useState(false);
-
   // Create the query and memoize using Firestore’s queryEqual
   const memoizedQuery = useMemoValue(
     getQuery<T>(
@@ -191,6 +196,10 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
               available: docs.length >= memoizedQuery.limit,
             }));
           }
+          // on each new snapshot, use the query to get and set the document count from the server
+          getCountFromServer(memoizedQuery.query).then((value) => {
+            setServerDocCountAtom(value._data.count)
+          })
         } catch (error) {
           if (onError) onError(error as FirestoreError);
           else handleError(error);
