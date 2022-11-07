@@ -231,6 +231,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     handleError,
     nextPageAtom,
     setNextPageAtom,
+    setServerDocCountAtom
   ]);
 
   // Create variable for validity of query to pass to useEffect dependencies
