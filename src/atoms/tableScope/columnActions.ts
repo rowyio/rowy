@@ -1,5 +1,6 @@
 import { atom } from "jotai";
 import { findIndex } from "lodash-es";
+import { FieldType } from "@src/constants/fields";
 
 import {
   tableColumnsOrderedAtom,
@@ -14,6 +15,7 @@ export interface IAddColumnOptions {
   /** Index to add column at. If undefined, adds to end */
   index?: number;
 }
+
 /**
  * Set function adds a column to tableSchema, to the end or by index.
  * Also fixes any issues with column indexes, so they go from 0 to length - 1
@@ -52,6 +54,7 @@ export interface IUpdateColumnOptions {
   /** If passed, reorders the column to the index */
   index?: number;
 }
+
 /**
  * Set function updates a column in tableSchema
  * @throws Error if column not found
@@ -118,6 +121,30 @@ export const deleteColumnAtom = atom(null, async (get, _set, key: string) => {
 
   const updatedColumns = tableColumnsOrdered
     .filter((c) => c.key !== key)
+    .map((c) => {
+      // remove column from derivatives listener fields
+      if (c.type === FieldType.derivative) {
+        return {
+          ...c,
+          config: {
+            ...c.config,
+            listenerFields:
+              c.config?.listenerFields?.filter((f) => f !== key) ?? [],
+          },
+        };
+      } else if (c.type === FieldType.action) {
+        return {
+          ...c,
+          config: {
+            ...c.config,
+            requiredFields:
+              c.config?.requiredFields?.filter((f) => f !== key) ?? [],
+          },
+        };
+      } else {
+        return c;
+      }
+    })
     .reduce(tableColumnsReducer, {});
 
   await updateTableSchema({ columns: updatedColumns }, [`columns.${key}`]);
