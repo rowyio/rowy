@@ -6,6 +6,7 @@ import {
   tableColumnsOrderedAtom,
   tableColumnsReducer,
   updateTableSchemaAtom,
+  tableSchemaAtom,
 } from "./table";
 import { ColumnConfig } from "@src/types/table";
 
@@ -115,6 +116,7 @@ export const updateColumnAtom = atom(
  * ```
  */
 export const deleteColumnAtom = atom(null, async (get, _set, key: string) => {
+  const tableSchema = get(tableSchemaAtom);
   const tableColumnsOrdered = [...get(tableColumnsOrderedAtom)];
   const updateTableSchema = get(updateTableSchemaAtom);
   if (!updateTableSchema) throw new Error("Cannot update table schema");
@@ -147,5 +149,17 @@ export const deleteColumnAtom = atom(null, async (get, _set, key: string) => {
     })
     .reduce(tableColumnsReducer, {});
 
-  await updateTableSchema({ columns: updatedColumns }, [`columns.${key}`]);
+  const updatedExtensionObjects = tableSchema?.extensionObjects?.map(
+    (extension) => {
+      return {
+        ...extension,
+        requiredFields: extension.requiredFields.filter((f) => f !== key),
+      };
+    }
+  );
+
+  await updateTableSchema(
+    { columns: updatedColumns, extensionObjects: updatedExtensionObjects },
+    [`columns.${key}`]
+  );
 });
