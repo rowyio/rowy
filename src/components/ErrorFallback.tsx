@@ -1,21 +1,17 @@
 import { useState, useEffect } from "react";
 import { FallbackProps } from "react-error-boundary";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import useOffline from "@src/hooks/useOffline";
 
 import { Typography, Button } from "@mui/material";
 import ReloadIcon from "@mui/icons-material/Refresh";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import OfflineIcon from "@mui/icons-material/CloudOff";
-import { Tables as TablesIcon } from "@src/assets/icons";
 
 import EmptyState, { IEmptyStateProps } from "@src/components/EmptyState";
 import AccessDenied from "@src/components/AccessDenied";
 
-import { ROUTES } from "@src/constants/routes";
 import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
-
-export const ERROR_TABLE_NOT_FOUND = "Table not found";
 
 export interface IErrorFallbackProps extends FallbackProps, IEmptyStateProps {}
 
@@ -69,37 +65,6 @@ export function ErrorFallbackContents({
       </>
     ),
   };
-
-  if (error.message.startsWith(ERROR_TABLE_NOT_FOUND)) {
-    if (isOffline) {
-      renderProps = { Icon: OfflineIcon, message: "You’re offline" };
-    } else {
-      renderProps = {
-        message: ERROR_TABLE_NOT_FOUND,
-        description: (
-          <>
-            <Typography variant="inherit">
-              Make sure you have the right ID
-            </Typography>
-            <code>
-              {error.message.replace(ERROR_TABLE_NOT_FOUND + ": ", "")}
-            </code>
-            <Button
-              size={props.basic ? "small" : "medium"}
-              variant="outlined"
-              color="secondary"
-              component={Link}
-              to={ROUTES.tables}
-              startIcon={<TablesIcon />}
-              onClick={() => resetErrorBoundary()}
-            >
-              All tables
-            </Button>
-          </>
-        ),
-      };
-    }
-  }
 
   if (error.message.startsWith("Loading chunk")) {
     if (isOffline) {
