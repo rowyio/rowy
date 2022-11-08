@@ -1,10 +1,9 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withPopoverCell from "@src/components/fields/_withTableCell/withPopoverCell";
+import withTableCell from "@src/components/Table/withTableCell";
 
 import { MultiSelect as MultiSelectIcon } from "@src/assets/icons";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
-import InlineCell from "./InlineCell";
+import DisplayCell from "./DisplayCell";
 import NullEditor from "@src/components/Table/editors/NullEditor";
 import { filterOperators } from "./Filter";
 const PopoverCell = lazy(
@@ -34,9 +33,8 @@ export const config: IFieldConfig = {
   icon: <MultiSelectIcon />,
   description:
     "Multiple values from predefined options. Options are searchable and users can optionally input custom values.",
-  TableCell: withPopoverCell(BasicCell, InlineCell, PopoverCell, {
-    anchorOrigin: { horizontal: "left", vertical: "bottom" },
-    transparent: true,
+  TableCell: withTableCell(DisplayCell, PopoverCell, "popover", {
+    disablePadding: true,
   }),
   TableEditor: NullEditor as any,
   SideDrawerField,

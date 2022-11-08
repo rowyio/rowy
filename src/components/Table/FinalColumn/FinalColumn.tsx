@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import type { TableCellProps } from "@src/components/Table";
 
@@ -21,7 +22,10 @@ import {
   contextMenuTargetAtom,
 } from "@src/atoms/tableScope";
 
-export default function FinalColumn({ row, focusInsideCell }: TableCellProps) {
+export const FinalColumn = memo(function FinalColumn({
+  row,
+  focusInsideCell,
+}: TableCellProps) {
   const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [addRowIdType] = useAtom(tableAddRowIdTypeAtom, projectScope);
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
@@ -47,7 +51,7 @@ export default function FinalColumn({ row, focusInsideCell }: TableCellProps) {
     <Stack
       direction="row"
       alignItems="center"
-      style={{ height: "100%" }}
+      className="cell-contents"
       gap={0.5}
     >
       <Tooltip title="Row menu">
@@ -145,4 +149,5 @@ export default function FinalColumn({ row, focusInsideCell }: TableCellProps) {
       </Tooltip>
     </Stack>
   );
-}
+});
+export default FinalColumn;

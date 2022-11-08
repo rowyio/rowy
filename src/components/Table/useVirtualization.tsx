@@ -39,7 +39,7 @@ export function useVirtualization(
   } = useVirtual({
     parentRef: containerRef,
     size: tableRows.length,
-    overscan: 10,
+    overscan: 5,
     paddingEnd: TABLE_PADDING,
     estimateSize: useCallback(
       (index: number) =>
@@ -58,7 +58,7 @@ export function useVirtualization(
     parentRef: containerRef,
     horizontal: true,
     size: leafColumns.length,
-    overscan: 10,
+    overscan: 5,
     paddingStart: TABLE_PADDING,
     paddingEnd: TABLE_PADDING,
     estimateSize: useCallback(

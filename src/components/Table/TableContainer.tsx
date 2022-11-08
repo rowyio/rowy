@@ -43,7 +43,7 @@ export const TableContainer = styled("div", {
     "--color": theme.palette.text.primary,
     "--border-color": theme.palette.divider,
     // "--summary-border-color": "#aaa",
-    "--background-color":
+    "--cell-background-color":
       theme.palette.mode === "light"
         ? theme.palette.background.paper
         : colord(theme.palette.background.paper)

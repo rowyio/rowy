@@ -12,7 +12,7 @@ import {
 } from "@src/atoms/tableScope";
 import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
 
-const ROW_HEIGHTS = [32, 40, 64, 96, 128, 160];
+const ROW_HEIGHTS = [32, 40, 64, 96, 128, 160].map((x) => x + 1);
 
 export default function RowHeight() {
   const theme = useTheme();
@@ -63,7 +63,7 @@ export default function RowHeight() {
         <ListSubheader>Row height</ListSubheader>
         {ROW_HEIGHTS.map((height) => (
           <MenuItem key={height} value={height}>
-            {height}px
+            {height - 1}px
           </MenuItem>
         ))}
       </TextField>

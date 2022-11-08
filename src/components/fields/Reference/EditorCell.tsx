@@ -61,7 +61,7 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
       sx={{
         width: "100%",
         height: "100%",
-        backgroundColor: "var(--background-color)",
+        backgroundColor: "var(--cell-background-color)",
 
         "& .MuiInputBase-root": {
           height: "100%",

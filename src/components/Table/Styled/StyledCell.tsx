@@ -1,31 +1,29 @@
-import { colord } from "colord";
 import { styled } from "@mui/material";
 
 export const StyledCell = styled("div")(({ theme }) => ({
+  position: "relative",
   display: "flex",
   alignItems: "center",
+  lineHeight: "calc(var(--row-height) - 1px)",
+  whiteSpace: "nowrap",
   "--cell-padding": theme.spacing(10 / 8),
 
   "& > .cell-contents": {
     padding: "0 var(--cell-padding)",
-    lineHeight: "calc(var(--row-height) - 1px)",
+    width: "100%",
+    height: "100%",
+    contain: "strict",
+    overflow: "hidden",
   },
 
-  overflow: "visible",
-  contain: "strict",
-  position: "relative",
-
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: "var(--cell-background-color)",
 
   border: `1px solid ${theme.palette.divider}`,
   borderTop: "none",
   "& + &": { borderLeft: "none" },
 
   "[role='row']:hover &": {
-    backgroundColor: colord(theme.palette.background.paper)
-      .mix(theme.palette.action.hover, theme.palette.action.hoverOpacity)
-      .alpha(1)
-      .toHslString(),
+    backgroundColor: "var(--row-hover-background-color)",
   },
 
   "[data-out-of-order='true'] + [role='row'] &": {

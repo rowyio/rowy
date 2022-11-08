@@ -1,4 +1,4 @@
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, startTransition } from "react";
 import { useSetAtom } from "jotai";
 import { get } from "lodash-es";
 import type { TableCellProps } from "@src/components/Table";
@@ -22,13 +22,14 @@ export default function withHeavyCell(
   return function HeavyCell({ row, column, getValue }: TableCellProps) {
     const updateField = useSetAtom(updateFieldAtom, tableScope);
 
+    // const displayedComponent = "heavy";
     // Initially display BasicCell to improve scroll performance
     const [displayedComponent, setDisplayedComponent] = useState<
       "basic" | "heavy"
     >("basic");
     // Then switch to HeavyCell once completed
     useEffect(() => {
-      setTimeout(() => {
+      startTransition(() => {
         setDisplayedComponent("heavy");
       });
     }, []);
@@ -45,6 +46,8 @@ export default function withHeavyCell(
       value: localValue,
       name: column.columnDef.meta!.name,
       type: column.columnDef.meta!.type,
+      onMouseOver: () => setDisplayedComponent("heavy"),
+      onMouseLeave: () => setDisplayedComponent("basic"),
     };
     const basicCell = <BasicCellComponent {...basicCellProps} />;
 

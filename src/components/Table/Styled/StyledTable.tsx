@@ -1,6 +1,19 @@
 import { styled } from "@mui/material";
+import { colord } from "colord";
 
 export const StyledTable = styled("div")(({ theme }) => ({
+  "--cell-background-color":
+    theme.palette.mode === "light"
+      ? theme.palette.background.paper
+      : colord(theme.palette.background.paper)
+          .mix("#fff", 0.04)
+          .alpha(1)
+          .toHslString(),
+  "--row-hover-background-color": colord(theme.palette.background.paper)
+    .mix(theme.palette.action.hover, theme.palette.action.hoverOpacity)
+    .alpha(1)
+    .toHslString(),
+
   ...(theme.typography.caption as any),
   lineHeight: "inherit !important",
 

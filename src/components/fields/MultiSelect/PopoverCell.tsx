@@ -1,4 +1,4 @@
-import { IPopoverCellProps } from "@src/components/fields/types";
+import { IEditorCellProps } from "@src/components/fields/types";
 
 import MultiSelectComponent from "@rowy/multiselect";
 
@@ -11,7 +11,7 @@ export default function MultiSelect({
   parentRef,
   showPopoverCell,
   disabled,
-}: IPopoverCellProps) {
+}: IEditorCellProps) {
   const config = column.config ?? {};
 
   return (

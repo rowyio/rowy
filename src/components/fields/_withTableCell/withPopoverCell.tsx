@@ -43,13 +43,13 @@ export default function withPopoverCell(
     // Initially display BasicCell to improve scroll performance
     const [displayedComponent, setDisplayedComponent] = useState<
       "basic" | "inline" | "popover"
-    >("basic");
+    >("inline");
     // Then switch to heavier InlineCell once completed
-    useEffect(() => {
-      setTimeout(() => {
-        setDisplayedComponent("inline");
-      });
-    }, []);
+    // useEffect(() => {
+    //   setTimeout(() => {
+    //     setDisplayedComponent("inline");
+    //   });
+    // }, []);
 
     // Store Popover open state here so we can add delay for close transition
     const [popoverOpen, setPopoverOpen] = useState(false);

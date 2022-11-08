@@ -1,4 +1,4 @@
-import { IHeavyCellProps } from "@src/components/fields/types";
+import { IEditorCellProps } from "@src/components/fields/types";
 import { useSetAtom } from "jotai";
 import { get } from "lodash-es";
 
@@ -17,7 +17,8 @@ export default function Checkbox({
   value,
   onSubmit,
   disabled,
-}: IHeavyCellProps) {
+  tabIndex,
+}: IEditorCellProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
 
   const handleChange = () => {
@@ -43,6 +44,7 @@ export default function Checkbox({
           onChange={handleChange}
           disabled={disabled}
           color="success"
+          tabIndex={tabIndex}
         />
       }
       label={column.name as string}

@@ -1,5 +1,4 @@
-import { forwardRef } from "react";
-import { IPopoverInlineCellProps } from "@src/components/fields/types";
+import { IDisplayCellProps } from "@src/components/fields/types";
 
 import { ButtonBase, Grid } from "@mui/material";
 import { ChevronDown } from "@src/assets/icons";
@@ -7,22 +6,21 @@ import { ChevronDown } from "@src/assets/icons";
 import { sanitiseValue } from "./utils";
 import ChipList from "@src/components/Table/formatters/ChipList";
 import FormattedChip from "@src/components/FormattedChip";
-import { ConvertStringToArray } from "./ConvertStringToArray";
 
-export const MultiSelect = forwardRef(function MultiSelect(
-  { value, showPopoverCell, disabled, onSubmit }: IPopoverInlineCellProps,
-  ref: React.Ref<any>
-) {
-  if (typeof value === "string" && value !== "")
-    return <ConvertStringToArray value={value} onSubmit={onSubmit} />;
+export default function MultiSelect({
+  value,
+  showPopoverCell,
+  disabled,
+}: IDisplayCellProps) {
+  // if (typeof value === "string" && value !== "")
+  // return <ConvertStringToArray value={value} onSubmit={onSubmit} />;
 
   return (
     <ButtonBase
       onClick={() => showPopoverCell(true)}
-      ref={ref}
       disabled={disabled}
-      className="cell-collapse-padding"
-      sx={{
+      style={{
+        width: "100%",
         height: "100%",
         font: "inherit",
         color: "inherit !important",
@@ -42,20 +40,7 @@ export const MultiSelect = forwardRef(function MultiSelect(
         )}
       </ChipList>
 
-      {!disabled && (
-        <ChevronDown
-          className="row-hover-iconButton"
-          sx={{
-            flexShrink: 0,
-            mr: 0.5,
-            borderRadius: 1,
-            p: (32 - 20) / 2 / 8,
-            boxSizing: "content-box !important",
-          }}
-        />
-      )}
+      {!disabled && <ChevronDown className="row-hover-iconButton end" />}
     </ButtonBase>
   );
-});
-
-export default MultiSelect;
+}

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useSetAtom } from "jotai";
 import { Column } from "@tanstack/react-table";
 
@@ -23,7 +22,6 @@ export function useKeyboardNavigation({
   leafColumns,
 }: IUseKeyboardNavigationProps) {
   const setSelectedCell = useSetAtom(selectedCellAtom, tableScope);
-  const [focusInsideCell, setFocusInsideCell] = useState(false);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     // Block default browser behavior for arrow keys (scroll) and other keys
@@ -43,7 +41,7 @@ export function useKeyboardNavigation({
 
     // Esc: exit cell
     if (e.key === "Escape") {
-      setFocusInsideCell(false);
+      setSelectedCell((c) => ({ ...c!, focusInside: false }));
       (
         gridRef.current?.querySelector("[aria-selected=true]") as HTMLDivElement
       )?.focus();
@@ -63,7 +61,7 @@ export function useKeyboardNavigation({
 
     // Enter: enter cell
     if (e.key === "Enter") {
-      setFocusInsideCell(true);
+      setSelectedCell((c) => ({ ...c!, focusInside: true }));
       (target.querySelector("[tabindex]") as HTMLElement)?.focus();
       return;
     }
@@ -125,6 +123,8 @@ export function useKeyboardNavigation({
           ? tableRows[newRowIndex]._rowy_ref.path
           : "_rowy_header",
       columnKey: leafColumns[newColIndex].id! || leafColumns[0].id!,
+      // When selected cell changes, exit current cell
+      focusInside: false,
     };
 
     // Store in selectedCellAtom
@@ -139,12 +139,9 @@ export function useKeyboardNavigation({
 
     // Focus the cell
     if (newCellEl) setTimeout(() => (newCellEl as HTMLDivElement).focus());
-
-    // When selected cell changes, exit current cell
-    setFocusInsideCell(false);
   };
 
-  return { handleKeyDown, focusInsideCell } as const;
+  return { handleKeyDown } as const;
 }
 
 export default useKeyboardNavigation;

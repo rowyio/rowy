@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { styled } from "@mui/material/styles";
 import ErrorIcon from "@mui/icons-material/ErrorOutline";
 import WarningIcon from "@mui/icons-material/WarningAmber";
@@ -18,7 +19,7 @@ const Dot = styled("div")(({ theme }) => ({
   borderRadius: "50%",
   backgroundColor: theme.palette.error.main,
 
-  boxShadow: `0 0 0 4px var(--background-color)`,
+  boxShadow: `0 0 0 4px var(--cell-background-color)`,
   "[role='row']:hover &": {
     boxShadow: `0 0 0 4px var(--row-hover-background-color)`,
   },
@@ -34,7 +35,7 @@ export interface ICellValidationProps
   validationRegex?: string;
 }
 
-export default function CellValidation({
+export const CellValidation = memo(function MemoizedCellValidation({
   value,
   required,
   validationRegex,
@@ -73,4 +74,6 @@ export default function CellValidation({
     );
 
   return <StyledCell {...props}>{children}</StyledCell>;
-}
+});
+
+export default CellValidation;

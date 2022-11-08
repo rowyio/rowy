@@ -1,3 +1,3 @@
-export default function BasicCellNull() {
-  return null;
+export default function BasicCellNull(props: any) {
+  return <div {...props} style={{ position: "absolute", inset: 0 }} />;
 }

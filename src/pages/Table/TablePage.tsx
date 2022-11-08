@@ -2,7 +2,7 @@ import { useRef, Suspense, lazy } from "react";
 import { useAtom } from "jotai";
 import { DataGridHandle } from "react-data-grid";
 import { ErrorBoundary } from "react-error-boundary";
-import { isEmpty } from "lodash-es";
+import { isEmpty, intersection } from "lodash-es";
 
 import { Box, Fade } from "@mui/material";
 import ErrorFallback, {
@@ -72,7 +72,10 @@ export default function TablePage({
   // shouldn’t access projectScope at all, to separate concerns.
   const canAddColumn = userRoles.includes("ADMIN");
   const canEditColumn = userRoles.includes("ADMIN");
-  const canEditCell = userRoles.includes("ADMIN") || !tableSettings.readOnly;
+  const canEditCell =
+    userRoles.includes("ADMIN") ||
+    (!tableSettings.readOnly &&
+      intersection(userRoles, tableSettings.roles).length > 0);
 
   // Warn user about leaving when they have a table modal open
   useBeforeUnload(columnModalAtom, tableScope);

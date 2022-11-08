@@ -30,7 +30,8 @@ export interface IFieldConfig {
     reset: () => void
   ) => IContextMenuItem[];
   TableCell: React.ComponentType<TableCellProps>;
-  TableEditor: React.ComponentType<EditorProps<TableRow, any>>;
+  /** @deprecated TODO: REMOVE */
+  TableEditor?: React.ComponentType<EditorProps<TableRow, any>>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;
   settings?: React.ComponentType<ISettingsProps>;
   settingsValidator?: (config: Record<string, any>) => Record<string, string>;
@@ -45,11 +46,13 @@ export interface IFieldConfig {
   csvImportParser?: (value: string, config?: any) => any;
 }
 
+/** @deprecated TODO: REMOVE */
 export interface IBasicCellProps {
   value: any;
   type: FieldType;
   name: string;
 }
+/** @deprecated TODO: REMOVE */
 export interface IHeavyCellProps extends IBasicCellProps {
   row: TableRow;
   column: ColumnConfig;
@@ -57,11 +60,29 @@ export interface IHeavyCellProps extends IBasicCellProps {
   docRef: TableRowRef;
   disabled: boolean;
 }
-
+/** @deprecated TODO: REMOVE */
 export interface IPopoverInlineCellProps extends IHeavyCellProps {
   showPopoverCell: React.Dispatch<React.SetStateAction<boolean>>;
 }
+/** @deprecated TODO: REMOVE */
 export interface IPopoverCellProps extends IPopoverInlineCellProps {
+  parentRef: PopoverProps["anchorEl"];
+}
+
+export interface IDisplayCellProps<T = any> {
+  value: T;
+  type: FieldType;
+  name: string;
+  row: TableRow;
+  column: ColumnConfig;
+  docRef: TableRowRef;
+  disabled: boolean;
+  showPopoverCell: (value: boolean) => void;
+  setFocusInsideCell: (focusInside: boolean) => void;
+}
+export interface IEditorCellProps<T = any> extends IDisplayCellProps<T> {
+  onSubmit: (value: T) => void;
+  tabIndex: number;
   parentRef: PopoverProps["anchorEl"];
 }
 

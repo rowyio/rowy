@@ -14,6 +14,7 @@ import {
   Droppable,
   Draggable,
 } from "react-beautiful-dnd";
+import { get } from "lodash-es";
 import { Portal } from "@mui/material";
 import { ErrorBoundary } from "react-error-boundary";
 
@@ -63,6 +64,8 @@ export const DEBOUNCE_DELAY = 500;
 
 export type TableCellProps = CellContext<TableRow, any> & {
   focusInsideCell: boolean;
+  setFocusInsideCell: (focusInside: boolean) => void;
+  disabled: boolean;
 };
 
 declare module "@tanstack/table-core" {
@@ -95,6 +98,7 @@ export default function Table({
   const [tablePage, setTablePage] = useAtom(tablePageAtom, tableScope);
   const [selectedCell, setSelectedCell] = useAtom(selectedCellAtom, tableScope);
   const setContextMenuTarget = useSetAtom(contextMenuTargetAtom, tableScope);
+  const focusInsideCell = selectedCell?.focusInside ?? false;
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
@@ -109,7 +113,7 @@ export default function Table({
       // Hide column for all users using table schema
       .filter((column) => !column.hidden)
       .map((columnConfig) =>
-        columnHelper.accessor(columnConfig.fieldName, {
+        columnHelper.accessor((row) => get(row, columnConfig.fieldName), {
           id: columnConfig.fieldName,
           meta: columnConfig,
           size: columnConfig.width,
@@ -119,7 +123,7 @@ export default function Table({
         })
       );
 
-    if (canAddColumn || !tableSettings.readOnly) {
+    if (canAddColumn || canEditCell) {
       _columns.push(
         columnHelper.display({
           id: "_rowy_column_actions",
@@ -129,7 +133,7 @@ export default function Table({
     }
 
     return _columns;
-  }, [tableColumnsOrdered, canAddColumn, tableSettings.readOnly]);
+  }, [tableColumnsOrdered, canAddColumn, canEditCell]);
 
   // Get user’s hidden columns from props and memoize into a VisibilityState
   const columnVisibility = useMemo(() => {
@@ -171,7 +175,7 @@ export default function Table({
   const { rows } = table.getRowModel();
   const leafColumns = table.getVisibleLeafColumns();
 
-  const { handleKeyDown, focusInsideCell } = useKeyboardNavigation({
+  const { handleKeyDown } = useKeyboardNavigation({
     gridRef,
     tableRows,
     leafColumns,
@@ -228,7 +232,7 @@ export default function Table({
       <StyledTable
         ref={gridRef}
         role="grid"
-        aria-readonly={tableSettings.readOnly}
+        aria-readonly={!canEditCell}
         aria-colcount={columns.length}
         aria-rowcount={tableRows.length + 1}
         style={
@@ -320,15 +324,24 @@ export default function Table({
                                 zIndex: header.column.getIsPinned() ? 11 : 10,
                               }}
                               width={header.getSize()}
-                              sx={[
+                              sx={
                                 snapshot.isDragging
-                                  ? {}
-                                  : { "& + &": { borderLeft: "none" } },
-                              ]}
+                                  ? undefined
+                                  : { "& + &": { borderLeft: "none" } }
+                              }
                               onClick={(e) => {
                                 setSelectedCell({
                                   path: "_rowy_header",
                                   columnKey: header.id,
+                                  focusInside: false,
+                                });
+                                (e.target as HTMLDivElement).focus();
+                              }}
+                              onDoubleClick={(e) => {
+                                setSelectedCell({
+                                  path: "_rowy_header",
+                                  columnKey: header.id,
+                                  focusInside: true,
                                 });
                                 (e.target as HTMLDivElement).focus();
                               }}
@@ -425,11 +438,11 @@ export default function Table({
                       tabIndex={isSelectedCell && !focusInsideCell ? 0 : -1}
                       aria-colindex={cellIndex + 1}
                       aria-readonly={
-                        !canEditCell &&
+                        !canEditCell ||
                         cell.column.columnDef.meta?.editable === false
                       }
                       aria-required={Boolean(
-                        cell.column.columnDef.meta!.config?.required
+                        cell.column.columnDef.meta?.config?.required
                       )}
                       aria-selected={isSelectedCell}
                       aria-describedby="rowy-table-cell-description"
@@ -456,6 +469,15 @@ export default function Table({
                         setSelectedCell({
                           path: row.original._rowy_ref.path,
                           columnKey: cell.column.id,
+                          focusInside: false,
+                        });
+                        (e.target as HTMLDivElement).focus();
+                      }}
+                      onDoubleClick={(e) => {
+                        setSelectedCell({
+                          path: row.original._rowy_ref.path,
+                          columnKey: cell.column.id,
+                          focusInside: true,
                         });
                         (e.target as HTMLDivElement).focus();
                       }}
@@ -464,27 +486,32 @@ export default function Table({
                         setSelectedCell({
                           path: row.original._rowy_ref.path,
                           columnKey: cell.column.id,
+                          focusInside: false,
                         });
                         (e.target as HTMLDivElement).focus();
                         setContextMenuTarget(e.target as HTMLElement);
                       }}
                       value={cell.getValue()}
-                      required={cell.column.columnDef.meta!.config?.required}
+                      required={cell.column.columnDef.meta?.config?.required}
                       validationRegex={
-                        cell.column.columnDef.meta!.config?.validationRegex
+                        cell.column.columnDef.meta?.config?.validationRegex
                       }
                     >
-                      <div
-                        className="cell-contents"
-                        style={{ height: tableSchema.rowHeight }}
-                      >
-                        <ErrorBoundary fallbackRender={InlineErrorFallback}>
-                          {flexRender(cell.column.columnDef.cell, {
-                            ...cell.getContext(),
-                            focusInsideCell: isSelectedCell && focusInsideCell,
-                          })}
-                        </ErrorBoundary>
-                      </div>
+                      <ErrorBoundary fallbackRender={InlineErrorFallback}>
+                        {flexRender(cell.column.columnDef.cell, {
+                          ...cell.getContext(),
+                          focusInsideCell: isSelectedCell && focusInsideCell,
+                          setFocusInsideCell: (focusInside: boolean) =>
+                            setSelectedCell({
+                              path: row.original._rowy_ref.path,
+                              columnKey: cell.column.id,
+                              focusInside,
+                            }),
+                          disabled:
+                            !canEditCell ||
+                            cell.column.columnDef.meta?.editable === false,
+                        })}
+                      </ErrorBoundary>
                     </CellValidation>
                   );
                 })}

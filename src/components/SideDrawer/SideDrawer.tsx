@@ -79,7 +79,11 @@ export default function SideDrawer({
     if (direction === "down" && rowIndex < tableRows.length - 1) rowIndex += 1;
     const newPath = tableRows[rowIndex]._rowy_ref.path;
 
-    setCell((cell) => ({ columnKey: cell!.columnKey, path: newPath }));
+    setCell((cell) => ({
+      columnKey: cell!.columnKey,
+      path: newPath,
+      focusInside: false,
+    }));
 
     const columnIndex = visibleColumnKeys.indexOf(cell!.columnKey || "");
     dataGridRef?.current?.selectCell(
