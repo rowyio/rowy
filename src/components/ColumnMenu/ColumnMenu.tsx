@@ -133,7 +133,7 @@ export default function ColumnMenu() {
       c.config?.listenerFields?.includes(column.key) ||
       c.config?.requiredFields?.includes(column.key)
     ) {
-      referencedColumns.push(key);
+      referencedColumns.push(c.name);
     }
   });
   tableSchema?.extensionObjects?.forEach((extension) => {
