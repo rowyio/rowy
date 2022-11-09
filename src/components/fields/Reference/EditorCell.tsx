@@ -1,100 +1,33 @@
-import { useRef, useLayoutEffect } from "react";
-import { useAtom, useSetAtom } from "jotai";
-import { EditorProps } from "react-data-grid";
-import { get } from "lodash-es";
-import { useSnackbar } from "notistack";
+import type { IEditorCellProps } from "@src/components/fields/types";
+import EditorCellTextField from "@src/components/Table/EditorCellTextField";
 
-import { TextField } from "@mui/material";
+import { useAtom } from "jotai";
+import { doc, deleteField } from "firebase/firestore";
+import { useSnackbar } from "notistack";
 
 import { projectScope } from "@src/atoms/projectScope";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
-import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
-import { doc, deleteField } from "firebase/firestore";
 
-/** WARNING: THIS DOES NOT WORK IN REACT 18 STRICT MODE */
-export default function TextEditor({ row, column }: EditorProps<any>) {
-  const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
-  const updateField = useSetAtom(updateFieldAtom, tableScope);
+export default function Reference(
+  props: IEditorCellProps<ReturnType<typeof doc>>
+) {
   const { enqueueSnackbar } = useSnackbar();
-
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  // WARNING: THIS DOES NOT WORK IN REACT 18 STRICT MODE
-  useLayoutEffect(() => {
-    const inputElement = inputRef.current;
-    return () => {
-      const newValue = inputElement?.value;
-      if (newValue !== undefined && newValue !== "") {
-        try {
-          const refValue = doc(firebaseDb, newValue);
-
-          updateField({
-            path: row._rowy_ref.path,
-            fieldName: column.key,
-            value: refValue,
-          });
-        } catch (e: any) {
-          enqueueSnackbar(`Invalid path: ${e.message}`, { variant: "error" });
-        }
-      } else {
-        updateField({
-          path: row._rowy_ref.path,
-          fieldName: column.key,
-          value: deleteField(),
-        });
-      }
-    };
-  }, [column.key, row._rowy_ref.path, updateField]);
-
-  const defaultValue = get(row, column.key)?.path ?? "";
-  const { maxLength } = (column as any).config;
+  const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
 
   return (
-    <TextField
-      defaultValue={defaultValue}
-      fullWidth
-      variant="standard"
-      inputProps={{
-        ref: inputRef,
-        maxLength: maxLength,
-      }}
-      sx={{
-        width: "100%",
-        height: "100%",
-        backgroundColor: "var(--cell-background-color)",
-
-        "& .MuiInputBase-root": {
-          height: "100%",
-          font: "inherit", // Prevent text jumping
-          letterSpacing: "inherit", // Prevent text jumping
-          p: 0,
-        },
-        "& .MuiInputBase-input": {
-          height: "100%",
-          font: "inherit", // Prevent text jumping
-          letterSpacing: "inherit", // Prevent text jumping
-          p: "var(--cell-padding)",
-          pb: 1 / 8,
-        },
-        "& textarea.MuiInputBase-input": {
-          lineHeight: (theme) => theme.typography.body2.lineHeight,
-          maxHeight: "100%",
-          boxSizing: "border-box",
-          py: 3 / 8,
-        },
-      }}
-      // InputProps={{
-      //   endAdornment:
-      //     (column as any).type === FieldType.percentage ? "%" : undefined,
-      // }}
-      autoFocus
-      onKeyDown={(e) => {
-        if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-          e.stopPropagation();
-        }
-
-        if (e.key === "Escape") {
-          (e.target as any).value = defaultValue;
+    <EditorCellTextField
+      {...(props as any)}
+      value={props.value?.path ?? ""}
+      onSubmit={(newValue) => {
+        if (newValue !== undefined && newValue !== "") {
+          try {
+            const refValue = doc(firebaseDb, newValue);
+            props.onSubmit(refValue);
+          } catch (e: any) {
+            enqueueSnackbar(`Invalid path: ${e.message}`, { variant: "error" });
+          }
+        } else {
+          props.onSubmit(deleteField() as any);
         }
       }}
     />

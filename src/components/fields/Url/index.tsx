@@ -1,10 +1,10 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
+import withTableCell from "@src/components/Table/withTableCell";
 
 import UrlIcon from "@mui/icons-material/Link";
-import TableCell from "./TableCell";
-import TextEditor from "@src/components/Table/editors/TextEditor";
+import DisplayCell from "./DisplayCell";
+import EditorCell from "./EditorCell";
 import { filterOperators } from "@src/components/fields/ShortText/Filter";
 import BasicContextMenuActions from "@src/components/fields/_BasicCell/BasicCellContextMenuActions";
 
@@ -23,8 +23,9 @@ export const config: IFieldConfig = {
   icon: <UrlIcon />,
   description: "Web address. Not validated.",
   contextMenuActions: BasicContextMenuActions,
-  TableCell: withBasicCell(TableCell),
-  TableEditor: TextEditor,
+  TableCell: withTableCell(DisplayCell, EditorCell, "focus", {
+    disablePadding: true,
+  }),
   SideDrawerField,
   filter: {
     operators: filterOperators,

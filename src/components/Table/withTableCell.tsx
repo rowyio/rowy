@@ -36,7 +36,7 @@ export interface ICellOptions {
  */
 export default function withTableCell(
   DisplayCellComponent: React.ComponentType<IDisplayCellProps>,
-  EditorCellComponent: React.ComponentType<IEditorCellProps>,
+  EditorCellComponent: React.ComponentType<IEditorCellProps> | null,
   editorMode: "focus" | "inline" | "popover" = "focus",
   options: ICellOptions = {}
 ) {
@@ -115,13 +115,16 @@ export default function withTableCell(
         });
       };
 
-      const editorCell = (
+      // Show displayCell as a fallback if intentionally null
+      const editorCell = EditorCellComponent ? (
         <EditorCellComponent
           {...basicCellProps}
           tabIndex={focusInsideCell ? 0 : -1}
           onSubmit={handleSubmit}
           parentRef={parentRef}
         />
+      ) : (
+        displayCell
       );
 
       if (editorMode === "focus" && focusInsideCell) {

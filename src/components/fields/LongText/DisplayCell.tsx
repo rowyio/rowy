@@ -1,16 +1,15 @@
-import { IBasicCellProps } from "@src/components/fields/types";
+import { IDisplayCellProps } from "@src/components/fields/types";
 
 import { useTheme } from "@mui/material";
 
-export default function LongText({ value }: IBasicCellProps) {
+export default function LongText({ value }: IDisplayCellProps) {
   const theme = useTheme();
 
   return (
     <div
       style={{
-        width: "100%",
         maxHeight: "100%",
-        padding: theme.spacing(3 / 8, 0),
+        padding: theme.spacing(1, 0),
 
         whiteSpace: "pre-line",
         lineHeight: theme.typography.body2.lineHeight,

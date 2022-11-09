@@ -1,10 +1,10 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
+import withTableCell from "@src/components/Table/withTableCell";
 
 import PhoneIcon from "@mui/icons-material/PhoneOutlined";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellValue";
-import TextEditor from "@src/components/Table/editors/TextEditor";
+import DisplayCell from "@src/components/fields/_BasicCell/BasicCellValue";
+import EditorCell from "./EditorCell";
 import { filterOperators } from "@src/components/fields/ShortText/Filter";
 import BasicContextMenuActions from "@src/components/fields/_BasicCell/BasicCellContextMenuActions";
 
@@ -23,8 +23,7 @@ export const config: IFieldConfig = {
   icon: <PhoneIcon />,
   description: "Phone number stored as text. Not validated.",
   contextMenuActions: BasicContextMenuActions,
-  TableCell: withBasicCell(BasicCell),
-  TableEditor: TextEditor,
+  TableCell: withTableCell(DisplayCell, EditorCell),
   SideDrawerField,
   filter: {
     operators: filterOperators,

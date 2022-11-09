@@ -1,20 +1,14 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
+import withTableCell from "@src/components/Table/withTableCell";
 
 import LongTextIcon from "@mui/icons-material/Notes";
-import BasicCell from "./BasicCell";
-import TextEditor from "@src/components/Table/editors/TextEditor";
+import DisplayCell from "./DisplayCell";
+import EditorCell from "./EditorCell";
+import SideDrawerField from "./SideDrawerField";
 
 import { filterOperators } from "./Filter";
 import BasicContextMenuActions from "@src/components/fields/_BasicCell/BasicCellContextMenuActions";
-
-const SideDrawerField = lazy(
-  () =>
-    import(
-      "./SideDrawerField" /* webpackChunkName: "SideDrawerField-LongText" */
-    )
-);
 
 const Settings = lazy(
   () => import("./Settings" /* webpackChunkName: "Settings-LongText" */)
@@ -30,8 +24,7 @@ export const config: IFieldConfig = {
   icon: <LongTextIcon />,
   description: "Text displayed on multiple lines.",
   contextMenuActions: BasicContextMenuActions,
-  TableCell: withBasicCell(BasicCell),
-  TableEditor: TextEditor,
+  TableCell: withTableCell(DisplayCell, EditorCell),
   SideDrawerField,
   settings: Settings,
   filter: {

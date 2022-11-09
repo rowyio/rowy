@@ -446,7 +446,11 @@ export default function Table({
                         cell.column.columnDef.meta?.config?.required
                       )}
                       aria-selected={isSelectedCell}
-                      aria-describedby="rowy-table-cell-description"
+                      aria-describedby={
+                        canEditCell
+                          ? "rowy-table-editable-cell-description"
+                          : undefined
+                      }
                       style={{
                         width: cell.column.getSize(),
                         height: tableSchema.rowHeight,
@@ -537,7 +541,10 @@ export default function Table({
       </StyledTable>
 
       <Portal>
-        <div id="rowy-table-cell-description" style={{ display: "none" }}>
+        <div
+          id="rowy-table-editable-cell-description"
+          style={{ display: "none" }}
+        >
           Press Enter to edit.
         </div>
       </Portal>

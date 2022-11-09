@@ -14,6 +14,9 @@ export const StyledCell = styled("div")(({ theme }) => ({
     height: "100%",
     contain: "strict",
     overflow: "hidden",
+
+    display: "flex",
+    alignItems: "center",
   },
 
   backgroundColor: "var(--cell-background-color)",

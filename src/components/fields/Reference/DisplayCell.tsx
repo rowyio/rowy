@@ -1,12 +1,12 @@
 import { useAtom } from "jotai";
-import { IBasicCellProps } from "@src/components/fields/types";
+import { IDisplayCellProps } from "@src/components/fields/types";
 
 import { Stack, IconButton } from "@mui/material";
 import LaunchIcon from "@mui/icons-material/Launch";
 
 import { projectScope, projectIdAtom } from "@src/atoms/projectScope";
 
-export default function Reference({ value }: IBasicCellProps) {
+export default function Reference({ value }: IDisplayCellProps) {
   const [projectId] = useAtom(projectIdAtom, projectScope);
 
   const path = value?.path ?? "";
@@ -17,8 +17,7 @@ export default function Reference({ value }: IBasicCellProps) {
       direction="row"
       alignItems="center"
       justifyContent="space-between"
-      className="cell-collapse-padding"
-      sx={{ p: "var(--cell-padding)", pr: 0.5 }}
+      sx={{ p: "var(--cell-padding)", pr: 0.5, width: "100%" }}
     >
       <div style={{ flexGrow: 1, overflow: "hidden" }}>{path}</div>
 

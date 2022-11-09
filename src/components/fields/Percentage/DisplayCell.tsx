@@ -1,9 +1,9 @@
-import { IHeavyCellProps } from "@src/components/fields/types";
+import { IDisplayCellProps } from "@src/components/fields/types";
 
 import { useTheme } from "@mui/material";
 import { resultColorsScale } from "@src/utils/color";
 
-export default function Percentage({ column, value }: IHeavyCellProps) {
+export default function Percentage({ column, value }: IDisplayCellProps) {
   const theme = useTheme();
   const { colors } = (column as any).config;
 

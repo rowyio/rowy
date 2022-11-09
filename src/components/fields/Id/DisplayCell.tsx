@@ -1,8 +1,8 @@
-import { IHeavyCellProps } from "@src/components/fields/types";
+import { IDisplayCellProps } from "@src/components/fields/types";
 
 import { useTheme } from "@mui/material";
 
-export default function Id({ docRef }: IHeavyCellProps) {
+export default function Id({ docRef }: IDisplayCellProps) {
   const theme = useTheme();
 
   return (

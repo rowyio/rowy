@@ -1,10 +1,10 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
+import withTableCell from "@src/components/Table/withTableCell";
 
 import { Number as NumberIcon } from "@src/assets/icons";
-import BasicCell from "./BasicCell";
-import TextEditor from "@src/components/Table/editors/TextEditor";
+import DisplayCell from "./DisplayCell";
+import EditorCell from "./EditorCell";
 import { filterOperators } from "./Filter";
 import BasicContextMenuActions from "@src/components/fields/_BasicCell/BasicCellContextMenuActions";
 const SideDrawerField = lazy(
@@ -22,8 +22,7 @@ export const config: IFieldConfig = {
   icon: <NumberIcon />,
   description: "Numeric value.",
   contextMenuActions: BasicContextMenuActions,
-  TableCell: withBasicCell(BasicCell),
-  TableEditor: TextEditor,
+  TableCell: withTableCell(DisplayCell, EditorCell),
   SideDrawerField,
   filter: {
     operators: filterOperators,

@@ -1,9 +1,9 @@
-import { IBasicCellProps } from "@src/components/fields/types";
+import { IDisplayCellProps } from "@src/components/fields/types";
 
 import { Stack, IconButton } from "@mui/material";
 import LaunchIcon from "@mui/icons-material/Launch";
 
-export default function Url({ value }: IBasicCellProps) {
+export default function Url({ value }: IDisplayCellProps) {
   if (!value || typeof value !== "string") return null;
 
   const href = value.includes("http") ? value : `https://${value}`;
@@ -13,8 +13,7 @@ export default function Url({ value }: IBasicCellProps) {
       direction="row"
       alignItems="center"
       justifyContent="space-between"
-      className="cell-collapse-padding"
-      sx={{ p: "var(--cell-padding)", pr: 0.5 }}
+      sx={{ p: "var(--cell-padding)", pr: 0.5, width: "100%" }}
     >
       <div style={{ flexGrow: 1, overflow: "hidden" }}>{value}</div>
 
