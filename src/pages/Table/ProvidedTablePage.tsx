@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { useAtom, Provider } from "jotai";
 import { DebugAtoms } from "@src/atoms/utils";
 import { useParams, useOutlet } from "react-router-dom";
@@ -9,7 +9,6 @@ import ErrorFallback, {
   ERROR_TABLE_NOT_FOUND,
 } from "@src/components/ErrorFallback";
 import TableSourceFirestore from "@src/sources/TableSourceFirestore";
-import TablePage from "./TablePage";
 import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkeleton";
 import TableSkeleton from "@src/components/Table/TableSkeleton";
 
@@ -27,6 +26,9 @@ import {
 } from "@src/atoms/tableScope";
 import { SyncAtomValue } from "@src/atoms/utils";
 import useDocumentTitle from "@src/hooks/useDocumentTitle";
+
+// prettier-ignore
+const TablePage = lazy(() => import("./TablePage" /* webpackChunkName: "TablePage" */));
 
 /**
  * Wraps `TablePage` with the data for a top-level table.
