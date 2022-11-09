@@ -421,18 +421,21 @@ export default function ColumnMenu() {
                       <Divider sx={{ my: 2 }} />
                       {referencedColumns.length ? (
                         <Typography sx={{ mt: 1 }}>
-                          This column will be removed as a dependency of the following columns:{" "}
-                          <Typography key={column} fontWeight="bold" component="span">
+                          This column will be removed as a dependency of the
+                          following columns:{" "}
+                          <Typography fontWeight="bold" component="span">
                             {referencedColumns.join(", ")}
                           </Typography>
                         </Typography>
                       ) : null}
                       {referencedExtensions.length ? (
                         <Typography sx={{ mt: 1 }}>
-                          This column will be removed as a dependency from the following Extensions:{" "}
-                          <Typography key={extension} fontWeight="bold" component="span">
+                          This column will be removed as a dependency from the
+                          following Extensions:{" "}
+                          <Typography fontWeight="bold" component="span">
                             {referencedExtensions.join(", ")}
                           </Typography>
+                        </Typography>
                       ) : null}
                       <Typography sx={{ mt: 1, fontWeight: "bold" }}>
                         You need to re-deploy this table’s cloud function.
