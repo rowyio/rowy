@@ -283,6 +283,7 @@ export default function Table({
                             aria-colindex={header.index + 1}
                             aria-readonly={!canEditColumn}
                             aria-selected={isSelectedCell}
+                            canAddColumn={canAddColumn}
                           />
                         );
 

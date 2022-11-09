@@ -9,16 +9,44 @@ import { spreadSx } from "@src/utils/ui";
 
 export interface IFinalColumnHeaderProps extends Partial<BoxProps> {
   focusInsideCell: boolean;
+  canAddColumn: boolean;
 }
 
 export default function FinalColumnHeader({
   focusInsideCell,
+  canAddColumn,
   ...props
 }: IFinalColumnHeaderProps) {
   const [userRoles] = useAtom(userRolesAtom, projectScope);
   const openColumnModal = useSetAtom(columnModalAtom, tableScope);
 
-  if (!userRoles.includes("ADMIN")) return null;
+  if (!userRoles.includes("ADMIN"))
+    return (
+      <Box
+        role="columnheader"
+        {...props}
+        sx={[
+          {
+            backgroundColor: "background.default",
+            border: (theme) => `1px solid ${theme.palette.divider}`,
+            borderLeft: "none",
+            borderTopRightRadius: (theme) => theme.shape.borderRadius,
+            borderBottomRightRadius: (theme) => theme.shape.borderRadius,
+
+            display: "flex",
+            alignItems: "center",
+
+            width: 32 * 3 + 4 * 2 + 10 * 2,
+            px: 1.5,
+            color: "text.secondary",
+          },
+          ...spreadSx(props.sx),
+        ]}
+        className="column-header"
+      >
+        Actions
+      </Box>
+    );
 
   return (
     <Box
@@ -37,7 +65,7 @@ export default function FinalColumnHeader({
 
           width: 32 * 3 + 4 * 2 + 10 * 2,
           overflow: "visible",
-          px: 1,
+          px: 0.75,
         },
         ...spreadSx(props.sx),
       ]}

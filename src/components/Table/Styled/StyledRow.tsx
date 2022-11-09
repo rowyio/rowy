@@ -35,7 +35,8 @@ export const StyledRow = styled("div")(({ theme }) => ({
     flexShrink: 0,
     borderRadius: theme.shape.borderRadius,
     padding: (32 - 20) / 2,
-    boxSizing: "content-box",
+    width: 32,
+    height: 32,
 
     "&.end": { marginRight: theme.spacing(0.5) },
   },
