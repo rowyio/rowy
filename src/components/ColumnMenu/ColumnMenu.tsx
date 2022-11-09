@@ -441,7 +441,7 @@ export default function ColumnMenu() {
                   ) : null}
                 </>
               ),
-              confirm: requireRebuild ? "Delete & rebuild" : "Delete",
+              confirm: requireRebuild ? "Delete & re-deploy" : "Delete",
               confirmColor: "error",
               handleConfirm: handleDeleteColumn,
             });
