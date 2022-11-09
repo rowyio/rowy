@@ -75,14 +75,17 @@ export interface IDisplayCellProps<T = any> {
   name: string;
   row: TableRow;
   column: ColumnConfig;
+  /** @deprecated */
   docRef: TableRowRef;
+  /** The row’s _rowy_ref object */
+  _rowy_ref: TableRowRef;
   disabled: boolean;
+  tabIndex: number;
   showPopoverCell: (value: boolean) => void;
   setFocusInsideCell: (focusInside: boolean) => void;
 }
 export interface IEditorCellProps<T = any> extends IDisplayCellProps<T> {
   onSubmit: (value: T) => void;
-  tabIndex: number;
   parentRef: PopoverProps["anchorEl"];
 }
 
@@ -104,13 +107,6 @@ export interface ISideDrawerFieldProps {
 
   /** Field locked. Do NOT check `column.locked` */
   disabled: boolean;
-
-  /** @deprecated */
-  docRef: TableRowRef;
-  /** @deprecated */
-  control: Control;
-  /** @deprecated */
-  useFormMethods: UseFormReturn;
 }
 
 export interface ISettingsProps {

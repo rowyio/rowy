@@ -6,7 +6,7 @@ import LaunchIcon from "@mui/icons-material/Launch";
 
 import { projectScope, projectIdAtom } from "@src/atoms/projectScope";
 
-export default function Reference({ value }: IDisplayCellProps) {
+export default function Reference({ value, tabIndex }: IDisplayCellProps) {
   const [projectId] = useAtom(projectIdAtom, projectScope);
 
   const path = value?.path ?? "";
@@ -32,6 +32,7 @@ export default function Reference({ value }: IDisplayCellProps) {
         aria-label="Open in Firebase Console"
         className="row-hover-iconButton"
         style={{ flexShrink: 0 }}
+        tabIndex={tabIndex}
       >
         <LaunchIcon />
       </IconButton>

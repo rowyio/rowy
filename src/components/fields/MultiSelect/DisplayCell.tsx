@@ -12,6 +12,7 @@ export default function MultiSelect({
   value,
   showPopoverCell,
   disabled,
+  tabIndex,
 }: IDisplayCellProps) {
   // if (typeof value === "string" && value !== "")
   // return <ConvertStringToArray value={value} onSubmit={onSubmit} />;
@@ -29,6 +30,7 @@ export default function MultiSelect({
         textAlign: "inherit",
         justifyContent: "flex-start",
       }}
+      tabIndex={tabIndex}
     >
       {typeof value === "string" && value !== "" ? (
         <div style={{ flexGrow: 1, paddingLeft: "var(--cell-padding)" }}>

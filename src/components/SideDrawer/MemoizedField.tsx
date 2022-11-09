@@ -78,10 +78,6 @@ export const MemoizedField = memo(
           },
           onSubmit: handleSubmit,
           disabled,
-          // TODO: Remove
-          control: {} as any,
-          useFormMethods: {} as any,
-          docRef: _rowy_ref,
         })}
       </FieldWrapper>
     );

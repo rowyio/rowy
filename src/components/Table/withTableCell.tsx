@@ -9,7 +9,11 @@ import {
 
 import { Popover, PopoverProps } from "@mui/material";
 
-import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
+import {
+  tableScope,
+  updateFieldAtom,
+  sideDrawerOpenAtom,
+} from "@src/atoms/tableScope";
 
 export interface ICellOptions {
   /** If the rest of the row’s data is used, set this to true for memoization */
@@ -32,12 +36,13 @@ export interface ICellOptions {
  *   - "focus" (default) - when the cell is focused (Enter or double-click)
  *   - "inline" - inline with deferred render
  *   - "popover" - as a popover
+ *   - "sideDrawer" - open the side drawer
  * @param options - {@link ICellOptions}
  */
 export default function withTableCell(
   DisplayCellComponent: React.ComponentType<IDisplayCellProps>,
   EditorCellComponent: React.ComponentType<IEditorCellProps> | null,
-  editorMode: "focus" | "inline" | "popover" = "focus",
+  editorMode: "focus" | "inline" | "popover" | "sideDrawer" = "focus",
   options: ICellOptions = {}
 ) {
   return memo(
@@ -51,6 +56,7 @@ export default function withTableCell(
     }: TableCellProps) {
       const value = getValue();
       const updateField = useSetAtom(updateFieldAtom, tableScope);
+      const setSideDrawerOpen = useSetAtom(sideDrawerOpenAtom, tableScope);
 
       // Store ref to rendered DisplayCell to get positioning for PopoverCell
       const displayCellRef = useRef<HTMLDivElement>(null);
@@ -59,8 +65,11 @@ export default function withTableCell(
       // Store Popover open state here so we can add delay for close transition
       const [popoverOpen, setPopoverOpen] = useState(false);
       useEffect(() => {
-        if (focusInsideCell) setPopoverOpen(true);
-      }, [focusInsideCell]);
+        if (focusInsideCell) {
+          setPopoverOpen(true);
+          if (editorMode === "sideDrawer") setSideDrawerOpen(true);
+        }
+      }, [focusInsideCell, setSideDrawerOpen]);
       const showPopoverCell = (popover: boolean) => {
         if (popover) {
           setPopoverOpen(true);
@@ -86,7 +95,9 @@ export default function withTableCell(
         row: row.original,
         column: column.columnDef.meta!,
         docRef: row.original._rowy_ref,
+        _rowy_ref: row.original._rowy_ref,
         disabled: column.columnDef.meta!.editable === false,
+        tabIndex: focusInsideCell ? 0 : -1,
         showPopoverCell,
         setFocusInsideCell,
       };
@@ -101,7 +112,11 @@ export default function withTableCell(
           <DisplayCellComponent {...basicCellProps} />
         </div>
       );
-      if (disabled || (editorMode !== "inline" && !focusInsideCell))
+      if (
+        disabled ||
+        (editorMode !== "inline" && !focusInsideCell) ||
+        editorMode === "sideDrawer"
+      )
         return displayCell;
 
       // This is where we update the documents
@@ -119,7 +134,6 @@ export default function withTableCell(
       const editorCell = EditorCellComponent ? (
         <EditorCellComponent
           {...basicCellProps}
-          tabIndex={focusInsideCell ? 0 : -1}
           onSubmit={handleSubmit}
           parentRef={parentRef}
         />

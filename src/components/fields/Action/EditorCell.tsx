@@ -1,4 +1,4 @@
-import { IHeavyCellProps } from "@src/components/fields/types";
+import { IEditorCellProps } from "@src/components/fields/types";
 
 import { Stack } from "@mui/material";
 
@@ -11,15 +11,15 @@ export default function Action({
   value,
   onSubmit,
   disabled,
-}: IHeavyCellProps) {
+  tabIndex,
+}: IEditorCellProps) {
   const hasRan = value && ![null, undefined].includes(value.status);
 
   return (
     <Stack
       direction="row"
       alignItems="center"
-      className="cell-collapse-padding"
-      sx={{ padding: "var(--cell-padding)", pr: 0.5 }}
+      sx={{ padding: "var(--cell-padding)", pr: 0.5, width: "100%" }}
     >
       <div style={{ flexGrow: 1, overflow: "hidden" }}>
         {hasRan && isUrl(value.status) ? (
@@ -39,6 +39,7 @@ export default function Action({
         onSubmit={onSubmit}
         value={value}
         disabled={disabled}
+        tabIndex={tabIndex}
       />
     </Stack>
   );
