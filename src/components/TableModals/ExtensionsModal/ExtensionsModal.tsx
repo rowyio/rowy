@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAtom, useSetAtom } from "jotai";
-import { isEqual } from "lodash-es";
+import { isEqual, isUndefined } from "lodash-es";
 import { ITableModalProps } from "@src/components/TableModals";
 
 import Modal from "@src/components/Modal";
@@ -56,11 +56,12 @@ export default function ExtensionsModal({ onClose }: ITableModalProps) {
 
   const errors = {
     runtimeOptions: {
-      timeoutSeconds: !(
-        !!localRuntimeOptions.timeoutSeconds &&
-        localRuntimeOptions.timeoutSeconds > 0 &&
-        localRuntimeOptions.timeoutSeconds <= 540
-      ),
+      timeoutSeconds:
+        !isUndefined(localRuntimeOptions.timeoutSeconds) &&
+        !(
+          localRuntimeOptions.timeoutSeconds! > 0 &&
+          localRuntimeOptions.timeoutSeconds! <= 540
+        ),
     },
   };
 
