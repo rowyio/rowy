@@ -164,6 +164,7 @@ export default function withTableCell(
                 onClick={(e) => e.stopPropagation()}
                 onDoubleClick={(e) => e.stopPropagation()}
                 onKeyDown={(e) => e.stopPropagation()}
+                onContextMenu={(e) => e.stopPropagation()}
               >
                 {editorCell}
               </Popover>
