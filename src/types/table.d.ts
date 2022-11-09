@@ -149,8 +149,9 @@ export type ColumnConfig = {
     };
     /** FieldType to render for Derivative fields */
     renderFieldType?: FieldType;
+    /** Used in Derivative fields */
     listenerFields?: string[];
-    /** FieldType to render for Action fields */
+    /** Used in Derivative and Action fields */
     requiredFields?: string[];
     /** For sub-table fields */
     parentLabel?: string[];
