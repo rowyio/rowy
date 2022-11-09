@@ -9,6 +9,7 @@ import { sanitiseValue } from "./utils";
 
 export default function MultiSelect({
   value,
+  onChange,
   onSubmit,
   column,
   parentRef,
@@ -25,7 +26,13 @@ export default function MultiSelect({
         description={
           <>
             <Typography>This cell’s value is a string</Typography>
-            <Button color="primary" onClick={() => onSubmit([value])}>
+            <Button
+              color="primary"
+              onClick={() => {
+                onChange([value]);
+                onSubmit();
+              }}
+            >
               Convert to array
             </Button>
           </>
@@ -37,7 +44,7 @@ export default function MultiSelect({
   return (
     <MultiSelectComponent
       value={sanitiseValue(value)}
-      onChange={onSubmit}
+      onChange={onChange}
       options={config.options ?? []}
       multiple
       freeText={config.freeText}
@@ -55,7 +62,10 @@ export default function MultiSelect({
           },
         },
       }}
-      onClose={() => showPopoverCell(false)}
+      onClose={() => {
+        showPopoverCell(false);
+        onSubmit();
+      }}
     />
   );
 }

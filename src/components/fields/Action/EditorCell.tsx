@@ -9,7 +9,6 @@ export default function Action({
   column,
   row,
   value,
-  onSubmit,
   disabled,
   tabIndex,
 }: IEditorCellProps) {
@@ -36,7 +35,6 @@ export default function Action({
       <ActionFab
         row={row}
         column={column}
-        onSubmit={onSubmit}
         value={value}
         disabled={disabled}
         tabIndex={tabIndex}

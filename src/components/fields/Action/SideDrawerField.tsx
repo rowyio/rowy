@@ -15,8 +15,6 @@ export default function Action({
   column,
   _rowy_ref,
   value,
-  onChange,
-  onSubmit,
   disabled,
 }: ISideDrawerFieldProps) {
   const [row] = useAtom(
@@ -67,10 +65,6 @@ export default function Action({
       <ActionFab
         row={row}
         column={column}
-        onSubmit={(value) => {
-          onChange(value);
-          onSubmit();
-        }}
         value={value}
         disabled={disabled}
         id={getFieldId(column.key)}

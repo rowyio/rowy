@@ -6,7 +6,7 @@ export default function Number_(props: IEditorCellProps<number>) {
     <EditorCellTextField
       {...(props as any)}
       InputProps={{ type: "number" }}
-      onSubmit={(v) => props.onSubmit(Number(v))}
+      onChange={(v) => props.onChange(Number(v))}
     />
   );
 }

@@ -85,23 +85,29 @@ export interface IDisplayCellProps<T = any> {
   setFocusInsideCell: (focusInside: boolean) => void;
 }
 export interface IEditorCellProps<T = any> extends IDisplayCellProps<T> {
-  onSubmit: (value: T) => void;
+  /** Call when the user has input but changes have not been saved */
+  onDirty: (dirty?: boolean) => void;
+  /** Update the local value. Also calls onDirty */
+  onChange: (value: T) => void;
+  /** Call when user input is ready to be saved (e.g. onBlur) */
+  onSubmit: () => void;
+  /** Get parent element for popover positioning */
   parentRef: PopoverProps["anchorEl"];
 }
 
 /** Props to be passed to all SideDrawerFields */
-export interface ISideDrawerFieldProps {
+export interface ISideDrawerFieldProps<T = any> {
   /** The column config */
-  column: FormatterProps<TableRow>["column"] & ColumnConfig;
+  column: ColumnConfig;
   /** The row’s _rowy_ref object */
   _rowy_ref: TableRowRef;
 
   /** The field’s local value – synced with db when field is not dirty */
-  value: any;
+  value: T;
   /** Call when the user has input but changes have not been saved */
-  onDirty: () => void;
+  onDirty: (dirty?: boolean) => void;
   /** Update the local value. Also calls onDirty */
-  onChange: (value: any) => void;
+  onChange: (T: any) => void;
   /** Call when user input is ready to be saved (e.g. onBlur) */
   onSubmit: () => void;
 

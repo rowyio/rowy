@@ -1,4 +1,12 @@
-import { memo, Suspense, useState, useEffect, useRef } from "react";
+import {
+  memo,
+  Suspense,
+  useState,
+  useEffect,
+  useRef,
+  useLayoutEffect,
+} from "react";
+import useStateRef from "react-usestateref";
 import { useSetAtom } from "jotai";
 import { get, isEqual } from "lodash-es";
 import type { TableCellProps } from "@src/components/Table";
@@ -14,6 +22,7 @@ import {
   updateFieldAtom,
   sideDrawerOpenAtom,
 } from "@src/atoms/tableScope";
+import { spreadSx } from "@src/utils/ui";
 
 export interface ICellOptions {
   /** If the rest of the row’s data is used, set this to true for memoization */
@@ -36,13 +45,12 @@ export interface ICellOptions {
  *   - "focus" (default) - when the cell is focused (Enter or double-click)
  *   - "inline" - inline with deferred render
  *   - "popover" - as a popover
- *   - "sideDrawer" - open the side drawer
  * @param options - {@link ICellOptions}
  */
 export default function withTableCell(
   DisplayCellComponent: React.ComponentType<IDisplayCellProps>,
   EditorCellComponent: React.ComponentType<IEditorCellProps> | null,
-  editorMode: "focus" | "inline" | "popover" | "sideDrawer" = "focus",
+  editorMode: "focus" | "inline" | "popover" = "focus",
   options: ICellOptions = {}
 ) {
   return memo(
@@ -55,8 +63,6 @@ export default function withTableCell(
       disabled,
     }: TableCellProps) {
       const value = getValue();
-      const updateField = useSetAtom(updateFieldAtom, tableScope);
-      const setSideDrawerOpen = useSetAtom(sideDrawerOpenAtom, tableScope);
 
       // Store ref to rendered DisplayCell to get positioning for PopoverCell
       const displayCellRef = useRef<HTMLDivElement>(null);
@@ -65,11 +71,8 @@ export default function withTableCell(
       // Store Popover open state here so we can add delay for close transition
       const [popoverOpen, setPopoverOpen] = useState(false);
       useEffect(() => {
-        if (focusInsideCell) {
-          setPopoverOpen(true);
-          if (editorMode === "sideDrawer") setSideDrawerOpen(true);
-        }
-      }, [focusInsideCell, setSideDrawerOpen]);
+        if (focusInsideCell) setPopoverOpen(true);
+      }, [focusInsideCell]);
       const showPopoverCell = (popover: boolean) => {
         if (popover) {
           setPopoverOpen(true);
@@ -112,30 +115,16 @@ export default function withTableCell(
           <DisplayCellComponent {...basicCellProps} />
         </div>
       );
-      if (
-        disabled ||
-        (editorMode !== "inline" && !focusInsideCell) ||
-        editorMode === "sideDrawer"
-      )
+      if (disabled || (editorMode !== "inline" && !focusInsideCell))
         return displayCell;
-
-      // This is where we update the documents
-      const handleSubmit = (value: any) => {
-        if (disabled) return;
-        updateField({
-          path: row.original._rowy_ref.path,
-          fieldName: column.id,
-          value,
-          deleteField: value === undefined,
-        });
-      };
 
       // Show displayCell as a fallback if intentionally null
       const editorCell = EditorCellComponent ? (
-        <EditorCellComponent
+        <EditorCellManager
           {...basicCellProps}
-          onSubmit={handleSubmit}
+          EditorCellComponent={EditorCellComponent}
           parentRef={parentRef}
+          saveOnUnmount={editorMode === "focus"}
         />
       ) : (
         displayCell
@@ -169,15 +158,17 @@ export default function withTableCell(
                 onClose={() => showPopoverCell(false)}
                 anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
                 {...options.popoverProps}
-                sx={
-                  options.transparent
-                    ? {
-                        "& .MuiPopover-paper": {
-                          backgroundColor: "transparent",
-                        },
-                      }
-                    : {}
-                }
+                sx={[
+                  {
+                    "& .MuiPopover-paper": {
+                      backgroundColor: options.transparent
+                        ? "transparent"
+                        : undefined,
+                      minWidth: column.getSize(),
+                    },
+                  },
+                  ...spreadSx(options.popoverProps?.sx),
+                ]}
                 onClick={(e) => e.stopPropagation()}
                 onDoubleClick={(e) => e.stopPropagation()}
                 onKeyDown={(e) => e.stopPropagation()}
@@ -212,5 +203,56 @@ export default function withTableCell(
       if (options?.usesRowData) return baseEqualities && rowEqual;
       else return baseEqualities;
     }
+  );
+}
+
+interface IEditorCellManagerProps extends IDisplayCellProps {
+  EditorCellComponent: React.ComponentType<IEditorCellProps>;
+  parentRef: IEditorCellProps["parentRef"];
+  saveOnUnmount: boolean;
+}
+
+function EditorCellManager({
+  EditorCellComponent,
+  saveOnUnmount,
+  ...props
+}: IEditorCellManagerProps) {
+  const [localValue, setLocalValue, localValueRef] = useStateRef(props.value);
+  const [, setIsDirty, isDirtyRef] = useStateRef(false);
+  const updateField = useSetAtom(updateFieldAtom, tableScope);
+
+  // This is where we update the documents
+  const handleSubmit = () => {
+    if (props.disabled || !isDirtyRef.current) return;
+
+    updateField({
+      path: props._rowy_ref.path,
+      fieldName: props.column.fieldName,
+      value: localValueRef.current,
+      deleteField: localValueRef.current === undefined,
+    });
+  };
+
+  useLayoutEffect(() => {
+    return () => {
+      if (saveOnUnmount) {
+        console.log("unmount", props._rowy_ref.path, props.column.fieldName);
+        handleSubmit();
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <EditorCellComponent
+      {...props}
+      value={localValue}
+      onDirty={(dirty?: boolean) => setIsDirty(dirty ?? true)}
+      onChange={(v) => {
+        setIsDirty(true);
+        setLocalValue(v);
+      }}
+      onSubmit={handleSubmit}
+    />
   );
 }

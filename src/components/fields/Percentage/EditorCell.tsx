@@ -7,7 +7,7 @@ export default function Percentage(props: IEditorCellProps<number>) {
       {...(props as any)}
       InputProps={{ type: "number", endAdornment: "%" }}
       value={typeof props.value === "number" ? props.value * 100 : props.value}
-      onSubmit={(v) => props.onSubmit(Number(v) / 100)}
+      onChange={(v) => props.onChange(Number(v) / 100)}
     />
   );
 }

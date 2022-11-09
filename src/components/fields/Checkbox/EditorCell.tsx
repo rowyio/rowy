@@ -15,6 +15,7 @@ export default function Checkbox({
   row,
   column,
   value,
+  onChange,
   onSubmit,
   disabled,
   tabIndex,
@@ -29,10 +30,14 @@ export default function Checkbox({
           /\{\{(.*?)\}\}/g,
           replacer(row)
         ),
-        handleConfirm: () => onSubmit(!value),
+        handleConfirm: () => {
+          onChange(!value);
+          onSubmit();
+        },
       });
     } else {
-      onSubmit(!value);
+      onChange(!value);
+      onSubmit();
     }
   };
 

@@ -1,8 +1,5 @@
 import type { IEditorCellProps } from "@src/components/fields/types";
-import { useSaveOnUnmount } from "@src/hooks/useSaveOnUnmount";
-
 import { InputBase, InputBaseProps } from "@mui/material";
-
 import { spreadSx } from "@src/utils/ui";
 
 export interface IEditorCellTextFieldProps extends IEditorCellProps<string> {
@@ -12,17 +9,18 @@ export interface IEditorCellTextFieldProps extends IEditorCellProps<string> {
 export default function EditorCellTextField({
   column,
   value,
-  onSubmit,
+  onDirty,
+  onChange,
   setFocusInsideCell,
   InputProps = {},
 }: IEditorCellTextFieldProps) {
-  const [localValue, setLocalValue] = useSaveOnUnmount(value, onSubmit);
   const maxLength = column.config?.maxLength;
 
   return (
     <InputBase
-      value={localValue}
-      onChange={(e) => setLocalValue(e.target.value)}
+      value={value}
+      onBlur={() => onDirty()}
+      onChange={(e) => onChange(e.target.value)}
       fullWidth
       autoFocus
       onKeyDown={(e) => {
@@ -34,9 +32,14 @@ export default function EditorCellTextField({
         ) {
           e.stopPropagation();
         }
+        // Escape prevents saving the new value
         if (e.key === "Escape") {
-          // Escape removes focus inside cell, this runs before save on unmount
-          setLocalValue(value);
+          // Setting isDirty to false prevents saving
+          onDirty(false);
+          // Stop propagation to prevent the table from closing the editor
+          e.stopPropagation();
+          // Close the editor after isDirty is set to false again
+          setTimeout(() => setFocusInsideCell(false));
         }
         if (e.key === "Enter" && !e.shiftKey) {
           // Removes focus from inside cell, triggering save on unmount

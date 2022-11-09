@@ -51,7 +51,6 @@ const getStateIcon = (actionState: "undo" | "redo" | string, config: any) => {
 export interface IActionFabProps extends Partial<FabProps> {
   row: any;
   column: any;
-  onSubmit: (value: any) => void;
   value: any;
   disabled: boolean;
 }
@@ -59,7 +58,6 @@ export interface IActionFabProps extends Partial<FabProps> {
 export default function ActionFab({
   row,
   column,
-  onSubmit,
   value,
   disabled,
   ...props
