@@ -421,30 +421,21 @@ export default function ColumnMenu() {
                       <Divider sx={{ my: 2 }} />
                       {referencedColumns.length ? (
                         <Typography sx={{ mt: 1 }}>
-                          Column config reference will be removed from{" "}
-                          {referencedColumns.map((column) => (
-                            <code
-                              style={{ userSelect: "all", marginRight: "2px" }}
-                            >
-                              {column}
-                            </code>
-                          ))}
+                          This column will be removed as a dependency of the following columns:{" "}
+                          <Typography key={column} fontWeight="bold" component="span">
+                            {referencedColumns.join(", ")}
+                          </Typography>
                         </Typography>
                       ) : null}
                       {referencedExtensions.length ? (
                         <Typography sx={{ mt: 1 }}>
-                          Extension config reference will be removed from{" "}
-                          {referencedExtensions.map((extension) => (
-                            <code
-                              style={{ userSelect: "all", marginRight: "2px" }}
-                            >
-                              {extension}
-                            </code>
-                          ))}
-                        </Typography>
+                          This column will be removed as a dependency from the following Extensions:{" "}
+                          <Typography key={extension} fontWeight="bold" component="span">
+                            {referencedExtensions.join(", ")}
+                          </Typography>
                       ) : null}
                       <Typography sx={{ mt: 1, fontWeight: "bold" }}>
-                        Table function rebuild is required.
+                        You need to re-deploy this table’s cloud function.
                       </Typography>
                     </>
                   ) : null}
