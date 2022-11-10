@@ -29,6 +29,7 @@ const StatusText = forwardRef(function StatusText(
 function LoadedRowsStatus() {
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
   const [serverDocCount] = useAtom(serverDocCountAtom, tableScope)
+  const [tableRows] = useAtom(tableRowsAtom, tableScope)
   if (tableNextPage.loading) return <StatusText>Loading more…</StatusText>;
 
   return (
@@ -42,7 +43,7 @@ function LoadedRowsStatus() {
     >
       <StatusText>
         Loaded {!tableNextPage.available && "all "}
-        {serverDocCount} row{serverDocCount !== 1 && "s"}
+        {tableRows.length} {tableNextPage.available && `of ${serverDocCount}`} row{serverDocCount !== 1 && "s"}
       </StatusText>
     </Tooltip>
   );

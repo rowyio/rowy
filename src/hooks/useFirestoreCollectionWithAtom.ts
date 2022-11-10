@@ -197,7 +197,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
             }));
           }
           // on each new snapshot, use the query to get and set the document count from the server
-          getCountFromServer(memoizedQuery.query).then((value) => {
+          getCountFromServer(memoizedQuery.unlimitedQuery).then((value) => {
             setServerDocCountAtom(value.data().count)
           })
         } catch (error) {
@@ -324,14 +324,13 @@ const getQuery = <T>(
     }
 
     if (!collectionRef) return null;
-
     const limit = (page + 1) * pageSize;
     const firestoreFilters = tableFiltersToFirestoreFilters(filters || []);
 
     return {
       query: query<T>(
         collectionRef,
-        queryLimit((page + 1) * pageSize),
+        queryLimit(limit),
         ...firestoreFilters,
         ...(sorts?.map((order) => orderBy(order.key, order.direction)) || [])
       ),
@@ -339,6 +338,7 @@ const getQuery = <T>(
       limit,
       firestoreFilters,
       sorts,
+      unlimitedQuery: query<T>(collectionRef, ...firestoreFilters)
     };
   } catch (e) {
     if (onError) onError(e as FirestoreError);
