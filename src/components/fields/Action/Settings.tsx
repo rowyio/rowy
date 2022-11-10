@@ -293,13 +293,13 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
                 </FormLabel>
                 <RadioGroup
                   aria-label="Action will run"
-                  name="isCloudFunction"
+                  name="isActionScript"
                   value={
-                    config.isCloudFunction ? "cloudFunction" : "actionScript"
+                    config.isActionScript !== false ? "actionScript" : "cloudFunction"
                   }
                   onChange={(e) =>
-                    onChange("isCloudFunction")(
-                      e.target.value === "cloudFunction"
+                    onChange("isActionScript")(
+                      e.target.value === "actionScript"
                     )
                   }
                 >
