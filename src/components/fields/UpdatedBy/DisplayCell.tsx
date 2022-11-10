@@ -1,11 +1,11 @@
-import { IHeavyCellProps } from "@src/components/fields/types";
+import { IDisplayCellProps } from "@src/components/fields/types";
 
 import { Tooltip, Stack, Avatar } from "@mui/material";
 
 import { format } from "date-fns";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 
-export default function CreatedBy({ column, value }: IHeavyCellProps) {
+export default function UpdatedBy({ column, value }: IDisplayCellProps) {
   if (!value || !value.displayName || !value.timestamp) return null;
   const dateLabel = format(
     value.timestamp.toDate ? value.timestamp.toDate() : value.timestamp,
@@ -13,13 +13,22 @@ export default function CreatedBy({ column, value }: IHeavyCellProps) {
   );
 
   return (
-    <Tooltip title={`Created at ${dateLabel}`}>
-      <Stack
-        spacing={0.75}
-        direction="row"
-        alignItems="center"
-        style={{ width: "100%" }}
-      >
+    <Tooltip
+      title={
+        <>
+          Updated
+          {value.updatedField && (
+            <>
+              {" "}
+              field <code>{value.updatedField}</code>
+            </>
+          )}
+          <br />
+          at {dateLabel}
+        </>
+      }
+    >
+      <Stack spacing={0.75} direction="row" alignItems="center">
         <Avatar
           alt="Avatar"
           src={value.photoURL}

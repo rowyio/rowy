@@ -1,11 +1,11 @@
-import { IHeavyCellProps } from "@src/components/fields/types";
+import { IDisplayCellProps } from "@src/components/fields/types";
 
 import { Tooltip, Stack, Avatar } from "@mui/material";
 
 import { format } from "date-fns";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 
-export default function User({ value, column }: IHeavyCellProps) {
+export default function User({ value, column }: IDisplayCellProps) {
   if (!value || !value.displayName) return null;
 
   const chip = (

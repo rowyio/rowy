@@ -1,27 +1,26 @@
-import { IPopoverCellProps } from "@src/components/fields/types";
+import { IEditorCellProps } from "@src/components/fields/types";
 
-import ConnectTableSelect from "./ConnectTableSelect";
+import ConnectServiceSelect from "./ConnectServiceSelect";
 
-export default function ConnectTable({
+export default function ConnectService({
   value,
-  onSubmit,
+  onChange,
   column,
   parentRef,
   showPopoverCell,
-  row,
   disabled,
-}: IPopoverCellProps) {
+  _rowy_ref,
+}: IEditorCellProps) {
   const config = column.config ?? {};
-  if (!config || !config.primaryKeys) return null;
+  if (!config) return null;
 
   return (
-    <ConnectTableSelect
-      row={row}
-      column={column}
+    <ConnectServiceSelect
       value={value}
-      onChange={onSubmit}
+      onChange={onChange}
       config={(config as any) ?? {}}
       disabled={disabled}
+      docRef={_rowy_ref as any}
       TextFieldProps={{
         style: { display: "none" },
         SelectProps: {
@@ -31,10 +30,9 @@ export default function ConnectTable({
             anchorOrigin: { vertical: "bottom", horizontal: "left" },
             transformOrigin: { vertical: "top", horizontal: "left" },
           },
+          onClose: () => showPopoverCell(false),
         },
       }}
-      onClose={() => showPopoverCell(false)}
-      loadBeforeOpen
     />
   );
 }

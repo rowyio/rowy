@@ -1,10 +1,10 @@
-import { IHeavyCellProps } from "@src/components/fields/types";
+import { IDisplayCellProps } from "@src/components/fields/types";
 
 import { Grid, Box } from "@mui/material";
 
 import { resultColorsScale } from "@src/utils/color";
 
-export default function Slider({ column, value }: IHeavyCellProps) {
+export default function Slider({ column, value }: IDisplayCellProps) {
   const {
     max,
     min,

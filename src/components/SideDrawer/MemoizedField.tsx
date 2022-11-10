@@ -53,7 +53,7 @@ export const MemoizedField = memo(
 
     // Should not reach this state
     if (isEmpty(fieldComponent)) {
-      // console.error('Could not find SideDrawerField component', field);
+      console.error("Could not find SideDrawerField component", field);
       return null;
     }
 

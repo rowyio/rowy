@@ -4,11 +4,10 @@ import withTableCell from "@src/components/Table/withTableCell";
 
 import { MultiSelect as MultiSelectIcon } from "@src/assets/icons";
 import DisplayCell from "./DisplayCell";
-import NullEditor from "@src/components/Table/editors/NullEditor";
 import { filterOperators } from "./Filter";
-const PopoverCell = lazy(
-  () =>
-    import("./PopoverCell" /* webpackChunkName: "PopoverCell-MultiSelect" */)
+
+const EditorCell = lazy(
+  () => import("./EditorCell" /* webpackChunkName: "EditorCell-MultiSelect" */)
 );
 const SideDrawerField = lazy(
   () =>
@@ -33,10 +32,10 @@ export const config: IFieldConfig = {
   icon: <MultiSelectIcon />,
   description:
     "Multiple values from predefined options. Options are searchable and users can optionally input custom values.",
-  TableCell: withTableCell(DisplayCell, PopoverCell, "popover", {
+  TableCell: withTableCell(DisplayCell, EditorCell, "popover", {
     disablePadding: true,
+    transparentPopover: true,
   }),
-  TableEditor: NullEditor as any,
   SideDrawerField,
   settings: Settings,
   csvImportParser: (v) => {

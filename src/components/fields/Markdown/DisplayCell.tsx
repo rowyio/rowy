@@ -1,10 +1,10 @@
-import { IBasicCellProps } from "@src/components/fields/types";
+import { IDisplayCellProps } from "@src/components/fields/types";
 
 import { useTheme } from "@mui/material";
 
 import MDEditor from "@uiw/react-md-editor";
 
-export default function Markdown({ value }: IBasicCellProps) {
+export default function Markdown({ value }: IDisplayCellProps) {
   const theme = useTheme();
 
   if (!value || typeof value !== "string") return null;

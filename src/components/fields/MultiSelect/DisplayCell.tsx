@@ -1,6 +1,6 @@
 import { IDisplayCellProps } from "@src/components/fields/types";
 
-import { ButtonBase, Grid } from "@mui/material";
+import { ButtonBase, Grid, Tooltip } from "@mui/material";
 import WarningIcon from "@mui/icons-material/WarningAmber";
 import { ChevronDown } from "@src/assets/icons";
 
@@ -14,13 +14,33 @@ export default function MultiSelect({
   disabled,
   tabIndex,
 }: IDisplayCellProps) {
-  // if (typeof value === "string" && value !== "")
-  // return <ConvertStringToArray value={value} onSubmit={onSubmit} />;
+  const rendered =
+    typeof value === "string" && value !== "" ? (
+      <div style={{ flexGrow: 1, paddingLeft: "var(--cell-padding)" }}>
+        <Tooltip title="This cell’s value is a string and needs to be converted to an array">
+          <WarningIcon color="action" style={{ verticalAlign: "middle" }} />
+        </Tooltip>
+        &nbsp;
+        {value}
+      </div>
+    ) : (
+      <ChipList>
+        {sanitiseValue(value).map(
+          (item) =>
+            typeof item === "string" && (
+              <Grid item key={item}>
+                <FormattedChip label={item} />
+              </Grid>
+            )
+        )}
+      </ChipList>
+    );
+
+  if (disabled) return rendered;
 
   return (
     <ButtonBase
       onClick={() => showPopoverCell(true)}
-      disabled={disabled}
       style={{
         width: "100%",
         height: "100%",
@@ -32,26 +52,8 @@ export default function MultiSelect({
       }}
       tabIndex={tabIndex}
     >
-      {typeof value === "string" && value !== "" ? (
-        <div style={{ flexGrow: 1, paddingLeft: "var(--cell-padding)" }}>
-          <WarningIcon color="action" style={{ verticalAlign: "middle" }} />
-          &nbsp;
-          {value}
-        </div>
-      ) : (
-        <ChipList>
-          {sanitiseValue(value).map(
-            (item) =>
-              typeof item === "string" && (
-                <Grid item key={item}>
-                  <FormattedChip label={item} />
-                </Grid>
-              )
-          )}
-        </ChipList>
-      )}
-
-      {!disabled && <ChevronDown className="row-hover-iconButton end" />}
+      {rendered}
+      <ChevronDown className="row-hover-iconButton end" />
     </ButtonBase>
   );
 }

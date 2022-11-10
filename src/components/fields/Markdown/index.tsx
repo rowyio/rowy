@@ -1,10 +1,9 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
+import withTableCell from "@src/components/Table/withTableCell";
 
 import { Markdown as MarkdownIcon } from "@src/assets/icons";
-import BasicCell from "./BasicCell";
-import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
+import DisplayCell from "./DisplayCell";
 
 const SideDrawerField = lazy(
   () =>
@@ -22,8 +21,7 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <MarkdownIcon />,
   description: "Markdown editor with preview",
-  TableCell: withBasicCell(BasicCell),
-  TableEditor: withSideDrawerEditor(BasicCell),
+  TableCell: withTableCell(DisplayCell, SideDrawerField, "popover"),
   SideDrawerField,
 };
 export default config;

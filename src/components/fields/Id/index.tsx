@@ -1,9 +1,13 @@
+import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withTableCell from "@src/components/Table/withTableCell";
 
 import DisplayCell from "./DisplayCell";
-import SideDrawerField from "./SideDrawerField";
 import { Id as IdIcon } from "@src/assets/icons";
+
+const SideDrawerField = lazy(
+  () => import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Id" */)
+);
 
 export const config: IFieldConfig = {
   type: FieldType.id,

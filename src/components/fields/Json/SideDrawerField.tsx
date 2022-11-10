@@ -82,8 +82,14 @@ export default function Json({
         sx={{
           minHeight: 32,
           mt: -32 / 8,
+          ".MuiPopover-root &": { mt: 0 }, // Don’t have margins in popover cell
 
-          "& .MuiTabs-flexContainer": { justifyContent: "flex-end" },
+          "& .MuiTabs-flexContainer": {
+            justifyContent: "flex-end",
+            ".MuiPopover-root &": {
+              justifyContent: "center",
+            },
+          },
           "& .MuiTab-root": { minHeight: 32, py: 0 },
         }}
       >

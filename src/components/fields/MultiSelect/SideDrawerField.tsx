@@ -1,6 +1,6 @@
 import { ISideDrawerFieldProps } from "@src/components/fields/types";
 
-import { Grid, Button } from "@mui/material";
+import { Grid, Button, Tooltip } from "@mui/material";
 import WarningIcon from "@mui/icons-material/WarningAmber";
 import MultiSelectComponent from "@rowy/multiselect";
 import FormattedChip from "@src/components/FormattedChip";
@@ -28,7 +28,9 @@ export default function MultiSelect({
     return (
       <Grid container wrap="nowrap" gap={1}>
         <Grid item xs sx={fieldSx}>
-          <WarningIcon color="action" style={{ verticalAlign: "middle" }} />
+          <Tooltip title="This cell’s value is a string and needs to be converted to an array">
+            <WarningIcon color="action" style={{ verticalAlign: "middle" }} />
+          </Tooltip>
           &nbsp;{value}
         </Grid>
         <Grid item>
@@ -38,6 +40,7 @@ export default function MultiSelect({
               onChange([value]);
               onSubmit();
             }}
+            disabled={disabled}
           >
             Convert to array
           </Button>

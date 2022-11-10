@@ -1,10 +1,9 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
+import withTableCell from "@src/components/Table/withTableCell";
 
 import { Json as JsonIcon } from "@src/assets/icons";
-import BasicCell from "./BasicCell";
-import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
+import DisplayCell from "./DisplayCell";
 import ContextMenuActions from "./ContextMenuActions";
 
 const SideDrawerField = lazy(
@@ -25,8 +24,9 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <JsonIcon />,
   description: "Object edited with a visual JSON editor.",
-  TableCell: withBasicCell(BasicCell),
-  TableEditor: withSideDrawerEditor(BasicCell),
+  TableCell: withTableCell(DisplayCell, SideDrawerField, "popover", {
+    popoverProps: { PaperProps: { sx: { p: 1 } } },
+  }),
   csvImportParser: (value) => {
     try {
       return JSON.parse(value);

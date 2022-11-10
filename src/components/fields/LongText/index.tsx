@@ -5,11 +5,16 @@ import withTableCell from "@src/components/Table/withTableCell";
 import LongTextIcon from "@mui/icons-material/Notes";
 import DisplayCell from "./DisplayCell";
 import EditorCell from "./EditorCell";
-import SideDrawerField from "./SideDrawerField";
 
 import { filterOperators } from "./Filter";
 import BasicContextMenuActions from "@src/components/fields/_BasicCell/BasicCellContextMenuActions";
 
+const SideDrawerField = lazy(
+  () =>
+    import(
+      "./SideDrawerField" /* webpackChunkName: "SideDrawerField-LongText" */
+    )
+);
 const Settings = lazy(
   () => import("./Settings" /* webpackChunkName: "Settings-LongText" */)
 );

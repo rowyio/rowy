@@ -211,7 +211,7 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
         disabled:
           selectedColumn?.editable === false ||
           !row ||
-          cellValue ||
+          cellValue === undefined ||
           getFieldProp("group", selectedColumn?.type) === "Auditing",
         onClick: altPress
           ? handleClearValue

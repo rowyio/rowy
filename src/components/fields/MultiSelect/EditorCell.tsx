@@ -57,8 +57,11 @@ export default function MultiSelect({
           open: true,
           MenuProps: {
             anchorEl: parentRef,
-            anchorOrigin: { vertical: "bottom", horizontal: "left" },
-            transformOrigin: { vertical: "top", horizontal: "left" },
+            anchorOrigin: { vertical: "bottom", horizontal: "center" },
+            transformOrigin: { vertical: "top", horizontal: "center" },
+            sx: {
+              "& .MuiPaper-root": { minWidth: `${column.width}px !important` },
+            },
           },
         },
       }}

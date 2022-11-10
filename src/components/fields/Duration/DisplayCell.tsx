@@ -1,8 +1,8 @@
-import { IBasicCellProps } from "@src/components/fields/types";
+import { IDisplayCellProps } from "@src/components/fields/types";
 
 import { getDurationString } from "./utils";
 
-export default function Duration({ value }: IBasicCellProps) {
+export default function Duration({ value }: IDisplayCellProps) {
   if (
     !value ||
     !value.start ||

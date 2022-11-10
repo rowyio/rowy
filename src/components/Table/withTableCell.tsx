@@ -17,11 +17,7 @@ import {
 
 import { Popover, PopoverProps } from "@mui/material";
 
-import {
-  tableScope,
-  updateFieldAtom,
-  sideDrawerOpenAtom,
-} from "@src/atoms/tableScope";
+import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import { spreadSx } from "@src/utils/ui";
 
 export interface ICellOptions {
@@ -30,7 +26,7 @@ export interface ICellOptions {
   /** Handle padding inside the cell component */
   disablePadding?: boolean;
   /** Set popover background to be transparent */
-  transparent?: boolean;
+  transparentPopover?: boolean;
   /** Props to pass to MUI Popover component */
   popoverProps?: Partial<PopoverProps>;
 }
@@ -120,12 +116,14 @@ export default function withTableCell(
 
       // Show displayCell as a fallback if intentionally null
       const editorCell = EditorCellComponent ? (
-        <EditorCellManager
-          {...basicCellProps}
-          EditorCellComponent={EditorCellComponent}
-          parentRef={parentRef}
-          saveOnUnmount={editorMode === "focus"}
-        />
+        <Suspense fallback={null}>
+          <EditorCellManager
+            {...basicCellProps}
+            EditorCellComponent={EditorCellComponent}
+            parentRef={parentRef}
+            saveOnUnmount={editorMode !== "inline"}
+          />
+        </Suspense>
       ) : (
         displayCell
       );
@@ -151,32 +149,32 @@ export default function withTableCell(
           <>
             {displayCell}
 
-            <Suspense fallback={null}>
-              <Popover
-                open={popoverOpen}
-                anchorEl={parentRef}
-                onClose={() => showPopoverCell(false)}
-                anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
-                {...options.popoverProps}
-                sx={[
-                  {
-                    "& .MuiPopover-paper": {
-                      backgroundColor: options.transparent
-                        ? "transparent"
-                        : undefined,
-                      minWidth: column.getSize(),
-                    },
+            <Popover
+              open={popoverOpen}
+              anchorEl={parentRef}
+              onClose={() => showPopoverCell(false)}
+              anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
+              transformOrigin={{ horizontal: "center", vertical: "top" }}
+              {...options.popoverProps}
+              sx={[
+                {
+                  "& .MuiPopover-paper": {
+                    backgroundColor: options.transparentPopover
+                      ? "transparent"
+                      : undefined,
+                    boxShadow: options.transparentPopover ? "none" : undefined,
+                    minWidth: column.getSize(),
                   },
-                  ...spreadSx(options.popoverProps?.sx),
-                ]}
-                onClick={(e) => e.stopPropagation()}
-                onDoubleClick={(e) => e.stopPropagation()}
-                onKeyDown={(e) => e.stopPropagation()}
-                onContextMenu={(e) => e.stopPropagation()}
-              >
-                {editorCell}
-              </Popover>
-            </Suspense>
+                },
+                ...spreadSx(options.popoverProps?.sx),
+              ]}
+              onClick={(e) => e.stopPropagation()}
+              onDoubleClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => e.stopPropagation()}
+              onContextMenu={(e) => e.stopPropagation()}
+            >
+              {editorCell}
+            </Popover>
           </>
         );
 

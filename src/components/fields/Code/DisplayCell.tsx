@@ -4,6 +4,9 @@ import { useTheme } from "@mui/material";
 
 export default function Code({ value }: IDisplayCellProps) {
   const theme = useTheme();
+
+  if (typeof value !== "string") return null;
+
   return (
     <div
       style={{
@@ -18,7 +21,7 @@ export default function Code({ value }: IDisplayCellProps) {
         tabSize: 2,
       }}
     >
-      {value}
+      {value.substring(0, 1000)}
     </div>
   );
 }

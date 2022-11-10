@@ -1,14 +1,10 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
+import withTableCell from "@src/components/Table/withTableCell";
 
 import { CreatedAt as CreatedAtIcon } from "@src/assets/icons";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
-import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
+import DisplayCell from "./DisplayCell";
 
-const TableCell = lazy(
-  () => import("./TableCell" /* webpackChunkName: "TableCell-CreatedAt" */)
-);
 const SideDrawerField = lazy(
   () =>
     import(
@@ -28,8 +24,7 @@ export const config: IFieldConfig = {
   initialValue: null,
   icon: <CreatedAtIcon />,
   description: "Displays the timestamp of when the row was created. Read-only.",
-  TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: withSideDrawerEditor(TableCell),
+  TableCell: withTableCell(DisplayCell, null),
   SideDrawerField,
   settings: Settings,
 };

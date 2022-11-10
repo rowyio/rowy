@@ -1,9 +1,9 @@
-import { IHeavyCellProps } from "@src/components/fields/types";
+import { IDisplayCellProps } from "@src/components/fields/types";
 
 import { format } from "date-fns";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 
-export default function UpdatedAt({ column, value }: IHeavyCellProps) {
+export default function CreatedAt({ column, value }: IDisplayCellProps) {
   if (!value) return null;
   const dateLabel = format(
     value.toDate ? value.toDate() : value,

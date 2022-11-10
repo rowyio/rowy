@@ -1,15 +1,13 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withPopoverCell from "@src/components/fields/_withTableCell/withPopoverCell";
+import withTableCell from "@src/components/Table/withTableCell";
 import { toColor } from "react-color-palette";
 
 import ColorIcon from "@mui/icons-material/Colorize";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
-import InlineCell from "./InlineCell";
-import NullEditor from "@src/components/Table/editors/NullEditor";
+import DisplayCell from "./DisplayCell";
 
-const PopoverCell = lazy(
-  () => import("./PopoverCell" /* webpackChunkName: "PopoverCell-Color" */)
+const EditorCell = lazy(
+  () => import("./EditorCell" /* webpackChunkName: "EditorCell-Color" */)
 );
 const SideDrawerField = lazy(
   () =>
@@ -26,10 +24,9 @@ export const config: IFieldConfig = {
   icon: <ColorIcon />,
   description:
     "Color stored as Hex, RGB, and HSV. Edited with a visual picker.",
-  TableCell: withPopoverCell(BasicCell, InlineCell, PopoverCell, {
-    anchorOrigin: { horizontal: "left", vertical: "bottom" },
+  TableCell: withTableCell(DisplayCell, EditorCell, "popover", {
+    disablePadding: true,
   }),
-  TableEditor: NullEditor as any,
   SideDrawerField,
   csvImportParser: (value: string) => {
     try {

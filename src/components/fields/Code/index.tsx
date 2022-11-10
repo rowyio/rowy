@@ -23,7 +23,12 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <CodeIcon />,
   description: "Raw code edited with the Monaco Editor.",
-  TableCell: withTableCell(DisplayCell, SideDrawerField, "popover"),
+  TableCell: withTableCell(DisplayCell, SideDrawerField, "popover", {
+    popoverProps: {
+      anchorOrigin: { vertical: "top", horizontal: "center" },
+      PaperProps: { sx: { borderRadius: 1 } },
+    },
+  }),
   SideDrawerField,
   settings: Settings,
 };
