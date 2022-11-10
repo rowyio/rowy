@@ -351,7 +351,7 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
                 </RadioGroup>
               </FormControl>
 
-              {config.isCloudFunction ? (
+              {config.isActionScript === false ? (
                 <TextField
                   id="callableName"
                   label="Callable name"
@@ -475,7 +475,7 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
             </Stack>
           ),
         },
-        !config.isCloudFunction &&
+        config.isActionScript !== false &&
           get(config, "undo.enabled") && {
             id: "undo",
             title: "Undo action",
