@@ -6,7 +6,7 @@ import UrlIcon from "@mui/icons-material/Link";
 import DisplayCell from "./DisplayCell";
 import EditorCell from "./EditorCell";
 import { filterOperators } from "@src/components/fields/ShortText/Filter";
-import BasicContextMenuActions from "@src/components/fields/_BasicCell/BasicCellContextMenuActions";
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
 
 const SideDrawerField = lazy(
   () =>

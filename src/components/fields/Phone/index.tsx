@@ -3,10 +3,10 @@ import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withTableCell from "@src/components/Table/withTableCell";
 
 import PhoneIcon from "@mui/icons-material/PhoneOutlined";
-import DisplayCell from "@src/components/fields/_BasicCell/BasicCellValue";
+import DisplayCell from "@src/components/fields/ShortText/DisplayCell";
 import EditorCell from "./EditorCell";
 import { filterOperators } from "@src/components/fields/ShortText/Filter";
-import BasicContextMenuActions from "@src/components/fields/_BasicCell/BasicCellContextMenuActions";
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
 
 const SideDrawerField = lazy(
   () =>

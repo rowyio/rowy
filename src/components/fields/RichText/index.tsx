@@ -4,7 +4,7 @@ import withTableCell from "@src/components/Table/withTableCell";
 
 import RichTextIcon from "@mui/icons-material/TextFormat";
 import DisplayCell from "./DisplayCell";
-import BasicContextMenuActions from "@src/components/fields/_BasicCell/BasicCellContextMenuActions";
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
 
 const SideDrawerField = lazy(
   () =>

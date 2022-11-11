@@ -6,7 +6,7 @@ import { Number as NumberIcon } from "@src/assets/icons";
 import DisplayCell from "./DisplayCell";
 import EditorCell from "./EditorCell";
 import { filterOperators } from "./Filter";
-import BasicContextMenuActions from "@src/components/fields/_BasicCell/BasicCellContextMenuActions";
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
 const SideDrawerField = lazy(
   () =>
     import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Number" */)

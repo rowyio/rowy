@@ -6,7 +6,7 @@ import { Percentage as PercentageIcon } from "@src/assets/icons";
 import DisplayCell from "./DisplayCell";
 import EditorCell from "./EditorCell";
 import { filterOperators } from "@src/components/fields/Number/Filter";
-import BasicContextMenuActions from "@src/components/fields/_BasicCell/BasicCellContextMenuActions";
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
 
 const SideDrawerField = lazy(
   () =>
