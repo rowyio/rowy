@@ -1,27 +1,31 @@
-import { IHeavyCellProps } from "@src/components/fields/types";
+import { IDisplayCellProps } from "@src/components/fields/types";
 import { Link } from "react-router-dom";
 
 import { Stack, IconButton } from "@mui/material";
-import LaunchIcon from "@mui/icons-material/Launch";
+import OpenIcon from "@mui/icons-material/OpenInBrowser";
 
 import { useSubTableData } from "./utils";
 
-export default function SubTable({ column, row }: IHeavyCellProps) {
+export default function SubTable({
+  column,
+  row,
+  _rowy_ref,
+  tabIndex,
+}: IDisplayCellProps) {
   const { documentCount, label, subTablePath } = useSubTableData(
     column as any,
     row,
-    row._rowy_ref
+    _rowy_ref
   );
 
-  if (!row._rowy_ref) return null;
+  if (!_rowy_ref) return null;
 
   return (
     <Stack
       direction="row"
       alignItems="center"
       justifyContent="space-between"
-      className="cell-collapse-padding"
-      sx={{ p: "var(--cell-padding)", pr: 0.5 }}
+      style={{ paddingLeft: "var(--cell-padding)", width: "100%" }}
     >
       <div style={{ flexGrow: 1, overflow: "hidden" }}>
         {documentCount} {column.name as string}: {label}
@@ -30,12 +34,12 @@ export default function SubTable({ column, row }: IHeavyCellProps) {
       <IconButton
         component={Link}
         to={subTablePath}
-        className="row-hover-iconButton"
+        className="row-hover-iconButton end"
         size="small"
         disabled={!subTablePath}
-        style={{ flexShrink: 0 }}
+        tabIndex={tabIndex}
       >
-        <LaunchIcon />
+        <OpenIcon />
       </IconButton>
     </Stack>
   );

@@ -1,23 +1,24 @@
-import { IPopoverCellProps } from "@src/components/fields/types";
+import { IEditorCellProps } from "@src/components/fields/types";
 
-import MultiSelect_ from "@rowy/multiselect";
+import MultiSelectComponent from "@rowy/multiselect";
 
 import { sanitiseValue } from "./utils";
 
 export default function SingleSelect({
   value,
+  onChange,
   onSubmit,
   column,
   parentRef,
   showPopoverCell,
   disabled,
-}: IPopoverCellProps) {
+}: IEditorCellProps) {
   const config = column.config ?? {};
 
   return (
-    <MultiSelect_
+    <MultiSelectComponent
       value={sanitiseValue(value)}
-      onChange={onSubmit}
+      onChange={onChange}
       options={config.options ?? []}
       multiple={false}
       freeText={config.freeText}
@@ -30,12 +31,18 @@ export default function SingleSelect({
           open: true,
           MenuProps: {
             anchorEl: parentRef,
-            anchorOrigin: { vertical: "bottom", horizontal: "left" },
-            transformOrigin: { vertical: "top", horizontal: "left" },
+            anchorOrigin: { vertical: "bottom", horizontal: "center" },
+            transformOrigin: { vertical: "top", horizontal: "center" },
+            sx: {
+              "& .MuiPaper-root": { minWidth: `${column.width}px !important` },
+            },
           },
         },
       }}
-      onClose={() => showPopoverCell(false)}
+      onClose={() => {
+        showPopoverCell(false);
+        onSubmit();
+      }}
     />
   );
 }

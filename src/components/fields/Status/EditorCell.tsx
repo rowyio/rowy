@@ -1,14 +1,15 @@
-import { IPopoverCellProps } from "@src/components/fields/types";
-import MultiSelect_ from "@rowy/multiselect";
+import { IEditorCellProps } from "@src/components/fields/types";
+import MultiSelectComponent from "@rowy/multiselect";
 
 export default function StatusSingleSelect({
   value,
+  onChange,
   onSubmit,
   column,
   parentRef,
   showPopoverCell,
   disabled,
-}: IPopoverCellProps) {
+}: IEditorCellProps) {
   const config = column.config ?? {};
   const conditions = config.conditions ?? [];
   /**Revisit eventually, can we abstract or use a helper function to clean this? */
@@ -22,9 +23,9 @@ export default function StatusSingleSelect({
   });
   return (
     // eslint-disable-next-line react/jsx-pascal-case
-    <MultiSelect_
+    <MultiSelectComponent
       value={value}
-      onChange={(v) => onSubmit(v)}
+      onChange={(v) => onChange(v)}
       options={conditions.length >= 1 ? reMappedConditions : []} // this handles when conditions are deleted
       multiple={false}
       freeText={config.freeText}
@@ -37,12 +38,18 @@ export default function StatusSingleSelect({
           open: true,
           MenuProps: {
             anchorEl: parentRef,
-            anchorOrigin: { vertical: "bottom", horizontal: "left" },
-            transformOrigin: { vertical: "top", horizontal: "left" },
+            anchorOrigin: { vertical: "bottom", horizontal: "center" },
+            transformOrigin: { vertical: "top", horizontal: "center" },
+            sx: {
+              "& .MuiPaper-root": { minWidth: `${column.width}px !important` },
+            },
           },
         },
       }}
-      onClose={() => showPopoverCell(false)}
+      onClose={() => {
+        showPopoverCell(false);
+        onSubmit();
+      }}
     />
   );
 }

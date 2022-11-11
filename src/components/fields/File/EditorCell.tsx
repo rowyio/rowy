@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { IHeavyCellProps } from "@src/components/fields/types";
+import { IEditorCellProps } from "@src/components/fields/types";
 import { useSetAtom } from "jotai";
 import { findIndex } from "lodash-es";
 
@@ -20,12 +20,13 @@ import { FileValue } from "@src/types/table";
 
 export default function File_({
   column,
-  row,
   value,
+  onChange,
   onSubmit,
   disabled,
-  docRef,
-}: IHeavyCellProps) {
+  _rowy_ref,
+  tabIndex,
+}: IEditorCellProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
 
@@ -38,13 +39,13 @@ export default function File_({
 
       if (file) {
         upload({
-          docRef: docRef! as any,
+          docRef: _rowy_ref,
           fieldName: column.key,
           files: [file],
           previousValue: value,
           onComplete: (newValue) => {
             updateField({
-              path: docRef.path,
+              path: _rowy_ref.path,
               fieldName: column.key,
               value: newValue,
             });
@@ -60,7 +61,8 @@ export default function File_({
     const index = findIndex(newValue, ["ref", ref]);
     const toBeDeleted = newValue.splice(index, 1);
     toBeDeleted.length && deleteUpload(toBeDeleted[0]);
-    onSubmit(newValue);
+    onChange(newValue);
+    onSubmit();
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -73,11 +75,10 @@ export default function File_({
   return (
     <Stack
       direction="row"
-      className="cell-collapse-padding"
       alignItems="center"
       sx={{
+        width: "100%",
         height: "100%",
-        pr: 0.5,
 
         ...(isDragActive
           ? {
@@ -92,6 +93,7 @@ export default function File_({
           : {}),
       }}
       {...dropzoneProps}
+      tabIndex={tabIndex}
       onClick={undefined}
     >
       <ChipList>
@@ -130,6 +132,7 @@ export default function File_({
                             confirmColor: "error",
                           })
                   }
+                  tabIndex={tabIndex}
                   style={{ width: "100%" }}
                 />
               </Tooltip>
@@ -146,8 +149,9 @@ export default function File_({
               e.stopPropagation();
             }}
             style={{ display: "flex" }}
-            className={docRef && "row-hover-iconButton"}
-            disabled={!docRef}
+            className={_rowy_ref && "row-hover-iconButton end"}
+            disabled={!_rowy_ref}
+            tabIndex={tabIndex}
           >
             <UploadIcon />
           </IconButton>
@@ -163,7 +167,7 @@ export default function File_({
         </div>
       )}
 
-      <input {...getInputProps()} />
+      <input {...getInputProps()} tabIndex={tabIndex} />
     </Stack>
   );
 }

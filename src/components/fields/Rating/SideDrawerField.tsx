@@ -3,7 +3,7 @@ import { ISideDrawerFieldProps } from "@src/components/fields/types";
 import { Grid } from "@mui/material";
 import { Rating as MuiRating } from "@mui/material";
 import "@mui/lab";
-import { getStateIcon, getStateOutline } from "./TableCell";
+import { getStateIcon, getStateOutline } from "./DisplayCell";
 import { fieldSx } from "@src/components/SideDrawer/utils";
 
 export default function Rating({
@@ -24,7 +24,6 @@ export default function Rating({
         value={typeof value === "number" ? value : 0}
         disabled={disabled}
         onChange={(_, newValue) => {
-          console.log("onChange", newValue);
           onChange(newValue);
           onSubmit();
         }}

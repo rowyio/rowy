@@ -15,7 +15,6 @@ import {
   Draggable,
 } from "react-beautiful-dnd";
 import { get } from "lodash-es";
-import { Portal } from "@mui/material";
 import { ErrorBoundary } from "react-error-boundary";
 
 import StyledTable from "./Styled/StyledTable";
@@ -426,6 +425,14 @@ export default function Table({
                     selectedCell?.path === row.original._rowy_ref.path &&
                     selectedCell?.columnKey === cell.column.id;
 
+                  const fieldTypeGroup = getFieldProp(
+                    "group",
+                    cell.column.columnDef.meta?.type
+                  );
+                  const isReadOnlyCell =
+                    fieldTypeGroup === "Auditing" ||
+                    fieldTypeGroup === "Metadata";
+
                   return (
                     <CellValidation
                       key={cell.id}
@@ -447,7 +454,7 @@ export default function Table({
                       )}
                       aria-selected={isSelectedCell}
                       aria-describedby={
-                        canEditCell
+                        canEditCell && !isReadOnlyCell
                           ? "rowy-table-editable-cell-description"
                           : undefined
                       }
@@ -540,14 +547,12 @@ export default function Table({
         </div>
       </StyledTable>
 
-      <Portal>
-        <div
-          id="rowy-table-editable-cell-description"
-          style={{ display: "none" }}
-        >
-          Press Enter to edit.
-        </div>
-      </Portal>
+      <div
+        id="rowy-table-editable-cell-description"
+        style={{ display: "none" }}
+      >
+        Press Enter to edit.
+      </div>
 
       <ContextMenu />
     </div>
