@@ -28,7 +28,7 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <DateIcon />,
   description: `Formatted date. Format is configurable, default: ${DATE_FORMAT}. Edited with a visual picker.`,
-  TableCell: withTableCell(DisplayCell, EditorCell, "inline", {
+  TableCell: withTableCell(DisplayCell, EditorCell, "focus", {
     disablePadding: true,
   }),
   SideDrawerField,

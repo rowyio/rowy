@@ -68,11 +68,8 @@ export default function DateTime({
             },
             "& .MuiInputAdornment-root": { m: 0 },
           }}
-          // Prevent react-data-grid showing NullEditor, which unmounts this field
-          onDoubleClick={(e) => e.stopPropagation()}
           onKeyDown={(e) => e.stopPropagation()}
-          // Touch mode: make the whole field clickable
-          onClick={props.inputProps?.onClick as any}
+          onClick={(e) => e.stopPropagation()}
           inputProps={{ ...props.inputProps, tabIndex }}
         />
       )}
@@ -90,6 +87,7 @@ export default function DateTime({
       components={{ OpenPickerIcon: ChevronDown }}
       disableOpenPicker={false}
       disabled={disabled}
+      PopperProps={{ onClick: (e) => e.stopPropagation() }}
     />
   );
 }
