@@ -41,7 +41,7 @@ import RenderedHtml from "@src/components/RenderedHtml";
 //   },
 // }));
 
-export default function RichText({ column, value }: IDisplayCellProps) {
+export default function RichText({ value, tabIndex }: IDisplayCellProps) {
   // const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
 
   const theme = useTheme();
@@ -59,6 +59,8 @@ export default function RichText({ column, value }: IDisplayCellProps) {
         fontSize: "0.75rem",
         lineHeight: theme.typography.body2.lineHeight,
       }}
+      // Prevent user tabbing into any rendered links
+      {...({ inert: tabIndex === -1 ? "inert" : undefined } as any)}
     />
   );
 
