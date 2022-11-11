@@ -680,6 +680,12 @@ export const components = (theme: Theme): ThemeOptions => {
         },
       },
 
+      MuiButtonBase: {
+        defaultProps: {
+          focusRipple: true,
+        },
+      },
+
       MuiButton: {
         defaultProps: {
           variant: "outlined",
