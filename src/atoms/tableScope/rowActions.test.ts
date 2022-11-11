@@ -4,7 +4,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { useAtomCallback } from "jotai/utils";
 import { find, findIndex, sortBy } from "lodash-es";
 
-import { currentUserAtom } from "@src/atoms/globalScope";
+import { currentUserAtom } from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,

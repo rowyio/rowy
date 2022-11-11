@@ -12,7 +12,9 @@ export default function Authentication({
   publicSettings,
   updatePublicSettings,
 }: IProjectSettingsChildProps) {
-  const [signInOptions, setSignInOptions] = useState(
+  const [signInOptions, setSignInOptions] = useState<
+    NonNullable<typeof publicSettings["signInOptions"]>
+  >(
     Array.isArray(publicSettings?.signInOptions)
       ? publicSettings.signInOptions
       : ["google"]
@@ -23,10 +25,12 @@ export default function Authentication({
       <MultiSelect
         label="Sign-in options"
         value={signInOptions}
-        options={Object.keys(authOptions).map((option) => ({
-          value: option,
-          label: startCase(option).replace("Github", "GitHub"),
-        }))}
+        options={
+          Object.keys(authOptions).map((option) => ({
+            value: option,
+            label: startCase(option).replace("Github", "GitHub"),
+          })) as any
+        }
         onChange={setSignInOptions}
         onClose={() => updatePublicSettings({ signInOptions })}
         multiple

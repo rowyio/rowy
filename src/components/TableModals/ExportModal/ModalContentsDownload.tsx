@@ -137,7 +137,11 @@ export default function Export({
       <ColumnSelect
         value={columns.map((x) => x.key)}
         onChange={handleChange(setColumns)}
-        filterColumns={(column) => DOWNLOADABLE_COLUMNS.includes(column.type)}
+        filterColumns={(column) =>
+          column.type === FieldType.derivative
+            ? DOWNLOADABLE_COLUMNS.includes(column.config?.renderFieldType)
+            : DOWNLOADABLE_COLUMNS.includes(column.type)
+        }
         label="Columns to export"
         labelPlural="columns"
         TextFieldProps={{

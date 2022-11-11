@@ -23,7 +23,7 @@ import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 import Thumbnail from "@src/components/Thumbnail";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
-import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
+import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
 import { IMAGE_MIME_TYPES } from ".";
 import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
 
@@ -88,7 +88,7 @@ export default function Image_({
   onSubmit,
   disabled,
 }: ISideDrawerFieldProps) {
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const { uploaderState, upload, deleteUpload } = useUploader();
   const { progress } = uploaderState;
 

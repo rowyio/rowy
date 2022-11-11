@@ -14,6 +14,14 @@ const CodeEditor = lazy(
 
 const additionalVariables = [
   {
+    key: "row",
+    description: `row has the value of doc.data() it has type definitions using this table's schema, but you can access any field in the document.`,
+  },
+  {
+    key: "ref",
+    description: `reference object that represents the reference to the current row in firestore db (ie: doc.ref).`,
+  },
+  {
     key: "change",
     description:
       "you can pass in field name to change.before.get() or change.after.get() to get changes",

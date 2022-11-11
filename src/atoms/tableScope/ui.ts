@@ -10,7 +10,7 @@ import { SEVERITY_LEVELS } from "@src/components/TableModals/CloudLogsModal/Clou
  *
  * @example Basic usage:
  * ```
- * const openColumnMenu = useSetAtom(columnMenuAtom, globalScope);
+ * const openColumnMenu = useSetAtom(columnMenuAtom, projectScope);
  * openColumnMenu({ column, anchorEl: ... });
  * ```
  *
@@ -30,7 +30,7 @@ export const columnMenuAtom = atom<{
  *
  * @example Basic usage:
  * ```
- * const openColumnModal = useSetAtom(columnModalAtom, globalScope);
+ * const openColumnModal = useSetAtom(columnModalAtom, projectScope);
  * openColumnModal({ type: "...", column });
  * ```
  *
@@ -56,7 +56,7 @@ export type TableFiltersPopoverState = {
  *
  * @example Basic usage:
  * ```
- * const openTableFiltersPopover = useSetAtom(tableFiltersPopoverAtom, globalScope);
+ * const openTableFiltersPopover = useSetAtom(tableFiltersPopoverAtom, projectScope);
  * openTableFiltersPopover({ query: ... });
  * ```
  *
@@ -84,7 +84,7 @@ export const sideDrawerShowHiddenFieldsAtom = atomWithStorage(
  *
  * @example Basic usage:
  * ```
- * const openTableModal = useSetAtom(tableModalAtom, globalScope);
+ * const openTableModal = useSetAtom(tableModalAtom, projectScope);
  * openTableModal("...");
  * ```
  *
@@ -100,16 +100,33 @@ export const tableModalAtom = atomWithHash<
   | "export"
   | "importExisting"
   | "importCsv"
+  | "importAirtable"
   | null
 >("tableModal", null, { replaceState: true });
 
 export type ImportCsvData = { columns: string[]; rows: Record<string, any>[] };
+export type ImportAirtableData = { records: Record<string, any>[] };
+
 /** Store import CSV popover and wizard state */
 export const importCsvAtom = atom<{
   importType: "csv" | "tsv";
   csvData: ImportCsvData | null;
 }>({ importType: "csv", csvData: null });
 
+/** Store import Airtable popover and wizard state */
+export const importAirtableAtom = atom<{
+  airtableData: ImportAirtableData | null;
+  apiKey: string;
+  baseId: string;
+  tableId: string;
+}>({ airtableData: null, apiKey: "", baseId: "", tableId: "" });
+
+/** Store side drawer open state */
+export const sideDrawerAtom = atomWithHash<"table-information" | null>(
+  "sideDrawer",
+  null,
+  { replaceState: true }
+);
 /** Store side drawer open state */
 export const sideDrawerOpenAtom = atom(false);
 

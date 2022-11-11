@@ -21,7 +21,7 @@ import CircularProgressOptical from "@src/components/CircularProgressOptical";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 
 import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
-import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
+import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
 import { FileValue } from "@src/types/table";
 
 export default function File_({
@@ -32,7 +32,7 @@ export default function File_({
   onSubmit,
   disabled,
 }: ISideDrawerFieldProps) {
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
 
   const { uploaderState, upload, deleteUpload } = useUploader();
 

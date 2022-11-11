@@ -13,10 +13,10 @@ import { InlineErrorFallback } from "@src/components/ErrorFallback";
 import Loading from "@src/components/Loading";
 
 import {
-  globalScope,
+  projectScope,
   rowyRunAtom,
   confirmDialogAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -35,10 +35,10 @@ export default function ColumnConfigModal({
   onClose,
   column,
 }: IColumnModalProps) {
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const snackLogContext = useSnackLogContext();
 

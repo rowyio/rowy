@@ -20,12 +20,12 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircleOutlined";
 import { ChevronRight as ChevronRightIcon } from "@src/assets/icons";
 
 import {
-  globalScope,
+  projectScope,
   projectIdAtom,
   userSettingsAtom,
   themeAtom,
   themeOverriddenAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { ROUTES } from "@src/constants/routes";
 
 export default function UserMenu(props: IconButtonProps) {
@@ -33,12 +33,12 @@ export default function UserMenu(props: IconButtonProps) {
   const [open, setOpen] = useState(false);
   const [themeSubMenu, setThemeSubMenu] = useState<HTMLElement | null>(null);
 
-  const [projectId] = useAtom(projectIdAtom, globalScope);
-  const [userSettings] = useAtom(userSettingsAtom, globalScope);
-  const [theme, setTheme] = useAtom(themeAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
+  const [theme, setTheme] = useAtom(themeAtom, projectScope);
   const [themeOverridden, setThemeOverridden] = useAtom(
     themeOverriddenAtom,
-    globalScope
+    projectScope
   );
 
   const displayName = userSettings.user?.displayName;
@@ -66,7 +66,6 @@ export default function UserMenu(props: IconButtonProps) {
           aria-label="Open user menu"
           aria-controls="user-menu"
           aria-haspopup="true"
-          edge="end"
           size="large"
           {...props}
           ref={anchorEl}
