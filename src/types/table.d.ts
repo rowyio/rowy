@@ -149,6 +149,10 @@ export type ColumnConfig = {
     };
     /** FieldType to render for Derivative fields */
     renderFieldType?: FieldType;
+    /** Used in Derivative fields */
+    listenerFields?: string[];
+    /** Used in Derivative and Action fields */
+    requiredFields?: string[];
     /** For sub-table fields */
     parentLabel?: string[];
 
@@ -169,7 +173,9 @@ export type TableFilter = {
     | "date-before-equal"
     | "date-after-equal"
     | "time-minute-equal"
-    | "id-equal";
+    | "id-equal"
+    | "color-equal"
+    | "color-not-equal";
   value: any;
 };
 

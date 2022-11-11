@@ -1,11 +1,11 @@
 import { ISettingsProps } from "@src/components/fields/types";
-import RatingIcon from "@mui/icons-material/Star";
-import RatingOutlineIcon from "@mui/icons-material/StarBorder"
 import { InputLabel, TextField, Grid, FormControlLabel, Checkbox, Stack } from "@mui/material";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import MuiRating from "@mui/material/Rating";
 import { get } from "lodash-es";
+import Icon from "./Icon"
+
 
 export default function Settings({ onChange, config }: ISettingsProps) {
   return (
@@ -80,9 +80,9 @@ export default function Settings({ onChange, config }: ISettingsProps) {
             <MuiRating aria-label="Preview of the rating field with custom icon"
               name="Preview"
               onClick={(e) => e.stopPropagation()}
-              icon={get(config, "customIcons.rating") || <RatingIcon />}
+              icon={<Icon config={config} isEmpty={false} />}
               size="small"
-              emptyIcon={get(config, "customIcons.rating") || <RatingOutlineIcon />}
+              emptyIcon={<Icon config={config} isEmpty={true} />}
               max={get(config, "max")}
               precision={get(config, "precision")}
               sx={{ pt: 0.5 }}
