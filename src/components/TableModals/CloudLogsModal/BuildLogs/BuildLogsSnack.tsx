@@ -94,7 +94,7 @@ export default function BuildLogsSnack({
         borderRadius: 1,
         zIndex: 1,
         transition: (theme) => theme.transitions.create("height"),
-        height: expanded ? "calc(100% - 300px)" : 300,
+        height: expanded ? "calc(100% - 300px)" : 50,
       }}
     >
       <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -165,7 +165,7 @@ export default function BuildLogsSnack({
         height={"calc(100% - 25px)"}
         id="live-stream-scroll-box-snack"
       >
-        {latestActiveLog && (
+        {latestActiveLog && expanded && (
           <>
             {logs?.map((log: any, index: number) => (
               <BuildLogRow logRecord={log} index={index} key={index} />
