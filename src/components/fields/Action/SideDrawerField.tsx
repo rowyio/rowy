@@ -10,7 +10,7 @@ import ActionFab from "./ActionFab";
 import { tableScope, tableRowsAtom } from "@src/atoms/tableScope";
 import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
 import { sanitiseCallableName, isUrl } from "./utils";
-import { getActionName } from "./TableCell";
+import { getActionName } from "./DisplayCell";
 
 export default function Action({
   column,

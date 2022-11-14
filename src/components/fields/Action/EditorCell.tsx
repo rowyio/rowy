@@ -4,15 +4,7 @@ import { Stack } from "@mui/material";
 
 import ActionFab from "./ActionFab";
 import { sanitiseCallableName, isUrl } from "./utils";
-import { get } from "lodash-es";
-
-export const getActionName = (column: any) => {
-  const config = get(column, "config");
-  if (!get(config, "customName.enabled")) {
-    return get(column, "name");
-  }
-  return get(config, "customName.actionName") || get(column, "name");
-};
+import { getActionName } from "./DisplayCell";
 
 export default function Action({
   column,
