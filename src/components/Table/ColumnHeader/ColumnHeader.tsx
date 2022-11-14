@@ -166,13 +166,13 @@ export const ColumnHeader = forwardRef(function ColumnHeader(
           placement="bottom-start"
           disableInteractive
           TransitionComponent={Fade}
+          sx={{ "& .MuiTooltip-tooltip": { marginTop: "-28px !important" } }}
         >
           <Typography
             noWrap
             sx={{
               typography: "caption",
               fontWeight: "fontWeightMedium",
-              lineHeight: `${COLUMN_HEADER_HEIGHT}px`,
               textOverflow: "clip",
               position: "relative",
               zIndex: 1,
@@ -218,7 +218,8 @@ export const ColumnHeader = forwardRef(function ColumnHeader(
                 }),
 
               color: "text.disabled",
-              ".column-header:hover &, &:focus": { color: "text.primary" },
+              "[role='columnheader']:hover &, [role='columnheader']:focus &, [role='columnheader']:focus-within &, &:focus":
+                { color: "text.primary" },
             }}
           >
             <DropdownIcon />

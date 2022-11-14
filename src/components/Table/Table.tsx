@@ -16,6 +16,7 @@ import {
 } from "react-beautiful-dnd";
 import { get } from "lodash-es";
 import { ErrorBoundary } from "react-error-boundary";
+import { DragVertical } from "@src/assets/icons";
 
 import StyledTable from "./Styled/StyledTable";
 import StyledRow from "./Styled/StyledRow";
@@ -44,12 +45,9 @@ import {
   selectedCellAtom,
   contextMenuTargetAtom,
 } from "@src/atoms/tableScope";
-import { COLLECTION_PAGE_SIZE } from "@src/config/db";
 
 import { getFieldType, getFieldProp } from "@src/components/fields";
-import { FieldType } from "@src/constants/fields";
 import { TableRow, ColumnConfig } from "@src/types/table";
-import { StyledCell } from "./Styled/StyledCell";
 import { useKeyboardNavigation } from "./useKeyboardNavigation";
 import { useSaveColumnSizing } from "./useSaveColumnSizing";
 import useVirtualization from "./useVirtualization";
@@ -89,7 +87,6 @@ export default function Table({
   hiddenColumns,
   emptyState,
 }: ITableProps) {
-  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
@@ -100,7 +97,6 @@ export default function Table({
   const focusInsideCell = selectedCell?.focusInside ?? false;
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
-  const updateField = useSetAtom(updateFieldAtom, tableScope);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -365,8 +361,40 @@ export default function Table({
                                   position: "absolute",
                                   inset: 0,
                                   zIndex: 0,
+                                  display: "flex",
+                                  alignItems: "center",
+                                  outline: "none",
                                 }}
-                              />
+                                className="column-drag-handle"
+                              >
+                                <DragVertical
+                                  sx={{
+                                    opacity: 0,
+                                    borderRadius: 2,
+                                    transition: (theme) =>
+                                      theme.transitions.create(["opacity"]),
+                                    "[role='columnheader']:hover &, [role='columnheader']:focus-within &":
+                                      {
+                                        opacity: 0.5,
+                                      },
+                                    ".column-drag-handle:hover &": {
+                                      opacity: 1,
+                                    },
+                                    ".column-drag-handle:active &": {
+                                      opacity: 1,
+                                      color: "primary.main",
+                                    },
+                                    ".column-drag-handle:focus &": {
+                                      opacity: 1,
+                                      color: "primary.main",
+                                      outline: "2px solid",
+                                      outlineColor: "primary.main",
+                                    },
+                                  }}
+                                  style={{ width: 8 }}
+                                  preserveAspectRatio="xMidYMid slice"
+                                />
+                              </div>
 
                               {header.column.getCanResize() && (
                                 <StyledResizer
