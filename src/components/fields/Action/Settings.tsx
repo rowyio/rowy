@@ -559,20 +559,46 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
           title: "Customization",
           content: (
             <>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={config.customIcons?.enabled}
+              <Stack>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={config.customName?.enabled}
+                      onChange={(e) =>
+                        onChange("customName.enabled")(e.target.checked)
+                      }
+                      name="customName.enabled"
+                    />
+                  }
+                  label="Customize label for action"
+                  style={{ marginLeft: -11 }}
+                />
+                {config.customName?.enabled && (
+                  <TextField
+                    id="customName.actionName"
+                    value={get(config, "customName.actionName")}
                     onChange={(e) =>
-                      onChange("customIcons.enabled")(e.target.checked)
+                      onChange("customName.actionName")(e.target.value)
                     }
-                    name="customIcons.enabled"
-                  />
-                }
-                label="Customize button icons with emoji"
-                style={{ marginLeft: -11 }}
-              />
-
+                    label="Action name:"
+                    className="labelHorizontal"
+                    inputProps={{ style: { width: "10ch" } }}
+                  ></TextField>
+                )}
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={config.customIcons?.enabled}
+                      onChange={(e) =>
+                        onChange("customIcons.enabled")(e.target.checked)
+                      }
+                      name="customIcons.enabled"
+                    />
+                  }
+                  label="Customize button icons with emoji"
+                  style={{ marginLeft: -11 }}
+                />
+              </Stack>
               {config.customIcons?.enabled && (
                 <Grid container spacing={2} sx={{ mt: { xs: 0, sm: -1 } }}>
                   <Grid item xs={12} sm={true}>

@@ -1381,11 +1381,12 @@ export const components = (theme: Theme): ThemeOptions => {
 
       MuiRating: {
         styleOverrides: {
-          iconFilled: { color: theme.palette.text.secondary },
           icon: {
             // https://github.com/mui/material-ui/issues/32557
             "& .MuiSvgIcon-root": { pointerEvents: "auto" },
+            color: theme.palette.text.secondary,
           },
+          iconEmpty: { opacity: 0.38 },
         },
       },
 

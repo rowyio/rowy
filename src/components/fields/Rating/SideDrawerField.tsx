@@ -3,8 +3,8 @@ import { ISideDrawerFieldProps } from "@src/components/fields/types";
 import { Grid } from "@mui/material";
 import { Rating as MuiRating } from "@mui/material";
 import "@mui/lab";
-import { getStateIcon, getStateOutline } from "./DisplayCell";
 import { fieldSx } from "@src/components/SideDrawer/utils";
+import Icon from "./Icon";
 
 export default function Rating({
   column,
@@ -27,8 +27,8 @@ export default function Rating({
           onChange(newValue);
           onSubmit();
         }}
-        icon={getStateIcon(column.config)}
-        emptyIcon={getStateOutline(column.config)}
+        icon={<Icon config={column.config} isEmpty={false} />}
+        emptyIcon={<Icon config={column.config} isEmpty={true} />}
         size="small"
         max={max}
         precision={precision}

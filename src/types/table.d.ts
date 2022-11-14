@@ -4,7 +4,10 @@ import type {
   DocumentData,
   DocumentReference,
 } from "firebase/firestore";
-import { IExtension } from "@src/components/TableModals/ExtensionsModal/utils";
+import {
+  IExtension,
+  IRuntimeOptions,
+} from "@src/components/TableModals/ExtensionsModal/utils";
 import { IWebhook } from "@src/components/TableModals/WebhooksModal/utils";
 
 /**
@@ -104,6 +107,7 @@ export type TableSchema = {
   extensionObjects?: IExtension[];
   compiledExtension?: string;
   webhooks?: IWebhook[];
+  runtimeOptions?: IRuntimeOptions;
 
   /** @deprecated Migrate to Extensions */
   sparks?: string;
@@ -146,7 +150,11 @@ export type ColumnConfig = {
     /** Regex used in CellValidation */
     validationRegex: string;
     /** FieldType to render for Derivative fields */
-    renderFieldType: FieldType;
+    renderFieldType?: FieldType;
+    /** Used in Derivative fields */
+    listenerFields?: string[];
+    /** Used in Derivative and Action fields */
+    requiredFields?: string[];
     /** For sub-table fields */
     parentLabel: string[];
 
@@ -167,7 +175,9 @@ export type TableFilter = {
     | "date-before-equal"
     | "date-after-equal"
     | "time-minute-equal"
-    | "id-equal";
+    | "id-equal"
+    | "color-equal"
+    | "color-not-equal";
   value: any;
 };
 

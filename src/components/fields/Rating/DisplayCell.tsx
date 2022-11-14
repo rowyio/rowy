@@ -2,24 +2,7 @@ import React, { forwardRef } from "react";
 import { IDisplayCellProps } from "@src/components/fields/types";
 
 import MuiRating, { RatingProps as MuiRatingProps } from "@mui/material/Rating";
-import RatingIcon from "@mui/icons-material/Star";
-import RatingOutlineIcon from "@mui/icons-material/StarBorder";
-import { get } from "lodash-es";
-
-export const getStateIcon = (config: any) => {
-  // only use the config to get the custom rating icon if enabled via toggle
-  if (!get(config, "customIcons.enabled")) {
-    return <RatingIcon />;
-  }
-  return get(config, "customIcons.rating") || <RatingIcon />;
-};
-
-export const getStateOutline = (config: any) => {
-  if (!get(config, "customIcons.enabled")) {
-    return <RatingOutlineIcon />;
-  }
-  return get(config, "customIcons.rating") || <RatingOutlineIcon />;
-};
+import Icon from "./Icon";
 
 export const Rating = forwardRef(function Rating(
   {
@@ -55,14 +38,15 @@ export const Rating = forwardRef(function Rating(
         if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key))
           e.stopPropagation();
       }}
-      icon={getStateIcon(column.config)}
+      icon={<Icon config={column.config} isEmpty={false} />}
+      emptyIcon={<Icon config={column.config} isEmpty={true} />}
       size="small"
       readOnly={disabled}
-      emptyIcon={getStateOutline(column.config)}
       max={max}
       precision={precision}
       sx={{ mx: -0.25 }}
     />
   );
 });
+
 export default Rating;

@@ -5,6 +5,7 @@ import { toColor } from "react-color-palette";
 
 import ColorIcon from "@mui/icons-material/Colorize";
 import DisplayCell from "./DisplayCell";
+import { filterOperators, valueFormatter } from "./filters";
 
 const EditorCell = lazy(
   () => import("./EditorCell" /* webpackChunkName: "EditorCell-Color" */)
@@ -28,6 +29,10 @@ export const config: IFieldConfig = {
     disablePadding: true,
   }),
   SideDrawerField,
+  filter: {
+    operators: filterOperators,
+    valueFormatter,
+  },
   csvImportParser: (value: string) => {
     try {
       const obj = JSON.parse(value);
