@@ -40,13 +40,14 @@ export default function Json({
   const [editor, setEditor] = useAtom(jsonEditorAtom, projectScope);
   const [codeValid, setCodeValid] = useState(true);
 
-  const sanitizedValue =
+  const baseValue =
     value !== undefined && isValidJson(value)
       ? value
       : column.config?.isArray
       ? []
       : {};
-  const formattedJson = stringify(sanitizedValue, { space: 2 });
+  const formattedJson = stringify(baseValue, { space: 2 });
+  const sanitizedValue = JSON.parse(formattedJson);
 
   if (disabled)
     return (
