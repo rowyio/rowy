@@ -1,7 +1,8 @@
 import { IHeavyCellProps } from "@src/components/fields/types";
 
 import MuiRating from "@mui/material/Rating";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
+import Icon from "./Icon"
+
 
 export default function Rating({
   row,
@@ -28,9 +29,11 @@ export default function Rating({
       name={`${row.id}-${column.key}`}
       value={typeof value === "number" ? value : 0}
       onClick={(e) => e.stopPropagation()}
+      icon={<Icon config={column.config} isEmpty={false} />}
+      size="small"
       disabled={disabled}
       onChange={(_, newValue) => onSubmit(newValue)}
-      emptyIcon={<StarBorderIcon />}
+      emptyIcon={<Icon config={column.config} isEmpty={true} />}
       max={max}
       precision={precision}
       sx={{ mx: -0.25 }}

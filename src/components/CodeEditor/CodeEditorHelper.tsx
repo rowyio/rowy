@@ -23,16 +23,8 @@ export default function CodeEditorHelper({
 
   const availableVariables = [
     {
-      key: "row",
-      description: `row has the value of doc.data() it has type definitions using this table's schema, but you can access any field in the document.`,
-    },
-    {
       key: "db",
       description: `db object provides access to firestore database instance of this project. giving you access to any collection or document in this firestore instance`,
-    },
-    {
-      key: "ref",
-      description: `ref object that represents the reference to the current row in firestore db (ie: doc.ref).`,
     },
     {
       key: "auth",
@@ -44,7 +36,7 @@ export default function CodeEditorHelper({
     },
     {
       key: "rowy",
-      description: `rowy provides a set of functions that are commonly used, such as easy access to GCP Secret Manager`,
+      description: `rowy provides a set of functions that are commonly used, such as easy file uploads & access to GCP Secret Manager`,
     },
   ];
 

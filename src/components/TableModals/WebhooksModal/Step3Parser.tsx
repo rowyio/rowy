@@ -12,6 +12,10 @@ import { parserExtraLibs } from "./utils";
 
 const additionalVariables = [
   {
+    key: "ref",
+    description: `reference object that represents the reference to the current collection in firestore db.`,
+  },
+  {
     key: "req",
     description: "webhook request",
   },

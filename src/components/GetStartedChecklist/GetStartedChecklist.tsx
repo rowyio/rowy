@@ -62,6 +62,7 @@ export default function GetStartedChecklist({
           "& .MuiDialog-container": {
             justifyContent: "flex-start",
             alignItems: "flex-end",
+            transformOrigin: "0% calc(100% - 160px)",
           },
 
           "& .MuiDialog-paper": {

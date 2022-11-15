@@ -59,9 +59,8 @@ export type ConfirmDialogProps = {
  */
 export const confirmDialogAtom = atom(
   { open: false } as ConfirmDialogProps,
-  (get, set, update: Partial<ConfirmDialogProps>) => {
+  (_, set, update: Partial<ConfirmDialogProps>) => {
     set(confirmDialogAtom, {
-      ...get(confirmDialogAtom),
       open: true, // Don’t require this to be set explicitly
       ...update,
     });

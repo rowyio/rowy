@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 import { atomWithReducer, atomWithHash } from "jotai/utils";
-import { uniqBy, findIndex, cloneDeep, unset, orderBy } from "lodash-es";
+import { findIndex, cloneDeep, unset, orderBy } from "lodash-es";
 
 import {
   TableSettings,
@@ -102,49 +102,53 @@ const tableRowsLocalReducer = (
   prev: TableRow[],
   action: TableRowsLocalAction
 ): TableRow[] => {
-  if (action.type === "set") {
-    return [...action.rows];
-  }
-  if (action.type === "add") {
-    if (Array.isArray(action.row)) return [...action.row, ...prev];
-    return [action.row, ...prev];
-  }
-  if (action.type === "update") {
-    const index = findIndex(prev, ["_rowy_ref.path", action.path]);
-    if (index > -1) {
-      const updatedRows = [...prev];
-      if (Array.isArray(action.deleteFields)) {
+  switch (action.type) {
+    case "set":
+      return [...action.rows];
+
+    case "add":
+      if (Array.isArray(action.row)) return [...action.row, ...prev];
+      return [action.row, ...prev];
+
+    case "update":
+      const index = findIndex(prev, ["_rowy_ref.path", action.path]);
+      if (index > -1) {
+        const updatedRows = [...prev];
         updatedRows[index] = cloneDeep(prev[index]);
-        for (const field of action.deleteFields) {
-          unset(updatedRows[index], field);
+        if (Array.isArray(action.deleteFields)) {
+          for (const field of action.deleteFields) {
+            unset(updatedRows[index], field);
+          }
         }
+        updatedRows[index] = updateRowData(updatedRows[index], action.row);
+        return updatedRows;
       }
-      updatedRows[index] = updateRowData(updatedRows[index], action.row);
-      return updatedRows;
-    }
-    // If not found, add to start
-    if (index === -1)
-      return [
-        {
-          ...action.row,
-          _rowy_ref: {
-            path: action.path,
-            id: action.path.split("/").pop() || action.path,
+      // If not found, add to start
+      else {
+        return [
+          {
+            ...action.row,
+            _rowy_ref: {
+              path: action.path,
+              id: action.path.split("/").pop() || action.path,
+            },
           },
-        },
-        ...prev,
-      ];
-  }
-  if (action.type === "delete") {
-    return prev.filter((row) => {
-      if (Array.isArray(action.path)) {
-        return !action.path.includes(row._rowy_ref.path);
-      } else {
-        return row._rowy_ref.path !== action.path;
+          ...prev,
+        ];
       }
-    });
+
+    case "delete":
+      return prev.filter((row) => {
+        if (Array.isArray(action.path)) {
+          return !action.path.includes(row._rowy_ref.path);
+        } else {
+          return row._rowy_ref.path !== action.path;
+        }
+      });
+
+    default:
+      throw new Error("Invalid action");
   }
-  throw new Error("Invalid action");
 };
 /**
  * Store rows that are out of order or not ready to be written to the db.

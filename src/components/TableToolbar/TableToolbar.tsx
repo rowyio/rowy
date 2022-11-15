@@ -16,6 +16,7 @@ import LoadedRowsStatus from "./LoadedRowsStatus";
 import TableSettings from "./TableSettings";
 import HiddenFields from "./HiddenFields";
 import RowHeight from "./RowHeight";
+import TableInformation from "./TableInformation";
 
 import {
   projectScope,
@@ -36,6 +37,7 @@ import { FieldType } from "@src/constants/fields";
 const Filters = lazy(() => import("./Filters" /* webpackChunkName: "Filters" */));
 // prettier-ignore
 const ImportData = lazy(() => import("./ImportData/ImportData" /* webpackChunkName: "ImportData" */));
+
 // prettier-ignore
 const ReExecute = lazy(() => import("./ReExecute" /* webpackChunkName: "ReExecute" */));
 
@@ -147,6 +149,7 @@ export default function TableToolbar() {
           <TableSettings />
         </>
       )}
+      <TableInformation />
       <div className="end-spacer" />
     </Stack>
   );

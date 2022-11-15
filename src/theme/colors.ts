@@ -99,9 +99,9 @@ export const colorsLight = (
             backgroundColor: colord({ l: 70, c: 5, h })
               .alpha(0.6)
               .toHslString(),
-            ".MuiDialog-root:has(.MuiDialog-paperFullScreen) &": {
-              backgroundColor: "rgba(0, 0, 0, 0)",
-            },
+            // ".MuiDialog-root:has(.MuiDialog-paperFullScreen) &": {
+            //   backgroundColor: "rgba(0, 0, 0, 0)",
+            // },
           },
           invisible: { backgroundColor: "transparent" },
         },
@@ -202,9 +202,9 @@ export const colorsDark = (
         styleOverrides: {
           root: {
             backgroundColor: colord({ l: 0, c: 1, h }).alpha(0.6).toHslString(),
-            ".MuiDialog-root:has(.MuiDialog-paperFullScreen) &": {
-              backgroundColor: "rgba(0, 0, 0, 0)",
-            },
+            // ".MuiDialog-root:has(.MuiDialog-paperFullScreen) &": {
+            //   backgroundColor: "rgba(0, 0, 0, 0)",
+            // },
           },
           invisible: { backgroundColor: "transparent" },
         },

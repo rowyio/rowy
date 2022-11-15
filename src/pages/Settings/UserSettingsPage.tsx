@@ -18,10 +18,11 @@ import {
   updateUserSettingsAtom,
 } from "@src/atoms/projectScope";
 import { useScrollToHash } from "@src/hooks/useScrollToHash";
+import { UserSettings } from "@src/types/settings";
 
 export interface IUserSettingsChildProps {
-  settings: Record<string, any>;
-  updateSettings: (data: Record<string, any>) => void;
+  settings: UserSettings;
+  updateSettings: (data: Partial<UserSettings>) => void;
 }
 
 export default function UserSettingsPage() {

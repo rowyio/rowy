@@ -31,6 +31,7 @@ export default function RequireAuth({
       <Navigate
         to={ROUTES.auth + `?redirect=${encodeURIComponent(redirect)}`}
         replace
+        state={location.state}
       />
     );
 

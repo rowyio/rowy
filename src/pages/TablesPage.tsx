@@ -1,5 +1,6 @@
 import { useAtom, useSetAtom } from "jotai";
-import { find, groupBy } from "lodash-es";
+import { find, groupBy, sortBy } from "lodash-es";
+import { Link } from "react-router-dom";
 
 import {
   Container,
@@ -13,12 +14,14 @@ import {
   IconButton,
   Zoom,
 } from "@mui/material";
+
 import ViewListIcon from "@mui/icons-material/ViewListOutlined";
 import ViewGridIcon from "@mui/icons-material/ViewModuleOutlined";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import AddIcon from "@mui/icons-material/Add";
+import InfoIcon from "@mui/icons-material/InfoOutlined";
 
 import FloatingSearch from "@src/components/FloatingSearch";
 import SlideTransition from "@src/components/Modal/SlideTransition";
@@ -54,7 +57,6 @@ export default function TablesPage() {
     tableSettingsDialogAtom,
     projectScope
   );
-
   useScrollToHash();
 
   const [results, query, handleQuery] = useBasicSearch(
@@ -67,7 +69,7 @@ export default function TablesPage() {
     : [];
   const sections: Record<string, TableSettings[]> = {
     Favorites: favorites.map((id) => find(results, { id })) as TableSettings[],
-    ...groupBy(results, "section"),
+    ...groupBy(sortBy(results, ["section", "name"]), "section"),
   };
 
   if (!Array.isArray(tables))
@@ -159,6 +161,15 @@ export default function TablesPage() {
         sx={view === "list" ? { p: 1.5 } : undefined}
         color="secondary"
       />
+      <IconButton
+        aria-label="Table information"
+        size={view === "list" ? "large" : undefined}
+        component={Link}
+        to={`${getLink(table)}#sideDrawer="table-information"`}
+        style={{ marginLeft: 0 }}
+      >
+        <InfoIcon />
+      </IconButton>
     </>
   );
 

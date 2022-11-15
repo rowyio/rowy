@@ -15,8 +15,8 @@ export const EXTERNAL_LINKS = {
   twitter: "https://twitter.com/rowyio",
   productHunt: "https://www.producthunt.com/products/rowy-2",
 
-  rowyRun: meta.repository.url.replace(".git", "Run"),
-  rowyRunGitHub: meta.repository.url.replace(".git", "Run"),
+  rowyRun: meta.repository.url.replace("rowy.git", "backend"),
+  rowyRunGitHub: meta.repository.url.replace("rowy.git", "backend"),
   // prettier-ignore
   rowyRunDeploy: `https://deploy.cloud.run/?git_repo=${meta.repository.url.replace(".git", "Run")}.git`,
 
