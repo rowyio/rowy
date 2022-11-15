@@ -16,7 +16,9 @@ import {
 import { DEBOUNCE_DELAY } from "./Table";
 import { ColumnSizingState } from "@tanstack/react-table";
 
-/** Debounces columnSizing and asks admins if they want to save for all users */
+/**
+ * Debounces columnSizing and asks admins if they want to save for all users
+ */
 export function useSaveColumnSizing(
   columnSizing: ColumnSizingState,
   canEditColumns: boolean

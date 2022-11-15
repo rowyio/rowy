@@ -3,55 +3,35 @@ import { useAtom, useSetAtom } from "jotai";
 import { useThrottledCallback } from "use-debounce";
 import {
   createColumnHelper,
-  flexRender,
   getCoreRowModel,
   useReactTable,
-  CellContext,
 } from "@tanstack/react-table";
-import {
-  DragDropContext,
-  DropResult,
-  Droppable,
-  Draggable,
-} from "react-beautiful-dnd";
+import { DropResult } from "react-beautiful-dnd";
 import { get } from "lodash-es";
-import { ErrorBoundary } from "react-error-boundary";
-import { DragVertical } from "@src/assets/icons";
 
 import StyledTable from "./Styled/StyledTable";
-import StyledRow from "./Styled/StyledRow";
 import TableHeaderGroup from "./TableHeaderGroup";
-import ColumnHeader from "./ColumnHeader";
-import StyledResizer from "./Styled/StyledResizer";
-import FinalColumnHeader from "./FinalColumn/FinalColumnHeader";
+import TableBody from "./TableBody";
 import FinalColumn from "./FinalColumn/FinalColumn";
-import OutOfOrderIndicator from "./OutOfOrderIndicator";
 import ContextMenu from "./ContextMenu";
-import CellValidation from "./CellValidation";
 
 import EmptyState from "@src/components/EmptyState";
-import { InlineErrorFallback } from "@src/components/ErrorFallback";
 // import BulkActions from "./BulkActions";
 
 import {
   tableScope,
-  tableSettingsAtom,
   tableSchemaAtom,
   tableColumnsOrderedAtom,
   tableRowsAtom,
   tableNextPageAtom,
   tablePageAtom,
   updateColumnAtom,
-  updateFieldAtom,
-  selectedCellAtom,
-  contextMenuTargetAtom,
 } from "@src/atoms/tableScope";
 
 import { getFieldType, getFieldProp } from "@src/components/fields";
 import { TableRow, ColumnConfig } from "@src/types/table";
 import { useKeyboardNavigation } from "./useKeyboardNavigation";
 import { useSaveColumnSizing } from "./useSaveColumnSizing";
-import useVirtualization from "./useVirtualization";
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
@@ -61,6 +41,7 @@ export const OUT_OF_ORDER_MARGIN = 8;
 export const DEBOUNCE_DELAY = 500;
 
 declare module "@tanstack/table-core" {
+  /** The `column.meta` property contains the column config from tableSchema */
   interface ColumnMeta<TData, TValue> extends ColumnConfig {}
 }
 
@@ -87,9 +68,6 @@ export default function Table({
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
   const [tablePage, setTablePage] = useAtom(tablePageAtom, tableScope);
-  const [selectedCell, setSelectedCell] = useAtom(selectedCellAtom, tableScope);
-  const setContextMenuTarget = useSetAtom(contextMenuTargetAtom, tableScope);
-  const focusInsideCell = selectedCell?.focusInside ?? false;
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
 
@@ -170,14 +148,7 @@ export default function Table({
     tableRows,
     leafColumns,
   });
-  const {
-    virtualRows,
-    virtualCols,
-    paddingTop,
-    paddingBottom,
-    paddingLeft,
-    paddingRight,
-  } = useVirtualization(containerRef, leafColumns);
+
   useSaveColumnSizing(columnSizing, canEditColumns);
 
   const handleDropColumn = useCallback(
@@ -253,88 +224,17 @@ export default function Table({
           />
         </div>
 
-        <div className="tbody" role="rowgroup">
-          {paddingTop > 0 && (
-            <div role="presentation" style={{ height: `${paddingTop}px` }} />
-          )}
-
-          {virtualRows.map((virtualRow) => {
-            const row = rows[virtualRow.index];
-            const outOfOrder = row.original._rowy_outOfOrder;
-
-            return (
-              <StyledRow
-                key={row.id}
-                role="row"
-                aria-rowindex={row.index + 2}
-                style={{
-                  height: "auto",
-                  marginBottom: outOfOrder ? OUT_OF_ORDER_MARGIN : 0,
-                }}
-                data-out-of-order={outOfOrder || undefined}
-              >
-                {paddingLeft > 0 && (
-                  <div
-                    role="presentation"
-                    style={{ width: `${paddingLeft}px` }}
-                  />
-                )}
-
-                {outOfOrder && <OutOfOrderIndicator />}
-
-                {virtualCols.map((virtualCell) => {
-                  const cellIndex = virtualCell.index;
-                  const cell = row.getVisibleCells()[cellIndex];
-
-                  const isSelectedCell =
-                    selectedCell?.path === row.original._rowy_ref.path &&
-                    selectedCell?.columnKey === cell.column.id;
-
-                  const fieldTypeGroup = getFieldProp(
-                    "group",
-                    cell.column.columnDef.meta?.type
-                  );
-                  const isReadOnlyCell =
-                    fieldTypeGroup === "Auditing" ||
-                    fieldTypeGroup === "Metadata";
-
-                  return (
-                    <CellValidation
-                      key={cell.id}
-                      row={row}
-                      cell={cell}
-                      index={cellIndex}
-                      left={
-                        cell.column.getIsPinned()
-                          ? virtualCell.start - TABLE_PADDING
-                          : undefined
-                      }
-                      isSelectedCell={isSelectedCell}
-                      isReadOnlyCell={isReadOnlyCell}
-                      canEditCells={canEditCells}
-                      lastFrozen={lastFrozen}
-                      rowHeight={tableSchema.rowHeight || DEFAULT_ROW_HEIGHT}
-                    />
-                  );
-                })}
-
-                {paddingRight > 0 && (
-                  <div
-                    role="presentation"
-                    style={{ width: `${paddingRight}px` }}
-                  />
-                )}
-              </StyledRow>
-            );
-          })}
-
-          {paddingBottom > 0 && (
-            <div role="presentation" style={{ height: `${paddingBottom}px` }} />
-          )}
-
-          {tableRows.length === 0 &&
-            (emptyState ?? <EmptyState sx={{ py: 8 }} />)}
-        </div>
+        {tableRows.length === 0 ? (
+          emptyState ?? <EmptyState sx={{ py: 8 }} />
+        ) : (
+          <TableBody
+            containerRef={containerRef}
+            leafColumns={leafColumns}
+            rows={rows}
+            canEditCells={canEditCells}
+            lastFrozen={lastFrozen}
+          />
+        )}
       </StyledTable>
 
       <div
