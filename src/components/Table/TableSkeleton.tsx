@@ -13,7 +13,7 @@ import {
   tableSchemaAtom,
   tableColumnsOrderedAtom,
 } from "@src/atoms/tableScope";
-import { DEFAULT_ROW_HEIGHT, DEFAULT_COL_WIDTH } from "./Table";
+import { DEFAULT_ROW_HEIGHT, DEFAULT_COL_WIDTH, TABLE_PADDING } from "./Table";
 import { COLLECTION_PAGE_SIZE } from "@src/config/db";
 import { formatSubTableName } from "@src/utils/table";
 
@@ -129,17 +129,7 @@ export function RowsSkeleton() {
         <Stack
           key={i}
           direction="row"
-          sx={{
-            px: 2,
-            mt: -1 / 8,
-
-            "&:last-of-type > div:first-of-type": {
-              borderBottomLeftRadius: (theme) => theme.shape.borderRadius,
-            },
-            "&:last-of-type > div:last-of-type": {
-              borderBottomRightRadius: (theme) => theme.shape.borderRadius,
-            },
-          }}
+          style={{ padding: `0 ${TABLE_PADDING}px`, marginTop: -1 }}
         >
           {columns.map((col, j) => (
             <Skeleton
@@ -156,6 +146,7 @@ export function RowsSkeleton() {
                 border: "1px solid",
                 borderColor: "divider",
                 borderLeftWidth: j === 0 ? 1 : 0,
+                borderRadius: 0,
                 width: col.width || DEFAULT_COL_WIDTH,
                 flexShrink: 0,
                 height: rowHeight + 1,

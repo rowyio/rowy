@@ -4,11 +4,13 @@ import type { Column, Row } from "@tanstack/react-table";
 import StyledRow from "./Styled/StyledRow";
 import OutOfOrderIndicator from "./OutOfOrderIndicator";
 import CellValidation from "./CellValidation";
+import { RowsSkeleton } from "./TableSkeleton";
 
 import {
   tableScope,
   tableSchemaAtom,
   selectedCellAtom,
+  tableNextPageAtom,
 } from "@src/atoms/tableScope";
 
 import { getFieldProp } from "@src/components/fields";
@@ -38,6 +40,7 @@ export default function TableBody({
 }: ITableBodyProps) {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [selectedCell] = useAtom(selectedCellAtom, tableScope);
+  const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
 
   const {
     virtualRows,
@@ -116,6 +119,8 @@ export default function TableBody({
           </StyledRow>
         );
       })}
+
+      {tableNextPage.loading && <RowsSkeleton />}
 
       {paddingBottom > 0 && (
         <div role="presentation" style={{ height: `${paddingBottom}px` }} />
