@@ -67,7 +67,16 @@ export default function withTableCell(
       disabled,
       rowHeight,
     }: ITableCellProps) {
+      // Get the latest value on every re-render of this component
       const value = getValue();
+
+      // Render inline editor cell after timeout on mount
+      // to improve scroll performance
+      const [inlineEditorReady, setInlineEditorReady] = useState(false);
+      useEffect(() => {
+        if (editorMode === "inline")
+          setTimeout(() => setInlineEditorReady(true));
+      }, []);
 
       // Store ref to rendered DisplayCell to get positioning for PopoverCell
       const displayCellRef = useRef<HTMLDivElement>(null);
@@ -109,6 +118,9 @@ export default function withTableCell(
         setFocusInsideCell,
         rowHeight,
       };
+
+      // If the inline editor cell is not ready to be rendered, display nothing
+      if (editorMode === "inline" && !inlineEditorReady) return null;
 
       // Show display cell, unless if editorMode is inline
       const displayCell = (
