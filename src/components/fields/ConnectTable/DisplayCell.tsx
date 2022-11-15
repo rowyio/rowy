@@ -3,7 +3,7 @@ import { IDisplayCellProps } from "@src/components/fields/types";
 import { ButtonBase, Grid, Chip } from "@mui/material";
 import { ChevronDown } from "@src/assets/icons";
 
-import ChipList from "@src/components/Table/formatters/ChipList";
+import ChipList from "@src/components/Table/ChipList";
 
 export default function ConnectTable({
   value,
