@@ -23,8 +23,7 @@ import {
   sideDrawerShowHiddenFieldsAtom,
 } from "@src/atoms/tableScope";
 import { formatSubTableName } from "@src/utils/table";
-import { ColumnConfig, TableRow } from "@src/types/table";
-import { FieldType } from "@src/components/fields/types";
+import { TableRow } from "@src/types/table";
 
 export interface ISideDrawerFieldsProps {
   row: TableRow;
@@ -67,17 +66,7 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
 
       setSaveState("saving");
       try {
-        const { type } = tableColumnsOrdered.find(
-          (c) => c.key === selectedCell.columnKey
-        ) as ColumnConfig;
-        const useArrayUnion = [FieldType.file, FieldType.image].includes(type);
-
-        await updateField({
-          path: selectedCell!.path,
-          fieldName,
-          value,
-          useArrayUnion,
-        });
+        await updateField({ path: selectedCell!.path, fieldName, value });
         setSaveState("saved");
       } catch (e) {
         enqueueSnackbar((e as Error).message, { variant: "error" });
