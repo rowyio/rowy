@@ -17,7 +17,6 @@ import {
   selectedCellAtom,
   contextMenuTargetAtom,
 } from "@src/atoms/tableScope";
-import { TABLE_PADDING } from "./Table";
 import type { TableRow } from "@src/types/table";
 
 const Dot = styled("div")(({ theme }) => ({
@@ -73,51 +72,29 @@ export const CellValidation = memo(function MemoizedCellValidation({
   const isInvalid = validationRegex && !new RegExp(validationRegex).test(value);
   const isMissing = required && value === undefined;
 
-  const renderedCell = (
-    <ErrorBoundary fallbackRender={InlineErrorFallback}>
-      {flexRender(cell.column.columnDef.cell, {
-        ...cell.getContext(),
-        focusInsideCell: isSelectedCell && focusInsideCell,
-        setFocusInsideCell: (focusInside: boolean) =>
-          setSelectedCell({
-            path: row.original._rowy_ref.path,
-            columnKey: cell.column.id,
-            focusInside,
-          }),
-        disabled:
-          !canEditCells || cell.column.columnDef.meta?.editable === false,
-        rowHeight,
-      })}
-    </ErrorBoundary>
-  );
+  let renderedValidationTooltip = null;
 
-  // if (isInvalid)
-  //   return (
-  //     <StyledCell aria-invalid="true" {...props}>
-  //       <RichTooltip
-  //         icon={<ErrorIcon fontSize="inherit" color="error" />}
-  //         title="Invalid data"
-  //         message="This row will not be saved until all the required fields contain valid data"
-  //         placement="right"
-  //         render={({ openTooltip }) => <Dot onClick={openTooltip} />}
-  //       />
-  //       {children}
-  //     </StyledCell>
-  //   );
-
-  // if (isMissing)
-  //   return (
-  //     <StyledCell aria-invalid="true" {...props}>
-  //       <RichTooltip
-  //         icon={<WarningIcon fontSize="inherit" color="warning" />}
-  //         title="Required field"
-  //         message="This row will not be saved until all the required fields contain valid data"
-  //         placement="right"
-  //         render={({ openTooltip }) => <Dot onClick={openTooltip} />}
-  //       />
-  //       {children}
-  //     </StyledCell>
-  //   );
+  if (isInvalid) {
+    renderedValidationTooltip = (
+      <RichTooltip
+        icon={<ErrorIcon fontSize="inherit" color="error" />}
+        title="Invalid data"
+        message="This row will not be saved until all the required fields contain valid data"
+        placement="right"
+        render={({ openTooltip }) => <Dot onClick={openTooltip} />}
+      />
+    );
+  } else if (isMissing) {
+    renderedValidationTooltip = (
+      <RichTooltip
+        icon={<WarningIcon fontSize="inherit" color="warning" />}
+        title="Required field"
+        message="This row will not be saved until all the required fields contain valid data"
+        placement="right"
+        render={({ openTooltip }) => <Dot onClick={openTooltip} />}
+      />
+    );
+  }
 
   return (
     <StyledCell
@@ -139,6 +116,7 @@ export const CellValidation = memo(function MemoizedCellValidation({
           ? "rowy-table-editable-cell-description"
           : undefined
       }
+      aria-invalid={isInvalid || isMissing}
       style={{
         width: cell.column.getSize(),
         height: rowHeight,
@@ -177,7 +155,22 @@ export const CellValidation = memo(function MemoizedCellValidation({
         setContextMenuTarget(e.target as HTMLElement);
       }}
     >
-      {renderedCell}
+      {renderedValidationTooltip}
+      <ErrorBoundary fallbackRender={InlineErrorFallback}>
+        {flexRender(cell.column.columnDef.cell, {
+          ...cell.getContext(),
+          focusInsideCell: isSelectedCell && focusInsideCell,
+          setFocusInsideCell: (focusInside: boolean) =>
+            setSelectedCell({
+              path: row.original._rowy_ref.path,
+              columnKey: cell.column.id,
+              focusInside,
+            }),
+          disabled:
+            !canEditCells || cell.column.columnDef.meta?.editable === false,
+          rowHeight,
+        })}
+      </ErrorBoundary>
     </StyledCell>
   );
 });

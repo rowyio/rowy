@@ -14,7 +14,7 @@ import { DragVertical } from "@src/assets/icons";
 import { tableScope, selectedCellAtom } from "@src/atoms/tableScope";
 import { DEFAULT_ROW_HEIGHT, TABLE_PADDING } from "@src/components/Table";
 
-export interface ITableHeaderGroupProps {
+export interface ITableHeaderProps {
   headerGroups: HeaderGroup<TableRow>[];
   handleDropColumn: (result: DropResult) => void;
   canAddColumns: boolean;
@@ -22,13 +22,13 @@ export interface ITableHeaderGroupProps {
   lastFrozen?: string;
 }
 
-export const TableHeaderGroup = memo(function TableHeaderGroup({
+export const TableHeader = memo(function TableHeader({
   headerGroups,
   handleDropColumn,
   canAddColumns,
   canEditColumns,
   lastFrozen,
-}: ITableHeaderGroupProps) {
+}: ITableHeaderProps) {
   const [selectedCell, setSelectedCell] = useAtom(selectedCellAtom, tableScope);
   const focusInsideCell = selectedCell?.focusInside ?? false;
 
@@ -190,4 +190,4 @@ export const TableHeaderGroup = memo(function TableHeaderGroup({
   );
 });
 
-export default TableHeaderGroup;
+export default TableHeader;

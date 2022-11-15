@@ -10,7 +10,7 @@ import { DropResult } from "react-beautiful-dnd";
 import { get } from "lodash-es";
 
 import StyledTable from "./Styled/StyledTable";
-import TableHeaderGroup from "./TableHeaderGroup";
+import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
 import FinalColumn from "./FinalColumn/FinalColumn";
 import ContextMenu from "./ContextMenu";
@@ -215,7 +215,7 @@ export default function Table({
             padding: `0 ${TABLE_PADDING}px`,
           }}
         >
-          <TableHeaderGroup
+          <TableHeader
             headerGroups={table.getHeaderGroups()}
             handleDropColumn={handleDropColumn}
             canAddColumns={canAddColumns}
