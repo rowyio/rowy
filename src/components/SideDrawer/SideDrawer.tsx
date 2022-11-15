@@ -1,10 +1,8 @@
 import { useEffect } from "react";
-import useMemoValue from "use-memo-value";
 import clsx from "clsx";
 import { useAtom } from "jotai";
-import { find, findIndex, isEqual } from "lodash-es";
+import { find, findIndex } from "lodash-es";
 import { ErrorBoundary } from "react-error-boundary";
-import { DataGridHandle } from "react-data-grid";
 import { TransitionGroup } from "react-transition-group";
 
 import { Fab, Fade } from "@mui/material";
@@ -16,33 +14,19 @@ import ErrorFallback from "@src/components/ErrorFallback";
 import StyledDrawer from "./StyledDrawer";
 import SideDrawerFields from "./SideDrawerFields";
 
-import { projectScope, userSettingsAtom } from "@src/atoms/projectScope";
 import {
   tableScope,
-  tableIdAtom,
-  tableColumnsOrderedAtom,
   tableRowsAtom,
   sideDrawerOpenAtom,
   selectedCellAtom,
 } from "@src/atoms/tableScope";
 import { analytics, logEvent } from "@src/analytics";
-import { formatSubTableName } from "@src/utils/table";
 
 export const DRAWER_WIDTH = 512;
 export const DRAWER_COLLAPSED_WIDTH = 36;
 
-export default function SideDrawer({
-  dataGridRef,
-}: {
-  dataGridRef?: React.MutableRefObject<DataGridHandle | null>;
-}) {
-  const [userSettings] = useAtom(userSettingsAtom, projectScope);
-  const [tableId] = useAtom(tableIdAtom, tableScope);
-  const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
+export default function SideDrawer() {
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
-
-  const userDocHiddenFields =
-    userSettings.tables?.[formatSubTableName(tableId)]?.hiddenFields ?? [];
 
   const [cell, setCell] = useAtom(selectedCellAtom, tableScope);
   const [open, setOpen] = useAtom(sideDrawerOpenAtom, tableScope);
@@ -51,26 +35,6 @@ export default function SideDrawer({
     "_rowy_ref.path",
     cell?.path,
   ]);
-  // Memo a list of visible column keys for useEffect dependencies
-  const visibleColumnKeys = useMemoValue(
-    tableColumnsOrdered
-      .filter((col) => !userDocHiddenFields.includes(col.key))
-      .map((col) => col.key),
-    isEqual
-  );
-
-  // When side drawer is opened, select the cell in the table
-  // in case we’ve scrolled and selected cell was reset
-  useEffect(() => {
-    if (open) {
-      const columnIndex = visibleColumnKeys.indexOf(cell?.columnKey || "");
-      if (columnIndex === -1 || selectedCellRowIndex === -1) return;
-      dataGridRef?.current?.selectCell(
-        { rowIdx: selectedCellRowIndex, idx: columnIndex },
-        false
-      );
-    }
-  }, [open, visibleColumnKeys, selectedCellRowIndex, cell, dataGridRef]);
 
   const handleNavigate = (direction: "up" | "down") => () => {
     if (!tableRows || !cell) return;
@@ -84,12 +48,6 @@ export default function SideDrawer({
       path: newPath,
       focusInside: false,
     }));
-
-    const columnIndex = visibleColumnKeys.indexOf(cell!.columnKey || "");
-    dataGridRef?.current?.selectCell(
-      { rowIdx: rowIndex, idx: columnIndex },
-      false
-    );
   };
 
   // const [urlDocState, dispatchUrlDoc] = useDoc({});

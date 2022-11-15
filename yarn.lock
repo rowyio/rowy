@@ -9970,13 +9970,6 @@ react-color-palette@^6.2.0:
   resolved "https://registry.yarnpkg.com/react-color-palette/-/react-color-palette-6.2.0.tgz#aa3be88f6953d57502c00f4433692129ffbad3e7"
   integrity sha512-9rIboaRJNoeF8aCI2f3J8wgMyhl74SnGmZLDjor3bKf0iDBhP2EBv0/jGmm0hrj6OackGCqtWl5ZvM89XUc3sg==
 
-react-data-grid@7.0.0-beta.5:
-  version "7.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-7.0.0-beta.5.tgz#bc39ce45b7a7f42ebfb66840e0ec1c8619d60f10"
-  integrity sha512-rtN4wnePrQ80UN6lYF/zUQqVVJMT3HW5bTLx9nR5XOKQiG72cGzX2d2+b+e82vUh23zTFBicEnuWSlN9Fa/83Q==
-  dependencies:
-    clsx "^1.1.1"
-
 react-detect-offline@^2.4.5:
   version "2.4.5"
   resolved "https://registry.yarnpkg.com/react-detect-offline/-/react-detect-offline-2.4.5.tgz#3c242516c37b6789cf89102881031f87e70b80e6"

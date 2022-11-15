@@ -1,6 +1,5 @@
-import { useRef, Suspense, lazy } from "react";
+import { Suspense, lazy } from "react";
 import { useAtom } from "jotai";
-import { DataGridHandle } from "react-data-grid";
 import { ErrorBoundary } from "react-error-boundary";
 import { isEmpty, intersection } from "lodash-es";
 
@@ -81,9 +80,6 @@ export default function TablePage({
   useBeforeUnload(columnModalAtom, tableScope);
   useBeforeUnload(tableModalAtom, tableScope);
 
-  // A ref to the data grid. Contains data grid functions
-  const dataGridRef = useRef<DataGridHandle | null>(null);
-
   if (!(tableSchema as any)._rowy_ref)
     return (
       <>
@@ -161,7 +157,7 @@ export default function TablePage({
 
       <ErrorBoundary FallbackComponent={InlineErrorFallback}>
         <Suspense fallback={null}>
-          {!disableSideDrawer && <SideDrawer dataGridRef={dataGridRef} />}
+          {!disableSideDrawer && <SideDrawer />}
         </Suspense>
       </ErrorBoundary>
 
