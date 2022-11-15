@@ -248,7 +248,7 @@ export default function ColumnMenu() {
         });
         handleClose();
       },
-      active: !column.editable,
+      active: column.editable === false,
     },
     {
       label: "Disable resize",

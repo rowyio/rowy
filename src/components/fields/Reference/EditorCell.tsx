@@ -1,101 +1,56 @@
-import { useRef, useLayoutEffect } from "react";
-import { useAtom, useSetAtom } from "jotai";
-import { EditorProps } from "react-data-grid";
-import { get } from "lodash-es";
-import { useSnackbar } from "notistack";
+import { useState } from "react";
+import { useAtom } from "jotai";
+import { doc, deleteField } from "firebase/firestore";
 
-import { TextField } from "@mui/material";
+import type { IEditorCellProps } from "@src/components/fields/types";
+import EditorCellTextField from "@src/components/Table/EditorCellTextField";
+
+import { InputAdornment, Tooltip } from "@mui/material";
+import ErrorIcon from "@mui/icons-material/ErrorOutline";
 
 import { projectScope } from "@src/atoms/projectScope";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
-import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
-import { doc, deleteField } from "firebase/firestore";
 
-/** WARNING: THIS DOES NOT WORK IN REACT 18 STRICT MODE */
-export default function TextEditor({ row, column }: EditorProps<any>) {
+export default function Reference({
+  value,
+  ...props
+}: IEditorCellProps<ReturnType<typeof doc>>) {
   const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
-  const updateField = useSetAtom(updateFieldAtom, tableScope);
-  const { enqueueSnackbar } = useSnackbar();
 
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  // WARNING: THIS DOES NOT WORK IN REACT 18 STRICT MODE
-  useLayoutEffect(() => {
-    const inputElement = inputRef.current;
-    return () => {
-      const newValue = inputElement?.value;
-      if (newValue !== undefined && newValue !== "") {
-        try {
-          const refValue = doc(firebaseDb, newValue);
-
-          updateField({
-            path: row._rowy_ref.path,
-            fieldName: column.key,
-            value: refValue,
-          });
-        } catch (e: any) {
-          enqueueSnackbar(`Invalid path: ${e.message}`, { variant: "error" });
-        }
-      } else {
-        updateField({
-          path: row._rowy_ref.path,
-          fieldName: column.key,
-          value: deleteField(),
-        });
-      }
-    };
-  }, [column.key, row._rowy_ref.path, updateField]);
-
-  const defaultValue = get(row, column.key)?.path ?? "";
-  const { maxLength } = (column as any).config;
+  const [localValue, setLocalValue] = useState(
+    Boolean(value) && "path" in value && typeof value.path === "string"
+      ? value.path
+      : ""
+  );
+  const [error, setError] = useState("");
 
   return (
-    <TextField
-      defaultValue={defaultValue}
-      fullWidth
-      variant="standard"
-      inputProps={{
-        ref: inputRef,
-        maxLength: maxLength,
-      }}
-      sx={{
-        width: "100%",
-        height: "100%",
-        backgroundColor: "var(--background-color)",
-
-        "& .MuiInputBase-root": {
-          height: "100%",
-          font: "inherit", // Prevent text jumping
-          letterSpacing: "inherit", // Prevent text jumping
-          p: 0,
-        },
-        "& .MuiInputBase-input": {
-          height: "100%",
-          font: "inherit", // Prevent text jumping
-          letterSpacing: "inherit", // Prevent text jumping
-          p: "var(--cell-padding)",
-          pb: 1 / 8,
-        },
-        "& textarea.MuiInputBase-input": {
-          lineHeight: (theme) => theme.typography.body2.lineHeight,
-          maxHeight: "100%",
-          boxSizing: "border-box",
-          py: 3 / 8,
-        },
-      }}
-      // InputProps={{
-      //   endAdornment:
-      //     (column as any).type === FieldType.percentage ? "%" : undefined,
-      // }}
-      autoFocus
-      onKeyDown={(e) => {
-        if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-          e.stopPropagation();
+    <EditorCellTextField
+      {...(props as any)}
+      value={localValue}
+      onChange={(newValue) => {
+        if (newValue !== undefined && newValue !== "") {
+          try {
+            const refValue = doc(firebaseDb, newValue);
+            props.onChange(refValue);
+            setError("");
+          } catch (e: any) {
+            setError(e.message);
+          }
+        } else {
+          props.onChange(deleteField() as any);
         }
 
-        if (e.key === "Escape") {
-          (e.target as any).value = defaultValue;
-        }
+        setLocalValue(newValue);
+      }}
+      InputProps={{
+        endAdornment: error && (
+          <InputAdornment position="end" sx={{ mr: 1, cursor: "default" }}>
+            <Tooltip title={error}>
+              <ErrorIcon color="error" />
+            </Tooltip>
+          </InputAdornment>
+        ),
       }}
     />
   );

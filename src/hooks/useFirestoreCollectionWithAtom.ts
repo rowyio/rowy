@@ -377,11 +377,15 @@ export const tableFiltersToFirestoreFilters = (filters: TableFilter[]) => {
       firestoreFilters.push(where(documentId(), "==", filter.value));
       continue;
     } else if (filter.operator === "color-equal") {
-      firestoreFilters.push(where(filter.key.concat(".hex"), "==", filter.value.hex.toString()))
-      continue
+      firestoreFilters.push(
+        where(filter.key.concat(".hex"), "==", filter.value.hex.toString())
+      );
+      continue;
     } else if (filter.operator === "color-not-equal") {
-      firestoreFilters.push(where(filter.key.concat(".hex"), "!=", filter.value.hex.toString()))
-      continue
+      firestoreFilters.push(
+        where(filter.key.concat(".hex"), "!=", filter.value.hex.toString())
+      );
+      continue;
     }
     firestoreFilters.push(
       where(filter.key, filter.operator as WhereFilterOp, filter.value)

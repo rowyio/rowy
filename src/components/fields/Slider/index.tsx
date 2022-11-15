@@ -1,15 +1,11 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
+import withTableCell from "@src/components/Table/withTableCell";
 
 import { Slider as SliderIcon } from "@src/assets/icons";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
-import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
+import DisplayCell from "./DisplayCell";
 import { filterOperators } from "@src/components/fields/Number/Filter";
 
-const TableCell = lazy(
-  () => import("./TableCell" /* webpackChunkName: "TableCell-Slider" */)
-);
 const SideDrawerField = lazy(
   () =>
     import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Slider" */)
@@ -28,8 +24,9 @@ export const config: IFieldConfig = {
   icon: <SliderIcon />,
   requireConfiguration: true,
   description: "Numeric value edited with a Slider. Range is configurable.",
-  TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: withSideDrawerEditor(TableCell),
+  TableCell: withTableCell(DisplayCell, SideDrawerField, "popover", {
+    popoverProps: { PaperProps: { sx: { p: 1, pt: 5 } } },
+  }),
   settings: Settings,
   filter: {
     operators: filterOperators,

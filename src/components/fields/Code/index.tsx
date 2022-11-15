@@ -1,10 +1,9 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
+import withTableCell from "@src/components/Table/withTableCell";
 
 import CodeIcon from "@mui/icons-material/Code";
-import BasicCell from "./BasicCell";
-import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
+import DisplayCell from "./DisplayCell";
 
 const Settings = lazy(
   () => import("./Settings" /* webpackChunkName: "Settings-Code" */)
@@ -24,8 +23,12 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <CodeIcon />,
   description: "Raw code edited with the Monaco Editor.",
-  TableCell: withBasicCell(BasicCell),
-  TableEditor: withSideDrawerEditor(BasicCell),
+  TableCell: withTableCell(DisplayCell, SideDrawerField, "popover", {
+    popoverProps: {
+      anchorOrigin: { vertical: "top", horizontal: "center" },
+      PaperProps: { sx: { borderRadius: 1 } },
+    },
+  }),
   SideDrawerField,
   settings: Settings,
 };

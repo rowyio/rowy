@@ -1,14 +1,13 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
+import withTableCell from "@src/components/Table/withTableCell";
 
 import { Image as ImageIcon } from "@src/assets/icons";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
-import NullEditor from "@src/components/Table/editors/NullEditor";
+import DisplayCell from "./DisplayCell";
 import ContextMenuActions from "./ContextMenuActions";
 
-const TableCell = lazy(
-  () => import("./TableCell" /* webpackChunkName: "TableCell-Image" */)
+const EditorCell = lazy(
+  () => import("./EditorCell" /* webpackChunkName: "EditorCell-Image" */)
 );
 const SideDrawerField = lazy(
   () =>
@@ -24,8 +23,9 @@ export const config: IFieldConfig = {
   icon: <ImageIcon />,
   description:
     "Image file uploaded to Firebase Storage. Supports JPEG, PNG, SVG, GIF, WebP, AVIF, JPEG XL.",
-  TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: NullEditor as any,
+  TableCell: withTableCell(DisplayCell, EditorCell, "inline", {
+    disablePadding: true,
+  }),
   SideDrawerField,
   contextMenuActions: ContextMenuActions,
 };

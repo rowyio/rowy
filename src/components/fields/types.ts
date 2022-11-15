@@ -1,15 +1,14 @@
 import { FieldType } from "@src/constants/fields";
-import { FormatterProps, EditorProps } from "react-data-grid";
-import { Control, UseFormReturn } from "react-hook-form";
-import { PopoverProps } from "@mui/material";
-import {
+import type { ITableCellProps } from "@src/components/Table/withTableCell";
+import type { PopoverProps } from "@mui/material";
+import type {
   ColumnConfig,
   TableRow,
   TableRowRef,
   TableFilter,
 } from "@src/types/table";
-import { SelectedCell } from "@src/atoms/tableScope";
-import { IContextMenuItem } from "@src/components/Table/ContextMenu/ContextMenuItem";
+import type { SelectedCell } from "@src/atoms/tableScope";
+import type { IContextMenuItem } from "@src/components/Table/ContextMenu/ContextMenuItem";
 
 export { FieldType };
 
@@ -28,8 +27,7 @@ export interface IFieldConfig {
     selectedCell: SelectedCell,
     reset: () => void
   ) => IContextMenuItem[];
-  TableCell: React.ComponentType<FormatterProps<TableRow>>;
-  TableEditor: React.ComponentType<EditorProps<TableRow, any>>;
+  TableCell: React.ComponentType<ITableCellProps>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;
   settings?: React.ComponentType<ISettingsProps>;
   settingsValidator?: (config: Record<string, any>) => Record<string, string>;
@@ -44,52 +42,49 @@ export interface IFieldConfig {
   csvImportParser?: (value: string, config?: any) => any;
 }
 
-export interface IBasicCellProps {
-  value: any;
+export interface IDisplayCellProps<T = any> {
+  value: T;
   type: FieldType;
   name: string;
-}
-export interface IHeavyCellProps
-  extends IBasicCellProps,
-    FormatterProps<TableRow> {
-  column: FormatterProps<TableRow>["column"] & { config?: Record<string, any> };
-  onSubmit: (value: any) => void;
-  docRef: TableRowRef;
+  row: TableRow;
+  column: ColumnConfig;
+  /** The row’s _rowy_ref object */
+  _rowy_ref: TableRowRef;
   disabled: boolean;
+  tabIndex: number;
+  showPopoverCell: (value: boolean) => void;
+  setFocusInsideCell: (focusInside: boolean) => void;
+  rowHeight: number;
 }
-
-export interface IPopoverInlineCellProps extends IHeavyCellProps {
-  showPopoverCell: React.Dispatch<React.SetStateAction<boolean>>;
-}
-export interface IPopoverCellProps extends IPopoverInlineCellProps {
+export interface IEditorCellProps<T = any> extends IDisplayCellProps<T> {
+  /** Call when the user has input but changes have not been saved */
+  onDirty: (dirty?: boolean) => void;
+  /** Update the local value. Also calls onDirty */
+  onChange: (value: T) => void;
+  /** Call when user input is ready to be saved (e.g. onBlur) */
+  onSubmit: () => void;
+  /** Get parent element for popover positioning */
   parentRef: PopoverProps["anchorEl"];
 }
 
 /** Props to be passed to all SideDrawerFields */
-export interface ISideDrawerFieldProps {
+export interface ISideDrawerFieldProps<T = any> {
   /** The column config */
-  column: FormatterProps<TableRow>["column"] & ColumnConfig;
+  column: ColumnConfig;
   /** The row’s _rowy_ref object */
   _rowy_ref: TableRowRef;
 
   /** The field’s local value – synced with db when field is not dirty */
-  value: any;
+  value: T;
   /** Call when the user has input but changes have not been saved */
-  onDirty: () => void;
+  onDirty: (dirty?: boolean) => void;
   /** Update the local value. Also calls onDirty */
-  onChange: (value: any) => void;
+  onChange: (T: any) => void;
   /** Call when user input is ready to be saved (e.g. onBlur) */
   onSubmit: () => void;
 
   /** Field locked. Do NOT check `column.locked` */
   disabled: boolean;
-
-  /** @deprecated */
-  docRef: TableRowRef;
-  /** @deprecated */
-  control: Control;
-  /** @deprecated */
-  useFormMethods: UseFormReturn;
 }
 
 export interface ISettingsProps {

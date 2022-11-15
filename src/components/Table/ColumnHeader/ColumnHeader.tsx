@@ -1,36 +1,33 @@
-import { useRef } from "react";
+import { forwardRef, useRef } from "react";
 import { useAtom, useSetAtom } from "jotai";
-import { useDrag, useDrop } from "react-dnd";
 
 import {
   styled,
-  alpha,
   Tooltip,
   TooltipProps,
   tooltipClasses,
   Fade,
   Grid,
+  GridProps,
   IconButton,
   Typography,
 } from "@mui/material";
 import DropdownIcon from "@mui/icons-material/MoreHoriz";
 import LockIcon from "@mui/icons-material/LockOutlined";
 
-import ColumnHeaderSort from "./ColumnHeaderSort";
+import ColumnHeaderSort, { SORT_STATES } from "./ColumnHeaderSort";
 
-import {
-  projectScope,
-  userRolesAtom,
-  altPressAtom,
-} from "@src/atoms/projectScope";
+import { projectScope, altPressAtom } from "@src/atoms/projectScope";
 import {
   tableScope,
-  updateColumnAtom,
   columnMenuAtom,
+  tableSortsAtom,
 } from "@src/atoms/tableScope";
 import { getFieldProp } from "@src/components/fields";
 import { COLUMN_HEADER_HEIGHT } from "@src/components/Table/Column";
 import { ColumnConfig } from "@src/types/table";
+import { FieldType } from "@src/constants/fields";
+import { spreadSx } from "@src/utils/ui";
 
 export { COLUMN_HEADER_HEIGHT };
 
@@ -47,36 +44,20 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
   },
 }));
 
-export interface IDraggableHeaderRendererProps {
+export interface IColumnHeaderProps extends Partial<GridProps> {
   column: ColumnConfig;
+  width: number;
+  focusInsideCell: boolean;
+  children: React.ReactNode;
 }
 
-export default function DraggableHeaderRenderer({
-  column,
-}: IDraggableHeaderRendererProps) {
-  const [userRoles] = useAtom(userRolesAtom, projectScope);
-  const updateColumn = useSetAtom(updateColumnAtom, tableScope);
+export const ColumnHeader = forwardRef(function ColumnHeader(
+  { column, width, focusInsideCell, children, ...props }: IColumnHeaderProps,
+  ref: React.Ref<HTMLDivElement>
+) {
   const openColumnMenu = useSetAtom(columnMenuAtom, tableScope);
   const [altPress] = useAtom(altPressAtom, projectScope);
-
-  const [{ isDragging }, dragRef] = useDrag({
-    type: "COLUMN_DRAG",
-    item: { key: column.key },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
-
-  const [{ isOver }, dropRef] = useDrop({
-    accept: "COLUMN_DRAG",
-    drop: ({ key }: { key: string }) => {
-      updateColumn({ key, config: {}, index: column.index });
-    },
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
-  });
+  const [tableSorts] = useAtom(tableSortsAtom, tableScope);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -85,14 +66,26 @@ export default function DraggableHeaderRenderer({
     openColumnMenu({ column, anchorEl: buttonRef.current });
   };
 
+  const _sortKey = getFieldProp("sortKey", (column as any).type);
+  const sortKey = _sortKey ? `${column.key}.${_sortKey}` : column.key;
+  const currentSort: typeof SORT_STATES[number] =
+    tableSorts[0]?.key !== sortKey
+      ? "none"
+      : tableSorts[0]?.direction || "none";
+
   return (
     <Grid
-      key={column.key}
+      role="columnheader"
       id={`column-header-${column.key}`}
-      ref={(ref) => {
-        dragRef(ref);
-        dropRef(ref);
-      }}
+      ref={ref}
+      {...props}
+      aria-sort={
+        currentSort === "none"
+          ? "none"
+          : currentSort === "asc"
+          ? "ascending"
+          : "descending"
+      }
       container
       alignItems="center"
       wrap="nowrap"
@@ -100,8 +93,10 @@ export default function DraggableHeaderRenderer({
       sx={[
         {
           height: "100%",
-          "& svg, & button": { display: "block" },
+          "& svg, & button": { display: "block", zIndex: 1 },
+          border: (theme) => `1px solid ${theme.palette.divider}`,
 
+          backgroundColor: "background.default",
           color: "text.secondary",
           transition: (theme) =>
             theme.transitions.create("color", {
@@ -109,29 +104,17 @@ export default function DraggableHeaderRenderer({
             }),
           "&:hover": { color: "text.primary" },
 
-          cursor: "move",
+          position: "relative",
 
           py: 0,
           pr: 0.5,
           pl: 1,
           width: "100%",
         },
-        isDragging
-          ? { opacity: 0.5 }
-          : isOver
-          ? {
-              backgroundColor: (theme) =>
-                alpha(
-                  theme.palette.primary.main,
-                  theme.palette.action.focusOpacity
-                ),
-              color: "primary.main",
-            }
-          : {},
+        ...spreadSx(props.sx),
       ]}
-      className="column-header"
     >
-      {(column.width as number) > 140 && (
+      {width > 140 && (
         <Tooltip
           title={
             <>
@@ -149,6 +132,7 @@ export default function DraggableHeaderRenderer({
             onClick={() => {
               navigator.clipboard.writeText(column.key);
             }}
+            style={{ position: "relative", zIndex: 2 }}
           >
             {column.editable === false ? (
               <LockIcon />
@@ -182,14 +166,16 @@ export default function DraggableHeaderRenderer({
           placement="bottom-start"
           disableInteractive
           TransitionComponent={Fade}
+          sx={{ "& .MuiTooltip-tooltip": { marginTop: "-28px !important" } }}
         >
           <Typography
             noWrap
             sx={{
               typography: "caption",
               fontWeight: "fontWeightMedium",
-              lineHeight: `${COLUMN_HEADER_HEIGHT}px`,
               textOverflow: "clip",
+              position: "relative",
+              zIndex: 1,
             }}
             component="div"
             color="inherit"
@@ -205,15 +191,22 @@ export default function DraggableHeaderRenderer({
         </LightTooltip>
       </Grid>
 
-      <Grid item>
-        <ColumnHeaderSort column={column as any} />
-      </Grid>
+      {column.type !== FieldType.id && (
+        <Grid item>
+          <ColumnHeaderSort
+            sortKey={sortKey}
+            currentSort={currentSort}
+            tabIndex={focusInsideCell ? 0 : -1}
+          />
+        </Grid>
+      )}
 
       <Grid item>
         <Tooltip title="Column settings">
           <IconButton
             size="small"
             aria-label={`Column settings for ${column.name as string}`}
+            tabIndex={focusInsideCell ? 0 : -1}
             id={`column-settings-${column.key}`}
             color="inherit"
             onClick={handleOpenMenu}
@@ -225,13 +218,18 @@ export default function DraggableHeaderRenderer({
                 }),
 
               color: "text.disabled",
-              ".column-header:hover &": { color: "text.primary" },
+              "[role='columnheader']:hover &, [role='columnheader']:focus &, [role='columnheader']:focus-within &, &:focus":
+                { color: "text.primary" },
             }}
           >
             <DropdownIcon />
           </IconButton>
         </Tooltip>
       </Grid>
+
+      {children}
     </Grid>
   );
-}
+});
+
+export default ColumnHeader;

@@ -1,14 +1,10 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
+import withTableCell from "@src/components/Table/withTableCell";
 
 import { UpdatedBy as UpdatedByIcon } from "@src/assets/icons";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
-import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
+import DisplayCell from "./DisplayCell";
 
-const TableCell = lazy(
-  () => import("./TableCell" /* webpackChunkName: "TableCell-UpdatedBy" */)
-);
 const SideDrawerField = lazy(
   () =>
     import(
@@ -30,8 +26,7 @@ export const config: IFieldConfig = {
   icon: <UpdatedByIcon />,
   description:
     "Displays the user that last updated the row, timestamp, and updated field key. Read-only.",
-  TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: withSideDrawerEditor(TableCell),
+  TableCell: withTableCell(DisplayCell, null),
   SideDrawerField,
   settings: Settings,
 };

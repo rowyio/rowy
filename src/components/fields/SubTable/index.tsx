@@ -1,14 +1,10 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
+import withTableCell from "@src/components/Table/withTableCell";
 
 import { SubTable as SubTableIcon } from "@src/assets/icons";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellName";
-import NullEditor from "@src/components/Table/editors/NullEditor";
+import DisplayCell from "./DisplayCell";
 
-const TableCell = lazy(
-  () => import("./TableCell" /* webpackChunkName: "TableCell-SubTable" */)
-);
 const SideDrawerField = lazy(
   () =>
     import(
@@ -28,8 +24,10 @@ export const config: IFieldConfig = {
   settings: Settings,
   description:
     "Connects to a sub-table in the current row. Also displays number of rows inside the sub-table. Max sub-table depth: 100.",
-  TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: NullEditor as any,
+  TableCell: withTableCell(DisplayCell, null, "focus", {
+    usesRowData: true,
+    disablePadding: true,
+  }),
   SideDrawerField,
   initializable: false,
   requireConfiguration: true,

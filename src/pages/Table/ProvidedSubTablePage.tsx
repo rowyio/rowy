@@ -1,4 +1,4 @@
-import { Suspense, useMemo } from "react";
+import { lazy, Suspense, useMemo } from "react";
 import { useAtom, Provider } from "jotai";
 import { selectAtom } from "jotai/utils";
 import { DebugAtoms } from "@src/atoms/utils";
@@ -10,7 +10,6 @@ import Modal from "@src/components/Modal";
 import BreadcrumbsSubTable from "@src/components/Table/BreadcrumbsSubTable";
 import ErrorFallback from "@src/components/ErrorFallback";
 import TableSourceFirestore from "@src/sources/TableSourceFirestore";
-import TablePage from "./TablePage";
 import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkeleton";
 import TableSkeleton from "@src/components/Table/TableSkeleton";
 
@@ -24,6 +23,9 @@ import {
 import { ROUTES } from "@src/constants/routes";
 import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
+
+// prettier-ignore
+const TablePage = lazy(() => import("./TablePage" /* webpackChunkName: "TablePage" */));
 
 /**
  * Wraps `TablePage` with the data for a top-level table.

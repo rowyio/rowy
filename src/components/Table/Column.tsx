@@ -1,8 +1,10 @@
+import { forwardRef } from "react";
 import { Grid, GridProps, Typography } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
+import { spreadSx } from "@src/utils/ui";
 
 export const COLUMN_HEADER_HEIGHT = 42;
 
@@ -10,23 +12,30 @@ export interface IColumnProps extends Partial<GridProps> {
   label: string;
   type?: FieldType;
   secondaryItem?: React.ReactNode;
+  children?: React.ReactNode;
 
   active?: boolean;
 }
 
-export default function Column({
-  label,
-  type,
-  secondaryItem,
+export const Column = forwardRef(function Column(
+  {
+    label,
+    type,
+    secondaryItem,
+    children,
 
-  active,
-  ...props
-}: IColumnProps) {
+    active,
+    ...props
+  }: IColumnProps,
+  ref: React.ForwardedRef<HTMLDivElement>
+) {
   return (
     <Grid
+      ref={ref}
       container
       alignItems="center"
       wrap="nowrap"
+      aria-label={label}
       {...props}
       sx={[
         {
@@ -34,6 +43,7 @@ export default function Column({
           height: COLUMN_HEADER_HEIGHT,
           border: (theme) => `1px solid ${theme.palette.divider}`,
           backgroundColor: "background.default",
+          position: "relative",
 
           py: 0,
           px: 1,
@@ -68,6 +78,7 @@ export default function Column({
               },
             }
           : {},
+        ...spreadSx(props.sx),
       ]}
     >
       {type && <Grid item>{getFieldProp("icon", type)}</Grid>}
@@ -94,6 +105,7 @@ export default function Column({
 
             ml: 0.5,
           }}
+          aria-hidden
         >
           {label}
         </Typography>
@@ -104,6 +116,10 @@ export default function Column({
           {secondaryItem}
         </Grid>
       )}
+
+      {children}
     </Grid>
   );
-}
+});
+
+export default Column;

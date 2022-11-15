@@ -1,10 +1,9 @@
-import { useRef, Suspense, lazy } from "react";
+import { Suspense, lazy } from "react";
 import { useAtom } from "jotai";
-import { DataGridHandle } from "react-data-grid";
 import { ErrorBoundary } from "react-error-boundary";
-import { isEmpty } from "lodash-es";
+import { isEmpty, intersection } from "lodash-es";
 
-import { Fade } from "@mui/material";
+import { Box, Fade } from "@mui/material";
 import ErrorFallback, {
   InlineErrorFallback,
 } from "@src/components/ErrorFallback";
@@ -18,9 +17,19 @@ import SideDrawer from "@src/components/SideDrawer";
 import ColumnMenu from "@src/components/ColumnMenu";
 import ColumnModals from "@src/components/ColumnModals";
 import TableModals from "@src/components/TableModals";
+import EmptyState from "@src/components/EmptyState";
+import AddRow from "@src/components/TableToolbar/AddRow";
+import { AddRow as AddRowIcon } from "@src/assets/icons";
 
 import {
+  projectScope,
+  userRolesAtom,
+  userSettingsAtom,
+} from "@src/atoms/projectScope";
+import {
   tableScope,
+  tableIdAtom,
+  tableSettingsAtom,
   tableSchemaAtom,
   columnModalAtom,
   tableModalAtom,
@@ -28,6 +37,10 @@ import {
 import useBeforeUnload from "@src/hooks/useBeforeUnload";
 import ActionParamsProvider from "@src/components/fields/Action/FormDialog/Provider";
 import { useSnackLogContext } from "@src/contexts/SnackLogContext";
+import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
+import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
+import { DRAWER_COLLAPSED_WIDTH } from "@src/components/SideDrawer";
+import { formatSubTableName } from "@src/utils/table";
 
 // prettier-ignore
 const BuildLogsSnack = lazy(() => import("@src/components/TableModals/CloudLogsModal/BuildLogs/BuildLogsSnack" /* webpackChunkName: "TableModals-BuildLogsSnack" */));
@@ -47,15 +60,25 @@ export default function TablePage({
   disableModals,
   disableSideDrawer,
 }: ITablePageProps) {
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
+  const [tableId] = useAtom(tableIdAtom, tableScope);
+  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const snackLogContext = useSnackLogContext();
+
+  // Set permissions here so we can pass them to the Table component, which
+  // shouldn’t access projectScope at all, to separate concerns.
+  const canAddColumns = userRoles.includes("ADMIN");
+  const canEditColumns = userRoles.includes("ADMIN");
+  const canEditCells =
+    userRoles.includes("ADMIN") ||
+    (!tableSettings.readOnly &&
+      intersection(userRoles, tableSettings.roles).length > 0);
 
   // Warn user about leaving when they have a table modal open
   useBeforeUnload(columnModalAtom, tableScope);
   useBeforeUnload(tableModalAtom, tableScope);
-
-  // A ref to the data grid. Contains data grid functions
-  const dataGridRef = useRef<DataGridHandle | null>(null);
 
   if (!(tableSchema as any)._rowy_ref)
     return (
@@ -94,13 +117,47 @@ export default function TablePage({
 
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Suspense fallback={<TableSkeleton />}>
-          <Table dataGridRef={dataGridRef} />
+          <Box
+            sx={{
+              height: `calc(100vh - ${TOP_BAR_HEIGHT}px - ${TABLE_TOOLBAR_HEIGHT}px)`,
+              width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
+              position: "relative",
+
+              '& [role="grid"]': {
+                marginBottom: `env(safe-area-inset-bottom)`,
+                marginLeft: `env(safe-area-inset-left)`,
+                marginRight: `env(safe-area-inset-right)`,
+              },
+            }}
+          >
+            <Table
+              canAddColumns={canAddColumns}
+              canEditColumns={canEditColumns}
+              canEditCells={canEditCells}
+              hiddenColumns={
+                userSettings.tables?.[formatSubTableName(tableId)]?.hiddenFields
+              }
+              emptyState={
+                <EmptyState
+                  Icon={AddRowIcon}
+                  message="Add a row to get started"
+                  description={
+                    <div>
+                      <br />
+                      <AddRow />
+                    </div>
+                  }
+                  style={{ position: "absolute", inset: 0 }}
+                />
+              }
+            />
+          </Box>
         </Suspense>
       </ErrorBoundary>
 
       <ErrorBoundary FallbackComponent={InlineErrorFallback}>
         <Suspense fallback={null}>
-          {!disableSideDrawer && <SideDrawer dataGridRef={dataGridRef} />}
+          {!disableSideDrawer && <SideDrawer />}
         </Suspense>
       </ErrorBoundary>
 
