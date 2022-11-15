@@ -9,12 +9,12 @@ import { spreadSx } from "@src/utils/ui";
 
 export interface IFinalColumnHeaderProps extends Partial<BoxProps> {
   focusInsideCell: boolean;
-  canAddColumn: boolean;
+  canAddColumns: boolean;
 }
 
 export default function FinalColumnHeader({
   focusInsideCell,
-  canAddColumn,
+  canAddColumns,
   ...props
 }: IFinalColumnHeaderProps) {
   const [userRoles] = useAtom(userRolesAtom, projectScope);

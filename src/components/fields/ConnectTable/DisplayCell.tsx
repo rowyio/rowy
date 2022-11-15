@@ -11,11 +11,12 @@ export default function ConnectTable({
   disabled,
   column,
   tabIndex,
+  rowHeight,
 }: IDisplayCellProps) {
   const config = column.config ?? {};
 
   const rendered = (
-    <ChipList>
+    <ChipList rowHeight={rowHeight}>
       {Array.isArray(value) ? (
         value.map((item: any) => (
           <Grid item key={item.docPath}>

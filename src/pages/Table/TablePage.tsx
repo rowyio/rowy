@@ -70,9 +70,9 @@ export default function TablePage({
 
   // Set permissions here so we can pass them to the Table component, which
   // shouldn’t access projectScope at all, to separate concerns.
-  const canAddColumn = userRoles.includes("ADMIN");
-  const canEditColumn = userRoles.includes("ADMIN");
-  const canEditCell =
+  const canAddColumns = userRoles.includes("ADMIN");
+  const canEditColumns = userRoles.includes("ADMIN");
+  const canEditCells =
     userRoles.includes("ADMIN") ||
     (!tableSettings.readOnly &&
       intersection(userRoles, tableSettings.roles).length > 0);
@@ -135,9 +135,9 @@ export default function TablePage({
             }}
           >
             <Table
-              canAddColumn={canAddColumn}
-              canEditColumn={canEditColumn}
-              canEditCell={canEditCell}
+              canAddColumns={canAddColumns}
+              canEditColumns={canEditColumns}
+              canEditCells={canEditCells}
               hiddenColumns={
                 userSettings.tables?.[formatSubTableName(tableId)]?.hiddenFields
               }

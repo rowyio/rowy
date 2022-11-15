@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { useAtom, useSetAtom } from "jotai";
-import type { TableCellProps } from "@src/components/Table";
+import type { ITableCellProps } from "@src/components/Table/withTableCell";
 
 import { Stack, Tooltip, IconButton, alpha } from "@mui/material";
 import { CopyCells as CopyCellsIcon } from "@src/assets/icons";
@@ -25,7 +25,7 @@ import {
 export const FinalColumn = memo(function FinalColumn({
   row,
   focusInsideCell,
-}: TableCellProps) {
+}: ITableCellProps) {
   const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [addRowIdType] = useAtom(tableAddRowIdTypeAtom, projectScope);
   const confirm = useSetAtom(confirmDialogAtom, projectScope);

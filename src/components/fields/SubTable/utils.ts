@@ -6,7 +6,7 @@ import { ColumnConfig, TableRow, TableRowRef } from "@src/types/table";
 export const useSubTableData = (
   column: ColumnConfig,
   row: TableRow,
-  docRef: TableRowRef
+  _rowy_ref: TableRowRef
 ) => {
   const label = (column.config?.parentLabel ?? []).reduce((acc, curr) => {
     if (acc !== "") return `${acc} - ${row[curr]}`;
@@ -24,7 +24,7 @@ export const useSubTableData = (
   let subTablePath = [
     rootTablePath,
     ROUTES.subTable,
-    encodeURIComponent(docRef.path),
+    encodeURIComponent(_rowy_ref.path),
     column.key,
   ].join("/");
 

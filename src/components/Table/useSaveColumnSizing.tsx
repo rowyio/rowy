@@ -19,7 +19,7 @@ import { ColumnSizingState } from "@tanstack/react-table";
 /** Debounces columnSizing and asks admins if they want to save for all users */
 export function useSaveColumnSizing(
   columnSizing: ColumnSizingState,
-  canEditColumn: boolean
+  canEditColumns: boolean
 ) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
@@ -30,7 +30,7 @@ export function useSaveColumnSizing(
   });
   // Offer to save when column sizing changes
   useEffect(() => {
-    if (!canEditColumn || isEmpty(debouncedColumnSizing)) return;
+    if (!canEditColumns || isEmpty(debouncedColumnSizing)) return;
 
     const snackbarId = enqueueSnackbar("Save column sizes for all users?", {
       action: (
@@ -45,7 +45,7 @@ export function useSaveColumnSizing(
     return () => closeSnackbar(snackbarId);
   }, [
     debouncedColumnSizing,
-    canEditColumn,
+    canEditColumns,
     enqueueSnackbar,
     closeSnackbar,
     updateColumn,

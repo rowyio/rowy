@@ -2,7 +2,7 @@ import { IDisplayCellProps } from "@src/components/fields/types";
 
 import { useTheme } from "@mui/material";
 
-export default function Id({ docRef }: IDisplayCellProps) {
+export default function Id({ _rowy_ref }: IDisplayCellProps) {
   const theme = useTheme();
 
   return (
@@ -13,7 +13,7 @@ export default function Id({ docRef }: IDisplayCellProps) {
         userSelect: "all",
       }}
     >
-      {docRef?.id}
+      {_rowy_ref?.id}
     </span>
   );
 }

@@ -1,14 +1,9 @@
-import { useAtom } from "jotai";
-
 import { Grid } from "@mui/material";
 
-import { tableScope, tableSchemaAtom } from "@src/atoms/tableScope";
-import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
-
-export default function ChipList({ children }: React.PropsWithChildren<{}>) {
-  const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
-
-  const rowHeight = tableSchema.rowHeight ?? DEFAULT_ROW_HEIGHT;
+export default function ChipList({
+  children,
+  rowHeight,
+}: React.PropsWithChildren<{ rowHeight: number }>) {
   const canWrap = rowHeight > 24 * 2 + 4;
 
   return (

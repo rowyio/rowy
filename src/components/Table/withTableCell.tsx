@@ -9,16 +9,17 @@ import {
 import useStateRef from "react-usestateref";
 import { useSetAtom } from "jotai";
 import { get, isEqual } from "lodash-es";
-import type { TableCellProps } from "@src/components/Table";
-import {
-  IDisplayCellProps,
-  IEditorCellProps,
-} from "@src/components/fields/types";
+import type { CellContext } from "@tanstack/react-table";
 
 import { Popover, PopoverProps } from "@mui/material";
 
 import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import { spreadSx } from "@src/utils/ui";
+import type { TableRow } from "@src/types/table";
+import type {
+  IDisplayCellProps,
+  IEditorCellProps,
+} from "@src/components/fields/types";
 
 export interface ICellOptions {
   /** If the rest of the row’s data is used, set this to true for memoization */
@@ -29,6 +30,13 @@ export interface ICellOptions {
   transparentPopover?: boolean;
   /** Props to pass to MUI Popover component */
   popoverProps?: Partial<PopoverProps>;
+}
+
+export interface ITableCellProps extends CellContext<TableRow, any> {
+  focusInsideCell: boolean;
+  setFocusInsideCell: (focusInside: boolean) => void;
+  disabled: boolean;
+  rowHeight: number;
 }
 
 /**
@@ -57,7 +65,8 @@ export default function withTableCell(
       focusInsideCell,
       setFocusInsideCell,
       disabled,
-    }: TableCellProps) {
+      rowHeight,
+    }: ITableCellProps) {
       const value = getValue();
 
       // Store ref to rendered DisplayCell to get positioning for PopoverCell
@@ -93,12 +102,12 @@ export default function withTableCell(
         type: column.columnDef.meta!.type,
         row: row.original,
         column: column.columnDef.meta!,
-        docRef: row.original._rowy_ref,
         _rowy_ref: row.original._rowy_ref,
         disabled: column.columnDef.meta!.editable === false,
         tabIndex: focusInsideCell ? 0 : -1,
         showPopoverCell,
         setFocusInsideCell,
+        rowHeight,
       };
 
       // Show display cell, unless if editorMode is inline

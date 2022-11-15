@@ -1,16 +1,14 @@
 import { FieldType } from "@src/constants/fields";
-import type { TableCellProps } from "@src/components/Table";
-import { FormatterProps, EditorProps } from "react-data-grid";
-import { Control, UseFormReturn } from "react-hook-form";
-import { PopoverProps } from "@mui/material";
-import {
+import type { ITableCellProps } from "@src/components/Table/withTableCell";
+import type { PopoverProps } from "@mui/material";
+import type {
   ColumnConfig,
   TableRow,
   TableRowRef,
   TableFilter,
 } from "@src/types/table";
-import { SelectedCell } from "@src/atoms/tableScope";
-import { IContextMenuItem } from "@src/components/Table/ContextMenu/ContextMenuItem";
+import type { SelectedCell } from "@src/atoms/tableScope";
+import type { IContextMenuItem } from "@src/components/Table/ContextMenu/ContextMenuItem";
 
 export { FieldType };
 
@@ -29,7 +27,7 @@ export interface IFieldConfig {
     selectedCell: SelectedCell,
     reset: () => void
   ) => IContextMenuItem[];
-  TableCell: React.ComponentType<TableCellProps>;
+  TableCell: React.ComponentType<ITableCellProps>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;
   settings?: React.ComponentType<ISettingsProps>;
   settingsValidator?: (config: Record<string, any>) => Record<string, string>;
@@ -50,14 +48,13 @@ export interface IDisplayCellProps<T = any> {
   name: string;
   row: TableRow;
   column: ColumnConfig;
-  /** @deprecated */
-  docRef: TableRowRef;
   /** The row’s _rowy_ref object */
   _rowy_ref: TableRowRef;
   disabled: boolean;
   tabIndex: number;
   showPopoverCell: (value: boolean) => void;
   setFocusInsideCell: (focusInside: boolean) => void;
+  rowHeight: number;
 }
 export interface IEditorCellProps<T = any> extends IDisplayCellProps<T> {
   /** Call when the user has input but changes have not been saved */

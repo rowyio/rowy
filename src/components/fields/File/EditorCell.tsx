@@ -26,6 +26,7 @@ export default function File_({
   disabled,
   _rowy_ref,
   tabIndex,
+  rowHeight,
 }: IEditorCellProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
@@ -96,7 +97,7 @@ export default function File_({
       tabIndex={tabIndex}
       onClick={undefined}
     >
-      <ChipList>
+      <ChipList rowHeight={rowHeight}>
         {Array.isArray(value) &&
           value.map((file: FileValue) => (
             <Grid

@@ -13,9 +13,10 @@ export default function Connector({
   disabled,
   column,
   tabIndex,
+  rowHeight,
 }: IDisplayCellProps) {
   const rendered = (
-    <ChipList>
+    <ChipList rowHeight={rowHeight}>
       {Array.isArray(value) &&
         value.map((item) => (
           <Grid item key={get(item, column.config?.id)}>

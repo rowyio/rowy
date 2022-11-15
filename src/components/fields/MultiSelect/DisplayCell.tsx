@@ -13,6 +13,7 @@ export default function MultiSelect({
   showPopoverCell,
   disabled,
   tabIndex,
+  rowHeight,
 }: IDisplayCellProps) {
   const rendered =
     typeof value === "string" && value !== "" ? (
@@ -24,7 +25,7 @@ export default function MultiSelect({
         {value}
       </div>
     ) : (
-      <ChipList>
+      <ChipList rowHeight={rowHeight}>
         {sanitiseValue(value).map(
           (item) =>
             typeof item === "string" && (

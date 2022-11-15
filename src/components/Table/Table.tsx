@@ -20,6 +20,7 @@ import { DragVertical } from "@src/assets/icons";
 
 import StyledTable from "./Styled/StyledTable";
 import StyledRow from "./Styled/StyledRow";
+import TableHeaderGroup from "./TableHeaderGroup";
 import ColumnHeader from "./ColumnHeader";
 import StyledResizer from "./Styled/StyledResizer";
 import FinalColumnHeader from "./FinalColumn/FinalColumnHeader";
@@ -59,12 +60,6 @@ export const TABLE_PADDING = 16;
 export const OUT_OF_ORDER_MARGIN = 8;
 export const DEBOUNCE_DELAY = 500;
 
-export type TableCellProps = CellContext<TableRow, any> & {
-  focusInsideCell: boolean;
-  setFocusInsideCell: (focusInside: boolean) => void;
-  disabled: boolean;
-};
-
 declare module "@tanstack/table-core" {
   interface ColumnMeta<TData, TValue> extends ColumnConfig {}
 }
@@ -73,17 +68,17 @@ const columnHelper = createColumnHelper<TableRow>();
 const getRowId = (row: TableRow) => row._rowy_ref.path || row._rowy_ref.id;
 
 export interface ITableProps {
-  canAddColumn: boolean;
-  canEditColumn: boolean;
-  canEditCell: boolean;
+  canAddColumns: boolean;
+  canEditColumns: boolean;
+  canEditCells: boolean;
   hiddenColumns?: string[];
   emptyState?: React.ReactNode;
 }
 
 export default function Table({
-  canAddColumn,
-  canEditColumn,
-  canEditCell,
+  canAddColumns,
+  canEditColumns,
+  canEditCells,
   hiddenColumns,
   emptyState,
 }: ITableProps) {
@@ -118,7 +113,7 @@ export default function Table({
         })
       );
 
-    if (canAddColumn || canEditCell) {
+    if (canAddColumns || canEditCells) {
       _columns.push(
         columnHelper.display({
           id: "_rowy_column_actions",
@@ -128,7 +123,7 @@ export default function Table({
     }
 
     return _columns;
-  }, [tableColumnsOrdered, canAddColumn, canEditCell]);
+  }, [tableColumnsOrdered, canAddColumns, canEditCells]);
 
   // Get user’s hidden columns from props and memoize into a VisibilityState
   const columnVisibility = useMemo(() => {
@@ -183,7 +178,7 @@ export default function Table({
     paddingLeft,
     paddingRight,
   } = useVirtualization(containerRef, leafColumns);
-  useSaveColumnSizing(columnSizing, canEditColumn);
+  useSaveColumnSizing(columnSizing, canEditColumns);
 
   const handleDropColumn = useCallback(
     (result: DropResult) => {
@@ -227,7 +222,7 @@ export default function Table({
       <StyledTable
         ref={gridRef}
         role="grid"
-        aria-readonly={!canEditCell}
+        aria-readonly={!canEditCells}
         aria-colcount={columns.length}
         aria-rowcount={tableRows.length + 1}
         style={
@@ -249,171 +244,13 @@ export default function Table({
             padding: `0 ${TABLE_PADDING}px`,
           }}
         >
-          <DragDropContext onDragEnd={handleDropColumn}>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <Droppable droppableId="droppable-column" direction="horizontal">
-                {(provided) => (
-                  <StyledRow
-                    key={headerGroup.id}
-                    role="row"
-                    aria-rowindex={1}
-                    style={{ height: DEFAULT_ROW_HEIGHT + 1 }}
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                  >
-                    {headerGroup.headers.map((header) => {
-                      const isSelectedCell =
-                        (!selectedCell && header.index === 0) ||
-                        (selectedCell?.path === "_rowy_header" &&
-                          selectedCell?.columnKey === header.id);
-
-                      if (header.id === "_rowy_column_actions")
-                        return (
-                          <FinalColumnHeader
-                            key={header.id}
-                            data-row-id={"_rowy_header"}
-                            data-col-id={header.id}
-                            tabIndex={isSelectedCell ? 0 : -1}
-                            focusInsideCell={isSelectedCell && focusInsideCell}
-                            aria-colindex={header.index + 1}
-                            aria-readonly={!canEditColumn}
-                            aria-selected={isSelectedCell}
-                            canAddColumn={canAddColumn}
-                          />
-                        );
-
-                      if (!header.column.columnDef.meta) return null;
-
-                      return (
-                        <Draggable
-                          key={header.id}
-                          draggableId={header.id}
-                          index={header.index}
-                          isDragDisabled={!canEditColumn}
-                          disableInteractiveElementBlocking
-                        >
-                          {(provided, snapshot) => (
-                            <ColumnHeader
-                              key={header.id}
-                              data-row-id={"_rowy_header"}
-                              data-col-id={header.id}
-                              data-frozen={
-                                header.column.getIsPinned() || undefined
-                              }
-                              data-frozen-last={
-                                lastFrozen === header.id || undefined
-                              }
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              tabIndex={isSelectedCell ? 0 : -1}
-                              aria-colindex={header.index + 1}
-                              aria-readonly={!canEditColumn}
-                              aria-selected={isSelectedCell}
-                              column={header.column.columnDef.meta!}
-                              style={{
-                                width: header.getSize(),
-                                left: header.column.getIsPinned()
-                                  ? virtualCols[header.index].start -
-                                    TABLE_PADDING
-                                  : undefined,
-                                ...provided.draggableProps.style,
-                                zIndex: header.column.getIsPinned() ? 11 : 10,
-                              }}
-                              width={header.getSize()}
-                              sx={
-                                snapshot.isDragging
-                                  ? undefined
-                                  : { "& + &": { borderLeft: "none" } }
-                              }
-                              onClick={(e) => {
-                                setSelectedCell({
-                                  path: "_rowy_header",
-                                  columnKey: header.id,
-                                  focusInside: false,
-                                });
-                                (e.target as HTMLDivElement).focus();
-                              }}
-                              onDoubleClick={(e) => {
-                                setSelectedCell({
-                                  path: "_rowy_header",
-                                  columnKey: header.id,
-                                  focusInside: true,
-                                });
-                                (e.target as HTMLDivElement).focus();
-                              }}
-                              focusInsideCell={
-                                isSelectedCell && focusInsideCell
-                              }
-                            >
-                              <div
-                                {...provided.dragHandleProps}
-                                tabIndex={
-                                  isSelectedCell && focusInsideCell ? 0 : -1
-                                }
-                                aria-describedby={
-                                  isSelectedCell && focusInsideCell
-                                    ? provided.dragHandleProps?.[
-                                        "aria-describedby"
-                                      ]
-                                    : undefined
-                                }
-                                style={{
-                                  position: "absolute",
-                                  inset: 0,
-                                  zIndex: 0,
-                                  display: "flex",
-                                  alignItems: "center",
-                                  outline: "none",
-                                }}
-                                className="column-drag-handle"
-                              >
-                                <DragVertical
-                                  sx={{
-                                    opacity: 0,
-                                    borderRadius: 2,
-                                    transition: (theme) =>
-                                      theme.transitions.create(["opacity"]),
-                                    "[role='columnheader']:hover &, [role='columnheader']:focus-within &":
-                                      {
-                                        opacity: 0.5,
-                                      },
-                                    ".column-drag-handle:hover &": {
-                                      opacity: 1,
-                                    },
-                                    ".column-drag-handle:active &": {
-                                      opacity: 1,
-                                      color: "primary.main",
-                                    },
-                                    ".column-drag-handle:focus &": {
-                                      opacity: 1,
-                                      color: "primary.main",
-                                      outline: "2px solid",
-                                      outlineColor: "primary.main",
-                                    },
-                                  }}
-                                  style={{ width: 8 }}
-                                  preserveAspectRatio="xMidYMid slice"
-                                />
-                              </div>
-
-                              {header.column.getCanResize() && (
-                                <StyledResizer
-                                  isResizing={header.column.getIsResizing()}
-                                  onMouseDown={header.getResizeHandler()}
-                                  onTouchStart={header.getResizeHandler()}
-                                />
-                              )}
-                            </ColumnHeader>
-                          )}
-                        </Draggable>
-                      );
-                    })}
-                    {provided.placeholder}
-                  </StyledRow>
-                )}
-              </Droppable>
-            ))}
-          </DragDropContext>
+          <TableHeaderGroup
+            headerGroups={table.getHeaderGroups()}
+            handleDropColumn={handleDropColumn}
+            canAddColumns={canAddColumns}
+            canEditColumns={canEditColumns}
+            lastFrozen={lastFrozen}
+          />
         </div>
 
         <div className="tbody" role="rowgroup">
@@ -464,95 +301,20 @@ export default function Table({
                   return (
                     <CellValidation
                       key={cell.id}
-                      data-row-id={row.id}
-                      data-col-id={cell.column.id}
-                      data-frozen={cell.column.getIsPinned() || undefined}
-                      data-frozen-last={
-                        lastFrozen === cell.column.id || undefined
-                      }
-                      role="gridcell"
-                      tabIndex={isSelectedCell && !focusInsideCell ? 0 : -1}
-                      aria-colindex={cellIndex + 1}
-                      aria-readonly={
-                        !canEditCell ||
-                        cell.column.columnDef.meta?.editable === false
-                      }
-                      aria-required={Boolean(
-                        cell.column.columnDef.meta?.config?.required
-                      )}
-                      aria-selected={isSelectedCell}
-                      aria-describedby={
-                        canEditCell && !isReadOnlyCell
-                          ? "rowy-table-editable-cell-description"
+                      row={row}
+                      cell={cell}
+                      index={cellIndex}
+                      left={
+                        cell.column.getIsPinned()
+                          ? virtualCell.start - TABLE_PADDING
                           : undefined
                       }
-                      style={{
-                        width: cell.column.getSize(),
-                        height: tableSchema.rowHeight,
-                        left: cell.column.getIsPinned()
-                          ? virtualCell.start - TABLE_PADDING
-                          : undefined,
-                        backgroundColor:
-                          cell.column.id === "_rowy_column_actions"
-                            ? "transparent"
-                            : undefined,
-                        borderBottomWidth:
-                          cell.column.id === "_rowy_column_actions"
-                            ? 0
-                            : undefined,
-                        borderRightWidth:
-                          cell.column.id === "_rowy_column_actions"
-                            ? 0
-                            : undefined,
-                      }}
-                      onClick={(e) => {
-                        setSelectedCell({
-                          path: row.original._rowy_ref.path,
-                          columnKey: cell.column.id,
-                          focusInside: false,
-                        });
-                        (e.target as HTMLDivElement).focus();
-                      }}
-                      onDoubleClick={(e) => {
-                        setSelectedCell({
-                          path: row.original._rowy_ref.path,
-                          columnKey: cell.column.id,
-                          focusInside: true,
-                        });
-                        (e.target as HTMLDivElement).focus();
-                      }}
-                      onContextMenu={(e) => {
-                        e.preventDefault();
-                        setSelectedCell({
-                          path: row.original._rowy_ref.path,
-                          columnKey: cell.column.id,
-                          focusInside: false,
-                        });
-                        (e.target as HTMLDivElement).focus();
-                        setContextMenuTarget(e.target as HTMLElement);
-                      }}
-                      value={cell.getValue()}
-                      required={cell.column.columnDef.meta?.config?.required}
-                      validationRegex={
-                        cell.column.columnDef.meta?.config?.validationRegex
-                      }
-                    >
-                      <ErrorBoundary fallbackRender={InlineErrorFallback}>
-                        {flexRender(cell.column.columnDef.cell, {
-                          ...cell.getContext(),
-                          focusInsideCell: isSelectedCell && focusInsideCell,
-                          setFocusInsideCell: (focusInside: boolean) =>
-                            setSelectedCell({
-                              path: row.original._rowy_ref.path,
-                              columnKey: cell.column.id,
-                              focusInside,
-                            }),
-                          disabled:
-                            !canEditCell ||
-                            cell.column.columnDef.meta?.editable === false,
-                        })}
-                      </ErrorBoundary>
-                    </CellValidation>
+                      isSelectedCell={isSelectedCell}
+                      isReadOnlyCell={isReadOnlyCell}
+                      canEditCells={canEditCells}
+                      lastFrozen={lastFrozen}
+                      rowHeight={tableSchema.rowHeight || DEFAULT_ROW_HEIGHT}
+                    />
                   );
                 })}
 

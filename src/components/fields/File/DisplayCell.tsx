@@ -6,9 +6,13 @@ import ChipList from "@src/components/Table/formatters/ChipList";
 import { FileIcon } from ".";
 import { FileValue } from "@src/types/table";
 
-export default function File_({ value, tabIndex }: IDisplayCellProps) {
+export default function File_({
+  value,
+  tabIndex,
+  rowHeight,
+}: IDisplayCellProps) {
   return (
-    <ChipList>
+    <ChipList rowHeight={rowHeight}>
       {Array.isArray(value) &&
         value.map((file: FileValue) => (
           <Grid

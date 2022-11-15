@@ -12,12 +12,13 @@ export default function ConnectService({
   disabled,
   column,
   tabIndex,
+  rowHeight,
 }: IDisplayCellProps) {
   const config = column.config ?? {};
   const displayKey = config.titleKey ?? config.primaryKey;
 
   const rendered = (
-    <ChipList>
+    <ChipList rowHeight={rowHeight}>
       {Array.isArray(value) &&
         value.map((snapshot) => (
           <Grid item key={get(snapshot, config.primaryKey)}>
