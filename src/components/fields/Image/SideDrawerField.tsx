@@ -1,10 +1,9 @@
 import { ISideDrawerFieldProps } from "@src/components/fields/types";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useSetAtom } from "jotai";
+import { assignIn } from "lodash-es";
 
 import { useDropzone } from "react-dropzone";
-// TODO: GENERALIZE
-import useUploader from "@src/hooks/useFirebaseStorageUploader";
 
 import {
   alpha,
@@ -20,13 +19,14 @@ import AddIcon from "@mui/icons-material/AddAPhotoOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 
+import { FileValue } from "@src/types/table";
 import Thumbnail from "@src/components/Thumbnail";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
-import { IMAGE_MIME_TYPES } from ".";
 import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
-import { arrayUnion } from "firebase/firestore";
+import useFileUpload from "@src/components/fields/File/useFileUpload";
+import { IMAGE_MIME_TYPES } from ".";
 
 const imgSx = {
   position: "relative",
@@ -85,46 +85,29 @@ export default function Image_({
   column,
   _rowy_ref,
   value,
-  onChange,
-  onSubmit,
   disabled,
 }: ISideDrawerFieldProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
-  const { uploaderState, upload, deleteUpload } = useUploader();
-  const { progress } = uploaderState;
 
-  // Store a preview image locally while uploading
-  const [localImages, setLocalImages] = useState<string[]>([]);
+  const { loading, progress, handleUpload, handleDelete, uploaderState } =
+    useFileUpload(_rowy_ref, column.key);
 
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      if (_rowy_ref && acceptedFiles.length > 0) {
-        upload({
-          docRef: _rowy_ref! as any,
-          fieldName: column.key,
-          files: acceptedFiles,
-          onComplete: (newUploads) => {
-            onChange(arrayUnion(newUploads));
-            onSubmit();
-            setLocalImages([]);
-          },
-        });
-        setLocalImages(acceptedFiles.map((file) => URL.createObjectURL(file)));
-      }
-    },
-    [_rowy_ref, value]
-  );
-
-  const handleDelete = (index: number) => {
-    const newValue = [...value];
-    const toBeDeleted = newValue.splice(index, 1);
-    toBeDeleted.length && deleteUpload(toBeDeleted[0]);
-    onChange(newValue);
-    onSubmit();
-  };
+  const [localImages, setLocalImages] = useState<
+    (File & { localURL: string })[]
+  >([]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
+    onDrop: async (acceptedFiles: File[]) => {
+      if (acceptedFiles.length > 0) {
+        setLocalImages(
+          acceptedFiles.map((file) =>
+            assignIn(file, { localURL: URL.createObjectURL(file) })
+          )
+        );
+        await handleUpload(acceptedFiles);
+        setLocalImages([]);
+      }
+    },
     multiple: true,
     accept: IMAGE_MIME_TYPES,
   });
@@ -133,6 +116,7 @@ export default function Image_({
     <>
       {!disabled && (
         <ButtonBase
+          disabled={loading}
           sx={[
             fieldSx,
             {
@@ -158,14 +142,22 @@ export default function Image_({
               ? "Drop image here"
               : "Click to upload or drop image here"}
           </Typography>
-          <AddIcon sx={{ ml: 1, mr: 2 / 8 }} />
+          {loading ? (
+            <CircularProgressOptical
+              size={20}
+              variant={progress === 0 ? "indeterminate" : "determinate"}
+              value={progress}
+            />
+          ) : (
+            <AddIcon sx={{ ml: 1, mr: 2 / 8 }} />
+          )}
         </ButtonBase>
       )}
 
       <Grid container spacing={1} style={{ marginTop: 0 }}>
         {Array.isArray(value) &&
-          value.map((image, i) => (
-            <Grid item key={image.downloadURL}>
+          value.map((image: FileValue) => (
+            <Grid item key={image.name}>
               {disabled ? (
                 <Tooltip title="Open">
                   <ButtonBase
@@ -212,7 +204,7 @@ export default function Image_({
                               body: "This image cannot be recovered after",
                               confirm: "Delete",
                               confirmColor: "error",
-                              handleConfirm: () => handleDelete(i),
+                              handleConfirm: () => handleDelete(image),
                             })
                           }
                         >
@@ -236,26 +228,34 @@ export default function Image_({
           ))}
 
         {localImages &&
-          localImages.map((image, i) => (
-            <Grid item>
+          localImages.map((image) => (
+            <Grid item key={image.name}>
               <ButtonBase
                 sx={imgSx}
-                style={{ backgroundImage: `url("${image}")` }}
+                style={{
+                  backgroundImage: `url("${image.localURL}")`,
+                }}
                 className="img"
               >
-                <Grid
-                  container
-                  justifyContent="center"
-                  alignItems="center"
-                  sx={overlaySx}
-                >
-                  <CircularProgressOptical
-                    color="inherit"
-                    size={48}
-                    variant={progress === 0 ? "indeterminate" : "determinate"}
-                    value={progress}
-                  />
-                </Grid>
+                {uploaderState[image.name] && (
+                  <Grid
+                    container
+                    justifyContent="center"
+                    alignItems="center"
+                    sx={overlaySx}
+                  >
+                    <CircularProgressOptical
+                      color="inherit"
+                      size={48}
+                      variant={
+                        uploaderState[image.name].progress === 0
+                          ? "indeterminate"
+                          : "determinate"
+                      }
+                      value={uploaderState[image.name].progress}
+                    />
+                  </Grid>
+                )}
               </ButtonBase>
             </Grid>
           ))}

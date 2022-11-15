@@ -1,10 +1,9 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { ISideDrawerFieldProps } from "@src/components/fields/types";
 import { useSetAtom } from "jotai";
 import { format } from "date-fns";
 
 import { useDropzone } from "react-dropzone";
-import useUploader from "@src/hooks/useFirebaseStorageUploader";
 
 import {
   alpha,
@@ -23,52 +22,30 @@ import { DATE_TIME_FORMAT } from "@src/constants/dates";
 import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
 import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
 import { FileValue } from "@src/types/table";
-import { arrayUnion } from "firebase/firestore";
+import useFileUpload from "./useFileUpload";
 
 export default function File_({
   column,
   _rowy_ref,
   value,
-  onChange,
-  onSubmit,
   disabled,
 }: ISideDrawerFieldProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
-
-  const { uploaderState, upload, deleteUpload } = useUploader();
-
-  // Store a preview image locally while uploading
-  const [localFiles, setLocalFiles] = useState<string[]>([]);
-
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      if (_rowy_ref && acceptedFiles.length > 0) {
-        upload({
-          docRef: _rowy_ref! as any,
-          fieldName: column.key,
-          files: acceptedFiles,
-          onComplete: (newUploads) => {
-            onChange(arrayUnion(newUploads));
-            onSubmit();
-            setLocalFiles([]);
-          },
-        });
-        setLocalFiles(acceptedFiles.map((file) => file.name));
-      }
-    },
-    [_rowy_ref, value]
+  const { loading, progress, handleUpload, handleDelete } = useFileUpload(
+    _rowy_ref,
+    column.key
   );
 
-  const handleDelete = (index: number) => {
-    const newValue = [...value];
-    const toBeDeleted = newValue.splice(index, 1);
-    toBeDeleted.length && deleteUpload(toBeDeleted[0]);
-    onChange(newValue);
-    onSubmit();
-  };
+  const [localFiles, setLocalFiles] = useState<File[]>([]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
+    onDrop: async (acceptedFiles: File[]) => {
+      if (acceptedFiles.length > 0) {
+        setLocalFiles(acceptedFiles);
+        await handleUpload(acceptedFiles);
+        setLocalFiles([]);
+      }
+    },
     multiple: true,
   });
 
@@ -76,6 +53,7 @@ export default function File_({
     <>
       {!disabled && (
         <ButtonBase
+          disabled={loading}
           sx={[
             fieldSx,
             {
@@ -99,13 +77,21 @@ export default function File_({
           <Typography color="inherit" style={{ flexGrow: 1 }}>
             Click to upload or drop file here
           </Typography>
-          <UploadIcon sx={{ ml: 1, mr: 2 / 8 }} />
+          {loading ? (
+            <CircularProgressOptical
+              size={20}
+              variant={progress === 0 ? "indeterminate" : "determinate"}
+              value={progress}
+            />
+          ) : (
+            <UploadIcon sx={{ ml: 1, mr: 2 / 8 }} />
+          )}
         </ButtonBase>
       )}
 
       <Grid container spacing={0.5} style={{ marginTop: 2 }}>
         {Array.isArray(value) &&
-          value.map((file: FileValue, i) => (
+          value.map((file: FileValue) => (
             <Grid item key={file.name}>
               <Tooltip
                 title={`File last modified ${format(
@@ -126,7 +112,7 @@ export default function File_({
                               body: "This file cannot be recovered after",
                               confirm: "Delete",
                               confirmColor: "error",
-                              handleConfirm: () => handleDelete(i),
+                              handleConfirm: () => handleDelete(file),
                             })
                         : undefined
                     }
@@ -137,11 +123,11 @@ export default function File_({
           ))}
 
         {localFiles &&
-          localFiles.map((fileName) => (
+          localFiles.map((file) => (
             <Grid item>
               <Chip
                 icon={<FileIcon />}
-                label={fileName}
+                label={file.name}
                 deleteIcon={
                   <CircularProgressOptical size={20} color="inherit" />
                 }

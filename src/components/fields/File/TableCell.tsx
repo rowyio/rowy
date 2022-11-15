@@ -1,7 +1,6 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { IHeavyCellProps } from "@src/components/fields/types";
 import { useSetAtom } from "jotai";
-import { findIndex } from "lodash-es";
 
 import { useDropzone } from "react-dropzone";
 import { format } from "date-fns";
@@ -12,58 +11,33 @@ import ChipList from "@src/components/Table/formatters/ChipList";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
-import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
-import useUploader from "@src/hooks/useFirebaseStorageUploader";
 import { FileIcon } from ".";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 import { FileValue } from "@src/types/table";
-import { arrayUnion } from "firebase/firestore";
+import useFileUpload from "./useFileUpload";
 
 export default function File_({
   column,
-  row,
   value,
-  onSubmit,
   disabled,
   docRef,
 }: IHeavyCellProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
-  const updateField = useSetAtom(updateFieldAtom, tableScope);
-  const [localFiles, setLocalFiles] = useState<string[]>([]);
-  const { uploaderState, upload, deleteUpload } = useUploader();
-  const { progress, isLoading } = uploaderState;
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      if (acceptedFiles.length > 0) {
-        upload({
-          docRef: docRef! as any,
-          fieldName: column.key,
-          files: acceptedFiles,
-          onComplete: (newUploads) => {
-            updateField({
-              path: docRef.path,
-              fieldName: column.key,
-              value: arrayUnion(newUploads),
-            });
-            setLocalFiles([]);
-          },
-        });
-        setLocalFiles(acceptedFiles.map((file) => file.name));
-      }
-    },
-    [value]
+  const [localFiles, setLocalFiles] = useState<File[]>([]);
+
+  const { loading, progress, handleUpload, handleDelete } = useFileUpload(
+    docRef,
+    column.key
   );
 
-  const handleDelete = (ref: string) => {
-    const newValue = [...value];
-    const index = findIndex(newValue, ["ref", ref]);
-    const toBeDeleted = newValue.splice(index, 1);
-    toBeDeleted.length && deleteUpload(toBeDeleted[0]);
-    onSubmit(newValue);
-  };
-
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
+    onDrop: async (acceptedFiles: File[]) => {
+      if (acceptedFiles.length > 0) {
+        setLocalFiles(acceptedFiles);
+        await handleUpload(acceptedFiles);
+        setLocalFiles([]);
+      }
+    },
     multiple: true,
   });
 
@@ -111,8 +85,13 @@ export default function File_({
                 )}`}
               >
                 <Chip
-                  icon={<FileIcon />}
                   label={file.name}
+                  icon={<FileIcon />}
+                  sx={{
+                    "& .MuiChip-label": {
+                      lineHeight: 5 / 3,
+                    },
+                  }}
                   onClick={(e) => {
                     window.open(file.downloadURL);
                     e.stopPropagation();
@@ -122,24 +101,23 @@ export default function File_({
                       ? undefined
                       : () =>
                           confirm({
-                            handleConfirm: () => handleDelete(file.ref),
+                            handleConfirm: () => handleDelete(file),
                             title: "Delete file?",
                             body: "This file cannot be recovered after",
                             confirm: "Delete",
                             confirmColor: "error",
                           })
                   }
-                  style={{ width: "100%" }}
                 />
               </Tooltip>
             </Grid>
           ))}
         {localFiles &&
-          localFiles.map((fileName) => (
+          localFiles.map((file) => (
             <Grid item>
               <Chip
                 icon={<FileIcon />}
-                label={fileName}
+                label={file.name}
                 deleteIcon={
                   <CircularProgressOptical size={20} color="inherit" />
                 }
@@ -148,7 +126,7 @@ export default function File_({
           ))}
       </ChipList>
 
-      {!isLoading ? (
+      {!loading ? (
         !disabled && (
           <IconButton
             size="small"

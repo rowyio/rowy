@@ -1,8 +1,7 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { IHeavyCellProps } from "@src/components/fields/types";
 import { useAtom, useSetAtom } from "jotai";
-import { findIndex } from "lodash-es";
-
+import { assignIn } from "lodash-es";
 import { useDropzone } from "react-dropzone";
 
 import {
@@ -23,16 +22,11 @@ import Thumbnail from "@src/components/Thumbnail";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
-import {
-  tableSchemaAtom,
-  tableScope,
-  updateFieldAtom,
-} from "@src/atoms/tableScope";
-import useUploader from "@src/hooks/useFirebaseStorageUploader";
-import { IMAGE_MIME_TYPES } from "./index";
+import { tableSchemaAtom, tableScope } from "@src/atoms/tableScope";
 import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
 import { FileValue } from "@src/types/table";
-import { arrayUnion } from "firebase/firestore";
+import useFileUpload from "@src/components/fields/File/useFileUpload";
+import { IMAGE_MIME_TYPES } from "./index";
 
 // MULTIPLE
 const imgSx = (rowHeight: number) => ({
@@ -89,50 +83,33 @@ const deleteImgHoverSx = {
 export default function Image_({
   column,
   value,
-  onSubmit,
   disabled,
   docRef,
 }: IHeavyCellProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
-  const updateField = useSetAtom(updateFieldAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
-  const { uploaderState, upload, deleteUpload } = useUploader();
-  const { progress, isLoading } = uploaderState;
 
-  // Store a preview image locally while uploading
-  const [localImages, setLocalImages] = useState<string[]>([]);
-
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      if (acceptedFiles.length > 0) {
-        upload({
-          docRef: docRef! as any,
-          fieldName: column.key,
-          files: acceptedFiles,
-          onComplete: (newUploads) => {
-            updateField({
-              path: docRef.path,
-              fieldName: column.key,
-              value: arrayUnion(newUploads),
-            });
-            setLocalImages([]);
-          },
-        });
-        setLocalImages(acceptedFiles.map((file) => URL.createObjectURL(file)));
-      }
-    },
-    [value]
+  const { loading, progress, handleUpload, handleDelete } = useFileUpload(
+    docRef,
+    column.key
   );
 
-  const handleDelete = (index: number) => () => {
-    const newValue = [...value];
-    const toBeDeleted = newValue.splice(index, 1);
-    toBeDeleted.length && deleteUpload(toBeDeleted[0]);
-    onSubmit(newValue);
-  };
+  const [localImages, setLocalImages] = useState<
+    (File & { localURL: string })[]
+  >([]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
+    onDrop: async (acceptedFiles: File[]) => {
+      if (acceptedFiles.length > 0) {
+        setLocalImages(
+          acceptedFiles.map((file) =>
+            assignIn(file, { localURL: URL.createObjectURL(file) })
+          )
+        );
+        await handleUpload(acceptedFiles);
+        setLocalImages([]);
+      }
+    },
     multiple: true,
     accept: IMAGE_MIME_TYPES,
   });
@@ -181,17 +158,17 @@ export default function Image_({
       >
         <Grid container spacing={0.5} wrap="nowrap">
           {Array.isArray(value) &&
-            value.map((file: FileValue, i) => (
-              <Grid item key={file.downloadURL}>
+            value.map((image: FileValue) => (
+              <Grid item key={image.downloadURL}>
                 {disabled ? (
                   <Tooltip title="Open">
                     <ButtonBase
                       sx={imgSx(rowHeight)}
                       className="img"
-                      onClick={() => window.open(file.downloadURL, "_blank")}
+                      onClick={() => window.open(image.downloadURL, "_blank")}
                     >
                       <Thumbnail
-                        imageUrl={file.downloadURL}
+                        imageUrl={image.downloadURL}
                         size={thumbnailSize}
                         objectFit="contain"
                         sx={thumbnailSx}
@@ -222,12 +199,12 @@ export default function Image_({
                             body: "This image cannot be recovered after",
                             confirm: "Delete",
                             confirmColor: "error",
-                            handleConfirm: handleDelete(i),
+                            handleConfirm: () => handleDelete(image),
                           });
                         }}
                       >
                         <Thumbnail
-                          imageUrl={file.downloadURL}
+                          imageUrl={image.downloadURL}
                           size={thumbnailSize}
                           objectFit="contain"
                           sx={thumbnailSx}
@@ -248,7 +225,7 @@ export default function Image_({
             ))}
 
           {localImages &&
-            localImages.map((url) => (
+            localImages.map((image) => (
               <Grid item>
                 <Box
                   sx={[
@@ -258,14 +235,16 @@ export default function Image_({
                         `0 0 0 1px ${theme.palette.divider} inset`,
                     },
                   ]}
-                  style={{ backgroundImage: `url("${url}")` }}
+                  style={{
+                    backgroundImage: `url("${image.localURL}")`,
+                  }}
                 />
               </Grid>
             ))}
         </Grid>
       </div>
 
-      {!isLoading ? (
+      {!loading ? (
         !disabled && (
           <IconButton
             size="small"
