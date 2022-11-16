@@ -16,6 +16,7 @@ import { projectScope } from "@src/atoms/projectScope";
 import { firebaseStorageAtom } from "@src/sources/ProjectSourceFirebase";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { FileValue } from "@src/types/table";
+import { generateId } from "@src/utils/table";
 
 export type UploadState = {
   progress: number;
@@ -85,7 +86,7 @@ const useFirebaseStorageUploader = () => {
 
         const storageRef = ref(
           firebaseStorage,
-          `${docRef.path}/${fieldName}/${file.name}`
+          `${docRef.path}/${fieldName}/${generateId()}-${file.name}`
         );
         const uploadTask = uploadBytesResumable(storageRef, file, {
           cacheControl: "public, max-age=31536000",
