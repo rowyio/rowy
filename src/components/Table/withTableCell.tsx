@@ -119,9 +119,6 @@ export default function withTableCell(
         rowHeight,
       };
 
-      // If the inline editor cell is not ready to be rendered, display nothing
-      if (editorMode === "inline" && !inlineEditorReady) return null;
-
       // Show display cell, unless if editorMode is inline
       const displayCell = (
         <div
@@ -134,6 +131,9 @@ export default function withTableCell(
       );
       if (disabled || (editorMode !== "inline" && !focusInsideCell))
         return displayCell;
+
+      // If the inline editor cell is not ready to be rendered, display nothing
+      if (editorMode === "inline" && !inlineEditorReady) return null;
 
       // Show displayCell as a fallback if intentionally null
       const editorCell = EditorCellComponent ? (
