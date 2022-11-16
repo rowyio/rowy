@@ -12,7 +12,7 @@ import FinalColumnHeader from "./FinalColumn/FinalColumnHeader";
 import { DragVertical } from "@src/assets/icons";
 
 import { tableScope, selectedCellAtom } from "@src/atoms/tableScope";
-import { DEFAULT_ROW_HEIGHT, TABLE_PADDING } from "@src/components/Table";
+import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
 
 export interface ITableHeaderProps {
   headerGroups: HeaderGroup<TableRow>[];
@@ -93,7 +93,7 @@ export const TableHeader = memo(function TableHeader({
                         style={{
                           width: header.getSize(),
                           left: header.column.getIsPinned()
-                            ? header.column.getStart() - TABLE_PADDING
+                            ? header.column.getStart()
                             : undefined,
                           ...provided.draggableProps.style,
                           zIndex: header.column.getIsPinned() ? 11 : 10,

@@ -33,8 +33,9 @@ export const StyledCell = styled("div")(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
   },
 
-  "&[aria-invalid='true']": {
-    boxShadow: `inset 0 0 0 2px ${theme.palette.error.main}`,
+  "&[aria-invalid='true'] .cell-contents": {
+    outline: `2px dotted ${theme.palette.error.main}`,
+    outlineOffset: -2,
   },
 }));
 StyledCell.displayName = "StyledCell";

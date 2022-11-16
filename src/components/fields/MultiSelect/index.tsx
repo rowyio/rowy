@@ -34,7 +34,7 @@ export const config: IFieldConfig = {
     "Multiple values from predefined options. Options are searchable and users can optionally input custom values.",
   TableCell: withTableCell(DisplayCell, EditorCell, "popover", {
     disablePadding: true,
-    transparentPopover: true,
+    transparentPopover: false,
   }),
   SideDrawerField,
   settings: Settings,
