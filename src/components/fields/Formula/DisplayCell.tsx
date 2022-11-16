@@ -1,9 +1,8 @@
-import { IHeavyCellProps } from "@src/components/fields/types";
-
 import { Grid } from "@mui/material";
+import { IDisplayCellProps } from "@src/components/fields/types";
 import { useFormula } from "./useFormula";
 
-export default function Formula({ row, column, onSubmit }: IHeavyCellProps) {
+export default function Formula({ row, column }: IDisplayCellProps) {
   const { result, error } = useFormula({
     row,
     formulaFn: column.config?.formulaFn,

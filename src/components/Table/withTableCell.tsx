@@ -132,6 +132,7 @@ export default function withTableCell(
           <DisplayCellComponent {...basicCellProps} />
         </div>
       );
+
       if (disabled || (editorMode !== "inline" && !focusInsideCell))
         return displayCell;
 

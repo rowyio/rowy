@@ -33,8 +33,8 @@ export const useFormula = ({
   );
 
   useEffect(() => {
-    setResult(null);
-    setError(null);
+    console.log("useFormula calculation: ", row._rowy_ref.path);
+    console.log("availableFields: ", availableFields);
     setLoading(true);
 
     const worker = new Worker(new URL("./worker.ts", import.meta.url));

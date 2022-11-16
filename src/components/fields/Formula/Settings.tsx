@@ -2,12 +2,12 @@ import { lazy, Suspense } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { FieldType, ISettingsProps } from "@src/components/fields/types";
 import {
-  styled,
   Grid,
   InputLabel,
   Typography,
   Stack,
   Tooltip,
+  FormHelperText,
 } from "@mui/material";
 import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 
@@ -17,27 +17,20 @@ import {
   tableRowsAtom,
   tableScope,
 } from "@src/atoms/tableScope";
-import Cell from "@src/components/Table/Cell";
-import Column from "@src/components/Table/Column";
 import { useFormula } from "./useFormula";
 import { ignoredColumns, typeDefs } from "./util";
+import MultiSelect from "@rowy/multiselect";
+import FieldsDropdown from "@src/components/ColumnModals/FieldsDropdown";
 
 const CodeEditor = lazy(
   () =>
     import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
-const ColumnWrapper = styled(Grid)(() => ({
-  width: 200,
-  flexShrink: 0,
-  marginLeft: -1,
-  "&:first-of-type": { marginLeft: 0 },
-}));
-
 export default function Settings({
   config,
-  onChange,
   fieldName,
+  onChange,
   onBlur,
   errors,
 }: ISettingsProps) {
@@ -67,6 +60,11 @@ export default function Settings({
     (c) => !ignoredColumns.includes(c.type)
   );
 
+  const columnOptions = tableColumnsOrdered
+    .filter((column) => column.fieldName !== fieldName)
+    .filter((column) => !ignoredColumns.includes(column.type))
+    .map((c) => ({ label: c.name, value: c.key }));
+
   const formulaFn =
     config?.formulaFn ??
     `// Write your formula code here
@@ -80,6 +78,61 @@ export default function Settings({
 
   return (
     <Stack spacing={1}>
+      <Grid container direction="row" spacing={2} flexWrap="nowrap">
+        <Grid item xs={12} md={6}>
+          <MultiSelect
+            label="Listener fields"
+            options={columnOptions}
+            value={config.listenerFields ?? []}
+            onChange={onChange("listenerFields")}
+            TextFieldProps={{
+              helperText: (
+                <>
+                  {errors.listenerFields && (
+                    <FormHelperText error style={{ margin: 0 }}>
+                      {errors.listenerFields}
+                    </FormHelperText>
+                  )}
+                  <FormHelperText error={false} style={{ margin: 0 }}>
+                    Changes to these fields will trigger the evaluation of the
+                    column.
+                  </FormHelperText>
+                </>
+              ),
+              FormHelperTextProps: { component: "div" } as any,
+              required: true,
+              error: errors.listenerFields,
+              onBlur,
+            }}
+          />
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <FieldsDropdown
+            label="Output field type"
+            value={config.renderFieldType}
+            options={Object.values(FieldType).filter(
+              (f) =>
+                ![
+                  FieldType.derivative,
+                  FieldType.aggregate,
+                  FieldType.subTable,
+                  FieldType.action,
+                ].includes(f)
+            )}
+            onChange={(value) => {
+              onChange("renderFieldType")(value);
+            }}
+            TextFieldProps={{
+              required: true,
+              error: errors.renderFieldType,
+              helperText: errors.renderFieldType,
+              onBlur,
+            }}
+          />
+        </Grid>
+      </Grid>
+
       <InputLabel>Formula script</InputLabel>
       <div>
         <Stack
@@ -114,7 +167,7 @@ export default function Settings({
           />
         </Suspense>
       </div>
-      <InputLabel style={{ overflowX: "scroll", display: "initial" }}>
+      {/* <InputLabel style={{ overflowX: "scroll", display: "initial" }}>
         Preview:
         <Grid container wrap="nowrap" style={{ flexGrow: 1 }}>
           <ColumnWrapper item>
@@ -142,7 +195,7 @@ export default function Settings({
             )
           )}
         </Grid>
-      </InputLabel>
+      </InputLabel> */}
     </Stack>
   );
 }
