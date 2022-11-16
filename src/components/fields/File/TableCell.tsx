@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { IHeavyCellProps } from "@src/components/fields/types";
 import { useSetAtom } from "jotai";
 
-import { useDropzone } from "react-dropzone";
 import { format } from "date-fns";
 
 import { alpha, Stack, Grid, Tooltip, Chip, IconButton } from "@mui/material";
@@ -23,26 +21,12 @@ export default function File_({
   docRef,
 }: IHeavyCellProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
-  const [localFiles, setLocalFiles] = useState<File[]>([]);
 
-  const { loading, progress, handleUpload, handleDelete } = useFileUpload(
-    docRef,
-    column.key
-  );
+  const { loading, progress, handleDelete, localFiles, dropzoneState } =
+    useFileUpload(docRef, column.key, { multiple: true });
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: async (acceptedFiles: File[]) => {
-      if (acceptedFiles.length > 0) {
-        setLocalFiles(acceptedFiles);
-        await handleUpload(acceptedFiles);
-        setLocalFiles([]);
-      }
-    },
-    multiple: true,
-  });
-
+  const { isDragActive, getRootProps, getInputProps } = dropzoneState;
   const dropzoneProps = getRootProps();
-
   return (
     <Stack
       direction="row"

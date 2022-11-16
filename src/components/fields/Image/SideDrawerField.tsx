@@ -1,9 +1,7 @@
 import { ISideDrawerFieldProps } from "@src/components/fields/types";
-import { useState } from "react";
+import { useMemo } from "react";
 import { useSetAtom } from "jotai";
 import { assignIn } from "lodash-es";
-
-import { useDropzone } from "react-dropzone";
 
 import {
   alpha,
@@ -89,28 +87,27 @@ export default function Image_({
 }: ISideDrawerFieldProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
 
-  const { loading, progress, handleUpload, handleDelete, uploaderState } =
-    useFileUpload(_rowy_ref, column.key);
-
-  const [localImages, setLocalImages] = useState<
-    (File & { localURL: string })[]
-  >([]);
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: async (acceptedFiles: File[]) => {
-      if (acceptedFiles.length > 0) {
-        setLocalImages(
-          acceptedFiles.map((file) =>
-            assignIn(file, { localURL: URL.createObjectURL(file) })
-          )
-        );
-        await handleUpload(acceptedFiles);
-        setLocalImages([]);
-      }
-    },
+  const {
+    loading,
+    progress,
+    handleDelete,
+    uploaderState,
+    localFiles,
+    dropzoneState,
+  } = useFileUpload(_rowy_ref, column.key, {
     multiple: true,
     accept: IMAGE_MIME_TYPES,
   });
+
+  const localImages = useMemo(
+    () =>
+      localFiles.map((file) =>
+        assignIn(file, { localURL: URL.createObjectURL(file) })
+      ),
+    [localFiles]
+  );
+
+  const { getRootProps, getInputProps, isDragActive } = dropzoneState;
 
   return (
     <>

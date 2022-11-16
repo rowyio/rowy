@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useMemo } from "react";
 import { IHeavyCellProps } from "@src/components/fields/types";
 import { useAtom, useSetAtom } from "jotai";
 import { assignIn } from "lodash-es";
-import { useDropzone } from "react-dropzone";
 
 import {
   alpha,
@@ -89,31 +88,21 @@ export default function Image_({
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
 
-  const { loading, progress, handleUpload, handleDelete } = useFileUpload(
-    docRef,
-    column.key
+  const { loading, progress, handleDelete, localFiles, dropzoneState } =
+    useFileUpload(docRef, column.key, {
+      multiple: true,
+      accept: IMAGE_MIME_TYPES,
+    });
+
+  const localImages = useMemo(
+    () =>
+      localFiles.map((file) =>
+        assignIn(file, { localURL: URL.createObjectURL(file) })
+      ),
+    [localFiles]
   );
 
-  const [localImages, setLocalImages] = useState<
-    (File & { localURL: string })[]
-  >([]);
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: async (acceptedFiles: File[]) => {
-      if (acceptedFiles.length > 0) {
-        setLocalImages(
-          acceptedFiles.map((file) =>
-            assignIn(file, { localURL: URL.createObjectURL(file) })
-          )
-        );
-        await handleUpload(acceptedFiles);
-        setLocalImages([]);
-      }
-    },
-    multiple: true,
-    accept: IMAGE_MIME_TYPES,
-  });
-
+  const { getRootProps, getInputProps, isDragActive } = dropzoneState;
   const dropzoneProps = getRootProps();
 
   const rowHeight = tableSchema.rowHeight ?? DEFAULT_ROW_HEIGHT;

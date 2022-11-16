@@ -1,9 +1,5 @@
-import { useState } from "react";
-import { ISideDrawerFieldProps } from "@src/components/fields/types";
 import { useSetAtom } from "jotai";
 import { format } from "date-fns";
-
-import { useDropzone } from "react-dropzone";
 
 import {
   alpha,
@@ -14,15 +10,15 @@ import {
   Chip,
 } from "@mui/material";
 import { Upload as UploadIcon } from "@src/assets/icons";
-import { FileIcon } from ".";
 
+import { ISideDrawerFieldProps } from "@src/components/fields/types";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
-
 import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
 import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
 import { FileValue } from "@src/types/table";
 import useFileUpload from "./useFileUpload";
+import { FileIcon } from ".";
 
 export default function File_({
   column,
@@ -31,23 +27,10 @@ export default function File_({
   disabled,
 }: ISideDrawerFieldProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
-  const { loading, progress, handleUpload, handleDelete } = useFileUpload(
-    _rowy_ref,
-    column.key
-  );
+  const { loading, progress, handleDelete, localFiles, dropzoneState } =
+    useFileUpload(_rowy_ref, column.key, { multiple: true });
 
-  const [localFiles, setLocalFiles] = useState<File[]>([]);
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: async (acceptedFiles: File[]) => {
-      if (acceptedFiles.length > 0) {
-        setLocalFiles(acceptedFiles);
-        await handleUpload(acceptedFiles);
-        setLocalFiles([]);
-      }
-    },
-    multiple: true,
-  });
+  const { isDragActive, getRootProps, getInputProps } = dropzoneState;
 
   return (
     <>
