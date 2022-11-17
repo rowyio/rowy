@@ -18,6 +18,7 @@ import {
   contextMenuTargetAtom,
 } from "@src/atoms/tableScope";
 import type { TableRow } from "@src/types/table";
+import type { ITableCellProps } from "./withTableCell";
 
 const Dot = styled("div")(({ theme }) => ({
   position: "absolute",
@@ -96,6 +97,20 @@ export const CellValidation = memo(function MemoizedCellValidation({
     );
   }
 
+  const tableCellComponentProps: ITableCellProps = {
+    ...cell.getContext(),
+    value,
+    focusInsideCell: isSelectedCell && focusInsideCell,
+    setFocusInsideCell: (focusInside: boolean) =>
+      setSelectedCell({
+        path: row.original._rowy_ref.path,
+        columnKey: cell.column.id,
+        focusInside,
+      }),
+    disabled: !canEditCells || cell.column.columnDef.meta?.editable === false,
+    rowHeight,
+  };
+
   return (
     <StyledCell
       key={cell.id}
@@ -157,19 +172,7 @@ export const CellValidation = memo(function MemoizedCellValidation({
     >
       {renderedValidationTooltip}
       <ErrorBoundary fallbackRender={InlineErrorFallback}>
-        {flexRender(cell.column.columnDef.cell, {
-          ...cell.getContext(),
-          focusInsideCell: isSelectedCell && focusInsideCell,
-          setFocusInsideCell: (focusInside: boolean) =>
-            setSelectedCell({
-              path: row.original._rowy_ref.path,
-              columnKey: cell.column.id,
-              focusInside,
-            }),
-          disabled:
-            !canEditCells || cell.column.columnDef.meta?.editable === false,
-          rowHeight,
-        })}
+        {flexRender(cell.column.columnDef.cell, tableCellComponentProps)}
       </ErrorBoundary>
     </StyledCell>
   );

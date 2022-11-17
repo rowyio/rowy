@@ -8,7 +8,7 @@ import {
 } from "react";
 import useStateRef from "react-usestateref";
 import { useSetAtom } from "jotai";
-import { get, isEqual } from "lodash-es";
+import { isEqual } from "lodash-es";
 import type { CellContext } from "@tanstack/react-table";
 
 import { Popover, PopoverProps } from "@mui/material";
@@ -32,7 +32,9 @@ export interface ICellOptions {
   popoverProps?: Partial<PopoverProps>;
 }
 
-export interface ITableCellProps extends CellContext<TableRow, any> {
+export interface ITableCellProps<TValue = any>
+  extends CellContext<TableRow, TValue> {
+  value: TValue;
   focusInsideCell: boolean;
   setFocusInsideCell: (focusInside: boolean) => void;
   disabled: boolean;
@@ -61,15 +63,12 @@ export default function withTableCell(
     function TableCell({
       row,
       column,
-      getValue,
+      value,
       focusInsideCell,
       setFocusInsideCell,
       disabled,
       rowHeight,
     }: ITableCellProps) {
-      // Get the latest value on every re-render of this component
-      const value = getValue();
-
       // Render inline editor cell after timeout on mount
       // to improve scroll performance
       const [inlineEditorReady, setInlineEditorReady] = useState(false);
@@ -203,10 +202,7 @@ export default function withTableCell(
       return null;
     },
     (prev, next) => {
-      const valueEqual = isEqual(
-        get(prev.row.original, prev.column.columnDef.meta!.fieldName),
-        get(next.row.original, next.column.columnDef.meta!.fieldName)
-      );
+      const valueEqual = isEqual(prev.value, next.value);
       const columnEqual = isEqual(
         prev.column.columnDef.meta,
         next.column.columnDef.meta
@@ -234,11 +230,22 @@ interface IEditorCellManagerProps extends IDisplayCellProps {
 function EditorCellManager({
   EditorCellComponent,
   saveOnUnmount,
+  value,
   ...props
 }: IEditorCellManagerProps) {
-  const [localValue, setLocalValue, localValueRef] = useStateRef(props.value);
-  const [, setIsDirty, isDirtyRef] = useStateRef(false);
+  // Store local value so we don’t immediately write to db when the user
+  // types in a textbox, for example
+  const [localValue, setLocalValue, localValueRef] = useStateRef(value);
+  // Mark if the user has interacted with this cell and hasn’t saved yet
+  const [isDirty, setIsDirty, isDirtyRef] = useStateRef(false);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
+
+  // When this cell’s data has updated, update the local value if
+  // it’s not dirty and the value is different
+  useEffect(() => {
+    if (!isDirty && !isEqual(value, localValueRef.current))
+      setLocalValue(value);
+  }, [isDirty, localValueRef, setLocalValue, value]);
 
   // This is where we update the documents
   const handleSubmit = () => {
