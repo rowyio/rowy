@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import DurationIcon from "@mui/icons-material/TimerOutlined";
 import DisplayCell from "./DisplayCell";
@@ -20,7 +20,7 @@ export const config: IFieldConfig = {
   initialValue: {},
   icon: <DurationIcon />,
   description: "Duration calculated from two timestamps.",
-  TableCell: withTableCell(DisplayCell, SideDrawerField, "popover", {
+  TableCell: withRenderTableCell(DisplayCell, SideDrawerField, "popover", {
     popoverProps: { PaperProps: { sx: { p: 1 } } },
   }),
   SideDrawerField,

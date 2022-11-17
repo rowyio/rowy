@@ -8,7 +8,7 @@ import { format } from "date-fns";
 
 import { alpha, Stack, Grid, Tooltip, Chip, IconButton } from "@mui/material";
 import { Upload as UploadIcon } from "@src/assets/icons";
-import ChipList from "@src/components/Table/ChipList";
+import ChipList from "@src/components/Table/TableCell/ChipList";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";

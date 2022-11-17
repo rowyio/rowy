@@ -29,7 +29,7 @@ import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import EvalIcon from "@mui/icons-material/PlayCircleOutline";
 
 import MenuContents, { IMenuContentsProps } from "./MenuContents";
-import ColumnHeader from "@src/components/Table/Column";
+import ColumnHeader from "@src/components/Table/Mock/Column";
 
 import {
   projectScope,

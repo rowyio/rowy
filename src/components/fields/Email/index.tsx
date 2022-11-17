@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import EmailIcon from "@mui/icons-material/MailOutlined";
 import DisplayCell from "@src/components/fields/ShortText/DisplayCell";
@@ -23,7 +23,7 @@ export const config: IFieldConfig = {
   icon: <EmailIcon />,
   description: "Email address. Not validated.",
   contextMenuActions: BasicContextMenuActions,
-  TableCell: withTableCell(DisplayCell, EditorCell),
+  TableCell: withRenderTableCell(DisplayCell, EditorCell),
   SideDrawerField,
   filter: {
     operators: filterOperators,

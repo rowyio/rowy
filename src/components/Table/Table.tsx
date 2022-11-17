@@ -221,6 +221,7 @@ export default function Table({
             canAddColumns={canAddColumns}
             canEditColumns={canEditColumns}
             lastFrozen={lastFrozen}
+            columnSizing={columnSizing}
           />
         </div>
 
@@ -233,6 +234,7 @@ export default function Table({
             rows={rows}
             canEditCells={canEditCells}
             lastFrozen={lastFrozen}
+            columnSizing={columnSizing}
           />
         )}
       </StyledTable>

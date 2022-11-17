@@ -1,13 +1,13 @@
 import { styled } from "@mui/material";
 
-export interface IStyledResizerProps {
+export interface IColumnHeaderResizerProps {
   isResizing: boolean;
 }
 
-export const StyledResizer = styled("div", {
-  name: "StyledResizer",
+export const ColumnHeaderResizer = styled("div", {
+  name: "ColumnHeaderResizer",
   shouldForwardProp: (prop) => prop !== "isResizing",
-})<IStyledResizerProps>(({ theme, isResizing }) => ({
+})<IColumnHeaderResizerProps>(({ theme, isResizing }) => ({
   position: "absolute",
   zIndex: 5,
   right: 0,
@@ -51,6 +51,6 @@ export const StyledResizer = styled("div", {
     transform: isResizing ? "scaleY(1.5) !important" : undefined,
   },
 }));
-StyledResizer.displayName = "StyledResizer";
+ColumnHeaderResizer.displayName = "ColumnHeaderResizer";
 
-export default StyledResizer;
+export default ColumnHeaderResizer;

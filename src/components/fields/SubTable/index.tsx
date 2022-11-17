@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { SubTable as SubTableIcon } from "@src/assets/icons";
 import DisplayCell from "./DisplayCell";
@@ -24,7 +24,7 @@ export const config: IFieldConfig = {
   settings: Settings,
   description:
     "Connects to a sub-table in the current row. Also displays number of rows inside the sub-table. Max sub-table depth: 100.",
-  TableCell: withTableCell(DisplayCell, null, "focus", {
+  TableCell: withRenderTableCell(DisplayCell, null, "focus", {
     usesRowData: true,
     disablePadding: true,
   }),

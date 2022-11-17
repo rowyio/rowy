@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { UpdatedAt as UpdatedAtIcon } from "@src/assets/icons";
 import DisplayCell from "./DisplayCell";
@@ -25,7 +25,7 @@ export const config: IFieldConfig = {
   icon: <UpdatedAtIcon />,
   description:
     "Displays the timestamp of the last update to the row. Read-only.",
-  TableCell: withTableCell(DisplayCell, null),
+  TableCell: withRenderTableCell(DisplayCell, null),
   SideDrawerField,
   settings: Settings,
 };

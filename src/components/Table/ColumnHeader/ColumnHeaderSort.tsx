@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { useSetAtom } from "jotai";
 import { colord } from "colord";
 
@@ -17,7 +18,7 @@ export interface IColumnHeaderSortProps {
   tabIndex?: number;
 }
 
-export default function ColumnHeaderSort({
+export const ColumnHeaderSort = memo(function ColumnHeaderSort({
   sortKey,
   currentSort,
   tabIndex,
@@ -34,7 +35,7 @@ export default function ColumnHeaderSort({
 
   return (
     <Tooltip
-      title={nextSort === "none" ? "Unsort" : `Sort by ${nextSort}ending`}
+      title={nextSort === "none" ? "Remove sort" : `Sort by ${nextSort}ending`}
     >
       <IconButton
         disableFocusRipple={true}
@@ -68,13 +69,6 @@ export default function ColumnHeaderSort({
 
           position: "relative",
           opacity: currentSort !== "none" ? 1 : 0,
-          "[role='columnheader']:hover &, [role='columnheader']:focus &, [role='columnheader']:focus-within &, &:focus":
-            { opacity: 1 },
-
-          transition: (theme) =>
-            theme.transitions.create(["background-color", "opacity"], {
-              duration: theme.transitions.duration.short,
-            }),
 
           "& .arrow": {
             transition: (theme) =>
@@ -108,4 +102,6 @@ export default function ColumnHeaderSort({
       </IconButton>
     </Tooltip>
   );
-}
+});
+
+export default ColumnHeaderSort;

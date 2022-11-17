@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { Percentage as PercentageIcon } from "@src/assets/icons";
 import DisplayCell from "./DisplayCell";
@@ -30,7 +30,7 @@ export const config: IFieldConfig = {
   requireConfiguration: true,
   description: "Percentage stored as a number between 0 and 1.",
   contextMenuActions: BasicContextMenuActions,
-  TableCell: withTableCell(DisplayCell, EditorCell),
+  TableCell: withRenderTableCell(DisplayCell, EditorCell),
   SideDrawerField,
   settings: Settings,
   filter: {

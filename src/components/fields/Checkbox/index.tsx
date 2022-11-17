@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import CheckboxIcon from "@mui/icons-material/ToggleOnOutlined";
 import DisplayCell from "./DisplayCell";
@@ -24,7 +24,7 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <CheckboxIcon />,
   description: "True/false value. Default: false.",
-  TableCell: withTableCell(DisplayCell, EditorCell, "inline", {
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "inline", {
     usesRowData: true,
   }),
   csvImportParser: (value: string) => {

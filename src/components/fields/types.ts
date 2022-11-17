@@ -1,5 +1,5 @@
 import { FieldType } from "@src/constants/fields";
-import type { ITableCellProps } from "@src/components/Table/withTableCell";
+import type { IRenderedTableCellProps } from "@src/components/Table/TableCell/withRenderTableCell";
 import type { PopoverProps } from "@mui/material";
 import type {
   ColumnConfig,
@@ -27,7 +27,7 @@ export interface IFieldConfig {
     selectedCell: SelectedCell,
     reset: () => void
   ) => IContextMenuItem[];
-  TableCell: React.ComponentType<ITableCellProps>;
+  TableCell: React.ComponentType<IRenderedTableCellProps>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;
   settings?: React.ComponentType<ISettingsProps>;
   settingsValidator?: (config: Record<string, any>) => Record<string, string>;

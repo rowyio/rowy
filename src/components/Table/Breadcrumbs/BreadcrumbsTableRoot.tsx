@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { useLocation, useParams, Link as RouterLink } from "react-router-dom";
+import { useParams, Link as RouterLink } from "react-router-dom";
 import { find, camelCase, uniq } from "lodash-es";
 
 import {

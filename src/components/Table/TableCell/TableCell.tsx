@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { useAtom, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { ErrorBoundary } from "react-error-boundary";
 import { flexRender } from "@tanstack/react-table";
 import type { Row, Cell } from "@tanstack/react-table";
@@ -8,7 +8,7 @@ import { styled } from "@mui/material/styles";
 import ErrorIcon from "@mui/icons-material/ErrorOutline";
 import WarningIcon from "@mui/icons-material/WarningAmber";
 
-import StyledCell from "./Styled/StyledCell";
+import StyledCell from "@src/components/Table/Styled/StyledCell";
 import { InlineErrorFallback } from "@src/components/ErrorFallback";
 import RichTooltip from "@src/components/RichTooltip";
 
@@ -18,7 +18,7 @@ import {
   contextMenuTargetAtom,
 } from "@src/atoms/tableScope";
 import type { TableRow } from "@src/types/table";
-import type { ITableCellProps } from "./withTableCell";
+import type { IRenderedTableCellProps } from "./withRenderTableCell";
 
 const Dot = styled("div")(({ theme }) => ({
   position: "absolute",
@@ -39,31 +39,34 @@ const Dot = styled("div")(({ theme }) => ({
   },
 }));
 
-export interface ICellValidationProps {
+export interface ITableCellProps {
   row: Row<TableRow>;
   cell: Cell<TableRow, any>;
   index: number;
   isSelectedCell: boolean;
+  focusInsideCell: boolean;
   isReadOnlyCell: boolean;
   canEditCells: boolean;
   rowHeight: number;
-  lastFrozen?: string;
+  isLastFrozen: boolean;
+  width: number;
   left?: number;
 }
 
-export const CellValidation = memo(function MemoizedCellValidation({
+export const TableCell = memo(function TableCell({
   row,
   cell,
   index,
   isSelectedCell,
+  focusInsideCell,
   isReadOnlyCell,
   canEditCells,
   rowHeight,
-  lastFrozen,
+  isLastFrozen,
+  width,
   left,
-}: ICellValidationProps) {
-  const [selectedCell, setSelectedCell] = useAtom(selectedCellAtom, tableScope);
-  const focusInsideCell = selectedCell?.focusInside ?? false;
+}: ITableCellProps) {
+  const setSelectedCell = useSetAtom(selectedCellAtom, tableScope);
   const setContextMenuTarget = useSetAtom(contextMenuTargetAtom, tableScope);
 
   const value = cell.getValue();
@@ -97,10 +100,10 @@ export const CellValidation = memo(function MemoizedCellValidation({
     );
   }
 
-  const tableCellComponentProps: ITableCellProps = {
+  const tableCellComponentProps: IRenderedTableCellProps = {
     ...cell.getContext(),
     value,
-    focusInsideCell: isSelectedCell && focusInsideCell,
+    focusInsideCell,
     setFocusInsideCell: (focusInside: boolean) =>
       setSelectedCell({
         path: row.original._rowy_ref.path,
@@ -117,7 +120,7 @@ export const CellValidation = memo(function MemoizedCellValidation({
       data-row-id={row.id}
       data-col-id={cell.column.id}
       data-frozen={cell.column.getIsPinned() || undefined}
-      data-frozen-last={lastFrozen === cell.column.id || undefined}
+      data-frozen-last={isLastFrozen || undefined}
       role="gridcell"
       tabIndex={isSelectedCell && !focusInsideCell ? 0 : -1}
       aria-colindex={index + 1}
@@ -133,7 +136,7 @@ export const CellValidation = memo(function MemoizedCellValidation({
       }
       aria-invalid={isInvalid || isMissing}
       style={{
-        width: cell.column.getSize(),
+        width,
         height: rowHeight,
         left,
         backgroundColor:
@@ -178,4 +181,4 @@ export const CellValidation = memo(function MemoizedCellValidation({
   );
 });
 
-export default CellValidation;
+export default TableCell;

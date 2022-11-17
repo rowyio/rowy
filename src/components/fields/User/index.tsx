@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import UserIcon from "@mui/icons-material/PersonOutlined";
 import DisplayCell from "./DisplayCell";
@@ -23,7 +23,7 @@ export const config: IFieldConfig = {
   initialValue: null,
   icon: <UserIcon />,
   description: "User information and optionally, timestamp. Read-only.",
-  TableCell: withTableCell(DisplayCell, null),
+  TableCell: withRenderTableCell(DisplayCell, null),
   SideDrawerField,
   settings: Settings,
 };

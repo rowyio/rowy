@@ -1,9 +1,10 @@
+import { memo } from "react";
 import { useAtom } from "jotai";
-import type { Column, Row } from "@tanstack/react-table";
+import type { Column, Row, ColumnSizingState } from "@tanstack/react-table";
 
 import StyledRow from "./Styled/StyledRow";
 import OutOfOrderIndicator from "./OutOfOrderIndicator";
-import CellValidation from "./CellValidation";
+import CellValidation from "./TableCell";
 import { RowsSkeleton } from "./TableSkeleton";
 
 import {
@@ -29,9 +30,12 @@ export interface ITableBodyProps {
 
   canEditCells: boolean;
   lastFrozen?: string;
+
+  /** Re-render when local column sizing changes */
+  columnSizing: ColumnSizingState;
 }
 
-export default function TableBody({
+export const TableBody = memo(function TableBody({
   containerRef,
   leafColumns,
   rows,
@@ -105,9 +109,11 @@ export default function TableBody({
                       : undefined
                   }
                   isSelectedCell={isSelectedCell}
+                  focusInsideCell={isSelectedCell && selectedCell?.focusInside}
                   isReadOnlyCell={isReadOnlyCell}
                   canEditCells={canEditCells}
-                  lastFrozen={lastFrozen}
+                  isLastFrozen={lastFrozen === cell.column.id}
+                  width={cell.column.getSize()}
                   rowHeight={tableSchema.rowHeight || DEFAULT_ROW_HEIGHT}
                 />
               );
@@ -127,4 +133,6 @@ export default function TableBody({
       )}
     </div>
   );
-}
+});
+
+export default TableBody;

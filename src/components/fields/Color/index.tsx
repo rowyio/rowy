@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 import { toColor } from "react-color-palette";
 
 import ColorIcon from "@mui/icons-material/Colorize";
@@ -25,7 +25,7 @@ export const config: IFieldConfig = {
   icon: <ColorIcon />,
   description:
     "Color stored as Hex, RGB, and HSV. Edited with a visual picker.",
-  TableCell: withTableCell(DisplayCell, EditorCell, "popover", {
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "popover", {
     disablePadding: true,
   }),
   SideDrawerField,

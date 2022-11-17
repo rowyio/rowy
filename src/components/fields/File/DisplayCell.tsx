@@ -1,7 +1,7 @@
 import { IDisplayCellProps } from "@src/components/fields/types";
 
 import { Grid, Chip } from "@mui/material";
-import ChipList from "@src/components/Table/ChipList";
+import ChipList from "@src/components/Table/TableCell/ChipList";
 
 import { FileIcon } from ".";
 import { FileValue } from "@src/types/table";

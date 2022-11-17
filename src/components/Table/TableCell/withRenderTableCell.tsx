@@ -32,7 +32,7 @@ export interface ICellOptions {
   popoverProps?: Partial<PopoverProps>;
 }
 
-export interface ITableCellProps<TValue = any>
+export interface IRenderedTableCellProps<TValue = any>
   extends CellContext<TableRow, TValue> {
   value: TValue;
   focusInsideCell: boolean;
@@ -60,7 +60,7 @@ export default function withTableCell(
   options: ICellOptions = {}
 ) {
   return memo(
-    function TableCell({
+    function RenderedTableCell({
       row,
       column,
       value,
@@ -68,7 +68,7 @@ export default function withTableCell(
       setFocusInsideCell,
       disabled,
       rowHeight,
-    }: ITableCellProps) {
+    }: IRenderedTableCellProps) {
       // Render inline editor cell after timeout on mount
       // to improve scroll performance
       const [inlineEditorReady, setInlineEditorReady] = useState(false);

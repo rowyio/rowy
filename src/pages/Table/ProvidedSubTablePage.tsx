@@ -7,7 +7,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { find, isEqual } from "lodash-es";
 
 import Modal from "@src/components/Modal";
-import BreadcrumbsSubTable from "@src/components/Table/BreadcrumbsSubTable";
+import BreadcrumbsSubTable from "@src/components/Table/Breadcrumbs/BreadcrumbsSubTable";
 import ErrorFallback from "@src/components/ErrorFallback";
 import TableSourceFirestore from "@src/sources/TableSourceFirestore";
 import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkeleton";

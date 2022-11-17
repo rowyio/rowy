@@ -105,7 +105,6 @@ export const Column = forwardRef(function Column(
 
             ml: 0.5,
           }}
-          aria-hidden
         >
           {label}
         </Typography>

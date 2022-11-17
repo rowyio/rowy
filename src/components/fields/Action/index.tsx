@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import ActionIcon from "@mui/icons-material/TouchAppOutlined";
 import DisplayCell from "./DisplayCell";
@@ -24,7 +24,7 @@ export const config: IFieldConfig = {
   icon: <ActionIcon />,
   description:
     "Button with pre-defined action script or triggers a Cloud Function. Optionally supports Undo and Redo.",
-  TableCell: withTableCell(DisplayCell, EditorCell, "inline", {
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "inline", {
     disablePadding: true,
   }),
   SideDrawerField,
