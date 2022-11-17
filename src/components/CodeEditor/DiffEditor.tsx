@@ -15,6 +15,8 @@ import useMonacoCustomizations, {
 } from "./useMonacoCustomizations";
 import FullScreenButton from "@src/components/FullScreenButton";
 import { spreadSx } from "@src/utils/ui";
+import githubLightTheme from "@src/components/CodeEditor/github-light-default.json";
+import githubDarkTheme from "@src/components/CodeEditor/github-dark-default.json";
 
 export interface IDiffEditorProps
   extends Partial<DiffEditorProps>,
@@ -73,7 +75,12 @@ export default function DiffEditor({
           loading={<CircularProgressOptical size={20} sx={{ m: 2 }} />}
           className="editor"
           {...props}
+          beforeMount={(monaco) => {
+            monaco.editor.defineTheme("github-light", githubLightTheme as any);
+            monaco.editor.defineTheme("github-dark", githubDarkTheme as any);
+          }}
           onMount={handleEditorMount}
+          theme={`github-${theme.palette.mode}`}
           options={
             {
               readOnly: disabled,
