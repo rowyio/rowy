@@ -67,10 +67,12 @@ export default function TablePage({
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const snackLogContext = useSnackLogContext();
 
-  // Set permissions here so we can pass them to the Table component, which
-  // shouldn’t access projectScope at all, to separate concerns.
-  const canAddColumns = userRoles.includes("ADMIN");
-  const canEditColumns = userRoles.includes("ADMIN");
+  // Set permissions here so we can pass them to the `Table` component, which
+  // shouldn’t access `projectScope` at all, to separate concerns.
+  const canAddColumns =
+    userRoles.includes("ADMIN") || userRoles.includes("OPS");
+  const canEditColumns = canAddColumns;
+  const canDeleteColumns = canAddColumns;
   const canEditCells =
     userRoles.includes("ADMIN") ||
     (!tableSettings.readOnly &&
@@ -170,7 +172,11 @@ export default function TablePage({
       {!disableModals && (
         <ErrorBoundary FallbackComponent={InlineErrorFallback}>
           <Suspense fallback={null}>
-            <ColumnMenu />
+            <ColumnMenu
+              canAddColumns={canAddColumns}
+              canEditColumns={canEditColumns}
+              canDeleteColumns={canDeleteColumns}
+            />
             <ColumnModals />
           </Suspense>
         </ErrorBoundary>

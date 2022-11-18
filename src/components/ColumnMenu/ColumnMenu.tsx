@@ -33,7 +33,6 @@ import ColumnHeader from "@src/components/Table/Mock/Column";
 
 import {
   projectScope,
-  userRolesAtom,
   userSettingsAtom,
   updateUserSettingsAtom,
   confirmDialogAtom,
@@ -80,8 +79,17 @@ export interface IMenuModalProps {
   ) => void;
 }
 
-export default function ColumnMenu() {
-  const [userRoles] = useAtom(userRolesAtom, projectScope);
+export interface IColumnMenuProps {
+  canAddColumns: boolean;
+  canEditColumns: boolean;
+  canDeleteColumns: boolean;
+}
+
+export default function ColumnMenu({
+  canAddColumns,
+  canEditColumns,
+  canDeleteColumns,
+}: IColumnMenuProps) {
   const [userSettings] = useAtom(userSettingsAtom, projectScope);
   const [updateUserSettings] = useAtom(updateUserSettingsAtom, projectScope);
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
@@ -387,6 +395,7 @@ export default function ColumnMenu() {
         openColumnModal({ type: "new", index: column.index - 1 });
         handleClose();
       },
+      disabled: !canAddColumns,
     },
     {
       label: "Insert to the right…",
@@ -396,6 +405,7 @@ export default function ColumnMenu() {
         openColumnModal({ type: "new", index: column.index + 1 });
         handleClose();
       },
+      disabled: !canAddColumns,
     },
     {
       label: `Delete column${altPress ? "" : "…"}`,
@@ -450,16 +460,19 @@ export default function ColumnMenu() {
             });
           },
       color: "error" as "error",
+      disabled: !canDeleteColumns,
     },
   ];
 
   let menuItems = [...localViewActions];
 
-  if (userRoles.includes("ADMIN") || userRoles.includes("OPS")) {
+  if (canEditColumns) {
     menuItems.push.apply(menuItems, configActions);
     if (column.type === FieldType.derivative) {
       menuItems.push.apply(menuItems, derivativeActions);
     }
+  }
+  if (canAddColumns || canDeleteColumns) {
     menuItems.push.apply(menuItems, columnActions);
   }
 
