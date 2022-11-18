@@ -85,10 +85,17 @@ export function useFirestoreDocWithAtom<T = TableRow>(
     // Create a listener for the document
     const unsubscribe = onSnapshot(
       memoizedDocRef,
+      { includeMetadataChanges: true },
       (docSnapshot) => {
         try {
-          // Create doc if it doesn’t exist
-          if (!docSnapshot.exists() && !!createIfNonExistent) {
+          // Create doc if it doesn’t exist and we’re online
+          // WARNING: If offline and we doc doesn’t exist in cache, it will
+          // ovewrite with default values when we go online
+          if (
+            !docSnapshot.exists() &&
+            !!createIfNonExistent &&
+            !docSnapshot.metadata.fromCache
+          ) {
             setDoc(docSnapshot.ref, createIfNonExistent);
             setDataAtom({ ...createIfNonExistent, _rowy_ref: docSnapshot.ref });
           } else {
@@ -121,8 +128,6 @@ export function useFirestoreDocWithAtom<T = TableRow>(
     disableSuspense,
     createIfNonExistent,
     handleError,
-    updateDataAtom,
-    setUpdateDataAtom,
   ]);
 
   // Set updateDocAtom and deleteDocAtom values if they exist

@@ -1,9 +1,7 @@
-import { useCallback, useState } from "react";
+import { useMemo } from "react";
 import { IHeavyCellProps } from "@src/components/fields/types";
 import { useAtom, useSetAtom } from "jotai";
-import { findIndex } from "lodash-es";
-
-import { useDropzone } from "react-dropzone";
+import { assignIn } from "lodash-es";
 
 import {
   alpha,
@@ -23,15 +21,11 @@ import Thumbnail from "@src/components/Thumbnail";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
-import {
-  tableSchemaAtom,
-  tableScope,
-  updateFieldAtom,
-} from "@src/atoms/tableScope";
-import useUploader from "@src/hooks/useFirebaseStorageUploader";
-import { IMAGE_MIME_TYPES } from "./index";
+import { tableSchemaAtom, tableScope } from "@src/atoms/tableScope";
 import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
 import { FileValue } from "@src/types/table";
+import useFileUpload from "@src/components/fields/File/useFileUpload";
+import { IMAGE_MIME_TYPES } from "./index";
 
 // MULTIPLE
 const imgSx = (rowHeight: number) => ({
@@ -88,57 +82,27 @@ const deleteImgHoverSx = {
 export default function Image_({
   column,
   value,
-  onSubmit,
   disabled,
   docRef,
 }: IHeavyCellProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
-  const updateField = useSetAtom(updateFieldAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
-  const { uploaderState, upload, deleteUpload } = useUploader();
-  const { progress, isLoading } = uploaderState;
 
-  // Store a preview image locally while uploading
-  const [localImage, setLocalImage] = useState<string>("");
+  const { loading, progress, handleDelete, localFiles, dropzoneState } =
+    useFileUpload(docRef, column.key, {
+      multiple: true,
+      accept: IMAGE_MIME_TYPES,
+    });
 
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const imageFile = acceptedFiles[0];
-
-      if (imageFile) {
-        upload({
-          docRef: docRef! as any,
-          fieldName: column.key,
-          files: [imageFile],
-          previousValue: value,
-          onComplete: (newValue) => {
-            updateField({
-              path: docRef.path,
-              fieldName: column.key,
-              value: newValue,
-            });
-            setLocalImage("");
-          },
-        });
-        setLocalImage(URL.createObjectURL(imageFile));
-      }
-    },
-    [value]
+  const localImages = useMemo(
+    () =>
+      localFiles.map((file) =>
+        assignIn(file, { localURL: URL.createObjectURL(file) })
+      ),
+    [localFiles]
   );
 
-  const handleDelete = (index: number) => () => {
-    const newValue = [...value];
-    const toBeDeleted = newValue.splice(index, 1);
-    toBeDeleted.length && deleteUpload(toBeDeleted[0]);
-    onSubmit(newValue);
-  };
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    multiple: false,
-    accept: IMAGE_MIME_TYPES,
-  });
-
+  const { getRootProps, getInputProps, isDragActive } = dropzoneState;
   const dropzoneProps = getRootProps();
 
   const rowHeight = tableSchema.rowHeight ?? DEFAULT_ROW_HEIGHT;
@@ -183,17 +147,17 @@ export default function Image_({
       >
         <Grid container spacing={0.5} wrap="nowrap">
           {Array.isArray(value) &&
-            value.map((file: FileValue, i) => (
-              <Grid item key={file.downloadURL}>
+            value.map((image: FileValue) => (
+              <Grid item key={image.downloadURL}>
                 {disabled ? (
                   <Tooltip title="Open">
                     <ButtonBase
                       sx={imgSx(rowHeight)}
                       className="img"
-                      onClick={() => window.open(file.downloadURL, "_blank")}
+                      onClick={() => window.open(image.downloadURL, "_blank")}
                     >
                       <Thumbnail
-                        imageUrl={file.downloadURL}
+                        imageUrl={image.downloadURL}
                         size={thumbnailSize}
                         objectFit="contain"
                         sx={thumbnailSx}
@@ -224,12 +188,12 @@ export default function Image_({
                             body: "This image cannot be recovered after",
                             confirm: "Delete",
                             confirmColor: "error",
-                            handleConfirm: handleDelete(i),
+                            handleConfirm: () => handleDelete(image),
                           });
                         }}
                       >
                         <Thumbnail
-                          imageUrl={file.downloadURL}
+                          imageUrl={image.downloadURL}
                           size={thumbnailSize}
                           objectFit="contain"
                           sx={thumbnailSx}
@@ -249,24 +213,27 @@ export default function Image_({
               </Grid>
             ))}
 
-          {localImage && (
-            <Grid item>
-              <Box
-                sx={[
-                  imgSx(rowHeight),
-                  {
-                    boxShadow: (theme) =>
-                      `0 0 0 1px ${theme.palette.divider} inset`,
-                  },
-                ]}
-                style={{ backgroundImage: `url("${localImage}")` }}
-              />
-            </Grid>
-          )}
+          {localImages &&
+            localImages.map((image) => (
+              <Grid item>
+                <Box
+                  sx={[
+                    imgSx(rowHeight),
+                    {
+                      boxShadow: (theme) =>
+                        `0 0 0 1px ${theme.palette.divider} inset`,
+                    },
+                  ]}
+                  style={{
+                    backgroundImage: `url("${image.localURL}")`,
+                  }}
+                />
+              </Grid>
+            ))}
         </Grid>
       </div>
 
-      {!isLoading ? (
+      {!loading ? (
         !disabled && (
           <IconButton
             size="small"

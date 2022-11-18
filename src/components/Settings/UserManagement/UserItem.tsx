@@ -23,12 +23,12 @@ import {
   projectSettingsAtom,
   rowyRunAtom,
   rowyRunModalAtom,
-  UserSettings,
   updateUserAtom,
   confirmDialogAtom,
 } from "@src/atoms/projectScope";
 import { runRoutes } from "@src/constants/runRoutes";
 import { USERS } from "@src/config/dbPaths";
+import type { UserSettings } from "@src/types/settings";
 
 export default function UserItem({
   _rowy_ref,

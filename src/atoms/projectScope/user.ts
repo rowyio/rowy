@@ -1,45 +1,12 @@
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { merge } from "lodash-es";
-import { ThemeOptions } from "@mui/material";
 
 import themes from "@src/theme";
 import { publicSettingsAtom } from "./project";
-import {
-  UpdateDocFunction,
-  TableFilter,
-  TableRowRef,
-  TableSort,
-} from "@src/types/table";
+import { UserSettings } from "@src/types/settings";
+import { UpdateDocFunction } from "@src/types/table";
 
-/** User info and settings */
-export type UserSettings = Partial<{
-  _rowy_ref: TableRowRef;
-  /** Synced from user auth info */
-  user: {
-    email: string;
-    displayName?: string;
-    photoURL?: string;
-    phoneNumber?: string;
-  };
-  roles: string[];
-
-  theme: Record<"base" | "light" | "dark", ThemeOptions>;
-
-  favoriteTables: string[];
-  /** Stores user overrides */
-  tables: Record<
-    string,
-    Partial<{
-      filters: TableFilter[];
-      hiddenFields: string[];
-      sorts: TableSort[];
-    }>
-  >;
-
-  /** Stores table tutorial completion */
-  tableTutorialComplete?: boolean;
-}>;
 /** User info and settings */
 export const userSettingsAtom = atom<UserSettings>({});
 /** Stores a function that updates user settings */

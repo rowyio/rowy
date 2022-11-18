@@ -71,6 +71,8 @@ export default function CircularProgressTimed({
           sx={{
             position: "absolute",
             inset: size * 0.33 * 0.5,
+            width: size * 0.67,
+            height: size * 0.67,
 
             "& .tick": {
               stroke: (theme) => theme.palette.success.main,

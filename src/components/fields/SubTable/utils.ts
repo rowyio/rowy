@@ -20,8 +20,7 @@ export const useSubTableData = (
     location.pathname.split("/" + ROUTES.subTable)[0]
   );
 
-  // const [searchParams] = useSearchParams();
-  // const parentLabels = searchParams.get("parentLabel");
+  // Get params from URL: /table/:tableId/subTable/:docPath/:subTableKey
   let subTablePath = [
     rootTablePath,
     ROUTES.subTable,
@@ -29,8 +28,6 @@ export const useSubTableData = (
     column.key,
   ].join("/");
 
-  // if (parentLabels) subTablePath += `${parentLabels ?? ""},${label ?? ""}`;
-  // else
   subTablePath += "?parentLabel=" + encodeURIComponent(label ?? "");
 
   return { documentCount, label, subTablePath };

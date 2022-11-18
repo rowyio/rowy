@@ -13,6 +13,7 @@ import {
   getTableSchemaAtom,
   AdditionalTableSettings,
   MinimumTableSettings,
+  currentUserAtom,
 } from "@src/atoms/projectScope";
 import { firebaseDbAtom } from "./init";
 
@@ -21,12 +22,14 @@ import {
   TABLE_SCHEMAS,
   TABLE_GROUP_SCHEMAS,
 } from "@src/config/dbPaths";
+import { rowyUser } from "@src/utils/table";
 import { TableSettings, TableSchema } from "@src/types/table";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 
 export function useTableFunctions() {
   const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
 
   // Create a function to get the latest tables from project settings,
   // so we don’t create new functions when tables change
@@ -93,10 +96,11 @@ export function useTableFunctions() {
               };
           }
 
+          const _createdBy = currentUser && rowyUser(currentUser);
           // Appends table to settings doc
           const promiseUpdateSettings = setDoc(
             doc(firebaseDb, SETTINGS),
-            { tables: [...tables, settings] },
+            { tables: [...tables, { ...settings, _createdBy }] },
             { merge: true }
           );
 
@@ -120,7 +124,7 @@ export function useTableFunctions() {
           await Promise.all([promiseUpdateSettings, promiseAddSchema]);
         }
     );
-  }, [firebaseDb, readTables, setCreateTable]);
+  }, [currentUser, firebaseDb, readTables, setCreateTable]);
 
   // Set the createTable function
   const setUpdateTable = useSetAtom(updateTableAtom, projectScope);

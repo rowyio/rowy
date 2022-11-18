@@ -36,14 +36,10 @@ export enum ROUTES {
   userSettings = "/settings/user",
   projectSettings = "/settings/project",
   members = "/members",
-  debugSettings = "/settings/debug",
+  debug = "/debug",
 
   tutorial = "/tutorial",
   tableTutorial = "/tutorial/table",
-
-  test = "/test",
-  themeTest = "/test/theme",
-  rowyRunTest = "/test/rowyRunTest",
 }
 
 export const ROUTE_TITLES = {
@@ -66,7 +62,7 @@ export const ROUTE_TITLES = {
   [ROUTES.userSettings]: "Settings",
   [ROUTES.projectSettings]: "Project Settings",
   [ROUTES.members]: "Members",
-  [ROUTES.debugSettings]: "Debug",
+  [ROUTES.debug]: "Debug",
 
   [ROUTES.tutorial]: "Tutorial",
   [ROUTES.tableTutorial]: {
@@ -79,10 +75,6 @@ export const ROUTE_TITLES = {
     titleTransitionProps: { style: { transformOrigin: "0 50%" } },
     leftAligned: true,
   },
-
-  [ROUTES.test]: "Test",
-  [ROUTES.themeTest]: "Theme Test",
-  [ROUTES.rowyRunTest]: "Rowy Run Test",
 } as Record<
   ROUTES,
   | string

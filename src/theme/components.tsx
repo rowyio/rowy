@@ -4,6 +4,7 @@ import type {} from "@mui/lab/themeAugmentation";
 import { MultiSelectProps } from "@rowy/multiselect";
 import { toRem } from "./typography";
 
+import ModalTransition from "@src/components/Modal/ModalTransition";
 import RadioIcon from "@src/theme/RadioIcon";
 import CheckboxIcon from "@src/theme/CheckboxIcon";
 import CheckboxIndeterminateIcon from "@src/theme/CheckboxIndeterminateIcon";
@@ -248,6 +249,9 @@ export const components = (theme: Theme): ThemeOptions => {
       },
 
       MuiDialog: {
+        defaultProps: {
+          TransitionComponent: ModalTransition,
+        },
         styleOverrides: {
           root: {
             "--dialog-title-height": "64px",
@@ -307,14 +311,8 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiDialogTitle: {
         styleOverrides: {
           root: {
-            padding: "var(--dialog-spacing)",
-            paddingTop: (64 - 28) / 2,
-            paddingBottom: (64 - 28) / 2,
-
-            [theme.breakpoints.down("sm")]: {
-              paddingTop: (56 - 28) / 2,
-              paddingBottom: (56 - 28) / 2,
-            },
+            ...(theme.typography.h5 as any),
+            padding: `calc((var(--dialog-title-height) - ${theme.typography.h5.lineHeight} * ${theme.typography.h5.fontSize}) / 2) var(--dialog-spacing)`,
           },
         },
       },
@@ -568,6 +566,13 @@ export const components = (theme: Theme): ThemeOptions => {
 
       MuiMenu: {
         styleOverrides: {
+          root: {
+            ".MuiDialog-root + & .MuiMenu-paper, form:has(.MuiDialog-root) + & .MuiMenu-paper, .MuiDialog-root & .MuiMenu-paper":
+              {
+                backgroundImage:
+                  "linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2))", // elevation 50
+              },
+          },
           list: { padding: theme.spacing(0.5, 0) },
         },
       },
@@ -1370,11 +1375,12 @@ export const components = (theme: Theme): ThemeOptions => {
 
       MuiRating: {
         styleOverrides: {
-          iconFilled: { color: theme.palette.text.secondary },
           icon: {
             // https://github.com/mui/material-ui/issues/32557
             "& .MuiSvgIcon-root": { pointerEvents: "auto" },
+            color: theme.palette.text.secondary,
           },
+          iconEmpty: { opacity: 0.38 },
         },
       },
 
