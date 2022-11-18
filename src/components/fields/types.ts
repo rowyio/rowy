@@ -1,5 +1,5 @@
 import { FieldType } from "@src/constants/fields";
-import type { IRenderedTableCellProps } from "@src/components/Table/TableCell/withRenderTableCell";
+import { IRenderedTableCellProps } from "@src/components/Table/TableCell/withRenderTableCell";
 import type { PopoverProps } from "@mui/material";
 import type {
   ColumnConfig,

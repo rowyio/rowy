@@ -67,12 +67,12 @@ export interface IRenderedTableCellProps<TValue = any>
  *
  *   - `EditorCell` should use the `value` and `onChange` props for the
  *     rendered inputs. Avoid creating another local state here.
- *   - `onSubmit` is available if `saveOnUnmount` does not work or if you want
- *     to submit to the db before unmount.
- *   - ✨ You can reuse your `SideDrawerField` as they take the same props. It
- *       should probably be displayed in a popover.
  *   - You can pass `null` to `withRenderTableCell()` to always display the
  *     `DisplayCell`.
+ *   - ⚠️ If it’s displayed inline, you must call `onSubmit` to save the value
+ *       to the database, because it never unmounts.
+ *   - ✨ You can reuse your `SideDrawerField` as they take the same props. It
+ *       should probably be displayed in a popover.
  *   - ⚠️ Make sure to use the `tabIndex` prop for buttons, text fields, and
  *       other interactive elements.
  *   - {@link IEditorCellProps}

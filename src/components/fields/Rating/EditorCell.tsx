@@ -4,6 +4,7 @@ import DisplayCell from "./DisplayCell";
 
 export default function Rating({
   onChange,
+  onSubmit,
   tabIndex,
   ...props
 }: IEditorCellProps) {
@@ -20,7 +21,10 @@ export default function Rating({
     <DisplayCell
       {...props}
       tabIndex={tabIndex}
-      onChange={(_, newValue) => onChange(newValue)}
+      onChange={(_, newValue) => {
+        onChange(newValue);
+        onSubmit();
+      }}
       ref={ref}
     />
   );
