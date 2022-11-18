@@ -110,6 +110,7 @@ export default function ProvidedSubTablePage() {
         disableBottomDivider: true,
         style: { "--dialog-spacing": 0, "--dialog-contents-spacing": 0 } as any,
       }}
+      BackdropProps={{ key: "sub-table-modal-backdrop" }}
     >
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Suspense
