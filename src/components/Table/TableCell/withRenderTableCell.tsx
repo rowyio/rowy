@@ -1,19 +1,11 @@
-import {
-  memo,
-  Suspense,
-  useState,
-  useEffect,
-  useRef,
-  useLayoutEffect,
-} from "react";
-import useStateRef from "react-usestateref";
-import { useSetAtom } from "jotai";
+import { memo, Suspense, useState, useEffect, useRef } from "react";
 import { isEqual } from "lodash-es";
 import type { CellContext } from "@tanstack/react-table";
 
 import { Popover, PopoverProps } from "@mui/material";
 
-import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
+import EditorCellController from "./EditorCellController";
+
 import { spreadSx } from "@src/utils/ui";
 import type { TableRow } from "@src/types/table";
 import type {
@@ -32,6 +24,7 @@ export interface ICellOptions {
   popoverProps?: Partial<PopoverProps>;
 }
 
+/** Received from `TableCell` */
 export interface IRenderedTableCellProps<TValue = any>
   extends CellContext<TableRow, TValue> {
   value: TValue;
@@ -42,18 +35,61 @@ export interface IRenderedTableCellProps<TValue = any>
 }
 
 /**
- * HOC to render table cells.
- * Renders read-only DisplayCell while scrolling for scroll performance.
- * Defers render for inline EditorCell.
- * @param DisplayCellComponent - The lighter cell component to display values
- * @param EditorCellComponent - The heavier cell component to edit inline
- * @param editorMode - When to display the EditorCell
- *   - "focus" (default) - when the cell is focused (Enter or double-click)
- *   - "inline" - inline with deferred render
- *   - "popover" - as a popover
- * @param options - {@link ICellOptions}
+ * Higher-order component to render each field type’s cell components.
+ * Handles when to render read-only `DisplayCell` and `EditorCell`.
+ *
+ * Memoized to re-render when value, column, focus, or disabled states change.
+ * Optionally re-renders when entire row updates.
+ *
+ * - Renders inline `EditorCell` after a timeout to improve scroll performance
+ * - Handles popovers
+ * - Renders Suspense for lazy-loaded `EditorCell`
+ * - Provides a `tabIndex` prop, so that interactive cell children (like
+ *   buttons) cannot be interacted with unless the user has focused in the
+ *   cell. Required for accessibility.
+ *
+ * @param DisplayCellComponent
+ * - The lighter cell component to display values. Also displayed when the
+ *   column is disabled/read-only.
+ *
+ *   - Keep these components lightweight, i.e. use base HTML or simple MUI
+ *     components. Avoid `Tooltip`, which is heavy.
+ *   - Avoid displaying disabled states (e.g. do not reduce opacity/grey out
+ *     toggles). This improves the experience of read-only tables for non-admins
+ *   - ⚠️ Make sure the disabled state does not render the buttons to open a
+ *       popover `EditorCell` (like Single/Multi Select).
+ *   - ⚠️ Make sure to use the `tabIndex` prop for buttons and other interactive
+ *       elements.
+ *   - {@link IDisplayCellProps}
+ *
+ * @param EditorCellComponent
+ * - The heavier cell component to edit values
+ *
+ *   - `EditorCell` should use the `value` and `onChange` props for the
+ *     rendered inputs. Avoid creating another local state here.
+ *   - `onSubmit` is available if `saveOnUnmount` does not work or if you want
+ *     to submit to the db before unmount.
+ *   - ✨ You can reuse your `SideDrawerField` as they take the same props. It
+ *       should probably be displayed in a popover.
+ *   - You can pass `null` to `withRenderTableCell()` to always display the
+ *     `DisplayCell`.
+ *   - ⚠️ Make sure to use the `tabIndex` prop for buttons, text fields, and
+ *       other interactive elements.
+ *   - {@link IEditorCellProps}
+ *
+ * @param editorMode
+ * - When to display the `EditorCell`
+ * 1. **focus** (default): the user has focused on the cell by pressing Enter or
+ *    double-clicking,
+ * 2. **inline**: always displayed if the cell is editable, or
+ * 3. **popover**: inside a popover when a user has focused on the cell
+ *    (as above) or clicked a button rendered by `DisplayCell`
+ *
+ * @param options
+ * - Note this is OK to pass as an object since it’s not defined in runtime
+ * - {@link ICellOptions}
  */
-export default function withTableCell(
+export default function withRenderTableCell(
   DisplayCellComponent: React.ComponentType<IDisplayCellProps>,
   EditorCellComponent: React.ComponentType<IEditorCellProps> | null,
   editorMode: "focus" | "inline" | "popover" = "focus",
@@ -137,7 +173,7 @@ export default function withTableCell(
       // Show displayCell as a fallback if intentionally null
       const editorCell = EditorCellComponent ? (
         <Suspense fallback={null}>
-          <EditorCellManager
+          <EditorCellController
             {...basicCellProps}
             EditorCellComponent={EditorCellComponent}
             parentRef={parentRef}
@@ -201,6 +237,7 @@ export default function withTableCell(
       // Should not reach this line
       return null;
     },
+    // Memo function
     (prev, next) => {
       const valueEqual = isEqual(prev.value, next.value);
       const columnEqual = isEqual(
@@ -218,67 +255,5 @@ export default function withTableCell(
       if (options?.usesRowData) return baseEqualities && rowEqual;
       else return baseEqualities;
     }
-  );
-}
-
-interface IEditorCellManagerProps extends IDisplayCellProps {
-  EditorCellComponent: React.ComponentType<IEditorCellProps>;
-  parentRef: IEditorCellProps["parentRef"];
-  saveOnUnmount: boolean;
-}
-
-function EditorCellManager({
-  EditorCellComponent,
-  saveOnUnmount,
-  value,
-  ...props
-}: IEditorCellManagerProps) {
-  // Store local value so we don’t immediately write to db when the user
-  // types in a textbox, for example
-  const [localValue, setLocalValue, localValueRef] = useStateRef(value);
-  // Mark if the user has interacted with this cell and hasn’t saved yet
-  const [isDirty, setIsDirty, isDirtyRef] = useStateRef(false);
-  const updateField = useSetAtom(updateFieldAtom, tableScope);
-
-  // When this cell’s data has updated, update the local value if
-  // it’s not dirty and the value is different
-  useEffect(() => {
-    if (!isDirty && !isEqual(value, localValueRef.current))
-      setLocalValue(value);
-  }, [isDirty, localValueRef, setLocalValue, value]);
-
-  // This is where we update the documents
-  const handleSubmit = () => {
-    if (props.disabled || !isDirtyRef.current) return;
-
-    updateField({
-      path: props._rowy_ref.path,
-      fieldName: props.column.fieldName,
-      value: localValueRef.current,
-      deleteField: localValueRef.current === undefined,
-    });
-  };
-
-  useLayoutEffect(() => {
-    return () => {
-      if (saveOnUnmount) {
-        console.log("unmount", props._rowy_ref.path, props.column.fieldName);
-        handleSubmit();
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return (
-    <EditorCellComponent
-      {...props}
-      value={localValue}
-      onDirty={(dirty?: boolean) => setIsDirty(dirty ?? true)}
-      onChange={(v) => {
-        setIsDirty(true);
-        setLocalValue(v);
-      }}
-      onSubmit={handleSubmit}
-    />
   );
 }

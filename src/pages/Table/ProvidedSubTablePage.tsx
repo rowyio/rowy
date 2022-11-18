@@ -28,7 +28,12 @@ import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
 const TablePage = lazy(() => import("./TablePage" /* webpackChunkName: "TablePage" */));
 
 /**
- * Wraps `TablePage` with the data for a top-level table.
+ * Wraps `TablePage` with the data for a sub-table.
+ *
+ * Differences to `ProvidedTablePage`:
+ * - Renders a `Modal`
+ * - When this is a child of `ProvidedTablePage`, the `TablePage` rendered for
+ *   the root table has its modals disabled
  */
 export default function ProvidedSubTablePage() {
   const location = useLocation();

@@ -46,7 +46,10 @@ import { formatSubTableName } from "@src/utils/table";
 const BuildLogsSnack = lazy(() => import("@src/components/TableModals/CloudLogsModal/BuildLogs/BuildLogsSnack" /* webpackChunkName: "TableModals-BuildLogsSnack" */));
 
 export interface ITablePageProps {
-  /** Disable modals on this table when a sub-table is open and it’s listening to URL state */
+  /**
+   * Disable modals on this table when a sub-table is open and it’s listening
+   * to URL state
+   */
   disableModals?: boolean;
   /** Disable side drawer */
   disableSideDrawer?: boolean;
@@ -55,6 +58,15 @@ export interface ITablePageProps {
 /**
  * TablePage renders all the UI for the table.
  * Must be wrapped by either `ProvidedTablePage` or `ProvidedSubTablePage`.
+ *
+ * Renders `Table`, `TableToolbar`, `SideDrawer`, `TableModals`, `ColumnMenu`,
+ * Suspense fallback UI. These components are all independent of each other.
+ *
+ * - Renders empty state if no columns
+ * - Defines empty state if no rows
+ * - Defines permissions `canAddColumns`, `canEditColumns`, `canEditCells`
+ *   for `Table` using `userRolesAtom` in `projectScope`
+ * - Provides `Table` with hidden columns array from user settings
  */
 export default function TablePage({
   disableModals,

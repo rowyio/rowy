@@ -13,16 +13,27 @@ import { tableScope, selectedCellAtom } from "@src/atoms/tableScope";
 import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
 
 export interface ITableHeaderProps {
+  /** Headers with context from TanStack Table state */
   headerGroups: HeaderGroup<TableRow>[];
+  /** Called when a header is dropped in a new position */
   handleDropColumn: (result: DropResult) => void;
+  /** Passed to `FinalColumnHeader` */
   canAddColumns: boolean;
+  /** Determines if columns can be re-ordered */
   canEditColumns: boolean;
+  /** If specified, renders a shadow in the last frozen column */
   lastFrozen?: string;
-
-  /** Re-render when local column sizing changes */
+  /**
+   * Must pass this prop so that it re-renders when local column sizing changes */
   columnSizing: ColumnSizingState;
 }
 
+/**
+ * Renders table header row. Memoized to only re-render when column definitions
+ * and sizes change.
+ *
+ * - Renders drag & drop components
+ */
 export const TableHeader = memo(function TableHeader({
   headerGroups,
   handleDropColumn,
@@ -93,6 +104,7 @@ export const TableHeader = memo(function TableHeader({
                   </Draggable>
                 );
               })}
+              {/* Required by react-beautiful-dnd */}
               {provided.placeholder}
             </StyledRow>
           )}

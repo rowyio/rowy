@@ -18,6 +18,10 @@ export interface IColumnHeaderSortProps {
   tabIndex?: number;
 }
 
+/**
+ * Renders button with current sort state.
+ * On click, updates `tableSortsAtom` in `tableScope`.
+ */
 export const ColumnHeaderSort = memo(function ColumnHeaderSort({
   sortKey,
   currentSort,

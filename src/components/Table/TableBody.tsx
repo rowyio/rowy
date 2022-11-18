@@ -4,7 +4,7 @@ import type { Column, Row, ColumnSizingState } from "@tanstack/react-table";
 
 import StyledRow from "./Styled/StyledRow";
 import OutOfOrderIndicator from "./OutOfOrderIndicator";
-import CellValidation from "./TableCell";
+import TableCell from "./TableCell";
 import { RowsSkeleton } from "./TableSkeleton";
 
 import {
@@ -24,17 +24,28 @@ import {
 } from "./Table";
 
 export interface ITableBodyProps {
+  /** Used in `useVirtualization` */
   containerRef: React.RefObject<HTMLDivElement>;
+  /** Used in `useVirtualization` */
   leafColumns: Column<TableRow, unknown>[];
+  /** Current table rows with context from TanStack Table state */
   rows: Row<TableRow>[];
-
+  /** Determines if EditorCell can be displayed */
   canEditCells: boolean;
+  /** If specified, renders a shadow in the last frozen column */
   lastFrozen?: string;
-
-  /** Re-render when local column sizing changes */
+  /**
+   * Must pass this prop so that it re-renders when local column sizing changes */
   columnSizing: ColumnSizingState;
 }
 
+/**
+ * Renders table body & data rows.
+ * Handles virtualization of rows & columns via `useVirtualization`.
+ *
+ * - Renders row out of order indicator
+ * - Renders next page loading UI (`RowsSkeleton`)
+ */
 export const TableBody = memo(function TableBody({
   containerRef,
   leafColumns,
@@ -98,7 +109,7 @@ export const TableBody = memo(function TableBody({
                 fieldTypeGroup === "Auditing" || fieldTypeGroup === "Metadata";
 
               return (
-                <CellValidation
+                <TableCell
                   key={cell.id}
                   row={row}
                   cell={cell}

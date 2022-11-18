@@ -49,13 +49,34 @@ const columnHelper = createColumnHelper<TableRow>();
 const getRowId = (row: TableRow) => row._rowy_ref.path || row._rowy_ref.id;
 
 export interface ITableProps {
+  /** Determines if “Add column” button is displayed */
   canAddColumns: boolean;
+  /** Determines if columns can be rearranged */
   canEditColumns: boolean;
+  /**
+   * Determines if any cell can be edited.
+   * If false, `Table` only ever renders `EditorCell`.
+   */
   canEditCells: boolean;
+  /** The hidden columns saved to user settings */
   hiddenColumns?: string[];
+  /**
+   * Displayed when `tableRows` is empty.
+   * Loading state handled by Suspense in parent component.
+   */
   emptyState?: React.ReactNode;
 }
 
+/**
+ * Takes table schema and row data from `tableScope` and makes it compatible
+ * with TanStack Table. Renders table children and cell context menu.
+ *
+ * - Calls `useKeyboardNavigation` hook
+ * - Handles rearranging columns
+ * - Handles infinite scrolling
+ * - Stores local state for resizing columns, and asks admins if they want to
+ *   save to table schema for all users
+ */
 export default function Table({
   canAddColumns,
   canEditColumns,
@@ -75,7 +96,7 @@ export default function Table({
   const gridRef = useRef<HTMLDivElement>(null);
 
   // Get column defs from table schema
-  // Also add end column for admins
+  // Also add end column for admins (canAddColumns || canEditCells)
   const columns = useMemo(() => {
     const _columns = tableColumnsOrdered
       // Hide column for all users using table schema
@@ -103,13 +124,13 @@ export default function Table({
     return _columns;
   }, [tableColumnsOrdered, canAddColumns, canEditCells]);
 
-  // Get user’s hidden columns from props and memoize into a VisibilityState
+  // Get user’s hidden columns from props and memoize into a `VisibilityState`
   const columnVisibility = useMemo(() => {
     if (!Array.isArray(hiddenColumns)) return {};
     return hiddenColumns.reduce((a, c) => ({ ...a, [c]: false }), {});
   }, [hiddenColumns]);
 
-  // Get frozen columns
+  // Get frozen columns and memoize into a `ColumnPinningState`
   const columnPinning = useMemo(
     () => ({
       left: columns.filter((c) => c.meta?.fixed && c.id).map((c) => c.id!),
@@ -128,7 +149,7 @@ export default function Table({
     columnResizeMode: "onChange",
   });
 
-  // Store local columnSizing state so we can save it to table schema
+  // Store local `columnSizing` state so we can save it to table schema
   // in `useSaveColumnSizing`. This could be generalized by storing the
   // entire table state.
   const [columnSizing, setColumnSizing] = useState(
@@ -139,16 +160,18 @@ export default function Table({
     state: { ...prev.state, columnVisibility, columnPinning, columnSizing },
     onColumnSizingChange: setColumnSizing,
   }));
-
+  // Get rows and columns for virtualization
   const { rows } = table.getRowModel();
   const leafColumns = table.getVisibleLeafColumns();
 
+  // Handle keyboard navigation
   const { handleKeyDown } = useKeyboardNavigation({
     gridRef,
     tableRows,
     leafColumns,
   });
 
+  // Handle prompt to save local column sizes if user `canEditColumns`
   useSaveColumnSizing(columnSizing, canEditColumns);
 
   const handleDropColumn = useCallback(

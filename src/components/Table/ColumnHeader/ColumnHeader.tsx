@@ -7,12 +7,8 @@ import type {
 } from "react-beautiful-dnd";
 
 import {
-  styled,
   Tooltip,
-  TooltipProps,
-  tooltipClasses,
   Fade,
-  Stack,
   StackProps,
   IconButton,
   Typography,
@@ -20,6 +16,10 @@ import {
 import DropdownIcon from "@mui/icons-material/MoreHoriz";
 import LockIcon from "@mui/icons-material/LockOutlined";
 
+import {
+  StyledColumnHeader,
+  StyledColumnHeaderNameTooltip,
+} from "@src/components/Table/Styled/StyledColumnHeader";
 import ColumnHeaderSort, { SORT_STATES } from "./ColumnHeaderSort";
 import ColumnHeaderDragHandle from "./ColumnHeaderDragHandle";
 import ColumnHeaderResizer from "./ColumnHeaderResizer";
@@ -39,53 +39,6 @@ import type { TableRow } from "@src/types/table";
 
 export { COLUMN_HEADER_HEIGHT };
 
-const StyledColumnHeader = styled(Stack)(({ theme }) => ({
-  position: "relative",
-  height: "100%",
-  border: `1px solid ${theme.palette.divider}`,
-  "& + &": { borderLeftStyle: "none" },
-
-  flexDirection: "row",
-  alignItems: "center",
-  padding: theme.spacing(0, 0.5, 0, 1),
-  "& svg, & button": { display: "block", zIndex: 1 },
-
-  backgroundColor: theme.palette.background.default,
-  color: theme.palette.text.secondary,
-  transition: theme.transitions.create("color", {
-    duration: theme.transitions.duration.short,
-  }),
-  "&:hover": { color: theme.palette.text.primary },
-
-  "& .MuiIconButton-root": {
-    color: theme.palette.text.disabled,
-    transition: theme.transitions.create(
-      ["background-color", "opacity", "color"],
-      { duration: theme.transitions.duration.short }
-    ),
-  },
-  [`&:hover .MuiIconButton-root,
-    &:focus .MuiIconButton-root,
-    &:focus-within .MuiIconButton-root,
-    .MuiIconButton-root:focus`]: {
-    color: theme.palette.text.primary,
-    opacity: 1,
-  },
-}));
-
-const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: theme.palette.background.default,
-    color: theme.palette.text.primary,
-
-    margin: `-${COLUMN_HEADER_HEIGHT - 1 - 2}px 0 0 !important`,
-    padding: 0,
-    paddingRight: theme.spacing(1.5),
-  },
-}));
-
 export interface IColumnHeaderProps
   extends Partial<Omit<StackProps, "style" | "sx">> {
   header: Header<TableRow, any>;
@@ -101,6 +54,18 @@ export interface IColumnHeaderProps
   isLastFrozen: boolean;
 }
 
+/**
+ * Renders UI components for each column header, including accessibility
+ * attributes. Memoized to prevent re-render when resizing or reordering other
+ * columns.
+ *
+ * Renders:
+ * - Drag handle (accessible)
+ * - Field type icon + click to copy field key
+ * - Field name + hover to view full name if cut off
+ * - Sort button
+ * - Resize handle (not accessible)
+ */
 export const ColumnHeader = memo(function ColumnHeader({
   header,
   column,
@@ -214,7 +179,7 @@ export const ColumnHeader = memo(function ColumnHeader({
         </Tooltip>
       )}
 
-      <LightTooltip
+      <StyledColumnHeaderNameTooltip
         title={
           <Typography
             sx={{
@@ -261,7 +226,7 @@ export const ColumnHeader = memo(function ColumnHeader({
             column.name
           )}
         </Typography>
-      </LightTooltip>
+      </StyledColumnHeaderNameTooltip>
 
       {column.type !== FieldType.id && (
         <ColumnHeaderSort

@@ -38,6 +38,13 @@ const TablePage = lazy(() => import("./TablePage" /* webpackChunkName: "TablePag
 /**
  * Wraps `TablePage` with the data for a top-level table.
  * `SubTablePage` is inserted in the outlet, alongside `TablePage`.
+ *
+ * Interfaces with `projectScope` atoms to find the correct table (or sub-table)
+ * settings and schema.
+ *
+ * - Renders the Jotai `Provider` with `tableScope`
+ * - Renders `TableSourceFirestore`, which queries Firestore and stores data in
+ *   atoms in `tableScope`
  */
 export default function ProvidedTablePage() {
   const { id } = useParams();
