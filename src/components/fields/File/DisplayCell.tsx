@@ -26,11 +26,13 @@ export default function File_({
             <Chip
               icon={<FileIcon />}
               label={file.name}
-              onClick={(e) => {
-                window.open(file.downloadURL);
-                e.stopPropagation();
-              }}
-              style={{ width: "100%" }}
+              onClick={(e: any) => e.stopPropagation()}
+              component="a"
+              href={file.downloadURL}
+              target="_blank"
+              rel="noopener noreferrer"
+              clickable
+              style={{ width: "100%", cursor: "pointer" }}
               tabIndex={tabIndex}
             />
           </Grid>

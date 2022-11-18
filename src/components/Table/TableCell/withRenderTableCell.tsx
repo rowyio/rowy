@@ -111,7 +111,7 @@ export default function withTableCell(
         row: row.original,
         column: column.columnDef.meta!,
         _rowy_ref: row.original._rowy_ref,
-        disabled: column.columnDef.meta!.editable === false,
+        disabled,
         tabIndex: focusInsideCell ? 0 : -1,
         showPopoverCell,
         setFocusInsideCell,

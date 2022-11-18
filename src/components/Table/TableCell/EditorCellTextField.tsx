@@ -55,6 +55,7 @@ export default function EditorCellTextField({
           width: "100%",
           height: "calc(100% - 1px)",
           marginTop: "1px",
+          padding: 0,
           paddingBottom: "1px",
 
           backgroundColor: "var(--cell-background-color)",
@@ -70,7 +71,7 @@ export default function EditorCellTextField({
             lineHeight: (theme) => theme.typography.body2.lineHeight,
             maxHeight: "100%",
             boxSizing: "border-box",
-            py: 3 / 8,
+            py: 2 / 8,
           },
         },
         ...spreadSx(InputProps.sx),

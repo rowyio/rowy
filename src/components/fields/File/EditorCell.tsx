@@ -117,10 +117,12 @@ export default function File_({
                 <Chip
                   icon={<FileIcon />}
                   label={file.name}
-                  onClick={(e) => {
-                    window.open(file.downloadURL);
-                    e.stopPropagation();
-                  }}
+                  onClick={(e: any) => e.stopPropagation()}
+                  component="a"
+                  href={file.downloadURL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  clickable
                   onDelete={
                     disabled
                       ? undefined
@@ -134,7 +136,7 @@ export default function File_({
                           })
                   }
                   tabIndex={tabIndex}
-                  style={{ width: "100%" }}
+                  style={{ width: "100%", cursor: "pointer" }}
                 />
               </Tooltip>
             </Grid>

@@ -12,7 +12,7 @@ export default function Code({ value }: IDisplayCellProps) {
       style={{
         width: "100%",
         maxHeight: "100%",
-        padding: theme.spacing(1, 0),
+        padding: "3px 0",
 
         whiteSpace: "pre-wrap",
         lineHeight: theme.typography.body2.lineHeight,
