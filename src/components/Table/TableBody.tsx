@@ -17,11 +17,7 @@ import {
 import { getFieldProp } from "@src/components/fields";
 import type { TableRow } from "@src/types/table";
 import useVirtualization from "./useVirtualization";
-import {
-  TABLE_PADDING,
-  DEFAULT_ROW_HEIGHT,
-  OUT_OF_ORDER_MARGIN,
-} from "./Table";
+import { DEFAULT_ROW_HEIGHT, OUT_OF_ORDER_MARGIN } from "./Table";
 
 export interface ITableBodyProps {
   /**
@@ -72,6 +68,8 @@ export const TableBody = memo(function TableBody({
     paddingRight,
   } = useVirtualization(containerRef, leafColumns);
 
+  const rowHeight = tableSchema.rowHeight || DEFAULT_ROW_HEIGHT;
+
   return (
     <div className="tbody" role="rowgroup">
       {paddingTop > 0 && (
@@ -88,15 +86,13 @@ export const TableBody = memo(function TableBody({
             role="row"
             aria-rowindex={row.index + 2}
             style={{
-              height: "auto",
+              height: rowHeight,
               marginBottom: outOfOrder ? OUT_OF_ORDER_MARGIN : 0,
+              paddingLeft,
+              paddingRight,
             }}
             data-out-of-order={outOfOrder || undefined}
           >
-            {paddingLeft > 0 && (
-              <div role="presentation" style={{ width: `${paddingLeft}px` }} />
-            )}
-
             {outOfOrder && <OutOfOrderIndicator />}
 
             {virtualCols.map((virtualCell) => {
@@ -120,25 +116,18 @@ export const TableBody = memo(function TableBody({
                   row={row}
                   cell={cell}
                   index={cellIndex}
-                  left={
-                    cell.column.getIsPinned()
-                      ? virtualCell.start - TABLE_PADDING
-                      : undefined
-                  }
                   isSelectedCell={isSelectedCell}
                   focusInsideCell={isSelectedCell && selectedCell?.focusInside}
                   isReadOnlyCell={isReadOnlyCell}
                   canEditCells={canEditCells}
                   isLastFrozen={lastFrozen === cell.column.id}
                   width={cell.column.getSize()}
-                  rowHeight={tableSchema.rowHeight || DEFAULT_ROW_HEIGHT}
+                  rowHeight={rowHeight}
+                  left={virtualCell.start}
+                  isPinned={cell.column.getIsPinned() === "left"}
                 />
               );
             })}
-
-            {paddingRight > 0 && (
-              <div role="presentation" style={{ width: `${paddingRight}px` }} />
-            )}
           </StyledRow>
         );
       })}

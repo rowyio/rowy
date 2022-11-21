@@ -17,6 +17,7 @@ import {
   selectedCellAtom,
   contextMenuTargetAtom,
 } from "@src/atoms/tableScope";
+import { TABLE_PADDING } from "@src/components/Table";
 import type { TableRow } from "@src/types/table";
 import type { IRenderedTableCellProps } from "./withRenderTableCell";
 
@@ -52,7 +53,8 @@ export interface ITableCellProps {
    * If provided, cell is pinned/frozen, and this value is used for
    * `position: sticky`.
    */
-  left?: number;
+  left: number;
+  isPinned: boolean;
 }
 
 /**
@@ -79,6 +81,7 @@ export const TableCell = memo(function TableCell({
   isLastFrozen,
   width,
   left,
+  isPinned,
 }: ITableCellProps) {
   const setSelectedCell = useSetAtom(selectedCellAtom, tableScope);
   const setContextMenuTarget = useSetAtom(contextMenuTargetAtom, tableScope);
@@ -152,7 +155,8 @@ export const TableCell = memo(function TableCell({
       style={{
         width,
         height: rowHeight,
-        left,
+        position: isPinned ? "sticky" : "absolute",
+        left: left - (isPinned ? TABLE_PADDING : 0),
         backgroundColor:
           cell.column.id === "_rowy_column_actions" ? "transparent" : undefined,
         borderBottomWidth:

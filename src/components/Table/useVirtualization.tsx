@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from "react";
 import { useAtom } from "jotai";
-import { useVirtual } from "react-virtual";
+import { useVirtual, defaultRangeExtractor } from "react-virtual";
+import type { Range } from "react-virtual";
 
 import {
   tableScope,
@@ -67,6 +68,21 @@ export function useVirtualization(
           MIN_COL_WIDTH,
           leafColumns[index].columnDef.size || DEFAULT_COL_WIDTH
         ),
+      [leafColumns]
+    ),
+    rangeExtractor: useCallback(
+      (range: Range) => {
+        const defaultRange = defaultRangeExtractor(range);
+        const frozenColumns = leafColumns
+          .filter((c) => c.getIsPinned())
+          .map((c) => c.getPinnedIndex());
+
+        const combinedRange = Array.from(
+          new Set([...defaultRange, ...frozenColumns])
+        ).sort((a, b) => a - b);
+
+        return combinedRange;
+      },
       [leafColumns]
     ),
   });
