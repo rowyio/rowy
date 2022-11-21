@@ -20,7 +20,6 @@ const getStateIcon = (config: any) => {
   if (!get(config, "customIcons.enabled")) {
     return <RatingIcon />;
   }
-  console.log(get(config, "customIcons.rating"));
   return get(config, "customIcons.rating") || <RatingIcon />;
 };
 const getStateOutline = (config: any) => {
