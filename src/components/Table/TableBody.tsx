@@ -24,6 +24,12 @@ import {
 } from "./Table";
 
 export interface ITableBodyProps {
+  /**
+   * Re-render this component when the container element changes, to fix a bug
+   * where virtualization doesn’t detect scrolls if `containerRef.current` was
+   * initially null
+   */
+  containerEl: HTMLDivElement | null;
   /** Used in `useVirtualization` */
   containerRef: React.RefObject<HTMLDivElement>;
   /** Used in `useVirtualization` */

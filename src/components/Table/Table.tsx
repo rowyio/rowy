@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState, useEffect, useCallback } from "react";
+import useStateRef from "react-usestateref";
 import { useAtom, useSetAtom } from "jotai";
 import { useThrottledCallback } from "use-debounce";
 import {
@@ -92,7 +93,11 @@ export default function Table({
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
 
-  const containerRef = useRef<HTMLDivElement>(null);
+  // Store a **state** and reference to the container element
+  // so the state can re-render `TableBody`, preventing virtualization
+  // not detecting scroll if the container element was initially `null`
+  const [containerEl, setContainerEl, containerRef] =
+    useStateRef<HTMLDivElement | null>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
   // Get column defs from table schema
@@ -205,11 +210,16 @@ export default function Table({
   // for large screen heights
   useEffect(() => {
     fetchMoreOnBottomReached(containerRef.current);
-  }, [fetchMoreOnBottomReached, tablePage, tableNextPage.loading]);
+  }, [
+    fetchMoreOnBottomReached,
+    tablePage,
+    tableNextPage.loading,
+    containerRef,
+  ]);
 
   return (
     <div
-      ref={containerRef}
+      ref={(el) => setContainerEl(el)}
       onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
       style={{ overflow: "auto", width: "100%", height: "100%" }}
     >
@@ -252,6 +262,7 @@ export default function Table({
           emptyState ?? <EmptyState sx={{ py: 8 }} />
         ) : (
           <TableBody
+            containerEl={containerEl}
             containerRef={containerRef}
             leafColumns={leafColumns}
             rows={rows}
