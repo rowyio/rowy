@@ -303,7 +303,7 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
                   aria-label="Action will run"
                   name="isActionScript"
                   value={
-                    config.isActionScript ? "actionScript" : "cloudFunction"
+                    config.isActionScript !== false ? "actionScript" : "cloudFunction"
                   }
                   onChange={(e) =>
                     onChange("isActionScript")(
@@ -359,7 +359,7 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
                 </RadioGroup>
               </FormControl>
 
-              {!config.isActionScript ? (
+              {config.isActionScript === false ? (
                 <TextField
                   id="callableName"
                   label="Callable name"
@@ -492,7 +492,7 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
             </Stack>
           ),
         },
-        config.isActionScript &&
+        config.isActionScript !== false &&
           get(config, "undo.enabled") && {
             id: "undo",
             title: "Undo action",
