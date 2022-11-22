@@ -14,6 +14,7 @@ import {
   _updateRowDbAtom,
   _deleteRowDbAtom,
   tableNextPageAtom,
+  serverDocCountAtom,
 } from "@src/atoms/tableScope";
 import useFirestoreDocWithAtom from "@src/hooks/useFirestoreDocWithAtom";
 import useFirestoreCollectionWithAtom from "@src/hooks/useFirestoreCollectionWithAtom";
@@ -77,6 +78,7 @@ export const TableSourceFirestore = memo(function TableSourceFirestore() {
       updateDocAtom: _updateRowDbAtom,
       deleteDocAtom: _deleteRowDbAtom,
       nextPageAtom: tableNextPageAtom,
+      serverDocCountAtom: serverDocCountAtom,
     }
   );
 

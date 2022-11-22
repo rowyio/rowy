@@ -1,8 +1,7 @@
-import { useCallback, useState } from "react";
+import { useMemo } from "react";
 import { IEditorCellProps } from "@src/components/fields/types";
 import { useAtom, useSetAtom } from "jotai";
-
-import { useDropzone } from "react-dropzone";
+import { assignIn } from "lodash-es";
 
 import { alpha, Box, Stack, Grid, IconButton, ButtonBase } from "@mui/material";
 import AddIcon from "@mui/icons-material/AddAPhotoOutlined";
@@ -12,77 +11,40 @@ import Thumbnail from "@src/components/Thumbnail";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
-import {
-  tableSchemaAtom,
-  tableScope,
-  updateFieldAtom,
-} from "@src/atoms/tableScope";
-import useUploader from "@src/hooks/useFirebaseStorageUploader";
-import { IMAGE_MIME_TYPES } from "./index";
+import { tableSchemaAtom, tableScope } from "@src/atoms/tableScope";
 import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
 import { FileValue } from "@src/types/table";
+import useFileUpload from "@src/components/fields/File/useFileUpload";
+import { IMAGE_MIME_TYPES } from "./index";
 import { imgSx, thumbnailSx, deleteImgHoverSx } from "./DisplayCell";
 
 export default function Image_({
   column,
   value,
-  onChange,
-  onSubmit,
   disabled,
   _rowy_ref,
   tabIndex,
+  rowHeight,
 }: IEditorCellProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
-  const updateField = useSetAtom(updateFieldAtom, tableScope);
-  const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
-  const { uploaderState, upload, deleteUpload } = useUploader();
-  const { progress, isLoading } = uploaderState;
 
-  // Store a preview image locally while uploading
-  const [localImage, setLocalImage] = useState<string>("");
+  const { loading, progress, handleDelete, localFiles, dropzoneState } =
+    useFileUpload(_rowy_ref, column.key, {
+      multiple: true,
+      accept: IMAGE_MIME_TYPES,
+    });
 
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const imageFile = acceptedFiles[0];
-
-      if (imageFile) {
-        upload({
-          docRef: _rowy_ref,
-          fieldName: column.key,
-          files: [imageFile],
-          previousValue: value,
-          onComplete: (newValue) => {
-            updateField({
-              path: _rowy_ref.path,
-              fieldName: column.key,
-              value: newValue,
-            });
-            setLocalImage("");
-          },
-        });
-        setLocalImage(URL.createObjectURL(imageFile));
-      }
-    },
-    [value]
+  const localImages = useMemo(
+    () =>
+      localFiles.map((file) =>
+        assignIn(file, { localURL: URL.createObjectURL(file) })
+      ),
+    [localFiles]
   );
 
-  const handleDelete = (index: number) => () => {
-    const newValue = [...value];
-    const toBeDeleted = newValue.splice(index, 1);
-    toBeDeleted.length && deleteUpload(toBeDeleted[0]);
-    onChange(newValue);
-    onSubmit();
-  };
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    multiple: false,
-    accept: IMAGE_MIME_TYPES,
-  });
-
+  const { getRootProps, getInputProps, isDragActive } = dropzoneState;
   const dropzoneProps = getRootProps();
 
-  const rowHeight = tableSchema.rowHeight ?? DEFAULT_ROW_HEIGHT;
   let thumbnailSize = "100x100";
   if (rowHeight > 50) thumbnailSize = "200x200";
   if (rowHeight > 100) thumbnailSize = "400x400";
@@ -136,7 +98,7 @@ export default function Image_({
                       body: "This image cannot be recovered after",
                       confirm: "Delete",
                       confirmColor: "error",
-                      handleConfirm: handleDelete(i),
+                      handleConfirm: () => handleDelete(file),
                     });
                   }}
                   disabled={disabled}
@@ -160,24 +122,27 @@ export default function Image_({
               </Grid>
             ))}
 
-          {localImage && (
-            <Grid item>
-              <Box
-                sx={[
-                  imgSx(rowHeight),
-                  {
-                    boxShadow: (theme) =>
-                      `0 0 0 1px ${theme.palette.divider} inset`,
-                  },
-                ]}
-                style={{ backgroundImage: `url("${localImage}")` }}
-              />
-            </Grid>
-          )}
+          {localImages &&
+            localImages.map((image) => (
+              <Grid item>
+                <Box
+                  sx={[
+                    imgSx(rowHeight),
+                    {
+                      boxShadow: (theme) =>
+                        `0 0 0 1px ${theme.palette.divider} inset`,
+                    },
+                  ]}
+                  style={{
+                    backgroundImage: `url("${image.localURL}")`,
+                  }}
+                />
+              </Grid>
+            ))}
         </Grid>
       </div>
 
-      {!isLoading ? (
+      {!loading ? (
         !disabled && (
           <IconButton
             size="small"

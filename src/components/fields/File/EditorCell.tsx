@@ -1,9 +1,7 @@
 import { useCallback } from "react";
 import { IEditorCellProps } from "@src/components/fields/types";
 import { useSetAtom } from "jotai";
-import { findIndex } from "lodash-es";
 
-import { useDropzone } from "react-dropzone";
 import { format } from "date-fns";
 
 import { alpha, Stack, Grid, Tooltip, Chip, IconButton } from "@mui/material";
@@ -12,67 +10,26 @@ import ChipList from "@src/components/Table/TableCell/ChipList";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
-import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
-import useUploader from "@src/hooks/useFirebaseStorageUploader";
 import { FileIcon } from ".";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 import { FileValue } from "@src/types/table";
+import useFileUpload from "./useFileUpload";
 
 export default function File_({
   column,
   value,
-  onChange,
-  onSubmit,
   disabled,
   _rowy_ref,
   tabIndex,
   rowHeight,
 }: IEditorCellProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
-  const updateField = useSetAtom(updateFieldAtom, tableScope);
 
-  const { uploaderState, upload, deleteUpload } = useUploader();
-  const { progress, isLoading } = uploaderState;
+  const { loading, progress, handleDelete, localFiles, dropzoneState } =
+    useFileUpload(_rowy_ref, column.key, { multiple: true });
 
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0];
-
-      if (file) {
-        upload({
-          docRef: _rowy_ref,
-          fieldName: column.key,
-          files: [file],
-          previousValue: value,
-          onComplete: (newValue) => {
-            updateField({
-              path: _rowy_ref.path,
-              fieldName: column.key,
-              value: newValue,
-            });
-          },
-        });
-      }
-    },
-    [value]
-  );
-
-  const handleDelete = (ref: string) => {
-    const newValue = [...value];
-    const index = findIndex(newValue, ["ref", ref]);
-    const toBeDeleted = newValue.splice(index, 1);
-    toBeDeleted.length && deleteUpload(toBeDeleted[0]);
-    onChange(newValue);
-    onSubmit();
-  };
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    multiple: false,
-  });
-
+  const { isDragActive, getRootProps, getInputProps } = dropzoneState;
   const dropzoneProps = getRootProps();
-
   return (
     <Stack
       direction="row"
@@ -115,8 +72,13 @@ export default function File_({
                 )}`}
               >
                 <Chip
-                  icon={<FileIcon />}
                   label={file.name}
+                  icon={<FileIcon />}
+                  sx={{
+                    "& .MuiChip-label": {
+                      lineHeight: 5 / 3,
+                    },
+                  }}
                   onClick={(e: any) => e.stopPropagation()}
                   component="a"
                   href={file.downloadURL}
@@ -128,7 +90,7 @@ export default function File_({
                       ? undefined
                       : () =>
                           confirm({
-                            handleConfirm: () => handleDelete(file.ref),
+                            handleConfirm: () => handleDelete(file),
                             title: "Delete file?",
                             body: "This file cannot be recovered after",
                             confirm: "Delete",
@@ -141,9 +103,21 @@ export default function File_({
               </Tooltip>
             </Grid>
           ))}
+        {localFiles &&
+          localFiles.map((file) => (
+            <Grid item key={file.name}>
+              <Chip
+                icon={<FileIcon />}
+                label={file.name}
+                deleteIcon={
+                  <CircularProgressOptical size={20} color="inherit" />
+                }
+              />
+            </Grid>
+          ))}
       </ChipList>
 
-      {!isLoading ? (
+      {!loading ? (
         !disabled && (
           <IconButton
             size="small"
