@@ -13,7 +13,7 @@ import TableSkeleton from "@src/components/Table/TableSkeleton";
 import EmptyTable from "@src/components/Table/EmptyTable";
 import TableToolbar from "@src/components/TableToolbar";
 import Table from "@src/components/Table";
-import SideDrawer from "@src/components/SideDrawer";
+import SideDrawer, { DRAWER_WIDTH } from "@src/components/SideDrawer";
 import ColumnMenu from "@src/components/ColumnMenu";
 import ColumnModals from "@src/components/ColumnModals";
 import TableModals from "@src/components/TableModals";
@@ -140,7 +140,9 @@ export default function TablePage({
               '& [role="grid"]': {
                 marginBottom: `env(safe-area-inset-bottom)`,
                 marginLeft: `env(safe-area-inset-left)`,
-                marginRight: `env(safe-area-inset-right)`,
+                // Ensure there’s enough space so that all columns are
+                // still visible when the side drawer is open
+                marginRight: `max(env(safe-area-inset-right), ${DRAWER_WIDTH}px)`,
               },
             }}
           >
