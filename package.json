@@ -88,7 +88,7 @@
     "env": "node createDotEnv",
     "target": "firebase target:apply hosting rowy",
     "deploy": "firebase deploy --only hosting",
-    "typedoc": "typedoc src/atoms/tableScope/index.ts src/atoms/globalScope/index.ts --out typedoc"
+    "typedoc": "typedoc src/atoms/projectScope/index.ts src/atoms/tableScope/index.ts --out typedoc"
   },
   "engines": {
     "node": ">=16"
