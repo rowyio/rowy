@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, Fragment } from "react";
 import { useAtom } from "jotai";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import type { DropResult } from "react-beautiful-dnd";
@@ -57,30 +57,36 @@ export const TableHeader = memo(function TableHeader({
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {headerGroup.headers.map((header) => {
+              {headerGroup.headers.map((header, i) => {
                 const isSelectedCell =
                   (!selectedCell && header.index === 0) ||
                   (selectedCell?.path === "_rowy_header" &&
                     selectedCell?.columnKey === header.id);
 
+                const isLastHeader = i === headerGroup.headers.length - 1;
+
+                // Render later, after the drag & drop placeholder
                 if (header.id === "_rowy_column_actions")
                   return (
-                    <FinalColumnHeader
-                      key={header.id}
-                      data-row-id={"_rowy_header"}
-                      data-col-id={header.id}
-                      tabIndex={isSelectedCell ? 0 : -1}
-                      focusInsideCell={isSelectedCell && focusInside}
-                      aria-colindex={header.index + 1}
-                      aria-readonly={!canEditColumns}
-                      aria-selected={isSelectedCell}
-                      canAddColumns={canAddColumns}
-                    />
+                    <Fragment key={header.id}>
+                      {provided.placeholder}
+                      <FinalColumnHeader
+                        key={header.id}
+                        data-row-id={"_rowy_header"}
+                        data-col-id={header.id}
+                        tabIndex={isSelectedCell ? 0 : -1}
+                        focusInsideCell={isSelectedCell && focusInside}
+                        aria-colindex={header.index + 1}
+                        aria-readonly={!canEditColumns}
+                        aria-selected={isSelectedCell}
+                        canAddColumns={canAddColumns}
+                      />
+                    </Fragment>
                   );
 
                 if (!header.column.columnDef.meta) return null;
 
-                return (
+                const draggableHeader = (
                   <Draggable
                     key={header.id}
                     draggableId={header.id}
@@ -103,9 +109,16 @@ export const TableHeader = memo(function TableHeader({
                     )}
                   </Draggable>
                 );
+
+                if (isLastHeader)
+                  return (
+                    <Fragment key={header.id}>
+                      {draggableHeader}
+                      {provided.placeholder}
+                    </Fragment>
+                  );
+                else return draggableHeader;
               })}
-              {/* Required by react-beautiful-dnd */}
-              {provided.placeholder}
             </StyledRow>
           )}
         </Droppable>
