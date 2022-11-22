@@ -92,7 +92,7 @@
     "typedoc": "typedoc src/atoms/tableScope/index.ts src/atoms/globalScope/index.ts --out typedoc"
   },
   "engines": {
-    "node": ">=16"
+    "node": "^16"
   },
   "eslintConfig": {
     "plugins": [
