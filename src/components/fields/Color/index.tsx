@@ -29,10 +29,6 @@ export const config: IFieldConfig = {
     disablePadding: true,
   }),
   SideDrawerField,
-  filter: {
-    operators: filterOperators,
-    valueFormatter,
-  },
   csvImportParser: (value: string) => {
     try {
       const obj = JSON.parse(value);
