@@ -69,8 +69,9 @@ function LoadedRowsStatus() {
       <StatusText>
         <SyncIcon style={{ transform: "rotate(45deg)" }} />
         Loaded {!tableNextPage.available && "all "}
-        {tableRows.length} {tableNextPage.available && `of ${serverDocCount}`}{" "}
-        row{serverDocCount !== 1 && "s"}
+        {tableRows.length}
+        {serverDocCount !== undefined && ` of ${serverDocCount}`} row
+        {(serverDocCount ?? tableRows.length) !== 1 && "s"}
       </StatusText>
     </Tooltip>
   );

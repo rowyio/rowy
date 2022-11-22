@@ -64,7 +64,7 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
   /** Update this atom when we’re loading the next page, and if there is a next page available. Uses same scope as `dataScope`. */
   nextPageAtom?: PrimitiveAtom<NextPageState>;
   /** Set this atom's value to the number of docs in the collection on each new snapshot */
-  serverDocCountAtom?: PrimitiveAtom<number> | undefined;
+  serverDocCountAtom?: PrimitiveAtom<number | undefined>;
 }
 
 /**
@@ -235,6 +235,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     handleError,
     nextPageAtom,
     setNextPageAtom,
+    serverDocCountAtom,
     setServerDocCountAtom,
   ]);
 
