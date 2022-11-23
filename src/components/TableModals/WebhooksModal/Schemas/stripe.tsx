@@ -17,7 +17,7 @@ export const webhookStripe = {
     extraLibs: null,
     template: (
       table: TableSettings
-    ) => `const sendgridParser: Parser = async ({ req, db, ref }) => {
+    ) => `const sendgridParser: Parser = async ({ req, db, ref, logging }) => {
     const event = req.body
     switch (event.type) {
         case "payment_intent.succeeded":
@@ -34,7 +34,7 @@ export const webhookStripe = {
     extraLibs: null,
     template: (
       table: TableSettings
-    ) => `const condition: Condition = async({ref,req,db}) => {
+    ) => `const condition: Condition = async({ref, req, db, logging}) => {
   // feel free to add your own code logic here
   return true;
 }`,
