@@ -14,7 +14,9 @@ import DoneIcon from "@mui/icons-material/Done";
 
 import { IStepProps } from ".";
 import ScrollableList from "@src/components/TableModals/ScrollableList";
-import Column, { COLUMN_HEADER_HEIGHT } from "@src/components/Table/Column";
+import Column, {
+  COLUMN_HEADER_HEIGHT,
+} from "@src/components/Table/Mock/Column";
 
 export default function Step2Rename({
   config,

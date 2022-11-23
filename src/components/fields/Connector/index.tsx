@@ -1,14 +1,13 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withPopoverCell from "@src/components/fields/_withTableCell/withPopoverCell";
-import ConnectorIcon from "@mui/icons-material/Cable";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
-import InlineCell from "./InlineCell";
-import NullEditor from "@src/components/Table/editors/NullEditor";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
-const PopoverCell = lazy(
+import ConnectorIcon from "@mui/icons-material/Cable";
+import DisplayCell from "./DisplayCell";
+
+const EditorCell = lazy(
   () =>
-    import("./PopoverCell" /* webpackChunkName: "PopoverCell-ConnectService" */)
+    import("./EditorCell" /* webpackChunkName: "EditorCell-ConnectService" */)
 );
 const SideDrawerField = lazy(
   () =>
@@ -30,11 +29,9 @@ export const config: IFieldConfig = {
   icon: <ConnectorIcon />,
   description:
     "Connects to any table or API to fetch a list of results based on a text query or row data.",
-  TableCell: withPopoverCell(BasicCell, InlineCell, PopoverCell, {
-    anchorOrigin: { horizontal: "left", vertical: "bottom" },
-    transparent: true,
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "popover", {
+    disablePadding: true,
   }),
-  TableEditor: NullEditor as any,
   SideDrawerField,
   requireConfiguration: true,
   settings: Settings,

@@ -1,13 +1,11 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import { Status as StatusIcon } from "@src/assets/icons";
-import NullEditor from "@src/components/Table/editors/NullEditor";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
+import { Status as StatusIcon } from "@src/assets/icons";
+import DisplayCell from "./DisplayCell";
+import EditorCell from "./EditorCell";
 import { filterOperators } from "./Filter";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
-import PopoverCell from "./PopoverCell";
-import InlineCell from "./InlineCell";
-import withPopoverCell from "@src/components/fields/_withTableCell/withPopoverCell";
 
 const SideDrawerField = lazy(
   () =>
@@ -25,12 +23,11 @@ export const config: IFieldConfig = {
   initialValue: undefined,
   initializable: true,
   icon: <StatusIcon />,
-  description: "Displays field value as custom status text. Read-only.	",
-  TableCell: withPopoverCell(BasicCell, InlineCell, PopoverCell, {
-    anchorOrigin: { horizontal: "left", vertical: "bottom" },
-    transparent: true,
+  description: "Displays field value as custom status text.",
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "popover", {
+    disablePadding: true,
+    transparentPopover: true,
   }),
-  TableEditor: NullEditor as any,
   settings: Settings,
   SideDrawerField,
   requireConfiguration: true,

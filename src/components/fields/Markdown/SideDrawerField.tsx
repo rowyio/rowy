@@ -34,7 +34,7 @@ export default function Markdown({
         {
           display: "block",
           padding: 0,
-          "& .wmde-markdown-var": { boxShadow: "none" },
+          "& .wmde-markdown-var": { boxShadow: (fieldSx as any)?.boxShadow },
         },
       ]}
       data-color-mode={theme.palette.mode}

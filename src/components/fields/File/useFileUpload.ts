@@ -1,14 +1,14 @@
 import { useCallback, useState } from "react";
 import { useSetAtom } from "jotai";
 import { some } from "lodash-es";
+import { DropzoneOptions, useDropzone } from "react-dropzone";
 
 import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import useUploader from "@src/hooks/useFirebaseStorageUploader";
-import { FileValue } from "@src/types/table";
-import { DropzoneOptions, useDropzone } from "react-dropzone";
+import type { FileValue, TableRowRef } from "@src/types/table";
 
 export default function useFileUpload(
-  docRef: any,
+  docRef: TableRowRef,
   fieldName: string,
   dropzoneOptions: DropzoneOptions = {}
 ) {
