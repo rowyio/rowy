@@ -130,7 +130,7 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
     : config?.runFn
     ? config.runFn
     : config?.script
-    ? `const action:Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
+    ? `const action:Action = async ({row,ref,db,storage,auth,actionParams,user,logging}) => {
       ${config.script.replace(/utilFns.getSecret/g, "rowy.secrets.get")}
     }`
     : RUN_ACTION_TEMPLATE;
@@ -140,7 +140,7 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
     : config.undoFn
     ? config.undoFn
     : get(config, "undo.script")
-    ? `const action : Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
+    ? `const action : Action = async ({row,ref,db,storage,auth,actionParams,user,logging}) => {
     ${get(config, "undo.script")}
   }`
     : UNDO_ACTION_TEMPLATE;
@@ -303,7 +303,9 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
                   aria-label="Action will run"
                   name="isActionScript"
                   value={
-                    config.isActionScript !== false ? "actionScript" : "cloudFunction"
+                    config.isActionScript !== false
+                      ? "actionScript"
+                      : "cloudFunction"
                   }
                   onChange={(e) =>
                     onChange("isActionScript")(
@@ -559,45 +561,45 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
           title: "Customization",
           content: (
             <>
-            <Stack>
-            <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={config.customName?.enabled}
+              <Stack>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={config.customName?.enabled}
+                      onChange={(e) =>
+                        onChange("customName.enabled")(e.target.checked)
+                      }
+                      name="customName.enabled"
+                    />
+                  }
+                  label="Customize label for action"
+                  style={{ marginLeft: -11 }}
+                />
+                {config.customName?.enabled && (
+                  <TextField
+                    id="customName.actionName"
+                    value={get(config, "customName.actionName")}
                     onChange={(e) =>
-                      onChange("customName.enabled")(e.target.checked)
+                      onChange("customName.actionName")(e.target.value)
                     }
-                    name="customName.enabled"
-                  />
-                }
-                label="Customize label for action"
-                style={{ marginLeft: -11 }}
-              />
-              {config.customName?.enabled && (
-                <TextField
-                id="customName.actionName"
-                value={get(config, "customName.actionName")}
-                onChange={(e) =>
-                  onChange("customName.actionName")(e.target.value)
-                }
-                label="Action name:"
-                        className="labelHorizontal"
-                        inputProps={{ style: { width: "10ch" } }}
-                ></TextField>
-              )}
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={config.customIcons?.enabled}
-                    onChange={(e) =>
-                      onChange("customIcons.enabled")(e.target.checked)
-                    }
-                    name="customIcons.enabled"
-                  />
-                }
-                label="Customize button icons with emoji"
-                style={{ marginLeft: -11 }}
-              />
+                    label="Action name:"
+                    className="labelHorizontal"
+                    inputProps={{ style: { width: "10ch" } }}
+                  ></TextField>
+                )}
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={config.customIcons?.enabled}
+                      onChange={(e) =>
+                        onChange("customIcons.enabled")(e.target.checked)
+                      }
+                      name="customIcons.enabled"
+                    />
+                  }
+                  label="Customize button icons with emoji"
+                  style={{ marginLeft: -11 }}
+                />
               </Stack>
               {config.customIcons?.enabled && (
                 <Grid container spacing={2} sx={{ mt: { xs: 0, sm: -1 } }}>

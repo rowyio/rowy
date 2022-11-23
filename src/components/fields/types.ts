@@ -49,6 +49,7 @@ export interface IBasicCellProps {
   type: FieldType;
   name: string;
 }
+
 export interface IHeavyCellProps
   extends IBasicCellProps,
     FormatterProps<TableRow> {
@@ -61,6 +62,7 @@ export interface IHeavyCellProps
 export interface IPopoverInlineCellProps extends IHeavyCellProps {
   showPopoverCell: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
 export interface IPopoverCellProps extends IPopoverInlineCellProps {
   parentRef: PopoverProps["anchorEl"];
 }
@@ -110,5 +112,12 @@ export interface IFilterOperator {
 export interface IFilterCustomInputProps {
   onChange: (value: any) => void;
   operator: TableFilter["operator"];
+
   [key: string]: any;
+}
+
+export interface RowyLogging {
+  log: (payload: any) => void;
+  warn: (payload: any) => void;
+  error: (payload: any) => void;
 }

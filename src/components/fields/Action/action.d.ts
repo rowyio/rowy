@@ -1,3 +1,5 @@
+import { RowyLogging } from "@src/components/fields/types";
+
 type ActionUser = {
   timestamp: Date;
   displayName: string;
@@ -15,6 +17,7 @@ type ActionContext = {
   auth: firebaseauth.BaseAuth;
   actionParams: actionParams;
   user: ActionUser;
+  logging: RowyLogging;
 };
 
 type ActionResult = {
