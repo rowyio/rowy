@@ -15,6 +15,11 @@ type ConnectorContext = {
   auth: firebaseauth.BaseAuth;
   query: string;
   user: ConnectorUser;
+  logging: {
+    log: (payload: any) => void;
+    warn: (payload: any) => void;
+    error: (payload: any) => void;
+  };
 };
 type ConnectorResult = any[];
 type Connector = (
