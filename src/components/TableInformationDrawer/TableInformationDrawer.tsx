@@ -17,7 +17,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { sideDrawerAtom, tableScope } from "@src/atoms/tableScope";
 
 import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
-import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar/TableToolbar";
+import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
 import ErrorFallback from "@src/components/ErrorFallback";
 import Details from "./Details";
 

@@ -1,15 +1,11 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import RichTextIcon from "@mui/icons-material/TextFormat";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
-import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
-import BasicContextMenuActions from "@src/components/fields/_BasicCell/BasicCellContextMenuActions";
+import DisplayCell from "./DisplayCell";
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
 
-const TableCell = lazy(
-  () => import("./TableCell" /* webpackChunkName: "TableCell-RichText" */)
-);
 const SideDrawerField = lazy(
   () =>
     import(
@@ -27,8 +23,7 @@ export const config: IFieldConfig = {
   icon: <RichTextIcon />,
   description: "HTML edited with a rich text editor.",
   contextMenuActions: BasicContextMenuActions,
-  TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: withSideDrawerEditor(TableCell),
+  TableCell: withRenderTableCell(DisplayCell, SideDrawerField, "popover"),
   SideDrawerField,
 };
 export default config;

@@ -4,18 +4,18 @@ export const filterOperators: IFilterOperator[] = [
   {
     label: "is",
     secondaryLabel: "==",
-    value: "color-equal"
+    value: "color-equal",
   },
   {
     label: "is not",
     secondaryLabel: "!=",
-    value: "color-not-equal"
-}
+    value: "color-not-equal",
+  },
 ];
 
 export const valueFormatter = (value: any) => {
   if (value && value.hex) {
-    return value.hex.toString()
+    return value.hex.toString();
   }
   return "";
 };

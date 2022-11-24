@@ -1,7 +1,6 @@
 import { useReducer } from "react";
 import { useAtom } from "jotai";
 import { useSnackbar } from "notistack";
-import type { DocumentReference } from "firebase/firestore";
 import {
   ref,
   uploadBytesResumable,
@@ -15,7 +14,7 @@ import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import { projectScope } from "@src/atoms/projectScope";
 import { firebaseStorageAtom } from "@src/sources/ProjectSourceFirebase";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
-import { FileValue } from "@src/types/table";
+import type { FileValue, TableRowRef } from "@src/types/table";
 import { generateId } from "@src/utils/table";
 
 export type UploadState = {
@@ -50,7 +49,7 @@ const uploadReducer = (
 };
 
 export type UploadProps = {
-  docRef: DocumentReference;
+  docRef: TableRowRef;
   fieldName: string;
   files: File[];
   onComplete?: ({

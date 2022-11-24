@@ -3,8 +3,8 @@ import { find } from "lodash-es";
 import { parseJSON } from "date-fns";
 
 import { styled, Grid } from "@mui/material";
-import Column from "@src/components/Table/Column";
-import Cell from "@src/components/Table/Cell";
+import Column from "@src/components/Table/Mock/Column";
+import Cell from "@src/components/Table/Mock/Cell";
 
 import { IStepProps } from ".";
 import { tableScope, tableSchemaAtom } from "@src/atoms/tableScope";

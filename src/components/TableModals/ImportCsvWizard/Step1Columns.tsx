@@ -26,7 +26,9 @@ import { TableColumn as TableColumnIcon } from "@src/assets/icons";
 import { IStepProps } from ".";
 import { CsvConfig } from "@src/components/TableModals/ImportCsvWizard";
 import FadeList from "@src/components/TableModals/ScrollableList";
-import Column, { COLUMN_HEADER_HEIGHT } from "@src/components/Table/Column";
+import Column, {
+  COLUMN_HEADER_HEIGHT,
+} from "@src/components/Table/Mock/Column";
 import ColumnSelect from "@src/components/Table/ColumnSelect";
 
 import {

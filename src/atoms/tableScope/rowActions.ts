@@ -131,9 +131,9 @@ export const addRowAtom = atom(
         });
       }
 
-      // Also add to rowsLocal if  any required fields are missing
+      // Also add to rowsLocal if any required fields are missing
       // (not out of order since those cases are handled above)
-      if (missingRequiredFields.length > 0) {
+      else if (missingRequiredFields.length > 0) {
         set(tableRowsLocalAtom, {
           type: "add",
           row: { ...rowValues, _rowy_outOfOrder: false },

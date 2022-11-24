@@ -130,7 +130,11 @@ export const sideDrawerAtom = atomWithHash<"table-information" | null>(
 /** Store side drawer open state */
 export const sideDrawerOpenAtom = atom(false);
 
-export type SelectedCell = { path: string; columnKey: string };
+export type SelectedCell = {
+  path: string | "_rowy_header";
+  columnKey: string | "_rowy_row_actions";
+  focusInside: boolean;
+};
 /** Store selected cell in table. Used in side drawer and context menu */
 export const selectedCellAtom = atom<SelectedCell | null>(null);
 

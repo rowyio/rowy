@@ -1,14 +1,11 @@
 import { lazy } from "react";
 import { GeoPoint } from "firebase/firestore";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import GeoPointIcon from "@mui/icons-material/PinDropOutlined";
-import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
+import DisplayCell from "./DisplayCell";
 
-const TableCell = lazy(
-  () => import("./TableCell" /* webpackChunkName: "TableCell-GeoPoint" */)
-);
 const SideDrawerField = lazy(
   () =>
     import(
@@ -24,8 +21,9 @@ export const config: IFieldConfig = {
   initialValue: {},
   icon: <GeoPointIcon />,
   description: "Geo point is represented as latitude/longitude pair.",
-  TableCell: withBasicCell(TableCell),
-  TableEditor: withSideDrawerEditor(TableCell),
+  TableCell: withRenderTableCell(DisplayCell, SideDrawerField, "popover", {
+    popoverProps: { PaperProps: { sx: { p: 1, pt: 0 } } },
+  }),
   SideDrawerField,
   csvImportParser: (value: string) => {
     try {
@@ -35,7 +33,7 @@ export const config: IFieldConfig = {
       }
       throw new Error();
     } catch (e) {
-      console.error("Invalid Geopoint value");
+      console.error("Invalid GeoPoint value");
       return null;
     }
   },
