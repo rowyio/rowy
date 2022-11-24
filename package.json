@@ -89,7 +89,7 @@
     "env": "node createDotEnv",
     "target": "firebase target:apply hosting rowy",
     "deploy": "firebase deploy --only hosting",
-    "typedoc": "typedoc src/atoms/projectScope/index.ts src/atoms/tableScope/index.ts --out typedoc"
+    "typedoc": "typedoc --options typedoc.json"
   },
   "engines": {
     "node": "^16"
@@ -181,7 +181,7 @@
     "raw-loader": "^4.0.2",
     "source-map-explorer": "^2.5.2",
     "ts-jest": "^28.0.2",
-    "typedoc": "^0.22.17"
+    "typedoc": "^0.23.21"
   },
   "resolutions": {
     "@types/react": "^18"

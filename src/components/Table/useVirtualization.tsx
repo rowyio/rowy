@@ -15,8 +15,8 @@ import {
   OUT_OF_ORDER_MARGIN,
   DEFAULT_COL_WIDTH,
 } from "./Table";
-import { TableRow } from "@src/types/table";
-import { Column } from "@tanstack/react-table";
+import type { TableRow } from "@src/types/table";
+import type { Column, ColumnSizingState } from "@tanstack/react-table";
 
 import { MIN_COL_WIDTH } from "./Table";
 
@@ -26,7 +26,8 @@ import { MIN_COL_WIDTH } from "./Table";
  */
 export function useVirtualization(
   containerRef: React.RefObject<HTMLDivElement>,
-  leafColumns: Column<TableRow, unknown>[]
+  leafColumns: Column<TableRow, unknown>[],
+  columnSizing: ColumnSizingState
 ) {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
@@ -63,12 +64,17 @@ export function useVirtualization(
     paddingStart: TABLE_PADDING,
     paddingEnd: TABLE_PADDING,
     estimateSize: useCallback(
-      (index: number) =>
-        Math.max(
+      (index: number) => {
+        const columnDef = leafColumns[index].columnDef;
+        const schemaWidth = columnDef.size;
+        const localWidth = columnSizing[columnDef.id || ""];
+
+        return Math.max(
           MIN_COL_WIDTH,
-          leafColumns[index].columnDef.size || DEFAULT_COL_WIDTH
-        ),
-      [leafColumns]
+          localWidth || schemaWidth || DEFAULT_COL_WIDTH
+        );
+      },
+      [leafColumns, columnSizing]
     ),
     rangeExtractor: useCallback(
       (range: Range) => {
