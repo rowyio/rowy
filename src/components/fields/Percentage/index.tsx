@@ -1,19 +1,12 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { Percentage as PercentageIcon } from "@src/assets/icons";
-import TextEditor from "@src/components/Table/editors/TextEditor";
+import DisplayCell from "./DisplayCell";
+import EditorCell from "./EditorCell";
 import { filterOperators } from "@src/components/fields/Number/Filter";
-import BasicContextMenuActions from "@src/components/fields/_BasicCell/BasicCellContextMenuActions";
-
-const BasicCell = lazy(
-  () => import("./BasicCell" /* webpackChunkName: "BasicCell-Percentage" */)
-);
-
-const TableCell = lazy(
-  () => import("./TableCell" /* webpackChunkName: "TableCell-Percentage" */)
-);
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
 
 const SideDrawerField = lazy(
   () =>
@@ -37,8 +30,7 @@ export const config: IFieldConfig = {
   requireConfiguration: true,
   description: "Percentage stored as a number between 0 and 1.",
   contextMenuActions: BasicContextMenuActions,
-  TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: TextEditor,
+  TableCell: withRenderTableCell(DisplayCell, EditorCell),
   SideDrawerField,
   settings: Settings,
   filter: {

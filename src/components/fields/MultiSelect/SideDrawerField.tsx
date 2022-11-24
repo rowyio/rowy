@@ -1,11 +1,12 @@
 import { ISideDrawerFieldProps } from "@src/components/fields/types";
 
-import { Grid } from "@mui/material";
+import { Grid, Button, Tooltip } from "@mui/material";
+import WarningIcon from "@mui/icons-material/WarningAmber";
 import MultiSelectComponent from "@rowy/multiselect";
 import FormattedChip from "@src/components/FormattedChip";
 
+import { fieldSx } from "@src/components/SideDrawer/utils";
 import { sanitiseValue } from "./utils";
-import { ConvertStringToArray } from "./ConvertStringToArray";
 
 export default function MultiSelect({
   column,
@@ -24,7 +25,28 @@ export default function MultiSelect({
   };
 
   if (typeof value === "string" && value !== "")
-    return <ConvertStringToArray value={value} onSubmit={onChange} />;
+    return (
+      <Grid container wrap="nowrap" gap={1}>
+        <Grid item xs sx={fieldSx}>
+          <Tooltip title="This cell’s value is a string and needs to be converted to an array">
+            <WarningIcon color="action" style={{ verticalAlign: "middle" }} />
+          </Tooltip>
+          &nbsp;{value}
+        </Grid>
+        <Grid item>
+          <Button
+            color="primary"
+            onClick={() => {
+              onChange([value]);
+              onSubmit();
+            }}
+            disabled={disabled}
+          >
+            Convert to array
+          </Button>
+        </Grid>
+      </Grid>
+    );
 
   return (
     <>

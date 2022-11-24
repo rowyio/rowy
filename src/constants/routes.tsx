@@ -1,5 +1,5 @@
 import Logo from "@src/assets/Logo";
-import BreadcrumbsTableRoot from "@src/components/Table/BreadcrumbsTableRoot";
+import BreadcrumbsTableRoot from "@src/components/Table/Breadcrumbs/BreadcrumbsTableRoot";
 import { FadeProps, Typography } from "@mui/material";
 
 export enum ROUTES {

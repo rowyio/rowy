@@ -1,12 +1,12 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import EmailIcon from "@mui/icons-material/MailOutlined";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellValue";
-import TextEditor from "@src/components/Table/editors/TextEditor";
+import DisplayCell from "@src/components/fields/ShortText/DisplayCell";
+import EditorCell from "./EditorCell";
 import { filterOperators } from "@src/components/fields/ShortText/Filter";
-import BasicContextMenuActions from "@src/components/fields/_BasicCell/BasicCellContextMenuActions";
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
 
 const SideDrawerField = lazy(
   () =>
@@ -23,8 +23,7 @@ export const config: IFieldConfig = {
   icon: <EmailIcon />,
   description: "Email address. Not validated.",
   contextMenuActions: BasicContextMenuActions,
-  TableCell: withBasicCell(BasicCell),
-  TableEditor: TextEditor,
+  TableCell: withRenderTableCell(DisplayCell, EditorCell),
   SideDrawerField,
   filter: {
     operators: filterOperators,

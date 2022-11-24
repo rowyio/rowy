@@ -1,17 +1,12 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withPopoverCell from "@src/components/fields/_withTableCell/withPopoverCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { SingleSelect as SingleSelectIcon } from "@src/assets/icons";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
-import InlineCell from "./InlineCell";
-import NullEditor from "@src/components/Table/editors/NullEditor";
+import DisplayCell from "./DisplayCell";
+import EditorCell from "./EditorCell";
 import { filterOperators } from "@src/components/fields/ShortText/Filter";
 
-const PopoverCell = lazy(
-  () =>
-    import("./PopoverCell" /* webpackChunkName: "PopoverCell-SingleSelect" */)
-);
 const SideDrawerField = lazy(
   () =>
     import(
@@ -32,11 +27,10 @@ export const config: IFieldConfig = {
   icon: <SingleSelectIcon />,
   description:
     "Single value from predefined options. Options are searchable and users can optionally input custom values.",
-  TableCell: withPopoverCell(BasicCell, InlineCell, PopoverCell, {
-    anchorOrigin: { horizontal: "left", vertical: "bottom" },
-    transparent: true,
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "popover", {
+    disablePadding: true,
+    transparentPopover: true,
   }),
-  TableEditor: NullEditor as any,
   SideDrawerField,
   settings: Settings,
   filter: { operators: filterOperators },

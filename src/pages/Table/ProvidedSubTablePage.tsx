@@ -1,4 +1,4 @@
-import { Suspense, useMemo } from "react";
+import { lazy, Suspense, useMemo } from "react";
 import { useAtom, Provider } from "jotai";
 import { selectAtom } from "jotai/utils";
 import { DebugAtoms } from "@src/atoms/utils";
@@ -7,10 +7,9 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { find, isEqual } from "lodash-es";
 
 import Modal from "@src/components/Modal";
-import BreadcrumbsSubTable from "@src/components/Table/BreadcrumbsSubTable";
+import BreadcrumbsSubTable from "@src/components/Table/Breadcrumbs/BreadcrumbsSubTable";
 import ErrorFallback from "@src/components/ErrorFallback";
 import TableSourceFirestore from "@src/sources/TableSourceFirestore";
-import TablePage from "./TablePage";
 import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkeleton";
 import TableSkeleton from "@src/components/Table/TableSkeleton";
 
@@ -25,8 +24,16 @@ import { ROUTES } from "@src/constants/routes";
 import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
 
+// prettier-ignore
+const TablePage = lazy(() => import("./TablePage" /* webpackChunkName: "TablePage" */));
+
 /**
- * Wraps `TablePage` with the data for a top-level table.
+ * Wraps `TablePage` with the data for a sub-table.
+ *
+ * Differences to `ProvidedTablePage`:
+ * - Renders a `Modal`
+ * - When this is a child of `ProvidedTablePage`, the `TablePage` rendered for
+ *   the root table has its modals disabled
  */
 export default function ProvidedSubTablePage() {
   const location = useLocation();
@@ -108,6 +115,7 @@ export default function ProvidedSubTablePage() {
         disableBottomDivider: true,
         style: { "--dialog-spacing": 0, "--dialog-contents-spacing": 0 } as any,
       }}
+      BackdropProps={{ key: "sub-table-modal-backdrop" }}
     >
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Suspense

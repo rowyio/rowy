@@ -12,7 +12,7 @@ import {
 } from "@src/atoms/tableScope";
 import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
 
-const ROW_HEIGHTS = [33, 41, 65, 97, 129, 161];
+const ROW_HEIGHTS = [32, 40, 64, 96, 128, 160].map((x) => x + 1);
 
 export default function RowHeight() {
   const theme = useTheme();

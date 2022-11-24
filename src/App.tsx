@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAtom } from "jotai";
 
+import { Backdrop } from "@mui/material";
 import Loading from "@src/components/Loading";
 import ProjectSourceFirebase from "@src/sources/ProjectSourceFirebase";
 import MembersSourceFirebase from "@src/sources/MembersSourceFirebase";
@@ -116,7 +117,21 @@ export default function App() {
                   <Route index element={<NotFound />} />
                   <Route
                     path=":docPath/:subTableKey"
-                    element={<ProvidedSubTablePage />}
+                    element={
+                      <Suspense
+                        fallback={
+                          <Backdrop
+                            key="sub-table-modal-backdrop"
+                            open
+                            sx={{ zIndex: "modal" }}
+                          >
+                            <Loading />
+                          </Backdrop>
+                        }
+                      >
+                        <ProvidedSubTablePage />
+                      </Suspense>
+                    }
                   />
                 </Route>
               </Route>

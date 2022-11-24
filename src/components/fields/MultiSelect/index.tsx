@@ -1,15 +1,13 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withPopoverCell from "@src/components/fields/_withTableCell/withPopoverCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { MultiSelect as MultiSelectIcon } from "@src/assets/icons";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
-import InlineCell from "./InlineCell";
-import NullEditor from "@src/components/Table/editors/NullEditor";
+import DisplayCell from "./DisplayCell";
 import { filterOperators } from "./Filter";
-const PopoverCell = lazy(
-  () =>
-    import("./PopoverCell" /* webpackChunkName: "PopoverCell-MultiSelect" */)
+
+const EditorCell = lazy(
+  () => import("./EditorCell" /* webpackChunkName: "EditorCell-MultiSelect" */)
 );
 const SideDrawerField = lazy(
   () =>
@@ -34,11 +32,10 @@ export const config: IFieldConfig = {
   icon: <MultiSelectIcon />,
   description:
     "Multiple values from predefined options. Options are searchable and users can optionally input custom values.",
-  TableCell: withPopoverCell(BasicCell, InlineCell, PopoverCell, {
-    anchorOrigin: { horizontal: "left", vertical: "bottom" },
-    transparent: true,
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "popover", {
+    disablePadding: true,
+    transparentPopover: false,
   }),
-  TableEditor: NullEditor as any,
   SideDrawerField,
   settings: Settings,
   csvImportParser: (v) => {

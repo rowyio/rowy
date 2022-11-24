@@ -24,7 +24,7 @@ export interface IConnectorSelectProps {
   className?: string;
   /** Override any props of the root MUI `TextField` component */
   TextFieldProps?: Partial<TextFieldProps>;
-  docRef: TableRowRef;
+  _rowy_ref: TableRowRef;
   disabled?: boolean;
 }
 
@@ -56,7 +56,11 @@ export default function ConnectorSelect({
         // prop for this component to a comma-separated string
         MenuProps: {
           classes: { paper: classes.paper, list: classes.menuChild },
-          MenuListProps: { disablePadding: true },
+          MenuListProps: {
+            disablePadding: true,
+            style: { padding: 0 },
+            component: "div",
+          } as any,
           anchorOrigin: { vertical: "bottom", horizontal: "center" },
           transformOrigin: { vertical: "top", horizontal: "center" },
           ...TextFieldProps.SelectProps?.MenuProps,
