@@ -1,7 +1,10 @@
 import { Suspense, forwardRef } from "react";
 import { useAtom } from "jotai";
+import { Offline, Online } from "react-detect-offline";
 
 import { Tooltip, Typography, TypographyProps } from "@mui/material";
+import SyncIcon from "@mui/icons-material/Sync";
+import OfflineIcon from "@mui/icons-material/CloudOffOutlined";
 
 import {
   tableScope,
@@ -9,6 +12,7 @@ import {
   tableNextPageAtom,
   serverDocCountAtom
 } from "@src/atoms/tableScope";
+import { spreadSx } from "@src/utils/ui";
 
 const StatusText = forwardRef(function StatusText(
   props: TypographyProps,
@@ -21,27 +25,51 @@ const StatusText = forwardRef(function StatusText(
       color="text.disabled"
       display="block"
       {...props}
-      style={{ userSelect: "none", ...props.style }}
+      sx={[
+        {
+          userSelect: "none",
+
+          "& svg": {
+            fontSize: 20,
+            width: "1em",
+            height: "1em",
+            verticalAlign: "bottom",
+            display: "inline-block",
+            mr: 0.75,
+          },
+        },
+        ...spreadSx(props.sx),
+      ]}
     />
   );
 });
+
+const loadingIcon = (
+  <SyncIcon
+    sx={{
+      animation: "spin-infinite 1.5s linear infinite",
+      "@keyframes spin-infinite": {
+        from: { transform: "rotate(45deg)" },
+        to: { transform: `rotate(${45 - 360}deg)` },
+      },
+    }}
+  />
+);
 
 function LoadedRowsStatus() {
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
   const [serverDocCount] = useAtom(serverDocCountAtom, tableScope)
   const [tableRows] = useAtom(tableRowsAtom, tableScope)
-  if (tableNextPage.loading) return <StatusText>Loading more…</StatusText>;
+
+
+  if (tableNextPage.loading)
+    return <StatusText>{loadingIcon}Loading more…</StatusText>;
+
 
   return (
-    <Tooltip
-      title={
-        tableNextPage.available
-          ? "Scroll to the bottom to load more rows"
-          : "All rows have been loaded in this table"
-      }
-      describeChild
-    >
+    <Tooltip title="Syncing with database in realtime" describeChild>
       <StatusText>
+        <SyncIcon style={{ transform: "rotate(45deg)" }} />
         Loaded {!tableNextPage.available && "all "}
         {tableRows.length} {tableNextPage.available && serverDocCount !== 0 && `of ${serverDocCount}`} row{serverDocCount !== 1 && "s"}
       </StatusText>
@@ -51,8 +79,21 @@ function LoadedRowsStatus() {
 
 export default function SuspendedLoadedRowsStatus() {
   return (
-    <Suspense fallback={<StatusText>Loading…</StatusText>}>
-      <LoadedRowsStatus />
-    </Suspense>
+    <>
+      <Online>
+        <Suspense fallback={<StatusText>{loadingIcon}Loading…</StatusText>}>
+          <LoadedRowsStatus />
+        </Suspense>
+      </Online>
+
+      <Offline>
+        <Tooltip title="Changes will be saved when you reconnect" describeChild>
+          <StatusText color="error.main">
+            <OfflineIcon />
+            Offline
+          </StatusText>
+        </Tooltip>
+      </Offline>
+    </>
   );
 }

@@ -1,4 +1,5 @@
 import { use100vh } from "react-div-100vh";
+import clsx from "clsx";
 
 import {
   Grid,
@@ -40,7 +41,13 @@ export default function EmptyState({
 
   if (basic)
     return (
-      <Grid container alignItems="center" spacing={1} {...props}>
+      <Grid
+        container
+        alignItems="center"
+        spacing={1}
+        {...props}
+        className={clsx("empty-state", "empty-state--basic", props.className)}
+      >
         <Grid item>
           <Icon style={{ display: "block" }} />
         </Grid>
@@ -66,6 +73,11 @@ export default function EmptyState({
         textAlign: "center",
         ...props.style,
       }}
+      className={clsx(
+        "empty-state",
+        "empty-state--full-screen",
+        props.className
+      )}
     >
       <Grid
         item

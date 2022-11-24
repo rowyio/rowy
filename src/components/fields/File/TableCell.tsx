@@ -11,7 +11,7 @@ import { Upload as UploadIcon } from "@src/assets/icons";
 import ChipList from "@src/components/Table/formatters/ChipList";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
-import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
+import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
 import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import useUploader from "@src/hooks/useFirebaseStorageUploader";
 import { FileIcon } from ".";
@@ -26,7 +26,7 @@ export default function File_({
   disabled,
   docRef,
 }: IHeavyCellProps) {
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
 
   const { uploaderState, upload, deleteUpload } = useUploader();

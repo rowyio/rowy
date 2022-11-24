@@ -3,7 +3,7 @@ import useMemoValue from "use-memo-value";
 import { useAtom, useSetAtom } from "jotai";
 import { RESET } from "jotai/utils";
 import { useSnackbar } from "notistack";
-import { uniqBy, find, isEqual } from "lodash-es";
+import { uniqBy, find, isEqual, groupBy } from "lodash-es";
 import { ITableModalProps } from "@src/components/TableModals";
 
 import {
@@ -37,10 +37,13 @@ import {
 import { ColumnConfig } from "@src/types/table";
 import { getFieldProp } from "@src/components/fields";
 import { analytics, logEvent } from "@src/analytics";
+import { isValidDocId } from "./utils";
 
 export type CsvConfig = {
   pairs: { csvKey: string; columnKey: string }[];
   newColumns: ColumnConfig[];
+  documentId: "auto" | "column";
+  documentIdCsvKey: string | null;
 };
 
 export interface IStepProps {
@@ -68,6 +71,8 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
   const [config, setConfig] = useState<CsvConfig>({
     pairs: [],
     newColumns: [],
+    documentId: "auto",
+    documentIdCsvKey: null,
   });
   const updateConfig: IStepProps["updateConfig"] = useCallback((value) => {
     setConfig((prev) => {
@@ -77,7 +82,7 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
         "key"
       ).filter((col) => pairs.some((pair) => pair.columnKey === col.key));
 
-      return { pairs, newColumns };
+      return { ...prev, pairs, newColumns };
     });
   }, []);
 
@@ -95,10 +100,28 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
         const value = csvFieldParser
           ? csvFieldParser(row[pair.csvKey], matchingColumn.config)
           : row[pair.csvKey];
-        return { ...a, [pair.columnKey]: value };
+
+        return config.documentId === "column"
+          ? {
+              ...a,
+              [pair.columnKey]: value,
+              _rowy_ref: {
+                id: config.documentIdCsvKey
+                  ? row[config.documentIdCsvKey]
+                  : null,
+              },
+            }
+          : { ...a, [pair.columnKey]: value };
       }, {})
     );
   }, [csvData, columns, config]);
+
+  const { validRows, invalidRows } =
+    config.documentId === "column"
+      ? groupBy(parsedRows, (row) =>
+          isValidDocId(row._rowy_ref?.id) ? "validRows" : "invalidRows"
+        )
+      : { validRows: parsedRows, invalidRows: [] };
 
   const handleFinish = async () => {
     if (!parsedRows) return;
@@ -106,14 +129,14 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
     snackbarProgressRef.current?.setProgress(0);
     const loadingSnackbar = enqueueSnackbar(
       `Importing ${Number(
-        parsedRows.length
+        validRows.length
       ).toLocaleString()} rows. This might take a while.`,
       {
         persist: true,
         action: (
           <SnackbarProgress
             stateRef={snackbarProgressRef}
-            target={Math.ceil(parsedRows.length / 500)}
+            target={Math.ceil(validRows.length / 500)}
             label=" batches"
           />
         ),
@@ -145,9 +168,17 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
       for (const col of config.newColumns)
         promises.push(addColumn({ config: col }));
 
+      if (validRows.length < parsedRows.length) {
+        enqueueSnackbar(
+          `Invalid document ID! ${Number(
+            parsedRows.length - validRows.length
+          ).toLocaleString()} invalid rows skipped!`,
+          { variant: "warning" }
+        );
+      }
       promises.push(
         bulkAddRows({
-          rows: parsedRows,
+          rows: validRows,
           collection: tableSettings.collection,
           onBatchCommit: (batchNumber: number) =>
             snackbarProgressRef.current?.setProgress(batchNumber),
@@ -158,7 +189,7 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
       await Promise.all(promises);
       logEvent(analytics, "import_success", { type: importType });
       enqueueSnackbar(
-        `Imported ${Number(parsedRows.length).toLocaleString()} rows`,
+        `Imported ${Number(validRows.length).toLocaleString()} rows`,
         { variant: "success" }
       );
     } catch (e) {
@@ -207,14 +238,17 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
             ),
             content: (
               <Step1Columns
-                csvData={csvData}
+                csvData={{ ...csvData, invalidRows }}
                 config={config}
                 setConfig={setConfig}
                 updateConfig={updateConfig}
                 isXs={isXs}
               />
             ),
-            disableNext: config.pairs.length === 0,
+            disableNext:
+              config.pairs.length === 0 ||
+              !validRows ||
+              (config.documentId === "column" && !config.documentIdCsvKey),
           },
           config.newColumns.length > 0 && {
             title: "Set column types",
@@ -240,7 +274,7 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
               "Preview your data with your configured columns. You can change column types by clicking “Edit type” from the column menu at any time.",
             content: (
               <Step3Preview
-                csvData={{ ...csvData, rows: parsedRows }}
+                csvData={{ ...csvData, rows: validRows }}
                 config={config}
                 setConfig={setConfig}
                 updateConfig={updateConfig}

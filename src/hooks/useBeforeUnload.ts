@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useAtom, Atom } from "jotai";
-import { Scope } from "jotai/core/atom";
 
 function beforeUnloadHandler(event: BeforeUnloadEvent) {
   event.preventDefault();
@@ -14,7 +13,10 @@ function beforeUnloadHandler(event: BeforeUnloadEvent) {
  * @param atom - The atom’s value to listen to
  * @param scope - The atom scope
  */
-export default function useBeforeUnload(atom: Atom<any | null>, scope: Scope) {
+export default function useBeforeUnload(
+  atom: Atom<any | null>,
+  scope: NonNullable<Parameters<typeof useAtom>[1]>
+) {
   const [atomValue] = useAtom(atom, scope);
 
   const atomValueFalsy = !atomValue;

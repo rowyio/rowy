@@ -15,7 +15,7 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
 import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
-import { globalScope, jsonEditorAtom } from "@src/atoms/globalScope";
+import { projectScope, jsonEditorAtom } from "@src/atoms/projectScope";
 import config from ".";
 
 const isValidJson = (val: any) => {
@@ -37,7 +37,7 @@ export default function Json({
 }: ISideDrawerFieldProps) {
   const theme = useTheme();
 
-  const [editor, setEditor] = useAtom(jsonEditorAtom, globalScope);
+  const [editor, setEditor] = useAtom(jsonEditorAtom, projectScope);
   const [codeValid, setCodeValid] = useState(true);
 
   const sanitizedValue =

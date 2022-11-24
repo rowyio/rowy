@@ -12,17 +12,17 @@ import ColumnSelect, { ColumnItem } from "@src/components/Table/ColumnSelect";
 import ButtonWithStatus from "@src/components/ButtonWithStatus";
 
 import {
-  globalScope,
+  projectScope,
   userSettingsAtom,
   updateUserSettingsAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { tableScope, tableIdAtom } from "@src/atoms/tableScope";
 import { formatSubTableName } from "@src/utils/table";
 
 export default function HiddenFields() {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const [userSettings] = useAtom(userSettingsAtom, globalScope);
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
   const [tableId] = useAtom(tableIdAtom, tableScope);
 
   const [open, setOpen] = useState(false);
@@ -47,7 +47,7 @@ export default function HiddenFields() {
   // }));
 
   // Save when MultiSelect closes
-  const [updateUserSettings] = useAtom(updateUserSettingsAtom, globalScope);
+  const [updateUserSettings] = useAtom(updateUserSettingsAtom, projectScope);
   const handleSave = () => {
     // Only update if there were any changes because it’s slow to update
     if (!isEqual(hiddenFields, userDocHiddenFields) && updateUserSettings) {

@@ -6,18 +6,20 @@ import {
   Button,
   DialogContentText,
   Link as MuiLink,
+  Box,
 } from "@mui/material";
+import CheckIcon from "@mui/icons-material/CheckCircle";
 
 import Modal from "@src/components/Modal";
-import Logo from "@src/assets/LogoRowyRun";
+import MemoizedText from "@src/components/Modal/MemoizedText";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import {
-  globalScope,
+  projectScope,
   userRolesAtom,
   projectSettingsAtom,
   rowyRunModalAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { ROUTES } from "@src/constants/routes";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 
@@ -27,11 +29,11 @@ import { WIKI_LINKS } from "@src/constants/externalLinks";
  * @see {@link rowyRunModalAtom | Usage example}
  */
 export default function RowyRunModal() {
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
-  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
   const [rowyRunModal, setRowyRunModal] = useAtom(
     rowyRunModalAtom,
-    globalScope
+    projectScope
   );
 
   const handleClose = () => setRowyRunModal({ ...rowyRunModal, open: false });
@@ -43,44 +45,72 @@ export default function RowyRunModal() {
       open={rowyRunModal.open}
       onClose={handleClose}
       title={
-        <Logo
-          size={2}
-          style={{
-            margin: "16px auto",
-            display: "block",
-            position: "relative",
-            right: 44 / -2,
-          }}
-        />
+        <MemoizedText>
+          {rowyRunModal.feature
+            ? `${
+                showUpdateModal ? "Update" : "Set up"
+              } Cloud Functions to use ${rowyRunModal.feature}`
+            : `Your Cloud isn’t set up`}
+        </MemoizedText>
       }
       maxWidth="xs"
       body={
         <>
-          <Typography variant="h5" paragraph align="center">
-            {showUpdateModal ? "Update" : "Set up"} Rowy Run to use{" "}
-            {rowyRunModal.feature || "this feature"}
-          </Typography>
-
           {showUpdateModal && (
-            <DialogContentText variant="body1" paragraph textAlign="center">
+            <DialogContentText variant="button" paragraph>
               {rowyRunModal.feature || "This feature"} requires Rowy Run v
               {rowyRunModal.version} or later.
             </DialogContentText>
           )}
 
-          <DialogContentText variant="body1" paragraph textAlign="center">
-            Rowy Run is a Cloud Run instance that provides backend
-            functionality, such as table action scripts, user management, and
-            easy Cloud Function deployment.{" "}
-            <MuiLink
-              href={WIKI_LINKS.rowyRun}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn more
-              <InlineOpenInNewIcon />
-            </MuiLink>
+          <DialogContentText paragraph>
+            Cloud Functions are free to use in our Base plan, you just need to
+            set a few things up first. Enable Cloud Functions for:
           </DialogContentText>
+
+          <Box
+            component="ol"
+            sx={{
+              margin: 0,
+              padding: 0,
+              alignSelf: "stretch",
+              "& li": {
+                listStyleType: "none",
+                display: "flex",
+                gap: 1,
+                marginBottom: 2,
+
+                "& svg": {
+                  display: "flex",
+                  fontSize: "1.25rem",
+                  color: "action.active",
+                },
+              },
+            }}
+          >
+            <li>
+              <CheckIcon />
+              Derivative fields, Extensions, Webhooks
+            </li>
+            <li>
+              <CheckIcon />
+              Table and Action scripts
+            </li>
+            <li>
+              <CheckIcon />
+              Easy Cloud Function deployment
+            </li>
+          </Box>
+
+          <MuiLink
+            href={WIKI_LINKS.rowyRun}
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{ display: "flex", mb: 3 }}
+          >
+            Learn more
+            <InlineOpenInNewIcon />
+          </MuiLink>
 
           <Button
             component={Link}
@@ -92,7 +122,7 @@ export default function RowyRunModal() {
             style={{ display: "flex" }}
             disabled={!userRoles.includes("ADMIN")}
           >
-            Set up Rowy Run
+            Set up Cloud Functions
           </Button>
 
           {!userRoles.includes("ADMIN") && (
@@ -102,7 +132,7 @@ export default function RowyRunModal() {
               color="error"
               sx={{ mt: 1 }}
             >
-              Contact the project owner to set up Rowy&nbsp;Run
+              Only admins can set up Cloud Functions
             </Typography>
           )}
         </>

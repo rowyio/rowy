@@ -12,29 +12,32 @@ import Authentication from "@src/components/Settings/ProjectSettings/Authenticat
 import Customization from "@src/components/Settings/ProjectSettings/Customization";
 
 import {
-  globalScope,
+  projectScope,
   projectSettingsAtom,
   updateProjectSettingsAtom,
   publicSettingsAtom,
   updatePublicSettingsAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
+import { useScrollToHash } from "@src/hooks/useScrollToHash";
+import { ProjectSettings, PublicSettings } from "@src/types/settings";
 
 export interface IProjectSettingsChildProps {
-  settings: Record<string, any>;
-  updateSettings: (data: Record<string, any>) => void;
-  publicSettings: Record<string, any>;
-  updatePublicSettings: (data: Record<string, any>) => void;
+  settings: ProjectSettings;
+  updateSettings: (data: Partial<ProjectSettings>) => void;
+  publicSettings: PublicSettings;
+  updatePublicSettings: (data: Partial<PublicSettings>) => void;
 }
 
 export default function ProjectSettingsPage() {
-  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
-  const [publicSettings] = useAtom(publicSettingsAtom, globalScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
+  const [publicSettings] = useAtom(publicSettingsAtom, projectScope);
 
   const { enqueueSnackbar } = useSnackbar();
+  useScrollToHash();
 
   const [_updateProjectSettingsDoc] = useAtom(
     updateProjectSettingsAtom,
-    globalScope
+    projectScope
   );
   const updateProjectSettings = useDebouncedCallback((data) => {
     if (_updateProjectSettingsDoc) {
@@ -55,7 +58,7 @@ export default function ProjectSettingsPage() {
 
   const [_updatePublicSettingsDoc] = useAtom(
     updatePublicSettingsAtom,
-    globalScope
+    projectScope
   );
   const updatePublicSettings = useDebouncedCallback(
     (data: Record<string, any>) => {

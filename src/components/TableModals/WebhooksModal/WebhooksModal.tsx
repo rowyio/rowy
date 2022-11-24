@@ -12,13 +12,13 @@ import WebhookList from "./WebhookList";
 import WebhookModal from "./WebhookModal";
 
 import {
-  globalScope,
+  projectScope,
   currentUserAtom,
   rowyRunAtom,
   compatibleRowyRunVersionAtom,
   rowyRunModalAtom,
   confirmDialogAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -32,14 +32,14 @@ import { analytics, logEvent } from "@src/analytics";
 import { getTableSchemaPath } from "@src/utils/table";
 
 export default function WebhooksModal({ onClose }: ITableModalProps) {
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
   const [compatibleRowyRunVersion] = useAtom(
     compatibleRowyRunVersionAtom,
-    globalScope
+    projectScope
   );
-  const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, projectScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [updateTableSchema] = useAtom(updateTableSchemaAtom, tableScope);

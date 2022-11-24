@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAtom, useSetAtom } from "jotai";
-import { isEqual } from "lodash-es";
+import { isEqual, isUndefined } from "lodash-es";
 import { ITableModalProps } from "@src/components/TableModals";
 
 import Modal from "@src/components/Modal";
@@ -10,11 +10,11 @@ import ExtensionModal from "./ExtensionModal";
 import ExtensionMigration from "./ExtensionMigration";
 
 import {
-  globalScope,
+  projectScope,
   currentUserAtom,
   rowyRunAtom,
   confirmDialogAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -23,7 +23,6 @@ import {
 } from "@src/atoms/tableScope";
 import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 
-import { emptyExtensionObject, IExtension, ExtensionType } from "./utils";
 import { runRoutes } from "@src/constants/runRoutes";
 import { analytics, logEvent } from "@src/analytics";
 import {
@@ -31,19 +30,40 @@ import {
   getTableBuildFunctionPathname,
 } from "@src/utils/table";
 
+import {
+  emptyExtensionObject,
+  IExtension,
+  ExtensionType,
+  IRuntimeOptions,
+} from "./utils";
+import RuntimeOptions from "./RuntimeOptions";
+
 export default function ExtensionsModal({ onClose }: ITableModalProps) {
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [updateTableSchema] = useAtom(updateTableSchemaAtom, tableScope);
 
-  const currentExtensionObjects = (tableSchema.extensionObjects ??
-    []) as IExtension[];
   const [localExtensionsObjects, setLocalExtensionsObjects] = useState(
-    currentExtensionObjects
+    tableSchema.extensionObjects ?? []
   );
+
+  const [localRuntimeOptions, setLocalRuntimeOptions] = useState(
+    tableSchema.runtimeOptions ?? {}
+  );
+
+  const errors = {
+    runtimeOptions: {
+      timeoutSeconds:
+        !isUndefined(localRuntimeOptions.timeoutSeconds) &&
+        !(
+          localRuntimeOptions.timeoutSeconds! > 0 &&
+          localRuntimeOptions.timeoutSeconds! <= 540
+        ),
+    },
+  };
 
   const [openMigrationGuide, setOpenMigrationGuide] = useState(false);
   useEffect(() => {
@@ -57,7 +77,9 @@ export default function ExtensionsModal({ onClose }: ITableModalProps) {
   } | null>(null);
 
   const snackLogContext = useSnackLogContext();
-  const edited = !isEqual(currentExtensionObjects, localExtensionsObjects);
+  const edited =
+    !isEqual(tableSchema.extensionObjects ?? [], localExtensionsObjects) ||
+    !isEqual(tableSchema.runtimeOptions ?? {}, localRuntimeOptions);
 
   const handleClose = (
     _setOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -70,7 +92,8 @@ export default function ExtensionsModal({ onClose }: ITableModalProps) {
         cancel: "Keep",
         handleConfirm: () => {
           _setOpen(false);
-          setLocalExtensionsObjects(currentExtensionObjects);
+          setLocalExtensionsObjects(tableSchema.extensionObjects ?? []);
+          setLocalRuntimeOptions(tableSchema.runtimeOptions ?? {});
           onClose();
         },
       });
@@ -79,15 +102,18 @@ export default function ExtensionsModal({ onClose }: ITableModalProps) {
     }
   };
 
-  const handleSaveExtensions = async (callback?: Function) => {
+  const handleSave = async (callback?: Function) => {
     if (updateTableSchema)
-      await updateTableSchema({ extensionObjects: localExtensionsObjects });
+      await updateTableSchema({
+        extensionObjects: localExtensionsObjects,
+        runtimeOptions: localRuntimeOptions,
+      });
     if (callback) callback();
     onClose();
   };
 
   const handleSaveDeploy = async () => {
-    handleSaveExtensions(() => {
+    handleSave(() => {
       try {
         snackLogContext.requestSnackLog();
         rowyRun({
@@ -130,6 +156,13 @@ export default function ExtensionsModal({ onClose }: ITableModalProps) {
     );
     logEvent(analytics, "updated_extension", { type: extensionObject.type });
     setExtensionModal(null);
+  };
+
+  const handleUpdateRuntimeOptions = (update: IRuntimeOptions) => {
+    setLocalRuntimeOptions((runtimeOptions) => ({
+      ...runtimeOptions,
+      ...update,
+    }));
   };
 
   const handleUpdateActive = (index: number, active: boolean) => {
@@ -217,24 +250,31 @@ export default function ExtensionsModal({ onClose }: ITableModalProps) {
           />
         }
         children={
-          <ExtensionList
-            extensions={localExtensionsObjects}
-            handleUpdateActive={handleUpdateActive}
-            handleEdit={handleEdit}
-            handleDuplicate={handleDuplicate}
-            handleDelete={handleDelete}
-          />
+          <>
+            <ExtensionList
+              extensions={localExtensionsObjects}
+              handleUpdateActive={handleUpdateActive}
+              handleEdit={handleEdit}
+              handleDuplicate={handleDuplicate}
+              handleDelete={handleDelete}
+            />
+            <RuntimeOptions
+              runtimeOptions={localRuntimeOptions}
+              handleUpdate={handleUpdateRuntimeOptions}
+              errors={errors.runtimeOptions}
+            />
+          </>
         }
         actions={{
           primary: {
             children: "Save & Deploy",
             onClick: handleSaveDeploy,
-            disabled: !edited,
+            disabled: !edited || errors.runtimeOptions.timeoutSeconds,
           },
           secondary: {
             children: "Save",
-            onClick: () => handleSaveExtensions(),
-            disabled: !edited,
+            onClick: () => handleSave(),
+            disabled: !edited || errors.runtimeOptions.timeoutSeconds,
           },
         }}
       />

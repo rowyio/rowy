@@ -17,10 +17,10 @@ import {
 } from "@src/assets/icons";
 
 import {
-  globalScope,
+  projectScope,
   userRolesAtom,
   tableAddRowIdTypeAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -30,12 +30,12 @@ import {
 } from "@src/atoms/tableScope";
 
 export default function AddRow() {
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableFilters] = useAtom(tableFiltersAtom, tableScope);
   const [tableSorts] = useAtom(tableSortsAtom, tableScope);
   const addRow = useSetAtom(addRowAtom, tableScope);
-  const [idType, setIdType] = useAtom(tableAddRowIdTypeAtom, globalScope);
+  const [idType, setIdType] = useAtom(tableAddRowIdTypeAtom, projectScope);
 
   const anchorEl = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);

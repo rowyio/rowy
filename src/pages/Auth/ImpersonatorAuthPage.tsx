@@ -12,13 +12,13 @@ import { Typography, Button, TextField } from "@mui/material";
 import AuthLayout from "@src/layouts/AuthLayout";
 import FirebaseUi from "@src/components/FirebaseUi";
 
-import { globalScope, rowyRunAtom } from "@src/atoms/globalScope";
+import { projectScope, rowyRunAtom } from "@src/atoms/projectScope";
 import { firebaseAuthAtom } from "@src/sources/ProjectSourceFirebase";
 import { runRoutes } from "@src/constants/runRoutes";
 
 export default function ImpersonatorAuthPage() {
-  const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [firebaseAuth] = useAtom(firebaseAuthAtom, projectScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
 
   const { enqueueSnackbar } = useSnackbar();
 

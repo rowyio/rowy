@@ -1,33 +1,26 @@
 import { useState, useEffect } from "react";
 import { FallbackProps } from "react-error-boundary";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import useOffline from "@src/hooks/useOffline";
 
-import { Button } from "@mui/material";
+import { Typography, Button } from "@mui/material";
 import ReloadIcon from "@mui/icons-material/Refresh";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
-import { Tables as TablesIcon } from "@src/assets/icons";
+import OfflineIcon from "@mui/icons-material/CloudOff";
 
 import EmptyState, { IEmptyStateProps } from "@src/components/EmptyState";
 import AccessDenied from "@src/components/AccessDenied";
 
-import { ROUTES } from "@src/constants/routes";
-import meta from "@root/package.json";
-
-export const ERROR_TABLE_NOT_FOUND = "Table not found";
+import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 
 export interface IErrorFallbackProps extends FallbackProps, IEmptyStateProps {}
 
-export default function ErrorFallback({
+export function ErrorFallbackContents({
   error,
   resetErrorBoundary,
   ...props
 }: IErrorFallbackProps) {
-  // Reset error boundary when navigating away from the page
-  const location = useLocation();
-  const [errorPathname] = useState(location.pathname);
-  useEffect(() => {
-    if (errorPathname !== location.pathname) resetErrorBoundary();
-  }, [errorPathname, location.pathname, resetErrorBoundary]);
+  const isOffline = useOffline();
 
   if ((error as any).code === "permission-denied")
     return (
@@ -38,13 +31,31 @@ export default function ErrorFallback({
     message: "Something went wrong",
     description: (
       <>
-        <span>
+        <Typography variant="inherit" style={{ whiteSpace: "pre-line" }}>
           {(error as any).code && <b>{(error as any).code}: </b>}
+          {(error as any).status && <b>{(error as any).status}: </b>}
           {error.message}
-        </span>
+        </Typography>
         <Button
           size={props.basic ? "small" : "medium"}
-          href={meta.repository.url.replace(".git", "") + "/issues/new/choose"}
+          href={
+            EXTERNAL_LINKS.gitHub +
+            "/discussions/new?" +
+            new URLSearchParams({
+              labels: "bug",
+              category: "support-q-a",
+              title: [
+                "Error",
+                (error as any).code,
+                (error as any).status,
+                error.message,
+              ]
+                .filter(Boolean)
+                .join(": ")
+                .replace(/\n/g, " "),
+              body: "👉 **Please describe the steps that you took that led to this bug.**",
+            }).toString()
+          }
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -55,56 +66,67 @@ export default function ErrorFallback({
     ),
   };
 
-  if (error.message.startsWith(ERROR_TABLE_NOT_FOUND)) {
-    renderProps = {
-      message: ERROR_TABLE_NOT_FOUND,
-      description: (
-        <>
-          <span>Make sure you have the right ID</span>
-          <code>{error.message.replace(ERROR_TABLE_NOT_FOUND + ": ", "")}</code>
-          <Button
-            size={props.basic ? "small" : "medium"}
-            variant="outlined"
-            color="secondary"
-            component={Link}
-            to={ROUTES.tables}
-            startIcon={<TablesIcon />}
-            onClick={() => resetErrorBoundary()}
-          >
-            All tables
-          </Button>
-        </>
-      ),
-    };
-  }
-
   if (error.message.startsWith("Loading chunk")) {
-    renderProps = {
-      Icon: ReloadIcon,
-      message: "New update available",
-      description: (
-        <>
-          <span>Reload this page to get the latest update</span>
+    if (isOffline) {
+      renderProps = { Icon: OfflineIcon, message: "You’re offline" };
+    } else {
+      renderProps = {
+        Icon: ReloadIcon,
+        message: "Update available",
+        description: (
           <Button
             size={props.basic ? "small" : "medium"}
             variant="outlined"
             color="secondary"
             startIcon={<ReloadIcon />}
             onClick={() => window.location.reload()}
+            sx={{ mt: 1 }}
           >
             Reload
           </Button>
-        </>
+        ),
+      };
+    }
+  }
+
+  if (error.message.includes("Failed to fetch")) {
+    renderProps = {
+      Icon: OfflineIcon,
+      message: "You’re offline",
+      description: isOffline ? null : (
+        <Button
+          size={props.basic ? "small" : "medium"}
+          variant="outlined"
+          color="secondary"
+          startIcon={<ReloadIcon />}
+          onClick={() => window.location.reload()}
+          sx={{ mt: 1 }}
+        >
+          Reload
+        </Button>
       ),
     };
   }
 
-  return <EmptyState fullScreen {...renderProps} {...props} />;
+  return <EmptyState role="alert" fullScreen {...renderProps} {...props} />;
+}
+
+export default function ErrorFallback(props: IErrorFallbackProps) {
+  const { resetErrorBoundary } = props;
+
+  // Reset error boundary when navigating away from the page
+  const location = useLocation();
+  const [errorPathname] = useState(location.pathname);
+  useEffect(() => {
+    if (errorPathname !== location.pathname) resetErrorBoundary();
+  }, [errorPathname, location.pathname, resetErrorBoundary]);
+
+  return <ErrorFallbackContents {...props} />;
 }
 
 export function InlineErrorFallback(props: IErrorFallbackProps) {
   return (
-    <ErrorFallback
+    <ErrorFallbackContents
       {...props}
       fullScreen={false}
       basic
@@ -115,5 +137,5 @@ export function InlineErrorFallback(props: IErrorFallbackProps) {
 }
 
 export function NonFullScreenErrorFallback(props: IErrorFallbackProps) {
-  return <ErrorFallback {...props} fullScreen={false} />;
+  return <ErrorFallbackContents {...props} fullScreen={false} />;
 }

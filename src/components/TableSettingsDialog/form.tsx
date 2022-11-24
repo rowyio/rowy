@@ -1,6 +1,6 @@
 import { find } from "lodash-es";
 import { Field, FieldType } from "@rowy/form-builder";
-import { TableSettingsDialogState } from "@src/atoms/globalScope";
+import { TableSettingsDialogState } from "@src/atoms/projectScope";
 
 import { Link, ListItemText, Typography } from "@mui/material";
 import OpenInNewIcon from "@src/components/InlineOpenInNewIcon";
@@ -215,8 +215,9 @@ export const tableSettings = (
       }.`,
       disabled: mode === "update",
       gridCols: { xs: 12, sm: 6 },
-      validation:
-        mode === "create"
+      validation: [
+        ["matches", /^[^/]+$/g, "ID cannot have /"],
+        ...(mode === "create"
           ? [
               [
                 "test",
@@ -225,7 +226,8 @@ export const tableSettings = (
                 (value: any) => !find(tables, ["value", value]),
               ],
             ]
-          : [],
+          : []),
+      ],
     },
     {
       step: "display",
@@ -242,7 +244,23 @@ export const tableSettings = (
       type: FieldType.paragraph,
       name: "description",
       label: "Description (optional)",
-      minRows: 2,
+    },
+    {
+      step: "display",
+      type: "tableDetails",
+      name: "details",
+      label: "Details (optional)",
+    },
+    {
+      step: "display",
+      type: "tableThumbnail",
+      name: "thumbnailFile",
+      label: "Thumbnail image (optional)",
+    },
+    {
+      step: "display",
+      type: FieldType.hidden,
+      name: "thumbnailURL",
     },
 
     // Step 3: Access controls
@@ -300,7 +318,7 @@ export const tableSettings = (
       type: FieldType.checkbox,
       name: "audit",
       label: "Enable auditing for this table",
-      defaultValue: true,
+      defaultValue: false,
     },
     {
       step: "auditing",

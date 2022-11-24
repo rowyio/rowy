@@ -6,12 +6,12 @@ import { CopyCells as CopyCellsIcon } from "@src/assets/icons";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
 import {
-  globalScope,
+  projectScope,
   userRolesAtom,
   tableAddRowIdTypeAtom,
   altPressAtom,
   confirmDialogAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -21,16 +21,22 @@ import {
 import { TableRow } from "@src/types/table";
 
 export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
-  const [addRowIdType] = useAtom(tableAddRowIdTypeAtom, globalScope);
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
+  const [addRowIdType] = useAtom(tableAddRowIdTypeAtom, projectScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
 
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const addRow = useSetAtom(addRowAtom, tableScope);
   const deleteRow = useSetAtom(deleteRowAtom, tableScope);
 
-  const [altPress] = useAtom(altPressAtom, globalScope);
+  const [altPress] = useAtom(altPressAtom, projectScope);
   const handleDelete = () => deleteRow(row._rowy_ref.path);
+  const handleDuplicate = () => {
+    addRow({
+      row,
+      setId: addRowIdType === "custom" ? "decrement" : addRowIdType,
+    });
+  };
 
   if (!userRoles.includes("ADMIN") && tableSettings.readOnly === true)
     return null;
@@ -42,11 +48,27 @@ export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
           size="small"
           color="inherit"
           disabled={tableSettings.tableType === "collectionGroup"}
-          onClick={() =>
-            addRow({
-              row,
-              setId: addRowIdType === "custom" ? "decrement" : addRowIdType,
-            })
+          onClick={
+            altPress
+              ? handleDuplicate
+              : () => {
+                  confirm({
+                    title: "Duplicate row?",
+                    body: (
+                      <>
+                        Row path:
+                        <br />
+                        <code
+                          style={{ userSelect: "all", wordBreak: "break-all" }}
+                        >
+                          {row._rowy_ref.path}
+                        </code>
+                      </>
+                    ),
+                    confirm: "Duplicate",
+                    handleConfirm: handleDuplicate,
+                  });
+                }
           }
           aria-label="Duplicate row"
           className="row-hover-iconButton"

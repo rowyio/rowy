@@ -13,10 +13,10 @@ import Modal from "@src/components/Modal";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 import {
-  globalScope,
+  projectScope,
   projectSettingsAtom,
   rowyRunModalAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { tableScope, tableSettingsAtom } from "@src/atoms/tableScope";
 
@@ -28,10 +28,10 @@ export default function ReExecute() {
   const [updating, setUpdating] = useState(false);
   const handleClose = () => setOpen(false);
 
-  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
-  const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
-  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
+  const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
 
   if (!firebaseDb) return null;
 

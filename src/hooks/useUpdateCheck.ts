@@ -4,10 +4,10 @@ import { differenceInDays } from "date-fns";
 import { compare } from "compare-versions";
 
 import {
-  globalScope,
+  projectScope,
   rowyRunAtom,
   rowyRunLatestUpdateAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import meta from "@root/package.json";
 import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 import { runRoutes } from "@src/constants/runRoutes";
@@ -29,11 +29,11 @@ const UPDATE_ENDPOINTS = {
  * @returns [latestUpdate, checkForUpdates, loading]
  */
 export default function useUpdateCheck() {
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
   // Store latest release from GitHub
   const [latestUpdate, setLatestUpdate] = useAtom(
     rowyRunLatestUpdateAtom,
-    globalScope
+    projectScope
   );
   const [loading, setLoading] = useState(false);
 
