@@ -10,14 +10,12 @@ import ActionFab from "./ActionFab";
 import { tableScope, tableRowsAtom } from "@src/atoms/tableScope";
 import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
 import { sanitiseCallableName, isUrl } from "./utils";
-import { getActionName } from "./TableCell"
+import { getActionName } from "./DisplayCell";
 
 export default function Action({
   column,
   _rowy_ref,
   value,
-  onChange,
-  onSubmit,
   disabled,
 }: ISideDrawerFieldProps) {
   const [row] = useAtom(
@@ -68,10 +66,6 @@ export default function Action({
       <ActionFab
         row={row}
         column={column}
-        onSubmit={(value) => {
-          onChange(value);
-          onSubmit();
-        }}
         value={value}
         disabled={disabled}
         id={getFieldId(column.key)}

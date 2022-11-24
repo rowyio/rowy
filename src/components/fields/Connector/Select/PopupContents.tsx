@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import clsx from "clsx";
+import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { get } from "lodash-es";
 import { useAtom } from "jotai";
@@ -7,7 +6,6 @@ import { useAtom } from "jotai";
 import {
   Button,
   Checkbox,
-  Divider,
   Grid,
   InputAdornment,
   List,
@@ -21,7 +19,6 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 
 import { IConnectorSelectProps } from ".";
-import useStyles from "./styles";
 import Loading from "@src/components/Loading";
 import { getLabel } from "@src/components/fields/Connector/utils";
 import { useSnackbar } from "notistack";
@@ -37,7 +34,7 @@ export default function PopupContents({
   value = [],
   onChange,
   column,
-  docRef,
+  _rowy_ref,
 }: IPopupContentsProps) {
   const [rowyRun] = useAtom(rowyRunAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
@@ -47,8 +44,6 @@ export default function PopupContents({
   const { config } = column;
   const elementId = config.elementId;
   const multiple = Boolean(config.multiple);
-
-  const { classes } = useStyles();
 
   // Webservice search query
   const [query, setQuery] = useState("");
@@ -75,7 +70,7 @@ export default function PopupContents({
           columnKey: column.key,
           query: query,
           schemaDocPath: getTableSchemaPath(tableSettings),
-          rowDocPath: docRef.path,
+          rowDocPath: _rowy_ref.path,
         },
       });
       setResponse(resp);
@@ -105,93 +100,88 @@ export default function PopupContents({
   const clearSelection = () => onChange([]);
 
   return (
-    <Grid container direction="column" className={classes.grid}>
-      <Grid item className={classes.searchRow}>
+    <Grid container direction="column" sx={{ p: 1, height: "100%" }}>
+      <Grid item>
         <TextField
           value={query}
+          type="search"
           onChange={(e) => setQuery(e.target.value)}
           fullWidth
           variant="filled"
-          margin="dense"
           label="Search items"
-          className={classes.noMargins}
+          hiddenLabel
+          placeholder="Search items"
           InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
+            startAdornment: (
+              <InputAdornment position="start">
                 <SearchIcon />
               </InputAdornment>
             ),
           }}
+          InputLabelProps={{ className: "visually-hidden" }}
           onClick={(e) => e.stopPropagation()}
           onKeyDown={(e) => e.stopPropagation()}
         />
       </Grid>
 
-      <Grid item xs className={classes.listRow}>
-        <List className={classes.list}>
+      <Grid item xs>
+        <List sx={{ overflowY: "auto" }}>
           {hits.map((hit) => {
             const isSelected = selectedValues.some((v) => v === hit[elementId]);
             return (
-              <React.Fragment key={get(hit, elementId)}>
-                <MenuItem
-                  dense
-                  onClick={isSelected ? deselect(hit) : select(hit)}
-                  disabled={
-                    !isSelected && multiple && value.length >= config.max
-                  }
-                >
-                  <ListItemIcon className={classes.checkboxContainer}>
-                    {multiple ? (
-                      <Checkbox
-                        edge="start"
-                        checked={isSelected}
-                        tabIndex={-1}
-                        color="secondary"
-                        className={classes.checkbox}
-                        disableRipple
-                        inputProps={{
-                          "aria-labelledby": `label-${get(hit, elementId)}`,
-                        }}
-                      />
-                    ) : (
-                      <Radio
-                        edge="start"
-                        checked={isSelected}
-                        tabIndex={-1}
-                        color="secondary"
-                        className={classes.checkbox}
-                        disableRipple
-                        inputProps={{
-                          "aria-labelledby": `label-${get(hit, elementId)}`,
-                        }}
-                      />
-                    )}
-                  </ListItemIcon>
-                  <ListItemText
-                    id={`label-${get(hit, elementId)}`}
-                    primary={getLabel(config, hit)}
-                  />
-                </MenuItem>
-                <Divider className={classes.divider} />
-              </React.Fragment>
+              <MenuItem
+                key={get(hit, elementId)}
+                onClick={isSelected ? deselect(hit) : select(hit)}
+                disabled={!isSelected && multiple && value.length >= config.max}
+                disableGutters
+                style={{ margin: 0, width: "100%" }}
+              >
+                <ListItemIcon>
+                  {multiple ? (
+                    <Checkbox
+                      edge="start"
+                      checked={isSelected}
+                      tabIndex={-1}
+                      color="secondary"
+                      disableRipple
+                      inputProps={{
+                        "aria-labelledby": `label-${get(hit, elementId)}`,
+                      }}
+                      sx={{ py: 0 }}
+                    />
+                  ) : (
+                    <Radio
+                      edge="start"
+                      checked={isSelected}
+                      tabIndex={-1}
+                      color="secondary"
+                      disableRipple
+                      inputProps={{
+                        "aria-labelledby": `label-${get(hit, elementId)}`,
+                      }}
+                      sx={{ py: 0 }}
+                    />
+                  )}
+                </ListItemIcon>
+                <ListItemText
+                  id={`label-${get(hit, elementId)}`}
+                  primary={getLabel(config, hit)}
+                />
+              </MenuItem>
             );
           })}
         </List>
       </Grid>
 
       {multiple && (
-        <Grid item className={clsx(classes.footerRow, classes.selectedRow)}>
+        <Grid item>
           <Grid
             container
             direction="row"
             justifyContent="space-between"
             alignItems="center"
           >
-            <Typography
-              variant="button"
-              color="textSecondary"
-              className={classes.selectedNum}
-            >
+            <Typography variant="button" color="textSecondary" sx={{ ml: 1 }}>
               {value?.length} of {hits?.length}
             </Typography>
 
@@ -199,9 +189,9 @@ export default function PopupContents({
               disabled={!value || value.length === 0}
               onClick={clearSelection}
               color="primary"
-              className={classes.selectAllButton}
+              variant="text"
             >
-              Clear selection
+              Clear
             </Button>
           </Grid>
         </Grid>

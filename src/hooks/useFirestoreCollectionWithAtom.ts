@@ -22,7 +22,7 @@ import {
   QueryConstraint,
   WhereFilterOp,
   documentId,
-  getCountFromServer
+  getCountFromServer,
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
@@ -64,7 +64,7 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
   /** Update this atom when we’re loading the next page, and if there is a next page available. Uses same scope as `dataScope`. */
   nextPageAtom?: PrimitiveAtom<NextPageState>;
   /** Set this atom's value to the number of docs in the collection on each new snapshot */
-  serverDocCountAtom?: PrimitiveAtom<number> | undefined;
+  serverDocCountAtom?: PrimitiveAtom<number | undefined>;
 }
 
 /**
@@ -96,7 +96,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     updateDocAtom,
     deleteDocAtom,
     nextPageAtom,
-    serverDocCountAtom
+    serverDocCountAtom,
   } = options || {};
 
   const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
@@ -120,7 +120,11 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     void
   >(nextPageAtom || (dataAtom as any), dataScope);
 
-  const setServerDocCountAtom = useSetAtom(serverDocCountAtom || (dataAtom as any), dataScope)
+  const setServerDocCountAtom = useSetAtom(
+    serverDocCountAtom || (dataAtom as any),
+    dataScope
+  );
+
 
   // Store if we’re at the last page to prevent a new query from being created
   const [isLastPage, setIsLastPage] = useState(false);
@@ -198,8 +202,8 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
           // on each new snapshot, use the query to get and set the document count from the server
           if (serverDocCountAtom) {
             getCountFromServer(memoizedQuery.unlimitedQuery).then((value) => {
-              setServerDocCountAtom(value.data().count)
-            })
+              setServerDocCountAtom(value.data().count);
+            });
           }
         } catch (error) {
           if (onError) onError(error as FirestoreError);
@@ -232,7 +236,8 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     handleError,
     nextPageAtom,
     setNextPageAtom,
-    setServerDocCountAtom
+    serverDocCountAtom,
+    setServerDocCountAtom,
   ]);
 
   // Create variable for validity of query to pass to useEffect dependencies
@@ -339,7 +344,7 @@ const getQuery = <T>(
       limit,
       firestoreFilters,
       sorts,
-      unlimitedQuery: query<T>(collectionRef, ...firestoreFilters)
+      unlimitedQuery: query<T>(collectionRef, ...firestoreFilters),
     };
   } catch (e) {
     if (onError) onError(e as FirestoreError);
@@ -389,11 +394,15 @@ export const tableFiltersToFirestoreFilters = (filters: TableFilter[]) => {
       firestoreFilters.push(where(documentId(), "==", filter.value));
       continue;
     } else if (filter.operator === "color-equal") {
-      firestoreFilters.push(where(filter.key.concat(".hex"), "==", filter.value.hex.toString()))
-      continue
+      firestoreFilters.push(
+        where(filter.key.concat(".hex"), "==", filter.value.hex.toString())
+      );
+      continue;
     } else if (filter.operator === "color-not-equal") {
-      firestoreFilters.push(where(filter.key.concat(".hex"), "!=", filter.value.hex.toString()))
-      continue
+      firestoreFilters.push(
+        where(filter.key.concat(".hex"), "!=", filter.value.hex.toString())
+      );
+      continue;
     }
     firestoreFilters.push(
       where(filter.key, filter.operator as WhereFilterOp, filter.value)

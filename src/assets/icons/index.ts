@@ -103,6 +103,9 @@ export { FileTableBoxOutline as Project };
 import { TableColumn } from "mdi-material-ui";
 export { TableColumn };
 
+import { DragVertical } from "mdi-material-ui";
+export { DragVertical };
+
 export * from "./AddRow";
 export * from "./AddRowTop";
 export * from "./ChevronDown";

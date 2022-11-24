@@ -1,15 +1,12 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withPopoverCell from "@src/components/fields/_withTableCell/withPopoverCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { ConnectTable as ConnectTableIcon } from "@src/assets/icons";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
-import InlineCell from "./InlineCell";
-import NullEditor from "@src/components/Table/editors/NullEditor";
+import DisplayCell from "./DisplayCell";
 
-const PopoverCell = lazy(
-  () =>
-    import("./PopoverCell" /* webpackChunkName: "PopoverCell-ConnectTable" */)
+const EditorCell = lazy(
+  () => import("./EditorCell" /* webpackChunkName: "EditorCell-ConnectTable" */)
 );
 const SideDrawerField = lazy(
   () =>
@@ -31,11 +28,10 @@ export const config: IFieldConfig = {
   icon: <ConnectTableIcon />,
   description:
     "Connects to an existing table to fetch a snapshot of values from a row. Requires Rowy Run and Algolia setup.",
-  TableCell: withPopoverCell(BasicCell, InlineCell, PopoverCell, {
-    anchorOrigin: { horizontal: "left", vertical: "bottom" },
-    transparent: true,
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "popover", {
+    disablePadding: true,
+    transparentPopover: true,
   }),
-  TableEditor: NullEditor as any,
   SideDrawerField,
   settings: Settings,
   requireConfiguration: true,
