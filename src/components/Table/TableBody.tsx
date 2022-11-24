@@ -54,6 +54,7 @@ export const TableBody = memo(function TableBody({
   rows,
   canEditCells,
   lastFrozen,
+  columnSizing,
 }: ITableBodyProps) {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [selectedCell] = useAtom(selectedCellAtom, tableScope);
@@ -66,7 +67,7 @@ export const TableBody = memo(function TableBody({
     paddingBottom,
     paddingLeft,
     paddingRight,
-  } = useVirtualization(containerRef, leafColumns);
+  } = useVirtualization(containerRef, leafColumns, columnSizing);
 
   const rowHeight = tableSchema.rowHeight || DEFAULT_ROW_HEIGHT;
 
