@@ -43,7 +43,7 @@ function LoadedRowsStatus() {
     >
       <StatusText>
         Loaded {!tableNextPage.available && "all "}
-        {tableRows.length} {tableNextPage.available && `of ${serverDocCount}`} row{serverDocCount !== 1 && "s"}
+        {tableRows.length} {tableNextPage.available && serverDocCount !== 0 && `of ${serverDocCount}`} row{serverDocCount !== 1 && "s"}
       </StatusText>
     </Tooltip>
   );
