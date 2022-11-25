@@ -37,7 +37,7 @@ import {
 } from "@src/atoms/tableScope";
 import { formatSubTableName } from "@src/utils/table";
 
-export default function HiddenFields2() {
+export default function HiddenFields() {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const [userSettings] = useAtom(userSettingsAtom, projectScope);
