@@ -161,6 +161,7 @@ export default function HiddenFields2() {
     });
   }
 
+  // checks whether to disable reordering when search filter is applied
   function checkToDisableDrag(e: ChangeEvent<HTMLInputElement>) {
     setDisableDrag(e.target.value !== "");
   }
