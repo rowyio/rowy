@@ -6,7 +6,7 @@ import { ISideDrawerFieldProps } from "@src/components/fields/types";
 import { Link } from "react-router-dom";
 
 import { Box, Stack, IconButton } from "@mui/material";
-import LaunchIcon from "@mui/icons-material/Launch";
+import OpenIcon from "@mui/icons-material/OpenInBrowser";
 
 import { tableScope, tableRowsAtom } from "@src/atoms/tableScope";
 import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
@@ -46,7 +46,7 @@ export default function SubTable({ column, _rowy_ref }: ISideDrawerFieldProps) {
         sx={{ ml: 1 }}
         disabled={!subTablePath}
       >
-        <LaunchIcon />
+        <OpenIcon />
       </IconButton>
     </Stack>
   );

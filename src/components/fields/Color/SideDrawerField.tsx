@@ -87,7 +87,9 @@ export default function Color({
         <ColorPicker
           width={440}
           height={180}
-          color={value?.hex ? value : toColor("hex", "#fff")}
+          color={
+            value?.hex ? toColor("hex", value.hex) : toColor("hex", "#fff")
+          }
           onChange={onChange}
           onChangeComplete={onSubmit}
           alpha

@@ -4,7 +4,10 @@ import type {
   DocumentData,
   DocumentReference,
 } from "firebase/firestore";
-import { IExtension } from "@src/components/TableModals/ExtensionsModal/utils";
+import {
+  IExtension,
+  IRuntimeOptions,
+} from "@src/components/TableModals/ExtensionsModal/utils";
 import { IWebhook } from "@src/components/TableModals/WebhooksModal/utils";
 
 /**
@@ -70,6 +73,18 @@ export type TableSettings = {
 
   section: string;
   description?: string;
+  details?: string;
+  thumbnailURL?: string;
+
+  _createdBy?: {
+    displayName?: string;
+    email?: string;
+    emailVerified: boolean;
+    isAnonymous: boolean;
+    photoURL?: string;
+    uid: string;
+    timestamp: firebase.firestore.Timestamp;
+  };
 
   tableType: "primaryCollection" | "collectionGroup";
 
@@ -92,6 +107,7 @@ export type TableSchema = {
   extensionObjects?: IExtension[];
   compiledExtension?: string;
   webhooks?: IWebhook[];
+  runtimeOptions?: IRuntimeOptions;
 
   /** @deprecated Migrate to Extensions */
   sparks?: string;
@@ -121,26 +137,32 @@ export type ColumnConfig = {
   /** Prevent column resizability */
   resizable?: boolean = true;
 
-  config?: {
+  config?: Partial<{
     /** Set column to required */
-    required?: boolean;
+    required: boolean;
     /** Set column default value */
-    defaultValue?: {
+    defaultValue: {
       type: "undefined" | "null" | "static" | "dynamic";
       value?: any;
       script?: string;
       dynamicValueFn?: string;
     };
+    /** Regex used in CellValidation */
+    validationRegex: string;
     /** FieldType to render for Derivative fields */
     renderFieldType?: FieldType;
+    /** Used in Derivative fields */
+    listenerFields?: string[];
+    /** Used in Derivative and Action fields */
+    requiredFields?: string[];
     /** For sub-table fields */
-    parentLabel?: string[];
+    parentLabel: string[];
 
-    primaryKeys?: string[];
+    primaryKeys: string[];
 
     /** Column-specific config */
     [key: string]: any;
-  };
+  }>;
 };
 
 export type TableFilter = {
@@ -153,7 +175,9 @@ export type TableFilter = {
     | "date-before-equal"
     | "date-after-equal"
     | "time-minute-equal"
-    | "id-equal";
+    | "id-equal"
+    | "color-equal"
+    | "color-not-equal";
   value: any;
 };
 
