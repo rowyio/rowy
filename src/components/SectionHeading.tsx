@@ -5,7 +5,7 @@ import { HashLink } from "react-router-hash-link";
 import { Stack, StackProps, Typography, IconButton } from "@mui/material";
 import LinkIcon from "@mui/icons-material/Link";
 
-import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
+import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 
 export interface ISectionHeadingProps extends Omit<StackProps, "children"> {
   children: string;
@@ -35,7 +35,7 @@ export const SectionHeading = forwardRef(function SectionHeading_(
           opacity: 1,
         },
 
-        scrollMarginTop: (theme) => theme.spacing(APP_BAR_HEIGHT / 8 + 3.5),
+        scrollMarginTop: (theme) => theme.spacing(TOP_BAR_HEIGHT / 8 + 3.5),
         scrollBehavior: "smooth",
       }}
     >

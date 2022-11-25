@@ -94,6 +94,18 @@ export { Table };
 import { Leaf } from "mdi-material-ui";
 export { Leaf };
 
+import { FormatListChecks } from "mdi-material-ui";
+export { FormatListChecks as Checklist };
+
+import { FileTableBoxOutline } from "mdi-material-ui";
+export { FileTableBoxOutline as Project };
+
+import { TableColumn } from "mdi-material-ui";
+export { TableColumn };
+
+import { DragVertical } from "mdi-material-ui";
+export { DragVertical };
+
 export * from "./AddRow";
 export * from "./AddRowTop";
 export * from "./ChevronDown";

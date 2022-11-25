@@ -1,13 +1,12 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import ActionIcon from "@mui/icons-material/TouchAppOutlined";
-import BasicCell from "./BasicCell";
-import NullEditor from "@src/components/Table/editors/NullEditor";
+import DisplayCell from "./DisplayCell";
 
-const TableCell = lazy(
-  () => import("./TableCell" /* webpackChunkName: "TableCell-Action" */)
+const EditorCell = lazy(
+  () => import("./EditorCell" /* webpackChunkName: "EditorCell-Action" */)
 );
 const SideDrawerField = lazy(
   () =>
@@ -25,8 +24,9 @@ export const config: IFieldConfig = {
   icon: <ActionIcon />,
   description:
     "Button with pre-defined action script or triggers a Cloud Function. Optionally supports Undo and Redo.",
-  TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: NullEditor as any,
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "inline", {
+    disablePadding: true,
+  }),
   SideDrawerField,
   settings: Settings,
   requireConfiguration: true,

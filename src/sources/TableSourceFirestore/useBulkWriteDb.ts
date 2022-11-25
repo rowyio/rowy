@@ -3,7 +3,7 @@ import { useAtom, useSetAtom } from "jotai";
 import { chunk, set } from "lodash-es";
 import { doc, writeBatch, deleteField } from "firebase/firestore";
 
-import { globalScope } from "@src/atoms/globalScope";
+import { projectScope } from "@src/atoms/projectScope";
 import { tableScope, _bulkWriteDbAtom } from "@src/atoms/tableScope";
 import { BulkWriteFunction } from "@src/types/table";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
@@ -13,7 +13,7 @@ import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
  */
 export default function useBulkWriteDb() {
   // Set _bulkWriteDb function
-  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
+  const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
   const setBulkWriteDb = useSetAtom(_bulkWriteDbAtom, tableScope);
   useEffect(() => {
     setBulkWriteDb(

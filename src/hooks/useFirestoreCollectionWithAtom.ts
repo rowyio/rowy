@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import useMemoValue from "use-memo-value";
 import { useAtom, PrimitiveAtom, useSetAtom, SetStateAction } from "jotai";
-import { Scope } from "jotai/core/atom";
 import { set } from "lodash-es";
 import {
   Firestore,
@@ -23,10 +22,11 @@ import {
   QueryConstraint,
   WhereFilterOp,
   documentId,
+  getCountFromServer,
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
-import { globalScope } from "@src/atoms/globalScope";
+import { projectScope } from "@src/atoms/projectScope";
 import {
   UpdateCollectionDocFunction,
   DeleteCollectionDocFunction,
@@ -63,11 +63,13 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
   deleteDocAtom?: PrimitiveAtom<DeleteCollectionDocFunction | undefined>;
   /** Update this atom when we’re loading the next page, and if there is a next page available. Uses same scope as `dataScope`. */
   nextPageAtom?: PrimitiveAtom<NextPageState>;
+  /** Set this atom's value to the number of docs in the collection on each new snapshot */
+  serverDocCountAtom?: PrimitiveAtom<number | undefined>;
 }
 
 /**
  * Attaches a listener for a Firestore collection and unsubscribes on unmount.
- * Gets the Firestore instance initiated in globalScope.
+ * Gets the Firestore instance initiated in projectScope.
  * Updates an atom and Suspends that atom until the first snapshot is received.
  *
  * @param dataAtom - Atom to store data in
@@ -77,7 +79,7 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
  */
 export function useFirestoreCollectionWithAtom<T = TableRow>(
   dataAtom: PrimitiveAtom<T[]>,
-  dataScope: Scope | undefined,
+  dataScope: Parameters<typeof useAtom>[1] | undefined,
   path: string | undefined,
   options?: IUseFirestoreCollectionWithAtomOptions<T>
 ) {
@@ -94,9 +96,10 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     updateDocAtom,
     deleteDocAtom,
     nextPageAtom,
+    serverDocCountAtom,
   } = options || {};
 
-  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
+  const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
   const setDataAtom = useSetAtom(dataAtom, dataScope);
   const handleError = useErrorHandler();
 
@@ -117,9 +120,13 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     void
   >(nextPageAtom || (dataAtom as any), dataScope);
 
+  const setServerDocCountAtom = useSetAtom(
+    serverDocCountAtom || (dataAtom as any),
+    dataScope
+  );
+
   // Store if we’re at the last page to prevent a new query from being created
   const [isLastPage, setIsLastPage] = useState(false);
-
   // Create the query and memoize using Firestore’s queryEqual
   const memoizedQuery = useMemoValue(
     getQuery<T>(
@@ -191,6 +198,12 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
               available: docs.length >= memoizedQuery.limit,
             }));
           }
+          // on each new snapshot, use the query to get and set the document count from the server
+          if (serverDocCountAtom) {
+            getCountFromServer(memoizedQuery.unlimitedQuery).then((value) => {
+              setServerDocCountAtom(value.data().count);
+            });
+          }
         } catch (error) {
           if (onError) onError(error as FirestoreError);
           else handleError(error);
@@ -222,6 +235,8 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     handleError,
     nextPageAtom,
     setNextPageAtom,
+    serverDocCountAtom,
+    setServerDocCountAtom,
   ]);
 
   // Create variable for validity of query to pass to useEffect dependencies
@@ -314,14 +329,13 @@ const getQuery = <T>(
     }
 
     if (!collectionRef) return null;
-
     const limit = (page + 1) * pageSize;
     const firestoreFilters = tableFiltersToFirestoreFilters(filters || []);
 
     return {
       query: query<T>(
         collectionRef,
-        queryLimit((page + 1) * pageSize),
+        queryLimit(limit),
         ...firestoreFilters,
         ...(sorts?.map((order) => orderBy(order.key, order.direction)) || [])
       ),
@@ -329,6 +343,7 @@ const getQuery = <T>(
       limit,
       firestoreFilters,
       sorts,
+      unlimitedQuery: query<T>(collectionRef, ...firestoreFilters),
     };
   } catch (e) {
     if (onError) onError(e as FirestoreError);
@@ -377,12 +392,20 @@ export const tableFiltersToFirestoreFilters = (filters: TableFilter[]) => {
     } else if (filter.operator === "id-equal") {
       firestoreFilters.push(where(documentId(), "==", filter.value));
       continue;
+    } else if (filter.operator === "color-equal") {
+      firestoreFilters.push(
+        where(filter.key.concat(".hex"), "==", filter.value.hex.toString())
+      );
+      continue;
+    } else if (filter.operator === "color-not-equal") {
+      firestoreFilters.push(
+        where(filter.key.concat(".hex"), "!=", filter.value.hex.toString())
+      );
+      continue;
     }
-
     firestoreFilters.push(
       where(filter.key, filter.operator as WhereFilterOp, filter.value)
     );
   }
-
   return firestoreFilters;
 };

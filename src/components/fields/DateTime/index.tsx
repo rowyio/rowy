@@ -1,16 +1,15 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 import { parseJSON, format } from "date-fns";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 
 import DateTimeIcon from "@mui/icons-material/AccessTime";
-import BasicCell from "./BasicCell";
-import NullEditor from "@src/components/Table/editors/NullEditor";
+import DisplayCell from "./DisplayCell";
 import { filterOperators, valueFormatter } from "./filters";
 
-const TableCell = lazy(
-  () => import("./TableCell" /* webpackChunkName: "TableCell-DateTime" */)
+const EditorCell = lazy(
+  () => import("./EditorCell" /* webpackChunkName: "EditorCell-DateTime" */)
 );
 const SideDrawerField = lazy(
   () =>
@@ -37,8 +36,9 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <DateTimeIcon />,
   description: `Formatted date & time. Format is configurable, default: ${DATE_TIME_FORMAT}. Edited with a visual picker.`,
-  TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: NullEditor as any,
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "focus", {
+    disablePadding: true,
+  }),
   SideDrawerField,
   filter: {
     operators: filterOperators,

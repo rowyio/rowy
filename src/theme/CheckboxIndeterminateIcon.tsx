@@ -68,6 +68,7 @@ export default function CheckboxIndeterminateIcon() {
           },
         },
       }}
+      className="checkbox-indeterminate-icon"
     >
       <svg viewBox="0 0 18 18">
         <line

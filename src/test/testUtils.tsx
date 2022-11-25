@@ -20,7 +20,7 @@ import {
   firebaseAuthAtom,
   firebaseDbAtom,
 } from "@src/sources/ProjectSourceFirebase";
-import { currentUserAtom } from "@src/atoms/globalScope";
+import { currentUserAtom } from "@src/atoms/projectScope";
 
 /** Initialize Firebase */
 console.log("Initializing Firebase...");
@@ -31,7 +31,7 @@ const db = initializeFirestore(app, { ignoreUndefinedProperties: true });
 connectFirestoreEmulator(db, "localhost", 9299);
 
 /**
- * Render with Jotai `globalScope` providers
+ * Render with Jotai `projectScope` providers
  * & `ProjectSourceFirebase` component
  */
 export const customRender = (

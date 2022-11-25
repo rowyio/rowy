@@ -5,7 +5,7 @@ import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { camelCase, find, findIndex, isEmpty } from "lodash-es";
 
 import {
-  globalScope,
+  projectScope,
   projectSettingsAtom,
   createTableAtom,
   updateTableAtom,
@@ -13,7 +13,8 @@ import {
   getTableSchemaAtom,
   AdditionalTableSettings,
   MinimumTableSettings,
-} from "@src/atoms/globalScope";
+  currentUserAtom,
+} from "@src/atoms/projectScope";
 import { firebaseDbAtom } from "./init";
 
 import {
@@ -21,22 +22,24 @@ import {
   TABLE_SCHEMAS,
   TABLE_GROUP_SCHEMAS,
 } from "@src/config/dbPaths";
+import { rowyUser } from "@src/utils/table";
 import { TableSettings, TableSchema } from "@src/types/table";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 
 export function useTableFunctions() {
-  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
+  const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
 
   // Create a function to get the latest tables from project settings,
   // so we don’t create new functions when tables change
   const readTables = useAtomCallback(
     useCallback((get) => get(projectSettingsAtom).tables, []),
-    globalScope
+    projectScope
   );
 
   // Set the createTable function
-  const setCreateTable = useSetAtom(createTableAtom, globalScope);
+  const setCreateTable = useSetAtom(createTableAtom, projectScope);
   useEffect(() => {
     setCreateTable(
       () =>
@@ -93,10 +96,11 @@ export function useTableFunctions() {
               };
           }
 
+          const _createdBy = currentUser && rowyUser(currentUser);
           // Appends table to settings doc
           const promiseUpdateSettings = setDoc(
             doc(firebaseDb, SETTINGS),
-            { tables: [...tables, settings] },
+            { tables: [...tables, { ...settings, _createdBy }] },
             { merge: true }
           );
 
@@ -120,10 +124,10 @@ export function useTableFunctions() {
           await Promise.all([promiseUpdateSettings, promiseAddSchema]);
         }
     );
-  }, [firebaseDb, readTables, setCreateTable]);
+  }, [currentUser, firebaseDb, readTables, setCreateTable]);
 
   // Set the createTable function
-  const setUpdateTable = useSetAtom(updateTableAtom, globalScope);
+  const setUpdateTable = useSetAtom(updateTableAtom, projectScope);
   useEffect(() => {
     setUpdateTable(
       () =>
@@ -169,7 +173,7 @@ export function useTableFunctions() {
   }, [firebaseDb, readTables, setUpdateTable]);
 
   // Set the deleteTable function
-  const setDeleteTable = useSetAtom(deleteTableAtom, globalScope);
+  const setDeleteTable = useSetAtom(deleteTableAtom, projectScope);
   useEffect(() => {
     setDeleteTable(() => async (id: string) => {
       // Get latest tables
@@ -199,7 +203,7 @@ export function useTableFunctions() {
   }, [firebaseDb, readTables, setDeleteTable]);
 
   // Set the getTableSchema function
-  const setGetTableSchema = useSetAtom(getTableSchemaAtom, globalScope);
+  const setGetTableSchema = useSetAtom(getTableSchemaAtom, projectScope);
   useEffect(() => {
     setGetTableSchema(() => async (id: string) => {
       // Get latest tables

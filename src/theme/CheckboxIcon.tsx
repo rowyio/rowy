@@ -68,6 +68,7 @@ export default function CheckboxIcon() {
           },
         },
       }}
+      className="checkbox-icon"
     >
       <svg viewBox="0 0 18 18">
         <polyline

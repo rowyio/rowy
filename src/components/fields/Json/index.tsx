@@ -1,10 +1,10 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { Json as JsonIcon } from "@src/assets/icons";
-import BasicCell from "./BasicCell";
-import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
+import DisplayCell from "./DisplayCell";
+import ContextMenuActions from "./ContextMenuActions";
 
 const SideDrawerField = lazy(
   () =>
@@ -24,8 +24,9 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <JsonIcon />,
   description: "Object edited with a visual JSON editor.",
-  TableCell: withBasicCell(BasicCell),
-  TableEditor: withSideDrawerEditor(BasicCell),
+  TableCell: withRenderTableCell(DisplayCell, SideDrawerField, "popover", {
+    popoverProps: { PaperProps: { sx: { p: 1 } } },
+  }),
   csvImportParser: (value) => {
     try {
       return JSON.parse(value);
@@ -35,5 +36,6 @@ export const config: IFieldConfig = {
   },
   SideDrawerField,
   settings: Settings,
+  contextMenuActions: ContextMenuActions,
 };
 export default config;

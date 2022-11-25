@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 
 import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
-import { globalScope, projectIdAtom } from "@src/atoms/globalScope";
+import { projectScope, projectIdAtom } from "@src/atoms/projectScope";
 
 export default {
   id: "welcome",
@@ -33,7 +33,7 @@ export default {
 } as ISetupStep;
 
 function StepWelcome({ isComplete, setComplete }: ISetupStepBodyProps) {
-  const [projectId] = useAtom(projectIdAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
 
   return (
     <>

@@ -14,6 +14,7 @@ import {
   _updateRowDbAtom,
   _deleteRowDbAtom,
   tableNextPageAtom,
+  serverDocCountAtom,
 } from "@src/atoms/tableScope";
 import useFirestoreDocWithAtom from "@src/hooks/useFirestoreDocWithAtom";
 import useFirestoreCollectionWithAtom from "@src/hooks/useFirestoreCollectionWithAtom";
@@ -30,9 +31,13 @@ import { getTableSchemaPath } from "@src/utils/table";
  * When rendered, provides atom values for top-level tables and sub-tables
  */
 export const TableSourceFirestore = memo(function TableSourceFirestore() {
-  // Get tableSettings from tableId and tables in globalScope
+  // Get tableSettings from tableId and tables in projectScope
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
-  const isCollectionGroup = tableSettings?.tableType === "collectionGroup";
+  if (!tableSettings) throw new Error("No table config");
+  if (!tableSettings.collection)
+    throw new Error("Invalid table config: no collection");
+
+  const isCollectionGroup = tableSettings.tableType === "collectionGroup";
 
   // Get tableSchema and store in tableSchemaAtom.
   // If it doesn’t exist, initialize columns
@@ -63,7 +68,7 @@ export const TableSourceFirestore = memo(function TableSourceFirestore() {
   useFirestoreCollectionWithAtom(
     tableRowsDbAtom,
     tableScope,
-    tableSettings?.collection,
+    tableSettings.collection,
     {
       filters,
       sorts,
@@ -73,6 +78,7 @@ export const TableSourceFirestore = memo(function TableSourceFirestore() {
       updateDocAtom: _updateRowDbAtom,
       deleteDocAtom: _deleteRowDbAtom,
       nextPageAtom: tableNextPageAtom,
+      serverDocCountAtom: serverDocCountAtom,
     }
   );
 

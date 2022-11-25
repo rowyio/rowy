@@ -15,7 +15,7 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
 import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
-import { globalScope, jsonEditorAtom } from "@src/atoms/globalScope";
+import { projectScope, jsonEditorAtom } from "@src/atoms/projectScope";
 import config from ".";
 
 const isValidJson = (val: any) => {
@@ -37,16 +37,17 @@ export default function Json({
 }: ISideDrawerFieldProps) {
   const theme = useTheme();
 
-  const [editor, setEditor] = useAtom(jsonEditorAtom, globalScope);
+  const [editor, setEditor] = useAtom(jsonEditorAtom, projectScope);
   const [codeValid, setCodeValid] = useState(true);
 
-  const sanitizedValue =
+  const baseValue =
     value !== undefined && isValidJson(value)
       ? value
       : column.config?.isArray
       ? []
       : {};
-  const formattedJson = stringify(sanitizedValue, { space: 2 });
+  const formattedJson = stringify(baseValue, { space: 2 });
+  const sanitizedValue = JSON.parse(formattedJson);
 
   if (disabled)
     return (
@@ -82,8 +83,14 @@ export default function Json({
         sx={{
           minHeight: 32,
           mt: -32 / 8,
+          ".MuiPopover-root &": { mt: 0 }, // Don’t have margins in popover cell
 
-          "& .MuiTabs-flexContainer": { justifyContent: "flex-end" },
+          "& .MuiTabs-flexContainer": {
+            justifyContent: "flex-end",
+            ".MuiPopover-root &": {
+              justifyContent: "center",
+            },
+          },
           "& .MuiTab-root": { minHeight: 32, py: 0 },
         }}
       >
