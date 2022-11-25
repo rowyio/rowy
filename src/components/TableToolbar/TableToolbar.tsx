@@ -14,7 +14,8 @@ import { ButtonSkeleton } from "./TableToolbarSkeleton";
 import AddRow from "./AddRow";
 import LoadedRowsStatus from "./LoadedRowsStatus";
 import TableSettings from "./TableSettings";
-import HiddenFields from "./HiddenFields";
+// import HiddenFields from "./HiddenFields";
+import ManageColumns from "./ManageColumns";
 import RowHeight from "./RowHeight";
 import TableInformation from "./TableInformation";
 
@@ -89,7 +90,8 @@ export default function TableToolbar() {
     >
       <AddRow />
       <div /> {/* Spacer */}
-      <HiddenFields />
+      {/* <HiddenFields /> */}
+      <ManageColumns />
       <Suspense fallback={<ButtonSkeleton />}>
         <Filters />
       </Suspense>
