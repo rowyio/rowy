@@ -121,10 +121,10 @@ const Styles = styled("div", {
                   0 0 0 1px ${theme.palette.action.inputOutline} inset`,
         }
       : {},
-  },
-  ".tox.tox-tinymce.tox-fullscreen": {
-    zIndex: 1203,
-    backgroundColor: "hsl(240, 9%, 7%)",
+    "& .tox-tinymce.tox-fullscreen": {
+      zIndex: theme.zIndex.modal,
+      backgroundColor: theme.palette.background.paper,
+    },
   },
 }));
 
