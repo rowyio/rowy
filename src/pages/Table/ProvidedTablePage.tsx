@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { useAtom, Provider } from "jotai";
 import { DebugAtoms } from "@src/atoms/utils";
 import { useParams, useOutlet, Link } from "react-router-dom";
@@ -10,7 +10,6 @@ import { Typography, Button } from "@mui/material";
 
 import ErrorFallback from "@src/components/ErrorFallback";
 import TableSourceFirestore from "@src/sources/TableSourceFirestore";
-import TablePage from "./TablePage";
 import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkeleton";
 import TableSkeleton from "@src/components/Table/TableSkeleton";
 import EmptyState from "@src/components/EmptyState";
@@ -33,9 +32,19 @@ import { SyncAtomValue } from "@src/atoms/utils";
 import { ROUTES } from "@src/constants/routes";
 import useDocumentTitle from "@src/hooks/useDocumentTitle";
 
+// prettier-ignore
+const TablePage = lazy(() => import("./TablePage" /* webpackChunkName: "TablePage" */));
+
 /**
  * Wraps `TablePage` with the data for a top-level table.
  * `SubTablePage` is inserted in the outlet, alongside `TablePage`.
+ *
+ * Interfaces with `projectScope` atoms to find the correct table (or sub-table)
+ * settings and schema.
+ *
+ * - Renders the Jotai `Provider` with `tableScope`
+ * - Renders `TableSourceFirestore`, which queries Firestore and stores data in
+ *   atoms in `tableScope`
  */
 export default function ProvidedTablePage() {
   const { id } = useParams();

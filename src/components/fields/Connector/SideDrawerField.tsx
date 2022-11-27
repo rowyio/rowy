@@ -11,7 +11,6 @@ export default function Connector({
   column,
   _rowy_ref,
   value,
-  onDirty,
   onChange,
   onSubmit,
   disabled,
@@ -32,7 +31,7 @@ export default function Connector({
           column={column}
           value={value}
           onChange={onChange}
-          docRef={_rowy_ref as any}
+          _rowy_ref={_rowy_ref}
           TextFieldProps={{
             label: "",
             hiddenLabel: true,
@@ -50,7 +49,6 @@ export default function Connector({
         <Grid container spacing={0.5} style={{ marginTop: 2 }}>
           {value.map((item) => {
             const key = get(item, config.elementId);
-            console.log(key, item);
             return (
               <Grid item key={key}>
                 <Chip

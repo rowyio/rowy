@@ -18,6 +18,7 @@
     "@mui/x-date-pickers": "^5.0.0-alpha.4",
     "@rowy/form-builder": "^0.7.0",
     "@rowy/multiselect": "^0.4.1",
+    "@tanstack/react-table": "^8.5.15",
     "@tinymce/tinymce-react": "^3",
     "@uiw/react-md-editor": "^3.14.1",
     "algoliasearch": "^4.13.1",
@@ -46,7 +47,6 @@
     "react": "^18.0.0",
     "react-beautiful-dnd": "^13.1.0",
     "react-color-palette": "^6.2.0",
-    "react-data-grid": "7.0.0-beta.5",
     "react-detect-offline": "^2.4.5",
     "react-div-100vh": "^0.7.0",
     "react-dnd": "^16.0.1",
@@ -64,6 +64,7 @@
     "react-router-hash-link": "^2.4.3",
     "react-scripts": "^5.0.0",
     "react-usestateref": "^1.0.8",
+    "react-virtual": "^2.10.4",
     "remark-gfm": "^3.0.1",
     "seedrandom": "^3.0.5",
     "stream-browserify": "^3.0.0",
@@ -88,10 +89,10 @@
     "env": "node createDotEnv",
     "target": "firebase target:apply hosting rowy",
     "deploy": "firebase deploy --only hosting",
-    "typedoc": "typedoc src/atoms/projectScope/index.ts src/atoms/tableScope/index.ts --out typedoc"
+    "typedoc": "typedoc --options typedoc.json"
   },
   "engines": {
-    "node": ">=16"
+    "node": "^16"
   },
   "eslintConfig": {
     "plugins": [
@@ -180,7 +181,7 @@
     "raw-loader": "^4.0.2",
     "source-map-explorer": "^2.5.2",
     "ts-jest": "^28.0.2",
-    "typedoc": "^0.22.17"
+    "typedoc": "^0.23.21"
   },
   "resolutions": {
     "@types/react": "^18"

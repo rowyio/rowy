@@ -2,8 +2,8 @@ import { useAtom } from "jotai";
 import { IStepProps } from ".";
 
 import { styled, Grid } from "@mui/material";
-import Column from "@src/components/Table/Column";
-import Cell from "@src/components/Table/Cell";
+import Column from "@src/components/Table/Mock/Column";
+import Cell from "@src/components/Table/Mock/Cell";
 
 import { tableScope, tableRowsAtom } from "@src/atoms/tableScope";
 

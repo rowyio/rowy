@@ -97,8 +97,6 @@ export const updateColumnAtom = atom(
       });
     }
 
-    console.log(tableColumnsOrdered);
-
     // Reduce array into single object with updated indexes
     const updatedColumns = tableColumnsOrdered.reduce(tableColumnsReducer, {});
     await updateTableSchema({ columns: updatedColumns });
