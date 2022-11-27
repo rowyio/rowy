@@ -26,6 +26,11 @@ type ExtensionContext = {
     extensionBody: any;
   };
   RULES_UTILS: any;
+  logging: {
+    log: (payload: any) => void;
+    warn: (payload: any) => void;
+    error: (payload: any) => void;
+  };
 };
 
 // extension body definition
