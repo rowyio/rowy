@@ -102,7 +102,13 @@ export default function HiddenFields() {
             >
               <DragIndicatorOutlinedIcon
                 color="disabled"
-                sx={[{ marginRight: "6px", opacity: disableDrag ? 0.6 : 1 }]}
+                sx={[
+                  {
+                    marginRight: "6px",
+                    opacity: (theme) =>
+                      disableDrag ? theme.palette.action.disabledOpacity : 1,
+                  },
+                ]}
               />
             </Box>
             <ColumnItem option={option}>
