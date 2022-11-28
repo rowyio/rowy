@@ -215,7 +215,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
           setDataAtom([]);
           suspended = false;
         }
-        if (nextPageAtom) setNextPageAtom({ loading: false, available: true });
+        if (nextPageAtom) setNextPageAtom({ loading: false, available: false });
         if (onError) onError(error);
         else handleError(error);
       }
