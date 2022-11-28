@@ -3,51 +3,30 @@ import { useAtom } from "jotai";
 import { ErrorBoundary } from "react-error-boundary";
 import { useLocation, Outlet } from "react-router-dom";
 
-import {
-  useScrollTrigger,
-  useMediaQuery,
-  Stack,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Box,
-  Typography,
-  Grow,
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import { useMediaQuery, Stack, GlobalStyles } from "@mui/material";
 
-import NavDrawer, { NAV_DRAWER_WIDTH } from "./NavDrawer";
-import HelpMenu from "./HelpMenu";
-import UserMenu from "./UserMenu";
+import TopBar, { TOP_BAR_HEIGHT } from "./TopBar";
+import NavDrawer from "./NavDrawer";
+import NavDrawerContents from "./NavDrawer/NavDrawerContents";
 import ErrorFallback, {
   IErrorFallbackProps,
 } from "@src/components/ErrorFallback";
 import Loading from "@src/components/Loading";
-import UpdateCheckBadge from "./UpdateCheckBadge";
+import GetStartedChecklist from "@src/components/GetStartedChecklist";
 
 import {
-  globalScope,
+  projectScope,
   projectIdAtom,
-  userRolesAtom,
   navOpenAtom,
-  navPinnedAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { ROUTE_TITLES } from "@src/constants/routes";
 import { useDocumentTitle } from "@src/hooks/useDocumentTitle";
 
-export const APP_BAR_HEIGHT = 56;
-const StyledErrorFallback = (props: IErrorFallbackProps) => (
-  <ErrorFallback {...props} style={{ marginTop: -APP_BAR_HEIGHT }} />
-);
-
 export default function Navigation({ children }: React.PropsWithChildren<{}>) {
-  const [projectId] = useAtom(projectIdAtom, globalScope);
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
 
-  const [open, setOpen] = useAtom(navOpenAtom, globalScope);
-  const [pinned, setPinned] = useAtom(navPinnedAtom, globalScope);
-  const trigger = useScrollTrigger({ disableHysteresis: true, threshold: 0 });
-  const canPin = !useMediaQuery((theme: any) => theme.breakpoints.down("lg"));
+  const [open, setOpen] = useAtom(navOpenAtom, projectScope);
+  const isPermanent = useMediaQuery((theme: any) => theme.breakpoints.up("md"));
 
   const { pathname } = useLocation();
   const basePath = ("/" + pathname.split("/")[1]) as keyof typeof ROUTE_TITLES;
@@ -60,165 +39,54 @@ export default function Navigation({ children }: React.PropsWithChildren<{}>) {
 
   return (
     <>
-      <AppBar
-        position="sticky"
-        color="inherit"
-        elevation={trigger ? 1 : 0}
-        sx={{
-          height: APP_BAR_HEIGHT,
-          backgroundImage:
-            "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))", // Elevation 8
-
-          "&::before": {
-            content: "''",
-            display: "block",
-            position: "absolute",
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-
-            bgcolor: "background.default",
-            opacity: trigger ? 0 : 1,
-            transition: (theme) =>
-              theme.transitions.create("opacity", {
-                easing:
-                  canPin && pinned
-                    ? theme.transitions.easing.easeOut
-                    : theme.transitions.easing.sharp,
-                duration:
-                  canPin && pinned
-                    ? theme.transitions.duration.enteringScreen
-                    : theme.transitions.duration.leavingScreen,
-              }),
-          },
-
-          ml: canPin && pinned && open ? `${NAV_DRAWER_WIDTH}px` : 0,
-          width:
-            canPin && pinned && open
-              ? `calc(100% - ${NAV_DRAWER_WIDTH}px)`
-              : "100%",
-          transition: (theme) =>
-            theme.transitions.create(["margin-left", "width", "box-shadow"], {
-              easing:
-                canPin && pinned
-                  ? theme.transitions.easing.easeOut
-                  : theme.transitions.easing.sharp,
-              duration:
-                canPin && pinned
-                  ? theme.transitions.duration.enteringScreen
-                  : theme.transitions.duration.leavingScreen,
-            }),
-        }}
-      >
-        <Toolbar
-          sx={{
-            height: APP_BAR_HEIGHT,
-            minWidth: 0,
-            maxWidth: "none",
-            "&&": {
-              minHeight: APP_BAR_HEIGHT,
-              p: 0,
-              pl: (theme) =>
-                `max(env(safe-area-inset-left), ${theme.spacing(2)})`,
-              pr: (theme) =>
-                `max(env(safe-area-inset-right), ${theme.spacing(2)})`,
-            },
-          }}
-        >
-          {!(open && canPin && pinned) && (
-            <Grow in>
-              <IconButton
-                aria-label="Open navigation drawer"
-                onClick={() => setOpen(true)}
-                size="large"
-                edge="start"
-              >
-                {userRoles.includes("ADMIN") ? (
-                  <UpdateCheckBadge>
-                    <MenuIcon />
-                  </UpdateCheckBadge>
-                ) : (
-                  <MenuIcon />
-                )}
-              </IconButton>
-            </Grow>
-          )}
-
-          <Grow
-            in
-            key={title}
-            {...(typeof routeTitle !== "string"
-              ? routeTitle.titleTransitionProps
-              : undefined)}
-          >
-            <Box
-              sx={{
-                flex: 1,
-                overflowX: "auto",
-                userSelect: "none",
-                pl: open && canPin && pinned ? 48 / 8 : 0,
-                pr: 1,
-                ml: (routeTitle as any)?.leftAligned
-                  ? 0
-                  : { xs: 0, sm: 1.5 + 6 + 1 },
-              }}
-            >
-              {typeof routeTitle !== "string" ? (
-                routeTitle.titleComponent(open, canPin && pinned)
-              ) : (
-                <Typography
-                  variant="h6"
-                  component="h1"
-                  textAlign="center"
-                  noWrap
-                  sx={{
-                    typography: { sm: "h5" },
-                    textAlign: { xs: "left", sm: "center" },
-                  }}
-                >
-                  {title}
-                </Typography>
-              )}
-            </Box>
-          </Grow>
-
-          <HelpMenu />
-          <UserMenu />
-        </Toolbar>
-      </AppBar>
+      <TopBar
+        open={open}
+        setOpen={setOpen}
+        isPermanent={isPermanent}
+        routeTitle={routeTitle}
+        title={title}
+      />
 
       <Stack direction="row">
         <NavDrawer
           open={open}
-          pinned={canPin && pinned}
-          setPinned={setPinned}
-          canPin={canPin}
+          isPermanent={isPermanent}
           onClose={() => setOpen(false)}
-          scrollTrigger={trigger}
+          Contents={NavDrawerContents}
         />
+        <GetStartedChecklist navOpen={open} navPermanent={isPermanent} />
 
         <ErrorBoundary FallbackComponent={StyledErrorFallback}>
           <Suspense
             fallback={
-              <Loading fullScreen style={{ marginTop: -APP_BAR_HEIGHT }} />
+              <Loading fullScreen style={{ marginTop: -TOP_BAR_HEIGHT }} />
             }
           >
-            <div
-              style={{
-                flexGrow: 1,
-                maxWidth:
-                  canPin && pinned && open
-                    ? `calc(100% - ${NAV_DRAWER_WIDTH}px)`
-                    : "100%",
-              }}
-            >
+            <div style={{ flexGrow: 1, minWidth: 0 }}>
               <Outlet />
               {children}
             </div>
           </Suspense>
         </ErrorBoundary>
       </Stack>
+
+      <GlobalStyles
+        styles={(theme) => ({
+          ":root": {
+            "--nav-transition-timing-function": open
+              ? theme.transitions.easing.easeOut
+              : theme.transitions.easing.sharp,
+            "--nav-transition-duration":
+              (open
+                ? theme.transitions.duration.enteringScreen
+                : theme.transitions.duration.leavingScreen) + "ms",
+          },
+        })}
+      />
     </>
   );
 }
+
+const StyledErrorFallback = (props: IErrorFallbackProps) => (
+  <ErrorFallback {...props} style={{ marginTop: -TOP_BAR_HEIGHT }} />
+);

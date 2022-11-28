@@ -2,10 +2,8 @@ import { ISideDrawerFieldProps } from "@src/components/fields/types";
 
 import { Grid } from "@mui/material";
 import { Rating as MuiRating } from "@mui/material";
-import "@mui/lab";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
-
-import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
+import { fieldSx } from "@src/components/SideDrawer/utils";
+import Icon from "./Icon";
 
 export default function Rating({
   column,
@@ -25,11 +23,12 @@ export default function Rating({
         value={typeof value === "number" ? value : 0}
         disabled={disabled}
         onChange={(_, newValue) => {
-          console.log("onChange", newValue);
           onChange(newValue);
           onSubmit();
         }}
-        emptyIcon={<StarBorderIcon fontSize="inherit" />}
+        icon={<Icon config={column.config} isEmpty={false} />}
+        emptyIcon={<Icon config={column.config} isEmpty={true} />}
+        size="small"
         max={max}
         precision={precision}
         sx={{ ml: -0.5 }}

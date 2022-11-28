@@ -19,6 +19,7 @@ export interface IContextMenuItem extends Partial<MenuItemProps> {
   disabled?: boolean;
   hotkeyLabel?: string;
   divider?: boolean;
+  subItems?: IContextMenuItem[];
 }
 
 export interface IContextMenuItemProps extends IContextMenuItem {
@@ -82,16 +83,20 @@ export default function ContextMenuItem({
       </>
     );
   } else {
-    return (
-      <MenuItem {...props} onClick={onClick}>
-        <ListItemIcon>{icon}</ListItemIcon>
-        <ListItemText>{label}</ListItemText>
-        {hotkeyLabel && (
-          <Typography variant="body2" color="text.secondary">
-            {hotkeyLabel}
-          </Typography>
-        )}
-      </MenuItem>
-    );
+    if (props.divider) {
+      return <Divider variant="middle" />;
+    } else {
+      return (
+        <MenuItem {...props} onClick={onClick}>
+          <ListItemIcon>{icon}</ListItemIcon>
+          <ListItemText>{label}</ListItemText>
+          {hotkeyLabel && (
+            <Typography variant="body2" color="text.secondary">
+              {hotkeyLabel}
+            </Typography>
+          )}
+        </MenuItem>
+      );
+    }
   }
 }

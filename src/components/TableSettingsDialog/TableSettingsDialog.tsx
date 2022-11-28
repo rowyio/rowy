@@ -17,7 +17,7 @@ import ActionsMenu from "./ActionsMenu";
 import DeleteMenu from "./DeleteMenu";
 
 import {
-  globalScope,
+  projectScope,
   tableSettingsDialogAtom,
   tablesAtom,
   projectRolesAtom,
@@ -26,7 +26,7 @@ import {
   createTableAtom,
   updateTableAtom,
   AdditionalTableSettings,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { TableSettings } from "@src/types/table";
 import { analytics, logEvent } from "@src/analytics";
 
@@ -38,6 +38,10 @@ import {
   getTableSchemaPath,
   getTableBuildFunctionPathname,
 } from "@src/utils/table";
+import { firebaseStorageAtom } from "@src/sources/ProjectSourceFirebase";
+import { uploadTableThumbnail } from "./utils";
+import TableThumbnail from "./TableThumbnail";
+import TableDetails from "./TableDetails";
 
 const customComponents = {
   tableName: {
@@ -55,21 +59,28 @@ const customComponents = {
     defaultValue: "",
     validation: [["string"]],
   },
+  tableThumbnail: {
+    component: TableThumbnail,
+  },
+  tableDetails: {
+    component: TableDetails,
+  },
 };
 
 export default function TableSettingsDialog() {
   const [{ open, mode, data }, setTableSettingsDialog] = useAtom(
     tableSettingsDialogAtom,
-    globalScope
+    projectScope
   );
   const clearDialog = () => setTableSettingsDialog({ open: false });
 
-  const [projectRoles] = useAtom(projectRolesAtom, globalScope);
-  const [tables] = useAtom(tablesAtom, globalScope);
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [projectRoles] = useAtom(projectRolesAtom, projectScope);
+  const [tables] = useAtom(tablesAtom, projectScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
+  const [firebaseStorage] = useAtom(firebaseStorageAtom, projectScope);
 
   const navigate = useNavigate();
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const snackLogContext = useSnackLogContext();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -91,20 +102,31 @@ export default function TableSettingsDialog() {
     }
   );
 
-  const [createTable] = useAtom(createTableAtom, globalScope);
-  const [updateTable] = useAtom(updateTableAtom, globalScope);
+  const [createTable] = useAtom(createTableAtom, projectScope);
+  const [updateTable] = useAtom(updateTableAtom, projectScope);
 
   if (!open) return null;
 
-  const handleSubmit = async (v: TableSettings & AdditionalTableSettings) => {
+  const handleSubmit = async (
+    v: TableSettings & AdditionalTableSettings & { thumbnailFile: File }
+  ) => {
     const {
       _schemaSource,
       _initialColumns,
       _schema,
       _suggestedRules,
+      thumbnailFile,
       ...values
     } = v;
-    const data = { ...values };
+
+    let thumbnailURL = values.thumbnailURL;
+    if (thumbnailFile) {
+      thumbnailURL = await uploadTableThumbnail(firebaseStorage)(
+        values.id,
+        thumbnailFile
+      );
+    }
+    const data = { ...values, thumbnailURL };
 
     const hasExtensions = !isEmpty(get(data, "_schema.extensionObjects"));
     const hasWebhooks = !isEmpty(get(data, "_schema.webhooks"));

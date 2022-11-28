@@ -1,14 +1,10 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { CreatedBy as CreatedByIcon } from "@src/assets/icons";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
-import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
+import DisplayCell from "./DisplayCell";
 
-const TableCell = lazy(
-  () => import("./TableCell" /* webpackChunkName: "TableCell-CreatedBy" */)
-);
 const SideDrawerField = lazy(
   () =>
     import(
@@ -29,8 +25,7 @@ export const config: IFieldConfig = {
   icon: <CreatedByIcon />,
   description:
     "Displays the user that created the row and timestamp. Read-only.",
-  TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: withSideDrawerEditor(TableCell),
+  TableCell: withRenderTableCell(DisplayCell, null),
   SideDrawerField,
   settings: Settings,
 };

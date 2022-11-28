@@ -11,7 +11,7 @@ import MultiSelect, { MultiSelectProps } from "@rowy/multiselect";
 import Loading from "@src/components/Loading";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
-import { globalScope, rowyRunAtom } from "@src/atoms/globalScope";
+import { projectScope, rowyRunAtom } from "@src/atoms/projectScope";
 import { tableScope } from "@src/atoms/tableScope";
 import { runRoutes } from "@src/constants/runRoutes";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
@@ -76,7 +76,7 @@ export default function ConnectTableSelect({
 }: IConnectTableSelectProps) {
   const { enqueueSnackbar } = useSnackbar();
 
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
   const [algoliaAppId, setAlgoliaAppId] = useAtom(algoliaAppIdAtom, tableScope);
 
   useEffect(() => {

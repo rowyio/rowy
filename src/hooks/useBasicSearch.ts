@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { matchSorter } from "match-sorter";
+import { matchSorter, rankings } from "match-sorter";
 
 export function useBasicSearch<T>(
   list: T[],
@@ -10,7 +10,9 @@ export function useBasicSearch<T>(
   const [query, setQuery] = useState("");
   const handleQuery = useDebouncedCallback(setQuery, debounce);
 
-  const results = query ? matchSorter(list, query, { keys }) : list;
+  const results = query
+    ? matchSorter(list, query, { keys, threshold: rankings.ACRONYM })
+    : list;
 
   return [results, query, handleQuery] as const;
 }

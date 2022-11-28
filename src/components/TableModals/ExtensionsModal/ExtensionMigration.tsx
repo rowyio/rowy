@@ -10,7 +10,7 @@ import GoIcon from "@mui/icons-material/ChevronRight";
 
 import Modal from "@src/components/Modal";
 
-import { globalScope, currentUserAtom } from "@src/atoms/globalScope";
+import { projectScope, currentUserAtom } from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -29,7 +29,7 @@ export default function ExtensionMigration({
   handleClose,
   handleUpgradeComplete,
 }: IExtensionMigrationProps) {
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [updateTableSchema] = useAtom(updateTableSchemaAtom, tableScope);
