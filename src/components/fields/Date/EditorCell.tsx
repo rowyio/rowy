@@ -1,7 +1,7 @@
 import { useDebouncedCallback } from "use-debounce";
 import { IEditorCellProps } from "@src/components/fields/types";
 
-import DatePicker from "@mui/lab/DatePicker";
+import { DatePicker } from "@mui/x-date-pickers";
 import { TextField } from "@mui/material";
 import { ChevronDown } from "@src/assets/icons";
 
@@ -63,6 +63,8 @@ export default function Date_({
             },
             "& .MuiInputAdornment-root": { m: 0 },
           }}
+          autoFocus
+          onKeyDown={(e) => e.stopPropagation()}
           onClick={(e) => e.stopPropagation()}
           inputProps={{ ...props.inputProps, tabIndex }}
         />
@@ -72,7 +74,6 @@ export default function Date_({
       onChange={handleDateChange}
       inputFormat={format}
       mask={format.replace(/[A-Za-z]/g, "_")}
-      clearable
       OpenPickerButtonProps={{
         size: "small",
         className: "row-hover-iconButton end",
