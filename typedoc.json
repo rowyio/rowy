@@ -1,14 +1,10 @@
 {
-  "plugin": "",
   "entryPoints": ["src/atoms/projectScope/*.ts", "src/atoms/tableScope/*.ts"],
   "includes": "src/types",
   "exclude": ["**/*.test"],
   "readme": "none",
   "githubPages": false,
-  "hideInPageTOC": true,
-  "entryDocument": "index.md",
   "name": "Rowy",
   "includeVersion": true,
-  "publicPath": "",
   "out": "typedoc"
 }

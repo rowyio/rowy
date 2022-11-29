@@ -7,6 +7,10 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import type {
+  ColumnPinningState,
+  VisibilityState,
+} from "@tanstack/react-table";
 import { DropResult } from "react-beautiful-dnd";
 import { get } from "lodash-es";
 
@@ -15,7 +19,6 @@ import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
 import FinalColumn from "./FinalColumn/FinalColumn";
 import ContextMenu from "./ContextMenu";
-
 import EmptyState from "@src/components/EmptyState";
 // import BulkActions from "./BulkActions";
 
@@ -28,11 +31,10 @@ import {
   tablePageAtom,
   updateColumnAtom,
 } from "@src/atoms/tableScope";
-
 import { getFieldType, getFieldProp } from "@src/components/fields";
-import { TableRow, ColumnConfig } from "@src/types/table";
 import { useKeyboardNavigation } from "./useKeyboardNavigation";
 import { useSaveColumnSizing } from "./useSaveColumnSizing";
+import type { TableRow, ColumnConfig } from "@src/types/table";
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
@@ -130,20 +132,24 @@ export default function Table({
   }, [tableColumnsOrdered, canAddColumns, canEditCells]);
 
   // Get user’s hidden columns from props and memoize into a `VisibilityState`
-  const columnVisibility = useMemo(() => {
+  const columnVisibility: VisibilityState = useMemo(() => {
     if (!Array.isArray(hiddenColumns)) return {};
     return hiddenColumns.reduce((a, c) => ({ ...a, [c]: false }), {});
   }, [hiddenColumns]);
 
   // Get frozen columns and memoize into a `ColumnPinningState`
-  const columnPinning = useMemo(
+  const columnPinning: ColumnPinningState = useMemo(
     () => ({
-      left: columns.filter((c) => c.meta?.fixed && c.id).map((c) => c.id!),
+      left: columns
+        .filter(
+          (c) => c.meta?.fixed && c.id && columnVisibility[c.id] !== false
+        )
+        .map((c) => c.id!),
     }),
-    [columns]
+    [columns, columnVisibility]
   );
   const lastFrozen: string | undefined =
-    columnPinning.left[columnPinning.left.length - 1];
+    columnPinning.left![columnPinning.left!.length - 1];
 
   // Call TanStack Table
   const table = useReactTable({
