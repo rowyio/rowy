@@ -21,7 +21,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                 }}
             />
             <Button style={{ width: "200px", margin: "20px auto auto" }} onClick={copyStandardRegex}>
-                Copy standard Regex to clipboard
+                Use standard regex
             </Button>
         </>
     );
