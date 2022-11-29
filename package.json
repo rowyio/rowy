@@ -60,7 +60,7 @@
     "react-image": "^4",
     "react-json-view": "^1.21.3",
     "react-markdown": "^8.0.3",
-    "react-router-dom": "^6.3.0",
+    "react-router-dom": "6.3.0",
     "react-router-hash-link": "^2.4.3",
     "react-scripts": "^5.0.1",
     "react-usestateref": "^1.0.8",
