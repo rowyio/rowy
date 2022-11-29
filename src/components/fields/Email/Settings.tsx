@@ -4,7 +4,7 @@ import { TextField, Button } from "@mui/material";
 export default function Settings({ onChange, config }: ISettingsProps) {
 
     const copyStandardRegex = () => {
-      navigator.clipboard.writeText('^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-zA-z]{2,3}$');
+      onChange("validationRegex")("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-zA-z]{2,3}$");
     }
 
     return (
