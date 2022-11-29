@@ -49,6 +49,11 @@ const Styles = styled("div", {
         boxShadow: `0 -1px 0 0 ${theme.palette.text.primary} inset,
                     0 0 0 1px ${theme.palette.action.inputOutline} inset`,
       },
+
+      "&.tox-fullscreen": {
+        zIndex: theme.zIndex.modal,
+        backgroundColor: theme.palette.background.paper,
+      },
     },
 
     "& .tox-toolbar-overlord, & .tox-edit-area__iframe, & .tox-toolbar__primary":
@@ -121,10 +126,6 @@ const Styles = styled("div", {
                   0 0 0 1px ${theme.palette.action.inputOutline} inset`,
         }
       : {},
-    "& .tox-tinymce.tox-fullscreen": {
-      zIndex: theme.zIndex.modal,
-      backgroundColor: theme.palette.background.paper,
-    },
   },
 }));
 
@@ -154,9 +155,6 @@ export default function RichTextEditor({
       <GlobalStyles
         styles={{
           ".tox": {
-            // "& .tox-editor-container": {
-            //   backgroundColor: theme.palette.background.paper,
-            // },
             "& .tox-menu.tox-menu, &.tox-tinymce-aux .tox-toolbar__overflow.tox-toolbar__overflow":
               {
                 backgroundColor: theme.palette.background.paper,
