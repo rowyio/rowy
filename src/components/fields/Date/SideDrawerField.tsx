@@ -1,6 +1,6 @@
 import { ISideDrawerFieldProps } from "@src/components/fields/types";
 
-import DatePicker from "@mui/lab/DatePicker";
+import { DatePicker } from "@mui/x-date-pickers";
 import { TextField } from "@mui/material";
 import { ChevronDown } from "@src/assets/icons";
 
@@ -52,7 +52,6 @@ export default function Date_({
       onAccept={onSubmit}
       inputFormat={format}
       mask={format.replace(/[A-Za-z]/g, "_")}
-      clearable
       OpenPickerButtonProps={{
         size: "small",
         sx: { width: 32, height: 32 },
