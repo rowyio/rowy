@@ -99,13 +99,15 @@ export default function TableToolbar() {
           <ImportCsv />
         </Suspense>
       )}
-      <Suspense fallback={<ButtonSkeleton />}>
+      {(userRoles.includes("viewer") && userRoles.length == 1) ? null : (<Suspense fallback={<ButtonSkeleton />}>
         <TableToolbarButton
           title="Export/Download"
           onClick={() => openTableModal("export")}
           icon={<ExportIcon />}
         />
       </Suspense>
+      )
+      }
       {userRoles.includes("ADMIN") && (
         <>
           <div /> {/* Spacer */}
