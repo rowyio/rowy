@@ -13,6 +13,10 @@ const SideDrawerField = lazy(
     import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Email" */)
 );
 
+const Settings = lazy(
+  () => import("./Settings" /* webpackChunkName: "Settings-ShortText" */)
+);
+
 export const config: IFieldConfig = {
   type: FieldType.email,
   name: "Email",
@@ -25,6 +29,7 @@ export const config: IFieldConfig = {
   contextMenuActions: BasicContextMenuActions,
   TableCell: withRenderTableCell(DisplayCell, EditorCell),
   SideDrawerField,
+  settings: Settings,
   filter: {
     operators: filterOperators,
   },
