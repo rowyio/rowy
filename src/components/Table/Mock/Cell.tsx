@@ -1,46 +1,12 @@
 import { createElement } from "react";
 
-import { styled } from "@mui/material";
+import StyledTable from "@src/components/Table/Styled/StyledTable";
+import StyledCell from "@src/components/Table/Styled/StyledCell";
 import EmptyState from "@src/components/EmptyState";
 
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
-
-const Root = styled("div")(({ theme }) => ({
-  width: "100%",
-  height: 43,
-  position: "relative",
-  overflow: "hidden",
-  whiteSpace: "nowrap",
-
-  pointerEvents: "none",
-
-  border: `1px solid ${theme.palette.divider}`,
-  borderTopWidth: 0,
-  backgroundColor: theme.palette.background.paper,
-
-  display: "flex",
-  alignItems: "center",
-  padding: theme.spacing(0, 1.25),
-
-  ...theme.typography.body2,
-  fontSize: "0.75rem",
-  lineHeight: "inherit",
-  color: theme.palette.text.secondary,
-
-  "& .cell-collapse-padding": {
-    margin: theme.spacing(0, -1.5),
-    width: `calc(100% + ${theme.spacing(3)})`,
-  },
-}));
-
-const Value = styled("div")(({ theme }) => ({
-  width: "100%",
-  height: 43,
-  display: "flex",
-  justifyContent: "flex-start",
-  alignItems: "center",
-}));
+import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
 
 export interface ICellProps
   extends Partial<
@@ -53,6 +19,7 @@ export interface ICellProps
   type: FieldType;
   value: any;
   name?: string;
+  rowHeight?: number;
 }
 
 export default function Cell({
@@ -60,29 +27,47 @@ export default function Cell({
   type,
   value,
   name,
+  rowHeight = DEFAULT_ROW_HEIGHT,
   ...props
 }: ICellProps) {
-  const formatter = type ? getFieldProp("TableCell", type) : null;
+  const tableCell = type ? getFieldProp("TableCell", type) : null;
 
   return (
-    <Root {...props}>
-      <Value>
-        {formatter ? (
-          createElement(formatter, {
+    <StyledTable>
+      <StyledCell
+        {...props}
+        style={
+          {
+            ...props.style,
+            height: rowHeight,
+            "--row-height": rowHeight,
+          } as any
+        }
+      >
+        {tableCell ? (
+          createElement(tableCell, {
             value,
-            rowIdx: 0,
             column: {
-              type,
-              key: field,
-              name,
-              config: { options: [] },
-              editable: false,
-            } as any,
-            row: { [field]: value },
-            isRowSelected: false,
-            onRowSelectionChange: () => {},
-            isSummaryRow: false,
-          } as any)
+              columnDef: {
+                meta: {
+                  type,
+                  key: field,
+                  name,
+                  config: { options: [] },
+                  editable: false,
+                },
+              },
+            },
+            row: {
+              original: {
+                _rowy_ref: { path: "_rowy_/_mockCell" },
+                [field]: value,
+              },
+            },
+            focusInsideCell: false,
+            disabled: true,
+            rowHeight: DEFAULT_ROW_HEIGHT,
+          })
         ) : typeof value === "string" ||
           typeof value === "number" ||
           value === undefined ||
@@ -93,7 +78,7 @@ export default function Cell({
         ) : (
           <EmptyState basic wrap="nowrap" message="Invalid column type" />
         )}
-      </Value>
-    </Root>
+      </StyledCell>
+    </StyledTable>
   );
 }

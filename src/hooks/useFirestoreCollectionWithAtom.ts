@@ -23,6 +23,7 @@ import {
   WhereFilterOp,
   documentId,
   getCountFromServer,
+  DocumentData,
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
@@ -77,7 +78,9 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
  * @param path - Collection path. If falsy, the listener isn’t created at all.
  * @param options - {@link IUseFirestoreCollectionWithAtomOptions}
  */
-export function useFirestoreCollectionWithAtom<T = TableRow>(
+export function useFirestoreCollectionWithAtom<
+  T extends DocumentData = TableRow
+>(
   dataAtom: PrimitiveAtom<T[]>,
   dataScope: Parameters<typeof useAtom>[1] | undefined,
   path: string | undefined,
@@ -215,7 +218,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
           setDataAtom([]);
           suspended = false;
         }
-        if (nextPageAtom) setNextPageAtom({ loading: false, available: true });
+        if (nextPageAtom) setNextPageAtom({ loading: false, available: false });
         if (onError) onError(error);
         else handleError(error);
       }
