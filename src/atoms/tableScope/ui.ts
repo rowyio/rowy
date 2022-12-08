@@ -142,7 +142,7 @@ export const selectedCellAtom = atom<SelectedCell | null>(null);
 export const contextMenuTargetAtom = atom<HTMLElement | null>(null);
 
 export type CloudLogFilters = {
-  type: "webhook" | "functions" | "audit" | "build";
+  type: "rowy" | "webhook" | "functions" | "audit" | "build";
   timeRange:
     | { type: "seconds" | "minutes" | "hours" | "days"; value: number }
     | { type: "range"; start: Date; end: Date };

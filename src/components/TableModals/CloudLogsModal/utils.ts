@@ -13,6 +13,9 @@ export const cloudLogFetcher = (
   let logQuery: string[] = [];
 
   switch (cloudLogFilters.type) {
+    case "rowy":
+      logQuery.push(`logName = "projects/${projectId}/logs/rowy-logging"`);
+      break;
     case "webhook":
       logQuery.push(
         `logName = "projects/${projectId}/logs/rowy-webhook-events"`

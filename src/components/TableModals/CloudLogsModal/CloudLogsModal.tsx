@@ -118,6 +118,7 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
                 }
                 aria-label="Filter by log type"
               >
+                <ToggleButton value="rowy">Rowy Logging</ToggleButton>
                 <ToggleButton value="webhook">Webhooks</ToggleButton>
                 <ToggleButton value="functions">Functions</ToggleButton>
                 <ToggleButton value="audit">Audit</ToggleButton>
@@ -139,6 +140,7 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
               </ToggleButtonGroup>
             )}
 
+            {cloudLogFilters.type === "rowy" && <></>}
             {cloudLogFilters.type === "webhook" && (
               <MultiSelect
                 multiple
