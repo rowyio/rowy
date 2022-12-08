@@ -4,7 +4,7 @@ import { colord } from "colord";
 
 import { Fade, Stack, Skeleton, Button } from "@mui/material";
 import { AddColumn as AddColumnIcon } from "@src/assets/icons";
-import Column from "./Column";
+import Column from "./Mock/Column";
 
 import { projectScope, userSettingsAtom } from "@src/atoms/projectScope";
 import {

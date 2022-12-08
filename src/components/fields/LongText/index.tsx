@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import LongTextIcon from "@mui/icons-material/Notes";
 import DisplayCell from "./DisplayCell";
@@ -29,7 +29,7 @@ export const config: IFieldConfig = {
   icon: <LongTextIcon />,
   description: "Text displayed on multiple lines.",
   contextMenuActions: BasicContextMenuActions,
-  TableCell: withTableCell(DisplayCell, EditorCell),
+  TableCell: withRenderTableCell(DisplayCell, EditorCell),
   SideDrawerField,
   settings: Settings,
   filter: {

@@ -7,8 +7,8 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import { IStepProps } from ".";
 import ScrollableList from "@src/components/TableModals/ScrollableList";
-import Column from "@src/components/Table/Column";
-import Cell from "@src/components/Table/Cell";
+import Column from "@src/components/Table/Mock/Column";
+import Cell from "@src/components/Table/Mock/Cell";
 import FieldsDropdown from "@src/components/ColumnModals/FieldsDropdown";
 
 import { FieldType } from "@src/constants/fields";

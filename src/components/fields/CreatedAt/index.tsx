@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { CreatedAt as CreatedAtIcon } from "@src/assets/icons";
 import DisplayCell from "./DisplayCell";
@@ -24,7 +24,7 @@ export const config: IFieldConfig = {
   initialValue: null,
   icon: <CreatedAtIcon />,
   description: "Displays the timestamp of when the row was created. Read-only.",
-  TableCell: withTableCell(DisplayCell, null),
+  TableCell: withRenderTableCell(DisplayCell, null),
   SideDrawerField,
   settings: Settings,
 };

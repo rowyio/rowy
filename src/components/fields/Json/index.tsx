@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { Json as JsonIcon } from "@src/assets/icons";
 import DisplayCell from "./DisplayCell";
@@ -24,7 +24,7 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <JsonIcon />,
   description: "Object edited with a visual JSON editor.",
-  TableCell: withTableCell(DisplayCell, SideDrawerField, "popover", {
+  TableCell: withRenderTableCell(DisplayCell, SideDrawerField, "popover", {
     popoverProps: { PaperProps: { sx: { p: 1 } } },
   }),
   csvImportParser: (value) => {

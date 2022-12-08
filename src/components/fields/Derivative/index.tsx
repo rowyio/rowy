@@ -1,5 +1,5 @@
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { Derivative as DerivativeIcon } from "@src/assets/icons";
 import Settings, { settingsValidator } from "./Settings";
@@ -15,7 +15,7 @@ export const config: IFieldConfig = {
   icon: <DerivativeIcon />,
   description:
     "Value derived from the rest of the row’s values. Displayed using any other field type. Requires Rowy Run set up.",
-  TableCell: withTableCell(() => null, null),
+  TableCell: withRenderTableCell(() => null, null),
   SideDrawerField: () => null as any,
   contextMenuActions: ContextMenuActions,
   settings: Settings,

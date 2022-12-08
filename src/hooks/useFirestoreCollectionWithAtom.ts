@@ -22,6 +22,8 @@ import {
   QueryConstraint,
   WhereFilterOp,
   documentId,
+  getCountFromServer,
+  DocumentData,
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
@@ -62,6 +64,8 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
   deleteDocAtom?: PrimitiveAtom<DeleteCollectionDocFunction | undefined>;
   /** Update this atom when we’re loading the next page, and if there is a next page available. Uses same scope as `dataScope`. */
   nextPageAtom?: PrimitiveAtom<NextPageState>;
+  /** Set this atom's value to the number of docs in the collection on each new snapshot */
+  serverDocCountAtom?: PrimitiveAtom<number | undefined>;
 }
 
 /**
@@ -74,7 +78,9 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
  * @param path - Collection path. If falsy, the listener isn’t created at all.
  * @param options - {@link IUseFirestoreCollectionWithAtomOptions}
  */
-export function useFirestoreCollectionWithAtom<T = TableRow>(
+export function useFirestoreCollectionWithAtom<
+  T extends DocumentData = TableRow
+>(
   dataAtom: PrimitiveAtom<T[]>,
   dataScope: Parameters<typeof useAtom>[1] | undefined,
   path: string | undefined,
@@ -93,6 +99,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     updateDocAtom,
     deleteDocAtom,
     nextPageAtom,
+    serverDocCountAtom,
   } = options || {};
 
   const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
@@ -116,9 +123,13 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     void
   >(nextPageAtom || (dataAtom as any), dataScope);
 
+  const setServerDocCountAtom = useSetAtom(
+    serverDocCountAtom || (dataAtom as any),
+    dataScope
+  );
+
   // Store if we’re at the last page to prevent a new query from being created
   const [isLastPage, setIsLastPage] = useState(false);
-
   // Create the query and memoize using Firestore’s queryEqual
   const memoizedQuery = useMemoValue(
     getQuery<T>(
@@ -190,6 +201,12 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
               available: docs.length >= memoizedQuery.limit,
             }));
           }
+          // on each new snapshot, use the query to get and set the document count from the server
+          if (serverDocCountAtom) {
+            getCountFromServer(memoizedQuery.unlimitedQuery).then((value) => {
+              setServerDocCountAtom(value.data().count);
+            });
+          }
         } catch (error) {
           if (onError) onError(error as FirestoreError);
           else handleError(error);
@@ -201,7 +218,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
           setDataAtom([]);
           suspended = false;
         }
-        if (nextPageAtom) setNextPageAtom({ loading: false, available: true });
+        if (nextPageAtom) setNextPageAtom({ loading: false, available: false });
         if (onError) onError(error);
         else handleError(error);
       }
@@ -221,6 +238,8 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     handleError,
     nextPageAtom,
     setNextPageAtom,
+    serverDocCountAtom,
+    setServerDocCountAtom,
   ]);
 
   // Create variable for validity of query to pass to useEffect dependencies
@@ -313,14 +332,13 @@ const getQuery = <T>(
     }
 
     if (!collectionRef) return null;
-
     const limit = (page + 1) * pageSize;
     const firestoreFilters = tableFiltersToFirestoreFilters(filters || []);
 
     return {
       query: query<T>(
         collectionRef,
-        queryLimit((page + 1) * pageSize),
+        queryLimit(limit),
         ...firestoreFilters,
         ...(sorts?.map((order) => orderBy(order.key, order.direction)) || [])
       ),
@@ -328,6 +346,7 @@ const getQuery = <T>(
       limit,
       firestoreFilters,
       sorts,
+      unlimitedQuery: query<T>(collectionRef, ...firestoreFilters),
     };
   } catch (e) {
     if (onError) onError(e as FirestoreError);

@@ -10,6 +10,7 @@ import {
   tableScope,
   tableRowsAtom,
   tableNextPageAtom,
+  serverDocCountAtom,
 } from "@src/atoms/tableScope";
 import { spreadSx } from "@src/utils/ui";
 
@@ -56,8 +57,9 @@ const loadingIcon = (
 );
 
 function LoadedRowsStatus() {
-  const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
+  const [serverDocCount] = useAtom(serverDocCountAtom, tableScope);
+  const [tableRows] = useAtom(tableRowsAtom, tableScope);
 
   if (tableNextPage.loading)
     return <StatusText>{loadingIcon}Loading more…</StatusText>;
@@ -67,7 +69,9 @@ function LoadedRowsStatus() {
       <StatusText>
         <SyncIcon style={{ transform: "rotate(45deg)" }} />
         Loaded {!tableNextPage.available && "all "}
-        {tableRows.length} row{tableRows.length !== 1 && "s"}
+        {tableRows.length}
+        {serverDocCount !== undefined && ` of ${serverDocCount}`} row
+        {(serverDocCount ?? tableRows.length) !== 1 && "s"}
       </StatusText>
     </Tooltip>
   );

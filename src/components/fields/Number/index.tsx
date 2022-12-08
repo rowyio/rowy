@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { Number as NumberIcon } from "@src/assets/icons";
 import DisplayCell from "./DisplayCell";
@@ -22,7 +22,7 @@ export const config: IFieldConfig = {
   icon: <NumberIcon />,
   description: "Numeric value.",
   contextMenuActions: BasicContextMenuActions,
-  TableCell: withTableCell(DisplayCell, EditorCell),
+  TableCell: withRenderTableCell(DisplayCell, EditorCell),
   SideDrawerField,
   filter: {
     operators: filterOperators,

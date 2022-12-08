@@ -1,10 +1,15 @@
 import { useMemo, useRef, useState, useEffect, useCallback } from "react";
+import useStateRef from "react-usestateref";
 import { useAtom, useSetAtom } from "jotai";
 import { useThrottledCallback } from "use-debounce";
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
+} from "@tanstack/react-table";
+import type {
+  ColumnPinningState,
+  VisibilityState,
 } from "@tanstack/react-table";
 import { DropResult } from "react-beautiful-dnd";
 import { get } from "lodash-es";
@@ -14,7 +19,6 @@ import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
 import FinalColumn from "./FinalColumn/FinalColumn";
 import ContextMenu from "./ContextMenu";
-
 import EmptyState from "@src/components/EmptyState";
 // import BulkActions from "./BulkActions";
 
@@ -27,11 +31,10 @@ import {
   tablePageAtom,
   updateColumnAtom,
 } from "@src/atoms/tableScope";
-
 import { getFieldType, getFieldProp } from "@src/components/fields";
-import { TableRow, ColumnConfig } from "@src/types/table";
 import { useKeyboardNavigation } from "./useKeyboardNavigation";
 import { useSaveColumnSizing } from "./useSaveColumnSizing";
+import type { TableRow, ColumnConfig } from "@src/types/table";
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
@@ -49,13 +52,34 @@ const columnHelper = createColumnHelper<TableRow>();
 const getRowId = (row: TableRow) => row._rowy_ref.path || row._rowy_ref.id;
 
 export interface ITableProps {
+  /** Determines if “Add column” button is displayed */
   canAddColumns: boolean;
+  /** Determines if columns can be rearranged */
   canEditColumns: boolean;
+  /**
+   * Determines if any cell can be edited.
+   * If false, `Table` only ever renders `EditorCell`.
+   */
   canEditCells: boolean;
+  /** The hidden columns saved to user settings */
   hiddenColumns?: string[];
+  /**
+   * Displayed when `tableRows` is empty.
+   * Loading state handled by Suspense in parent component.
+   */
   emptyState?: React.ReactNode;
 }
 
+/**
+ * Takes table schema and row data from `tableScope` and makes it compatible
+ * with TanStack Table. Renders table children and cell context menu.
+ *
+ * - Calls `useKeyboardNavigation` hook
+ * - Handles rearranging columns
+ * - Handles infinite scrolling
+ * - Stores local state for resizing columns, and asks admins if they want to
+ *   save to table schema for all users
+ */
 export default function Table({
   canAddColumns,
   canEditColumns,
@@ -71,11 +95,15 @@ export default function Table({
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
 
-  const containerRef = useRef<HTMLDivElement>(null);
+  // Store a **state** and reference to the container element
+  // so the state can re-render `TableBody`, preventing virtualization
+  // not detecting scroll if the container element was initially `null`
+  const [containerEl, setContainerEl, containerRef] =
+    useStateRef<HTMLDivElement | null>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
   // Get column defs from table schema
-  // Also add end column for admins
+  // Also add end column for admins (canAddColumns || canEditCells)
   const columns = useMemo(() => {
     const _columns = tableColumnsOrdered
       // Hide column for all users using table schema
@@ -103,21 +131,25 @@ export default function Table({
     return _columns;
   }, [tableColumnsOrdered, canAddColumns, canEditCells]);
 
-  // Get user’s hidden columns from props and memoize into a VisibilityState
-  const columnVisibility = useMemo(() => {
+  // Get user’s hidden columns from props and memoize into a `VisibilityState`
+  const columnVisibility: VisibilityState = useMemo(() => {
     if (!Array.isArray(hiddenColumns)) return {};
     return hiddenColumns.reduce((a, c) => ({ ...a, [c]: false }), {});
   }, [hiddenColumns]);
 
-  // Get frozen columns
-  const columnPinning = useMemo(
+  // Get frozen columns and memoize into a `ColumnPinningState`
+  const columnPinning: ColumnPinningState = useMemo(
     () => ({
-      left: columns.filter((c) => c.meta?.fixed && c.id).map((c) => c.id!),
+      left: columns
+        .filter(
+          (c) => c.meta?.fixed && c.id && columnVisibility[c.id] !== false
+        )
+        .map((c) => c.id!),
     }),
-    [columns]
+    [columns, columnVisibility]
   );
   const lastFrozen: string | undefined =
-    columnPinning.left[columnPinning.left.length - 1];
+    columnPinning.left![columnPinning.left!.length - 1];
 
   // Call TanStack Table
   const table = useReactTable({
@@ -128,7 +160,7 @@ export default function Table({
     columnResizeMode: "onChange",
   });
 
-  // Store local columnSizing state so we can save it to table schema
+  // Store local `columnSizing` state so we can save it to table schema
   // in `useSaveColumnSizing`. This could be generalized by storing the
   // entire table state.
   const [columnSizing, setColumnSizing] = useState(
@@ -139,16 +171,18 @@ export default function Table({
     state: { ...prev.state, columnVisibility, columnPinning, columnSizing },
     onColumnSizingChange: setColumnSizing,
   }));
-
+  // Get rows and columns for virtualization
   const { rows } = table.getRowModel();
   const leafColumns = table.getVisibleLeafColumns();
 
+  // Handle keyboard navigation
   const { handleKeyDown } = useKeyboardNavigation({
     gridRef,
     tableRows,
     leafColumns,
   });
 
+  // Handle prompt to save local column sizes if user `canEditColumns`
   useSaveColumnSizing(columnSizing, canEditColumns);
 
   const handleDropColumn = useCallback(
@@ -182,11 +216,16 @@ export default function Table({
   // for large screen heights
   useEffect(() => {
     fetchMoreOnBottomReached(containerRef.current);
-  }, [fetchMoreOnBottomReached, tablePage, tableNextPage.loading]);
+  }, [
+    fetchMoreOnBottomReached,
+    tablePage,
+    tableNextPage.loading,
+    containerRef,
+  ]);
 
   return (
     <div
-      ref={containerRef}
+      ref={(el) => setContainerEl(el)}
       onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
       style={{ overflow: "auto", width: "100%", height: "100%" }}
     >
@@ -221,6 +260,7 @@ export default function Table({
             canAddColumns={canAddColumns}
             canEditColumns={canEditColumns}
             lastFrozen={lastFrozen}
+            columnSizing={columnSizing}
           />
         </div>
 
@@ -228,11 +268,13 @@ export default function Table({
           emptyState ?? <EmptyState sx={{ py: 8 }} />
         ) : (
           <TableBody
+            containerEl={containerEl}
             containerRef={containerRef}
             leafColumns={leafColumns}
             rows={rows}
             canEditCells={canEditCells}
             lastFrozen={lastFrozen}
+            columnSizing={columnSizing}
           />
         )}
       </StyledTable>

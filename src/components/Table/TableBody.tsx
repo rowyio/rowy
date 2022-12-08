@@ -1,9 +1,10 @@
+import { memo } from "react";
 import { useAtom } from "jotai";
-import type { Column, Row } from "@tanstack/react-table";
+import type { Column, Row, ColumnSizingState } from "@tanstack/react-table";
 
 import StyledRow from "./Styled/StyledRow";
 import OutOfOrderIndicator from "./OutOfOrderIndicator";
-import CellValidation from "./CellValidation";
+import TableCell from "./TableCell";
 import { RowsSkeleton } from "./TableSkeleton";
 
 import {
@@ -16,27 +17,44 @@ import {
 import { getFieldProp } from "@src/components/fields";
 import type { TableRow } from "@src/types/table";
 import useVirtualization from "./useVirtualization";
-import {
-  TABLE_PADDING,
-  DEFAULT_ROW_HEIGHT,
-  OUT_OF_ORDER_MARGIN,
-} from "./Table";
+import { DEFAULT_ROW_HEIGHT, OUT_OF_ORDER_MARGIN } from "./Table";
 
 export interface ITableBodyProps {
+  /**
+   * Re-render this component when the container element changes, to fix a bug
+   * where virtualization doesn’t detect scrolls if `containerRef.current` was
+   * initially null
+   */
+  containerEl: HTMLDivElement | null;
+  /** Used in `useVirtualization` */
   containerRef: React.RefObject<HTMLDivElement>;
+  /** Used in `useVirtualization` */
   leafColumns: Column<TableRow, unknown>[];
+  /** Current table rows with context from TanStack Table state */
   rows: Row<TableRow>[];
-
+  /** Determines if EditorCell can be displayed */
   canEditCells: boolean;
+  /** If specified, renders a shadow in the last frozen column */
   lastFrozen?: string;
+  /**
+   * Must pass this prop so that it re-renders when local column sizing changes */
+  columnSizing: ColumnSizingState;
 }
 
-export default function TableBody({
+/**
+ * Renders table body & data rows.
+ * Handles virtualization of rows & columns via `useVirtualization`.
+ *
+ * - Renders row out of order indicator
+ * - Renders next page loading UI (`RowsSkeleton`)
+ */
+export const TableBody = memo(function TableBody({
   containerRef,
   leafColumns,
   rows,
   canEditCells,
   lastFrozen,
+  columnSizing,
 }: ITableBodyProps) {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [selectedCell] = useAtom(selectedCellAtom, tableScope);
@@ -49,7 +67,9 @@ export default function TableBody({
     paddingBottom,
     paddingLeft,
     paddingRight,
-  } = useVirtualization(containerRef, leafColumns);
+  } = useVirtualization(containerRef, leafColumns, columnSizing);
+
+  const rowHeight = tableSchema.rowHeight || DEFAULT_ROW_HEIGHT;
 
   return (
     <div className="tbody" role="rowgroup">
@@ -67,15 +87,13 @@ export default function TableBody({
             role="row"
             aria-rowindex={row.index + 2}
             style={{
-              height: "auto",
+              height: rowHeight,
               marginBottom: outOfOrder ? OUT_OF_ORDER_MARGIN : 0,
+              paddingLeft,
+              paddingRight,
             }}
             data-out-of-order={outOfOrder || undefined}
           >
-            {paddingLeft > 0 && (
-              <div role="presentation" style={{ width: `${paddingLeft}px` }} />
-            )}
-
             {outOfOrder && <OutOfOrderIndicator />}
 
             {virtualCols.map((virtualCell) => {
@@ -94,28 +112,23 @@ export default function TableBody({
                 fieldTypeGroup === "Auditing" || fieldTypeGroup === "Metadata";
 
               return (
-                <CellValidation
+                <TableCell
                   key={cell.id}
                   row={row}
                   cell={cell}
                   index={cellIndex}
-                  left={
-                    cell.column.getIsPinned()
-                      ? virtualCell.start - TABLE_PADDING
-                      : undefined
-                  }
                   isSelectedCell={isSelectedCell}
+                  focusInsideCell={isSelectedCell && selectedCell?.focusInside}
                   isReadOnlyCell={isReadOnlyCell}
                   canEditCells={canEditCells}
-                  lastFrozen={lastFrozen}
-                  rowHeight={tableSchema.rowHeight || DEFAULT_ROW_HEIGHT}
+                  isLastFrozen={lastFrozen === cell.column.id}
+                  width={cell.column.getSize()}
+                  rowHeight={rowHeight}
+                  left={virtualCell.start}
+                  isPinned={cell.column.getIsPinned() === "left"}
                 />
               );
             })}
-
-            {paddingRight > 0 && (
-              <div role="presentation" style={{ width: `${paddingRight}px` }} />
-            )}
           </StyledRow>
         );
       })}
@@ -127,4 +140,6 @@ export default function TableBody({
       )}
     </div>
   );
-}
+});
+
+export default TableBody;

@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import DisplayCell from "./DisplayCell";
 import { Id as IdIcon } from "@src/assets/icons";
@@ -17,7 +17,7 @@ export const config: IFieldConfig = {
   initialValue: "",
   icon: <IdIcon />,
   description: "Displays the row’s ID. Read-only. Cannot be sorted.",
-  TableCell: withTableCell(DisplayCell, null),
+  TableCell: withRenderTableCell(DisplayCell, null),
   SideDrawerField,
 };
 export default config;

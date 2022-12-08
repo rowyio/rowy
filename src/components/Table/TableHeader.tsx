@@ -1,27 +1,39 @@
-import { memo } from "react";
+import { memo, Fragment } from "react";
 import { useAtom } from "jotai";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import type { DropResult } from "react-beautiful-dnd";
-import type { HeaderGroup } from "@tanstack/react-table";
+import type { ColumnSizingState, HeaderGroup } from "@tanstack/react-table";
 import type { TableRow } from "@src/types/table";
 
 import StyledRow from "./Styled/StyledRow";
 import ColumnHeader from "./ColumnHeader";
-import StyledResizer from "./Styled/StyledResizer";
 import FinalColumnHeader from "./FinalColumn/FinalColumnHeader";
-import { DragVertical } from "@src/assets/icons";
 
 import { tableScope, selectedCellAtom } from "@src/atoms/tableScope";
-import { DEFAULT_ROW_HEIGHT, TABLE_PADDING } from "@src/components/Table";
+import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
 
 export interface ITableHeaderProps {
+  /** Headers with context from TanStack Table state */
   headerGroups: HeaderGroup<TableRow>[];
+  /** Called when a header is dropped in a new position */
   handleDropColumn: (result: DropResult) => void;
+  /** Passed to `FinalColumnHeader` */
   canAddColumns: boolean;
+  /** Determines if columns can be re-ordered */
   canEditColumns: boolean;
+  /** If specified, renders a shadow in the last frozen column */
   lastFrozen?: string;
+  /**
+   * Must pass this prop so that it re-renders when local column sizing changes */
+  columnSizing: ColumnSizingState;
 }
 
+/**
+ * Renders table header row. Memoized to only re-render when column definitions
+ * and sizes change.
+ *
+ * - Renders drag & drop components
+ */
 export const TableHeader = memo(function TableHeader({
   headerGroups,
   handleDropColumn,
@@ -29,8 +41,8 @@ export const TableHeader = memo(function TableHeader({
   canEditColumns,
   lastFrozen,
 }: ITableHeaderProps) {
-  const [selectedCell, setSelectedCell] = useAtom(selectedCellAtom, tableScope);
-  const focusInsideCell = selectedCell?.focusInside ?? false;
+  const [selectedCell] = useAtom(selectedCellAtom, tableScope);
+  const focusInside = selectedCell?.focusInside ?? false;
 
   return (
     <DragDropContext onDragEnd={handleDropColumn}>
@@ -45,30 +57,36 @@ export const TableHeader = memo(function TableHeader({
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {headerGroup.headers.map((header) => {
+              {headerGroup.headers.map((header, i) => {
                 const isSelectedCell =
                   (!selectedCell && header.index === 0) ||
                   (selectedCell?.path === "_rowy_header" &&
                     selectedCell?.columnKey === header.id);
 
+                const isLastHeader = i === headerGroup.headers.length - 1;
+
+                // Render later, after the drag & drop placeholder
                 if (header.id === "_rowy_column_actions")
                   return (
-                    <FinalColumnHeader
-                      key={header.id}
-                      data-row-id={"_rowy_header"}
-                      data-col-id={header.id}
-                      tabIndex={isSelectedCell ? 0 : -1}
-                      focusInsideCell={isSelectedCell && focusInsideCell}
-                      aria-colindex={header.index + 1}
-                      aria-readonly={!canEditColumns}
-                      aria-selected={isSelectedCell}
-                      canAddColumns={canAddColumns}
-                    />
+                    <Fragment key={header.id}>
+                      {provided.placeholder}
+                      <FinalColumnHeader
+                        key={header.id}
+                        data-row-id={"_rowy_header"}
+                        data-col-id={header.id}
+                        tabIndex={isSelectedCell ? 0 : -1}
+                        focusInsideCell={isSelectedCell && focusInside}
+                        aria-colindex={header.index + 1}
+                        aria-readonly={!canEditColumns}
+                        aria-selected={isSelectedCell}
+                        canAddColumns={canAddColumns}
+                      />
+                    </Fragment>
                   );
 
                 if (!header.column.columnDef.meta) return null;
 
-                return (
+                const draggableHeader = (
                   <Draggable
                     key={header.id}
                     draggableId={header.id}
@@ -78,110 +96,29 @@ export const TableHeader = memo(function TableHeader({
                   >
                     {(provided, snapshot) => (
                       <ColumnHeader
-                        key={header.id}
-                        data-row-id={"_rowy_header"}
-                        data-col-id={header.id}
-                        data-frozen={header.column.getIsPinned() || undefined}
-                        data-frozen-last={lastFrozen === header.id || undefined}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        tabIndex={isSelectedCell ? 0 : -1}
-                        aria-colindex={header.index + 1}
-                        aria-readonly={!canEditColumns}
-                        aria-selected={isSelectedCell}
+                        header={header}
                         column={header.column.columnDef.meta!}
-                        style={{
-                          width: header.getSize(),
-                          left: header.column.getIsPinned()
-                            ? header.column.getStart() - TABLE_PADDING
-                            : undefined,
-                          ...provided.draggableProps.style,
-                          zIndex: header.column.getIsPinned() ? 11 : 10,
-                        }}
+                        provided={provided}
+                        snapshot={snapshot}
                         width={header.getSize()}
-                        sx={
-                          snapshot.isDragging
-                            ? undefined
-                            : { "& + &": { borderLeft: "none" } }
-                        }
-                        onClick={(e) => {
-                          setSelectedCell({
-                            path: "_rowy_header",
-                            columnKey: header.id,
-                            focusInside: false,
-                          });
-                          (e.target as HTMLDivElement).focus();
-                        }}
-                        onDoubleClick={(e) => {
-                          setSelectedCell({
-                            path: "_rowy_header",
-                            columnKey: header.id,
-                            focusInside: true,
-                          });
-                          (e.target as HTMLDivElement).focus();
-                        }}
-                        focusInsideCell={isSelectedCell && focusInsideCell}
-                      >
-                        <div
-                          {...provided.dragHandleProps}
-                          tabIndex={isSelectedCell && focusInsideCell ? 0 : -1}
-                          aria-describedby={
-                            isSelectedCell && focusInsideCell
-                              ? provided.dragHandleProps?.["aria-describedby"]
-                              : undefined
-                          }
-                          style={{
-                            position: "absolute",
-                            inset: 0,
-                            zIndex: 0,
-                            display: "flex",
-                            alignItems: "center",
-                            outline: "none",
-                          }}
-                          className="column-drag-handle"
-                        >
-                          <DragVertical
-                            sx={{
-                              opacity: 0,
-                              borderRadius: 2,
-                              transition: (theme) =>
-                                theme.transitions.create(["opacity"]),
-                              "[role='columnheader']:hover &, [role='columnheader']:focus-within &":
-                                {
-                                  opacity: 0.5,
-                                },
-                              ".column-drag-handle:hover &": {
-                                opacity: 1,
-                              },
-                              ".column-drag-handle:active &": {
-                                opacity: 1,
-                                color: "primary.main",
-                              },
-                              ".column-drag-handle:focus &": {
-                                opacity: 1,
-                                color: "primary.main",
-                                outline: "2px solid",
-                                outlineColor: "primary.main",
-                              },
-                            }}
-                            style={{ width: 8 }}
-                            preserveAspectRatio="xMidYMid slice"
-                          />
-                        </div>
-
-                        {header.column.getCanResize() && (
-                          <StyledResizer
-                            isResizing={header.column.getIsResizing()}
-                            onMouseDown={header.getResizeHandler()}
-                            onTouchStart={header.getResizeHandler()}
-                          />
-                        )}
-                      </ColumnHeader>
+                        isSelectedCell={isSelectedCell}
+                        focusInsideCell={isSelectedCell && focusInside}
+                        canEditColumns={canEditColumns}
+                        isLastFrozen={lastFrozen === header.id}
+                      />
                     )}
                   </Draggable>
                 );
+
+                if (isLastHeader)
+                  return (
+                    <Fragment key={header.id}>
+                      {draggableHeader}
+                      {provided.placeholder}
+                    </Fragment>
+                  );
+                else return draggableHeader;
               })}
-              {provided.placeholder}
             </StyledRow>
           )}
         </Droppable>

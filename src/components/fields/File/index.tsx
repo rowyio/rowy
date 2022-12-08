@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import FileIcon from "@mui/icons-material/AttachFile";
 import DisplayCell from "./DisplayCell";
@@ -22,7 +22,7 @@ export const config: IFieldConfig = {
   initialValue: [],
   icon: <FileIcon />,
   description: "File uploaded to Firebase Storage. Supports any file type.",
-  TableCell: withTableCell(DisplayCell, EditorCell, "inline", {
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "inline", {
     disablePadding: true,
   }),
   SideDrawerField,

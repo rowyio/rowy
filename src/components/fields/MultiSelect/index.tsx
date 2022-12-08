@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { MultiSelect as MultiSelectIcon } from "@src/assets/icons";
 import DisplayCell from "./DisplayCell";
@@ -32,9 +32,9 @@ export const config: IFieldConfig = {
   icon: <MultiSelectIcon />,
   description:
     "Multiple values from predefined options. Options are searchable and users can optionally input custom values.",
-  TableCell: withTableCell(DisplayCell, EditorCell, "popover", {
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "popover", {
     disablePadding: true,
-    transparentPopover: true,
+    transparentPopover: false,
   }),
   SideDrawerField,
   settings: Settings,

@@ -1,0 +1,10 @@
+{
+  "entryPoints": ["src/atoms/projectScope/*.ts", "src/atoms/tableScope/*.ts"],
+  "includes": "src/types",
+  "exclude": ["**/*.test"],
+  "readme": "none",
+  "githubPages": false,
+  "name": "Rowy",
+  "includeVersion": true,
+  "out": "typedoc"
+}

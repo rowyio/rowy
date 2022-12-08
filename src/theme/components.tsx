@@ -1402,23 +1402,23 @@ export const components = (theme: Theme): ThemeOptions => {
         },
       },
 
-      MuiYearPicker: {
-        styleOverrides: {
-          root: {
-            "& .PrivatePickersYear-yearButton": {
-              ...(theme.typography.button as any),
-              fontSize: "1rem",
-            },
-          },
-        },
-      },
-      MuiPickersDay: {
-        styleOverrides: {
-          root: {
-            background: "none",
-          },
-        },
-      },
+      // MuiYearPicker: {
+      //   styleOverrides: {
+      //     root: {
+      //       "& .PrivatePickersYear-yearButton": {
+      //         ...(theme.typography.button as any),
+      //         fontSize: "1rem",
+      //       },
+      //     },
+      //   },
+      // },
+      // MuiPickersDay: {
+      //   styleOverrides: {
+      //     root: {
+      //       background: "none",
+      //     },
+      //   },
+      // },
 
       RowyMultiSelect: {
         defaultProps: {

@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import ShortTextIcon from "@mui/icons-material/ShortText";
 import DisplayCell from "@src/components/fields/ShortText/DisplayCell";
@@ -30,7 +30,7 @@ export const config: IFieldConfig = {
   icon: <ShortTextIcon />,
   description: "Text displayed on a single line.",
   contextMenuActions: BasicContextMenuActions,
-  TableCell: withTableCell(DisplayCell, EditorCell),
+  TableCell: withRenderTableCell(DisplayCell, EditorCell),
   SideDrawerField,
   settings: Settings,
   filter: {

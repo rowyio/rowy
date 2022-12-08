@@ -9,7 +9,7 @@ export default function LongText({ value }: IDisplayCellProps) {
     <div
       style={{
         maxHeight: "100%",
-        padding: theme.spacing(1, 0),
+        padding: "3px 0",
 
         whiteSpace: "pre-line",
         lineHeight: theme.typography.body2.lineHeight,

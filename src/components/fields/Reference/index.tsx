@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { Reference } from "@src/assets/icons";
 import DisplayCell from "./DisplayCell";
@@ -23,7 +23,7 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <Reference />,
   description: "Firestore document reference",
-  TableCell: withTableCell(DisplayCell, EditorCell, "focus", {
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "focus", {
     disablePadding: true,
   }),
   SideDrawerField,

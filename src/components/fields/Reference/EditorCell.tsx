@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import { doc, deleteField } from "firebase/firestore";
 
 import type { IEditorCellProps } from "@src/components/fields/types";
-import EditorCellTextField from "@src/components/Table/EditorCellTextField";
+import EditorCellTextField from "@src/components/Table/TableCell/EditorCellTextField";
 
 import { InputAdornment, Tooltip } from "@mui/material";
 import ErrorIcon from "@mui/icons-material/ErrorOutline";

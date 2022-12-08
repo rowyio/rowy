@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import ConnectServiceIcon from "@mui/icons-material/Http";
 import DisplayCell from "./DisplayCell";
@@ -28,7 +28,7 @@ export const config: IFieldConfig = {
   icon: <ConnectServiceIcon />,
   description:
     "Connects to an external web service to fetch a list of results.",
-  TableCell: withTableCell(DisplayCell, EditorCell, "popover", {
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "popover", {
     disablePadding: true,
     transparentPopover: true,
   }),

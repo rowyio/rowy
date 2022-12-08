@@ -1,5 +1,5 @@
 import { FieldType } from "@src/constants/fields";
-import type { ITableCellProps } from "@src/components/Table/withTableCell";
+import { IRenderedTableCellProps } from "@src/components/Table/TableCell/withRenderTableCell";
 import type { PopoverProps } from "@mui/material";
 import type {
   ColumnConfig,
@@ -27,7 +27,7 @@ export interface IFieldConfig {
     selectedCell: SelectedCell,
     reset: () => void
   ) => IContextMenuItem[];
-  TableCell: React.ComponentType<ITableCellProps>;
+  TableCell: React.ComponentType<IRenderedTableCellProps>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;
   settings?: React.ComponentType<ISettingsProps>;
   settingsValidator?: (config: Record<string, any>) => Record<string, string>;
@@ -42,6 +42,7 @@ export interface IFieldConfig {
   csvImportParser?: (value: string, config?: any) => any;
 }
 
+/** See {@link IRenderedTableCellProps | `withRenderTableCell` } for guidance */
 export interface IDisplayCellProps<T = any> {
   value: T;
   type: FieldType;
@@ -51,11 +52,16 @@ export interface IDisplayCellProps<T = any> {
   /** The row’s _rowy_ref object */
   _rowy_ref: TableRowRef;
   disabled: boolean;
+  /**
+   * ⚠️ Make sure to use the `tabIndex` prop for buttons and other interactive
+   *   elements.
+   */
   tabIndex: number;
   showPopoverCell: (value: boolean) => void;
   setFocusInsideCell: (focusInside: boolean) => void;
   rowHeight: number;
 }
+/** See {@link IRenderedTableCellProps | `withRenderTableCell` } for guidance */
 export interface IEditorCellProps<T = any> extends IDisplayCellProps<T> {
   /** Call when the user has input but changes have not been saved */
   onDirty: (dirty?: boolean) => void;

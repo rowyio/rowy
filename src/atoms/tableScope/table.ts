@@ -238,3 +238,9 @@ export type AuditChangeFunction = (
  * @param data - Optional additional data to log
  */
 export const auditChangeAtom = atom<AuditChangeFunction | undefined>(undefined);
+
+/**
+ * Store total number of rows in the table, respecting current filters.
+ * If `undefined`, the query hasn’t loaded yet.
+ */
+export const serverDocCountAtom = atom<number | undefined>(undefined);

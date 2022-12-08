@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import CodeIcon from "@mui/icons-material/Code";
 import DisplayCell from "./DisplayCell";
@@ -23,7 +23,7 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <CodeIcon />,
   description: "Raw code edited with the Monaco Editor.",
-  TableCell: withTableCell(DisplayCell, SideDrawerField, "popover", {
+  TableCell: withRenderTableCell(DisplayCell, SideDrawerField, "popover", {
     popoverProps: {
       anchorOrigin: { vertical: "top", horizontal: "center" },
       PaperProps: { sx: { borderRadius: 1 } },

@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from "react";
 import { useAtom } from "jotai";
-import { useVirtual } from "react-virtual";
+import { useVirtual, defaultRangeExtractor } from "react-virtual";
+import type { Range } from "react-virtual";
 
 import {
   tableScope,
@@ -14,8 +15,8 @@ import {
   OUT_OF_ORDER_MARGIN,
   DEFAULT_COL_WIDTH,
 } from "./Table";
-import { TableRow } from "@src/types/table";
-import { Column } from "@tanstack/react-table";
+import type { TableRow } from "@src/types/table";
+import type { Column, ColumnSizingState } from "@tanstack/react-table";
 
 import { MIN_COL_WIDTH } from "./Table";
 
@@ -25,7 +26,8 @@ import { MIN_COL_WIDTH } from "./Table";
  */
 export function useVirtualization(
   containerRef: React.RefObject<HTMLDivElement>,
-  leafColumns: Column<TableRow, unknown>[]
+  leafColumns: Column<TableRow, unknown>[],
+  columnSizing: ColumnSizingState
 ) {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
@@ -62,11 +64,31 @@ export function useVirtualization(
     paddingStart: TABLE_PADDING,
     paddingEnd: TABLE_PADDING,
     estimateSize: useCallback(
-      (index: number) =>
-        Math.max(
-          MIN_COL_WIDTH,
-          leafColumns[index].columnDef.size || DEFAULT_COL_WIDTH
-        ),
+      (index: number) => {
+        const columnDef = leafColumns[index].columnDef;
+        const schemaWidth = columnDef.size;
+        const localWidth = columnSizing[columnDef.id || ""];
+        const definedWidth = localWidth || schemaWidth;
+
+        if (definedWidth === undefined) return DEFAULT_COL_WIDTH;
+        if (definedWidth < MIN_COL_WIDTH) return MIN_COL_WIDTH;
+        return definedWidth;
+      },
+      [leafColumns, columnSizing]
+    ),
+    rangeExtractor: useCallback(
+      (range: Range) => {
+        const defaultRange = defaultRangeExtractor(range);
+        const frozenColumns = leafColumns
+          .filter((c) => c.getIsPinned())
+          .map((c) => c.getPinnedIndex());
+
+        const combinedRange = Array.from(
+          new Set([...defaultRange, ...frozenColumns])
+        ).sort((a, b) => a - b);
+
+        return combinedRange;
+      },
       [leafColumns]
     ),
   });

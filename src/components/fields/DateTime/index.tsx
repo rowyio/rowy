@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 import { parseJSON, format } from "date-fns";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 
@@ -36,7 +36,7 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <DateTimeIcon />,
   description: `Formatted date & time. Format is configurable, default: ${DATE_TIME_FORMAT}. Edited with a visual picker.`,
-  TableCell: withTableCell(DisplayCell, EditorCell, "focus", {
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "focus", {
     disablePadding: true,
   }),
   SideDrawerField,

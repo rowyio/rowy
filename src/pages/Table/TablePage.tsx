@@ -13,7 +13,7 @@ import TableSkeleton from "@src/components/Table/TableSkeleton";
 import EmptyTable from "@src/components/Table/EmptyTable";
 import TableToolbar from "@src/components/TableToolbar";
 import Table from "@src/components/Table";
-import SideDrawer from "@src/components/SideDrawer";
+import SideDrawer, { DRAWER_WIDTH } from "@src/components/SideDrawer";
 import ColumnMenu from "@src/components/ColumnMenu";
 import ColumnModals from "@src/components/ColumnModals";
 import TableModals from "@src/components/TableModals";
@@ -46,7 +46,10 @@ import { formatSubTableName } from "@src/utils/table";
 const BuildLogsSnack = lazy(() => import("@src/components/TableModals/CloudLogsModal/BuildLogs/BuildLogsSnack" /* webpackChunkName: "TableModals-BuildLogsSnack" */));
 
 export interface ITablePageProps {
-  /** Disable modals on this table when a sub-table is open and it’s listening to URL state */
+  /**
+   * Disable modals on this table when a sub-table is open and it’s listening
+   * to URL state
+   */
   disableModals?: boolean;
   /** Disable side drawer */
   disableSideDrawer?: boolean;
@@ -55,6 +58,15 @@ export interface ITablePageProps {
 /**
  * TablePage renders all the UI for the table.
  * Must be wrapped by either `ProvidedTablePage` or `ProvidedSubTablePage`.
+ *
+ * Renders `Table`, `TableToolbar`, `SideDrawer`, `TableModals`, `ColumnMenu`,
+ * Suspense fallback UI. These components are all independent of each other.
+ *
+ * - Renders empty state if no columns
+ * - Defines empty state if no rows
+ * - Defines permissions `canAddColumns`, `canEditColumns`, `canEditCells`
+ *   for `Table` using `userRolesAtom` in `projectScope`
+ * - Provides `Table` with hidden columns array from user settings
  */
 export default function TablePage({
   disableModals,
@@ -67,10 +79,12 @@ export default function TablePage({
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const snackLogContext = useSnackLogContext();
 
-  // Set permissions here so we can pass them to the Table component, which
-  // shouldn’t access projectScope at all, to separate concerns.
-  const canAddColumns = userRoles.includes("ADMIN");
-  const canEditColumns = userRoles.includes("ADMIN");
+  // Set permissions here so we can pass them to the `Table` component, which
+  // shouldn’t access `projectScope` at all, to separate concerns.
+  const canAddColumns =
+    userRoles.includes("ADMIN") || userRoles.includes("OPS");
+  const canEditColumns = canAddColumns;
+  const canDeleteColumns = canAddColumns;
   const canEditCells =
     userRoles.includes("ADMIN") ||
     (!tableSettings.readOnly &&
@@ -126,7 +140,9 @@ export default function TablePage({
               '& [role="grid"]': {
                 marginBottom: `env(safe-area-inset-bottom)`,
                 marginLeft: `env(safe-area-inset-left)`,
-                marginRight: `env(safe-area-inset-right)`,
+                // Ensure there’s enough space so that all columns are
+                // still visible when the side drawer is open
+                marginRight: `max(env(safe-area-inset-right), ${DRAWER_WIDTH}px)`,
               },
             }}
           >
@@ -170,7 +186,11 @@ export default function TablePage({
       {!disableModals && (
         <ErrorBoundary FallbackComponent={InlineErrorFallback}>
           <Suspense fallback={null}>
-            <ColumnMenu />
+            <ColumnMenu
+              canAddColumns={canAddColumns}
+              canEditColumns={canEditColumns}
+              canDeleteColumns={canDeleteColumns}
+            />
             <ColumnModals />
           </Suspense>
         </ErrorBoundary>

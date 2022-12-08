@@ -6,6 +6,7 @@ import {
   set as _set,
   isEqual,
   unset,
+  filter,
 } from "lodash-es";
 
 import { currentUserAtom } from "@src/atoms/projectScope";
@@ -29,6 +30,7 @@ import {
   updateRowData,
   omitRowyFields,
 } from "@src/utils/table";
+import { arrayRemove, arrayUnion } from "firebase/firestore";
 
 export interface IAddRowOptions {
   /** The row or array of rows to add */
@@ -129,9 +131,9 @@ export const addRowAtom = atom(
         });
       }
 
-      // Also add to rowsLocal if  any required fields are missing
+      // Also add to rowsLocal if any required fields are missing
       // (not out of order since those cases are handled above)
-      if (missingRequiredFields.length > 0) {
+      else if (missingRequiredFields.length > 0) {
         set(tableRowsLocalAtom, {
           type: "add",
           row: { ...rowValues, _rowy_outOfOrder: false },
@@ -306,6 +308,10 @@ export interface IUpdateFieldOptions {
   ignoreRequiredFields?: boolean;
   /** Optionally, disable checking if the updated value is equal to the current value. By default, we skip the update if they’re equal. */
   disableCheckEquality?: boolean;
+  /** Optionally, uses firestore's arrayUnion with the given value. Appends given value items to the existing array */
+  useArrayUnion?: boolean;
+  /** Optionally, uses firestore's arrayRemove with the given value. Removes given value items from the existing array */
+  useArrayRemove?: boolean;
 }
 /**
  * Set function updates or deletes a field in a row.
@@ -331,6 +337,8 @@ export const updateFieldAtom = atom(
       deleteField,
       ignoreRequiredFields,
       disableCheckEquality,
+      useArrayUnion,
+      useArrayRemove,
     }: IUpdateFieldOptions
   ) => {
     const updateRowDb = get(_updateRowDbAtom);
@@ -367,8 +375,36 @@ export const updateFieldAtom = atom(
       _set(update, fieldName, value);
     }
 
+    const localUpdate = cloneDeep(update);
+    const dbUpdate = cloneDeep(update);
+    // apply arrayUnion
+    if (useArrayUnion) {
+      if (!Array.isArray(update[fieldName]))
+        throw new Error("Field must be an array");
+
+      // use basic array merge on local row value
+      localUpdate[fieldName] = [
+        ...(row[fieldName] ?? []),
+        ...localUpdate[fieldName],
+      ];
+      dbUpdate[fieldName] = arrayUnion(...dbUpdate[fieldName]);
+    }
+
+    //apply arrayRemove
+    if (useArrayRemove) {
+      if (!Array.isArray(update[fieldName]))
+        throw new Error("Field must be an array");
+
+      // use basic array filter on local row value
+      localUpdate[fieldName] = filter(
+        row[fieldName] ?? [],
+        (el) => !find(localUpdate[fieldName], el)
+      );
+      dbUpdate[fieldName] = arrayRemove(...dbUpdate[fieldName]);
+    }
+
     // Check for required fields
-    const newRowValues = updateRowData(cloneDeep(row), update);
+    const newRowValues = updateRowData(cloneDeep(row), dbUpdate);
     const requiredFields = ignoreRequiredFields
       ? []
       : tableColumnsOrdered
@@ -383,7 +419,7 @@ export const updateFieldAtom = atom(
       set(tableRowsLocalAtom, {
         type: "update",
         path,
-        row: update,
+        row: localUpdate,
         deleteFields: deleteField ? [fieldName] : [],
       });
 
@@ -403,7 +439,7 @@ export const updateFieldAtom = atom(
     else {
       await updateRowDb(
         row._rowy_ref.path,
-        omitRowyFields(update),
+        omitRowyFields(dbUpdate),
         deleteField ? [fieldName] : []
       );
     }

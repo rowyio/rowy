@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { Status as StatusIcon } from "@src/assets/icons";
 import DisplayCell from "./DisplayCell";
@@ -24,7 +24,7 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <StatusIcon />,
   description: "Displays field value as custom status text.",
-  TableCell: withTableCell(DisplayCell, EditorCell, "popover", {
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "popover", {
     disablePadding: true,
     transparentPopover: true,
   }),

@@ -5,7 +5,7 @@ import WarningIcon from "@mui/icons-material/WarningAmber";
 import { ChevronDown } from "@src/assets/icons";
 
 import { sanitiseValue } from "./utils";
-import ChipList from "@src/components/Table/ChipList";
+import ChipList from "@src/components/Table/TableCell/ChipList";
 import FormattedChip from "@src/components/FormattedChip";
 
 export default function MultiSelect({

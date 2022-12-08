@@ -7,7 +7,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { find, isEqual } from "lodash-es";
 
 import Modal from "@src/components/Modal";
-import BreadcrumbsSubTable from "@src/components/Table/BreadcrumbsSubTable";
+import BreadcrumbsSubTable from "@src/components/Table/Breadcrumbs/BreadcrumbsSubTable";
 import ErrorFallback from "@src/components/ErrorFallback";
 import TableSourceFirestore from "@src/sources/TableSourceFirestore";
 import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkeleton";
@@ -28,7 +28,12 @@ import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
 const TablePage = lazy(() => import("./TablePage" /* webpackChunkName: "TablePage" */));
 
 /**
- * Wraps `TablePage` with the data for a top-level table.
+ * Wraps `TablePage` with the data for a sub-table.
+ *
+ * Differences to `ProvidedTablePage`:
+ * - Renders a `Modal`
+ * - When this is a child of `ProvidedTablePage`, the `TablePage` rendered for
+ *   the root table has its modals disabled
  */
 export default function ProvidedSubTablePage() {
   const location = useLocation();
@@ -110,6 +115,7 @@ export default function ProvidedSubTablePage() {
         disableBottomDivider: true,
         style: { "--dialog-spacing": 0, "--dialog-contents-spacing": 0 } as any,
       }}
+      BackdropProps={{ key: "sub-table-modal-backdrop" }}
     >
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Suspense

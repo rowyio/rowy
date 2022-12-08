@@ -184,18 +184,20 @@ export default function TableSettingsDialog() {
           handleCancel: async () => {
             let _schema: Record<string, any> = {};
             if (hasExtensions) {
-              _schema.extensionObjects = get(
-                data,
-                "_schema.extensionObjects"
-                // TODO: types
-              )!.map((x: any) => ({
+              _schema.extensionObjects = (
+                get(
+                  data,
+                  "_schema.extensionObjects"
+                  // TODO: types
+                ) ?? []
+              ).map((x: any) => ({
                 ...x,
                 active: false,
               }));
             }
             if (hasWebhooks) {
               // TODO: types
-              _schema.webhooks = get(data, "_schema.webhooks")!.map(
+              _schema.webhooks = (get(data, "_schema.webhooks") ?? []).map(
                 (x: any) => ({
                   ...x,
                   active: false,
@@ -272,7 +274,7 @@ export default function TableSettingsDialog() {
         ).reduce((acc, [name, err]) => {
           const match = find(fields, ["name", name])?.step;
           if (!match) return acc;
-          acc[match] = err.message;
+          acc[match] = (err?.message as string) ?? "";
           return acc;
         }, {} as Record<string, string>);
 

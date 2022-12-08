@@ -1,7 +1,7 @@
 import { lazy } from "react";
 import { GeoPoint } from "firebase/firestore";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import GeoPointIcon from "@mui/icons-material/PinDropOutlined";
 import DisplayCell from "./DisplayCell";
@@ -21,7 +21,7 @@ export const config: IFieldConfig = {
   initialValue: {},
   icon: <GeoPointIcon />,
   description: "Geo point is represented as latitude/longitude pair.",
-  TableCell: withTableCell(DisplayCell, SideDrawerField, "popover", {
+  TableCell: withRenderTableCell(DisplayCell, SideDrawerField, "popover", {
     popoverProps: { PaperProps: { sx: { p: 1, pt: 0 } } },
   }),
   SideDrawerField,

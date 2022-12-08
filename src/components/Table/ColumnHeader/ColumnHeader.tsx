@@ -1,61 +1,84 @@
-import { forwardRef, useRef } from "react";
+import { memo, useRef } from "react";
 import { useAtom, useSetAtom } from "jotai";
+import type { Header } from "@tanstack/react-table";
+import type {
+  DraggableProvided,
+  DraggableStateSnapshot,
+} from "react-beautiful-dnd";
 
 import {
-  styled,
   Tooltip,
-  TooltipProps,
-  tooltipClasses,
   Fade,
-  Grid,
-  GridProps,
+  StackProps,
   IconButton,
   Typography,
 } from "@mui/material";
 import DropdownIcon from "@mui/icons-material/MoreHoriz";
 import LockIcon from "@mui/icons-material/LockOutlined";
 
+import {
+  StyledColumnHeader,
+  StyledColumnHeaderNameTooltip,
+} from "@src/components/Table/Styled/StyledColumnHeader";
 import ColumnHeaderSort, { SORT_STATES } from "./ColumnHeaderSort";
+import ColumnHeaderDragHandle from "./ColumnHeaderDragHandle";
+import ColumnHeaderResizer from "./ColumnHeaderResizer";
 
 import { projectScope, altPressAtom } from "@src/atoms/projectScope";
 import {
   tableScope,
+  selectedCellAtom,
   columnMenuAtom,
   tableSortsAtom,
 } from "@src/atoms/tableScope";
 import { getFieldProp } from "@src/components/fields";
-import { COLUMN_HEADER_HEIGHT } from "@src/components/Table/Column";
-import { ColumnConfig } from "@src/types/table";
 import { FieldType } from "@src/constants/fields";
-import { spreadSx } from "@src/utils/ui";
+import { COLUMN_HEADER_HEIGHT } from "@src/components/Table/Mock/Column";
+import type { ColumnConfig } from "@src/types/table";
+import type { TableRow } from "@src/types/table";
 
 export { COLUMN_HEADER_HEIGHT };
 
-const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: theme.palette.background.default,
-    color: theme.palette.text.primary,
-
-    margin: `-${COLUMN_HEADER_HEIGHT - 1 - 2}px 0 0 !important`,
-    padding: 0,
-    paddingRight: theme.spacing(1.5),
-  },
-}));
-
-export interface IColumnHeaderProps extends Partial<GridProps> {
+export interface IColumnHeaderProps
+  extends Partial<Omit<StackProps, "style" | "sx">> {
+  header: Header<TableRow, any>;
   column: ColumnConfig;
+
+  provided: DraggableProvided;
+  snapshot: DraggableStateSnapshot;
+
   width: number;
+  isSelectedCell: boolean;
   focusInsideCell: boolean;
-  children: React.ReactNode;
+  canEditColumns: boolean;
+  isLastFrozen: boolean;
 }
 
-export const ColumnHeader = forwardRef(function ColumnHeader(
-  { column, width, focusInsideCell, children, ...props }: IColumnHeaderProps,
-  ref: React.Ref<HTMLDivElement>
-) {
+/**
+ * Renders UI components for each column header, including accessibility
+ * attributes. Memoized to prevent re-render when resizing or reordering other
+ * columns.
+ *
+ * Renders:
+ * - Drag handle (accessible)
+ * - Field type icon + click to copy field key
+ * - Field name + hover to view full name if cut off
+ * - Sort button
+ * - Resize handle (not accessible)
+ */
+export const ColumnHeader = memo(function ColumnHeader({
+  header,
+  column,
+  provided,
+  snapshot,
+  width,
+  isSelectedCell,
+  focusInsideCell,
+  canEditColumns,
+  isLastFrozen,
+}: IColumnHeaderProps) {
   const openColumnMenu = useSetAtom(columnMenuAtom, tableScope);
+  const setSelectedCell = useSetAtom(selectedCellAtom, tableScope);
   const [altPress] = useAtom(altPressAtom, projectScope);
   const [tableSorts] = useAtom(tableSortsAtom, tableScope);
 
@@ -74,11 +97,19 @@ export const ColumnHeader = forwardRef(function ColumnHeader(
       : tableSorts[0]?.direction || "none";
 
   return (
-    <Grid
+    <StyledColumnHeader
       role="columnheader"
       id={`column-header-${column.key}`}
-      ref={ref}
-      {...props}
+      ref={provided.innerRef}
+      {...provided.draggableProps}
+      data-row-id={"_rowy_header"}
+      data-col-id={header.id}
+      data-frozen={header.column.getIsPinned() || undefined}
+      data-frozen-last={isLastFrozen || undefined}
+      tabIndex={isSelectedCell ? 0 : -1}
+      aria-colindex={header.index + 1}
+      aria-readonly={!canEditColumns}
+      aria-selected={isSelectedCell}
       aria-sort={
         currentSort === "none"
           ? "none"
@@ -86,34 +117,40 @@ export const ColumnHeader = forwardRef(function ColumnHeader(
           ? "ascending"
           : "descending"
       }
-      container
-      alignItems="center"
-      wrap="nowrap"
+      style={{
+        left: header.column.getIsPinned()
+          ? header.column.getStart()
+          : undefined,
+        zIndex: header.column.getIsPinned() ? 11 : 10,
+        ...provided.draggableProps.style,
+        width,
+        borderLeftStyle: snapshot.isDragging ? "solid" : undefined,
+      }}
       onContextMenu={handleOpenMenu}
-      sx={[
-        {
-          height: "100%",
-          "& svg, & button": { display: "block", zIndex: 1 },
-          border: (theme) => `1px solid ${theme.palette.divider}`,
-
-          backgroundColor: "background.default",
-          color: "text.secondary",
-          transition: (theme) =>
-            theme.transitions.create("color", {
-              duration: theme.transitions.duration.short,
-            }),
-          "&:hover": { color: "text.primary" },
-
-          position: "relative",
-
-          py: 0,
-          pr: 0.5,
-          pl: 1,
-          width: "100%",
-        },
-        ...spreadSx(props.sx),
-      ]}
+      onClick={(e) => {
+        setSelectedCell({
+          path: "_rowy_header",
+          columnKey: header.id,
+          focusInside: false,
+        });
+        (e.target as HTMLDivElement).focus();
+      }}
+      onDoubleClick={(e) => {
+        setSelectedCell({
+          path: "_rowy_header",
+          columnKey: header.id,
+          focusInside: true,
+        });
+        (e.target as HTMLDivElement).focus();
+      }}
     >
+      {provided.dragHandleProps && (
+        <ColumnHeaderDragHandle
+          dragHandleProps={provided.dragHandleProps}
+          tabIndex={focusInsideCell ? 0 : -1}
+        />
+      )}
+
       {width > 140 && (
         <Tooltip
           title={
@@ -127,8 +164,7 @@ export const ColumnHeader = forwardRef(function ColumnHeader(
           placement="bottom-start"
           arrow
         >
-          <Grid
-            item
+          <div
             onClick={() => {
               navigator.clipboard.writeText(column.key);
             }}
@@ -139,96 +175,87 @@ export const ColumnHeader = forwardRef(function ColumnHeader(
             ) : (
               getFieldProp("icon", (column as any).type)
             )}
-          </Grid>
+          </div>
         </Tooltip>
       )}
 
-      <Grid
-        item
-        xs
-        sx={{ flexShrink: 1, overflow: "hidden", my: 0, ml: 0.5, mr: -30 / 8 }}
-      >
-        <LightTooltip
-          title={
-            <Typography
-              sx={{
-                typography: "caption",
-                fontWeight: "fontWeightMedium",
-                lineHeight: `${COLUMN_HEADER_HEIGHT - 2 - 4}px`,
-                textOverflow: "clip",
-              }}
-              color="inherit"
-            >
-              {column.name as string}
-            </Typography>
-          }
-          enterDelay={1000}
-          placement="bottom-start"
-          disableInteractive
-          TransitionComponent={Fade}
-          sx={{ "& .MuiTooltip-tooltip": { marginTop: "-28px !important" } }}
-        >
+      <StyledColumnHeaderNameTooltip
+        title={
           <Typography
-            noWrap
             sx={{
               typography: "caption",
               fontWeight: "fontWeightMedium",
+              lineHeight: `${COLUMN_HEADER_HEIGHT - 2 - 4}px`,
               textOverflow: "clip",
-              position: "relative",
-              zIndex: 1,
             }}
-            component="div"
             color="inherit"
           >
-            {altPress ? (
-              <>
-                {column.index} <code>{column.fieldName}</code>
-              </>
-            ) : (
-              column.name
-            )}
+            {column.name as string}
           </Typography>
-        </LightTooltip>
-      </Grid>
+        }
+        enterDelay={1000}
+        placement="bottom-start"
+        disableInteractive
+        TransitionComponent={Fade}
+        sx={{ "& .MuiTooltip-tooltip": { marginTop: "-28px !important" } }}
+      >
+        <Typography
+          noWrap
+          sx={{
+            typography: "caption",
+            fontWeight: "fontWeightMedium",
+            textOverflow: "clip",
+            position: "relative",
+            zIndex: 1,
+
+            flexGrow: 1,
+            flexShrink: 1,
+            overflow: "hidden",
+            my: 0,
+            ml: 0.5,
+            mr: -30 / 8,
+          }}
+          component="div"
+          color="inherit"
+        >
+          {altPress ? (
+            <>
+              {column.index} <code>{column.fieldName}</code>
+            </>
+          ) : (
+            column.name
+          )}
+        </Typography>
+      </StyledColumnHeaderNameTooltip>
 
       {column.type !== FieldType.id && (
-        <Grid item>
-          <ColumnHeaderSort
-            sortKey={sortKey}
-            currentSort={currentSort}
-            tabIndex={focusInsideCell ? 0 : -1}
-          />
-        </Grid>
+        <ColumnHeaderSort
+          sortKey={sortKey}
+          currentSort={currentSort}
+          tabIndex={focusInsideCell ? 0 : -1}
+        />
       )}
 
-      <Grid item>
-        <Tooltip title="Column settings">
-          <IconButton
-            size="small"
-            aria-label={`Column settings for ${column.name as string}`}
-            tabIndex={focusInsideCell ? 0 : -1}
-            id={`column-settings-${column.key}`}
-            color="inherit"
-            onClick={handleOpenMenu}
-            ref={buttonRef}
-            sx={{
-              transition: (theme) =>
-                theme.transitions.create("color", {
-                  duration: theme.transitions.duration.short,
-                }),
+      <Tooltip title="Column settings">
+        <IconButton
+          size="small"
+          tabIndex={focusInsideCell ? 0 : -1}
+          id={`column-settings-${column.key}`}
+          onClick={handleOpenMenu}
+          ref={buttonRef}
+        >
+          <DropdownIcon />
+        </IconButton>
+      </Tooltip>
 
-              color: "text.disabled",
-              "[role='columnheader']:hover &, [role='columnheader']:focus &, [role='columnheader']:focus-within &, &:focus":
-                { color: "text.primary" },
-            }}
-          >
-            <DropdownIcon />
-          </IconButton>
-        </Tooltip>
-      </Grid>
-
-      {children}
-    </Grid>
+      {header.column.getCanResize() && (
+        <ColumnHeaderResizer
+          isResizing={header.column.getIsResizing()}
+          onMouseDown={header.getResizeHandler()}
+          onTouchStart={header.getResizeHandler()}
+        />
+      )}
+    </StyledColumnHeader>
   );
 });
 

@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import RatingIcon from "@mui/icons-material/StarBorder";
 import DisplayCell from "./DisplayCell";
@@ -26,7 +26,7 @@ export const config: IFieldConfig = {
   requireConfiguration: true,
   description:
     "Rating displayed as stars. Max stars is configurable, default: 5 stars.",
-  TableCell: withTableCell(DisplayCell, EditorCell, "inline"),
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "inline"),
   settings: Settings,
   SideDrawerField,
   filter: {

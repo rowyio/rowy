@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { Image as ImageIcon } from "@src/assets/icons";
 import DisplayCell from "./DisplayCell";
@@ -23,7 +23,7 @@ export const config: IFieldConfig = {
   icon: <ImageIcon />,
   description:
     "Image file uploaded to Firebase Storage. Supports JPEG, PNG, SVG, GIF, WebP, AVIF, JPEG XL.",
-  TableCell: withTableCell(DisplayCell, EditorCell, "inline", {
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "inline", {
     disablePadding: true,
   }),
   SideDrawerField,

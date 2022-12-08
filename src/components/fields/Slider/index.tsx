@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { Slider as SliderIcon } from "@src/assets/icons";
 import DisplayCell from "./DisplayCell";
@@ -24,7 +24,7 @@ export const config: IFieldConfig = {
   icon: <SliderIcon />,
   requireConfiguration: true,
   description: "Numeric value edited with a Slider. Range is configurable.",
-  TableCell: withTableCell(DisplayCell, SideDrawerField, "popover", {
+  TableCell: withRenderTableCell(DisplayCell, SideDrawerField, "popover", {
     popoverProps: { PaperProps: { sx: { p: 1, pt: 5 } } },
   }),
   settings: Settings,
