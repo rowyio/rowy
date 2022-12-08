@@ -48,7 +48,6 @@ export enum FieldType {
   createdAt = "CREATED_AT",
   updatedAt = "UPDATED_AT",
   // METADATA
-
   user = "USER",
   id = "ID",
   last = "LAST",

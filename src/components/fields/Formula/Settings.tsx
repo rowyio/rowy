@@ -1,12 +1,11 @@
 import { lazy, Suspense } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { FieldType, ISettingsProps } from "@src/components/fields/types";
+import { ISettingsProps } from "@src/components/fields/types";
 import {
   Grid,
   InputLabel,
   Typography,
   Stack,
-  Tooltip,
   FormHelperText,
 } from "@mui/material";
 import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
@@ -18,7 +17,7 @@ import {
   tableScope,
 } from "@src/atoms/tableScope";
 import { useFormula } from "./useFormula";
-import { ignoredColumns, typeDefs } from "./util";
+import { listenerFieldTypes, outputFieldTypes, typeDefs } from "./util";
 import MultiSelect from "@rowy/multiselect";
 import FieldsDropdown from "@src/components/ColumnModals/FieldsDropdown";
 
@@ -41,29 +40,20 @@ export default function Settings({
     formulaFn: config.formulaFn,
   });
 
-  if (error && !config?.error) {
-    onChange("error")(error.message);
-  }
-  if (!error && config?.error) {
-    onChange("error")(undefined);
-  }
+  // if (error && !config?.error) {
+  //   onChange("error")(error.message);
+  // }
+  // if (!error && config?.error) {
+  //   onChange("error")(undefined);
+  // }
 
-  if (loading) {
-    console.log("loading");
-  }
+  // if (loading) {
+  //   console.log("loading");
+  // }
 
-  if (error) {
-    console.log(error);
-  }
-
-  const previewColumns = tableColumnsOrdered.filter(
-    (c) => !ignoredColumns.includes(c.type)
-  );
-
-  const columnOptions = tableColumnsOrdered
-    .filter((column) => column.fieldName !== fieldName)
-    .filter((column) => !ignoredColumns.includes(column.type))
-    .map((c) => ({ label: c.name, value: c.key }));
+  // if (error) {
+  //   console.log(error);
+  // }
 
   const formulaFn =
     config?.formulaFn ??
@@ -72,17 +62,15 @@ export default function Settings({
 // return column1 + column2;
 // checkout the documentation for more info: https://docs.rowy.io/field-types/formula`;
 
-  const defs = previewColumns
-    .map((c) => `declare const ${c.key}: ${typeDefs(c.type)};`)
-    .join("\n");
-
   return (
     <Stack spacing={1}>
       <Grid container direction="row" spacing={2} flexWrap="nowrap">
         <Grid item xs={12} md={6}>
           <MultiSelect
             label="Listener fields"
-            options={columnOptions}
+            options={tableColumnsOrdered
+              .filter((c) => listenerFieldTypes.includes(c.type))
+              .map((c) => c.name)}
             value={config.listenerFields ?? []}
             onChange={onChange("listenerFields")}
             TextFieldProps={{
@@ -111,15 +99,7 @@ export default function Settings({
           <FieldsDropdown
             label="Output field type"
             value={config.renderFieldType}
-            options={Object.values(FieldType).filter(
-              (f) =>
-                ![
-                  FieldType.derivative,
-                  FieldType.aggregate,
-                  FieldType.subTable,
-                  FieldType.action,
-                ].includes(f)
-            )}
+            options={outputFieldTypes}
             onChange={(value) => {
               onChange("renderFieldType")(value);
             }}
@@ -150,19 +130,19 @@ export default function Settings({
             spacing={1}
             style={{ flexGrow: 1, marginTop: -8, marginLeft: 0 }}
           >
-            {Object.values(previewColumns).map((column) => (
+            {/* {Object.values(previewColumns).map((column) => (
               <Grid item key={column.key}>
                 <Tooltip title={column.type}>
                   <code>{column.fieldName}</code>
                 </Tooltip>
               </Grid>
-            ))}
+            ))} */}
           </Grid>
         </Stack>
         <Suspense fallback={<FieldSkeleton height={200} />}>
           <CodeEditor
             value={formulaFn}
-            extraLibs={[defs]}
+            // extraLibs={[defs]}
             onChange={useDebouncedCallback(onChange("formulaFn"), 300)}
           />
         </Suspense>

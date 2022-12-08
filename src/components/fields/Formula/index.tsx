@@ -1,10 +1,10 @@
 import { Derivative as DerivativeIcon } from "@src/assets/icons";
 
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withTableCell from "@src/components/Table/withTableCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
+import DisplayCell from "./DisplayCell";
 
 import Settings, { settingsValidator } from "./Settings";
-import DisplayCell from "./DisplayCell";
 
 export const config: IFieldConfig = {
   type: FieldType.formula,
@@ -14,7 +14,7 @@ export const config: IFieldConfig = {
   initialValue: "",
   icon: <DerivativeIcon />,
   description: "Client Function (Alpha)",
-  TableCell: withTableCell(DisplayCell, DisplayCell, "inline", {
+  TableCell: withRenderTableCell(DisplayCell as any, null, undefined, {
     usesRowData: true,
   }),
   SideDrawerField: () => null as any,

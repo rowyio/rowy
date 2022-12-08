@@ -1,16 +1,15 @@
-import { Grid } from "@mui/material";
 import { IDisplayCellProps } from "@src/components/fields/types";
 import { useFormula } from "./useFormula";
+import { getDisplayCell } from "./util";
 
-export default function Formula({ row, column }: IDisplayCellProps) {
+export default function Formula(props: IDisplayCellProps) {
   const { result, error } = useFormula({
-    row,
-    formulaFn: column.config?.formulaFn,
+    row: props.row,
+    formulaFn: props.column.config?.formulaFn,
   });
 
-  return (
-    <Grid container alignItems="center" wrap="nowrap" spacing={1}>
-      {error ? error.message : result}
-    </Grid>
-  );
+  const type = props.column.config?.renderFieldType;
+  const DisplayCell = getDisplayCell(type);
+
+  return <DisplayCell {...props} value={result} disabled={true} />;
 }
