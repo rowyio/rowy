@@ -7,19 +7,19 @@ import {
   Typography,
   Stack,
   FormHelperText,
+  Tooltip,
 } from "@mui/material";
 import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 
 import { useAtom } from "jotai";
-import {
-  tableColumnsOrderedAtom,
-  tableRowsAtom,
-  tableScope,
-} from "@src/atoms/tableScope";
-import { useFormula } from "./useFormula";
-import { listenerFieldTypes, outputFieldTypes, typeDefs } from "./util";
+import { tableColumnsOrderedAtom, tableScope } from "@src/atoms/tableScope";
+import { defaultFn, listenerFieldTypes, outputFieldTypes } from "./util";
 import MultiSelect from "@rowy/multiselect";
 import FieldsDropdown from "@src/components/ColumnModals/FieldsDropdown";
+import { getFieldProp } from "..";
+
+/* eslint-disable import/no-webpack-loader-syntax */
+import formulaDefs from "!!raw-loader!./formula.d.ts";
 
 const CodeEditor = lazy(
   () =>
@@ -28,39 +28,13 @@ const CodeEditor = lazy(
 
 export default function Settings({
   config,
-  fieldName,
   onChange,
   onBlur,
   errors,
 }: ISettingsProps) {
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
-  const [tableRows] = useAtom(tableRowsAtom, tableScope);
-  const { error, result, loading } = useFormula({
-    row: tableRows[0],
-    formulaFn: config.formulaFn,
-  });
-
-  // if (error && !config?.error) {
-  //   onChange("error")(error.message);
-  // }
-  // if (!error && config?.error) {
-  //   onChange("error")(undefined);
-  // }
-
-  // if (loading) {
-  //   console.log("loading");
-  // }
-
-  // if (error) {
-  //   console.log(error);
-  // }
-
-  const formulaFn =
-    config?.formulaFn ??
-    `// Write your formula code here
-// for example:
-// return column1 + column2;
-// checkout the documentation for more info: https://docs.rowy.io/field-types/formula`;
+  const returnType = getFieldProp("dataType", config.renderFieldType) ?? "any";
+  const formulaFn = config?.formulaFn ? config.formulaFn : defaultFn;
 
   return (
     <Stack spacing={1}>
@@ -70,7 +44,7 @@ export default function Settings({
             label="Listener fields"
             options={tableColumnsOrdered
               .filter((c) => listenerFieldTypes.includes(c.type))
-              .map((c) => c.name)}
+              .map((c) => ({ label: c.name, value: c.key }))}
             value={config.listenerFields ?? []}
             onChange={onChange("listenerFields")}
             TextFieldProps={{
@@ -130,52 +104,26 @@ export default function Settings({
             spacing={1}
             style={{ flexGrow: 1, marginTop: -8, marginLeft: 0 }}
           >
-            {/* {Object.values(previewColumns).map((column) => (
-              <Grid item key={column.key}>
-                <Tooltip title={column.type}>
-                  <code>{column.fieldName}</code>
-                </Tooltip>
-              </Grid>
-            ))} */}
+            <Grid item>
+              <Tooltip title="Current row's data">
+                <code>row</code>
+              </Tooltip>
+            </Grid>
           </Grid>
         </Stack>
         <Suspense fallback={<FieldSkeleton height={200} />}>
           <CodeEditor
             value={formulaFn}
-            // extraLibs={[defs]}
+            extraLibs={[
+              formulaDefs.replace(
+                `"PLACEHOLDER_OUTPUT_TYPE"`,
+                `${returnType} | Promise<${returnType}>`
+              ),
+            ]}
             onChange={useDebouncedCallback(onChange("formulaFn"), 300)}
           />
         </Suspense>
       </div>
-      {/* <InputLabel style={{ overflowX: "scroll", display: "initial" }}>
-        Preview:
-        <Grid container wrap="nowrap" style={{ flexGrow: 1 }}>
-          <ColumnWrapper item>
-            <Column label={fieldName} type={FieldType.formula} />
-            <Cell
-              key={`${fieldName}--${tableRows[0]._rowy_ref.path}`}
-              field={fieldName}
-              value={String(result)}
-              type={FieldType.shortText}
-              name={fieldName}
-            />
-          </ColumnWrapper>
-          {Object.entries(previewColumns).map(
-            ([field, { name, type, key }]) => (
-              <ColumnWrapper>
-                <Column label={name} type={type} />
-                <Cell
-                  key={`${field}--${tableRows[0]._rowy_ref.path}`}
-                  field={field}
-                  value={key === fieldName ? String(result) : tableRows[0][key]}
-                  type={key === fieldName ? FieldType.shortText : type}
-                  name={name}
-                />
-              </ColumnWrapper>
-            )
-          )}
-        </Grid>
-      </InputLabel> */}
     </Stack>
   );
 }

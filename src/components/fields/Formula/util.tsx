@@ -47,7 +47,6 @@ export const listenerFieldTypes = Object.values(FieldType).filter(
       FieldType.connectTable,
       FieldType.connector,
       FieldType.subTable,
-      FieldType.reference,
       FieldType.last,
     ].includes(type)
 );
@@ -74,32 +73,13 @@ export const outputFieldTypes = Object.values(FieldType).filter(
     ].includes(type)
 );
 
-export const typeDefs = (type: FieldType) => {
-  switch (type) {
-    case FieldType.shortText:
-    case FieldType.longText:
-    case FieldType.richText:
-    case FieldType.email:
-    case FieldType.phone:
-    case FieldType.url:
-    case FieldType.singleSelect:
-      return "string | undefined";
-    case FieldType.multiSelect:
-      return "Array | undefined";
-    case FieldType.number:
-    case FieldType.rating:
-    case FieldType.slider:
-    case FieldType.percentage:
-      return "number | undefined";
-    case FieldType.checkbox:
-      return "boolean | undefined";
-    case FieldType.date:
-    case FieldType.dateTime:
-    case FieldType.duration:
-      return "{ seconds: number; nanoseconds: number; }";
-  }
-  return "any";
-};
+export const defaultFn = `const formula:Formula = async ({ row })=> {
+  // Write your formula code here
+  // for example:
+  // return row.a + row.b;
+  // checkout the documentation for more info: https://docs.rowy.io/field-types/formula
+}
+`;
 
 export const getDisplayCell = (type: FieldType) => {
   switch (type) {

@@ -3,13 +3,15 @@ import { TableRow } from "@src/types/table";
 import { useAtom } from "jotai";
 import { pick, zipObject } from "lodash-es";
 import { useEffect, useMemo, useState } from "react";
-import { useDeepCompareMemoize } from "./util";
+import { listenerFieldTypes, useDeepCompareMemoize } from "./util";
 
 export const useFormula = ({
   row,
+  listenerFields,
   formulaFn,
 }: {
   row: TableRow;
+  listenerFields: string[];
   formulaFn: string;
 }) => {
   const [result, setResult] = useState(null);
@@ -17,7 +19,9 @@ export const useFormula = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
 
-  const availableColumns = tableColumnsOrdered.map((c) => c.key);
+  const availableColumns = tableColumnsOrdered
+    .filter((c) => listenerFieldTypes.includes(c.type))
+    .map((c) => c.key);
 
   const availableFields = useMemo(
     () => ({
@@ -30,17 +34,22 @@ export const useFormula = ({
     [row, availableColumns]
   );
 
+  const listeners = useMemo(
+    () => pick(availableFields, listenerFields),
+    [availableFields, listenerFields]
+  );
+
   useEffect(() => {
     setLoading(true);
 
     const worker = new Worker(new URL("./worker.ts", import.meta.url), {
-      type: "classic",
+      type: "module",
     });
     const timeout = setTimeout(() => {
       setError(new Error("Timeout"));
       setLoading(false);
       worker.terminate();
-    }, 1000);
+    }, 10000);
 
     worker.onmessage = ({ data: { result, error } }: any) => {
       worker.terminate();
@@ -53,8 +62,9 @@ export const useFormula = ({
       clearInterval(timeout);
     };
 
+    const functionBody = formulaFn.replace(/^.*=>\s*{/, "").replace(/}$/, "");
     worker.postMessage({
-      formulaFn: formulaFn,
+      formulaFn: functionBody,
       row: availableFields,
     });
 
@@ -63,7 +73,7 @@ export const useFormula = ({
       clearInterval(timeout);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [useDeepCompareMemoize(availableFields), formulaFn]);
+  }, [useDeepCompareMemoize(listeners), formulaFn]);
 
   return { result, error, loading };
 };
