@@ -1,12 +1,12 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import { Number as NumberIcon } from "@src/assets/icons";
-import BasicCell from "./BasicCell";
-import TextEditor from "@src/components/Table/editors/TextEditor";
+import DisplayCell from "./DisplayCell";
+import EditorCell from "./EditorCell";
 import { filterOperators } from "./Filter";
-import BasicContextMenuActions from "@src/components/fields/_BasicCell/BasicCellContextMenuActions";
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
 const SideDrawerField = lazy(
   () =>
     import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Number" */)
@@ -22,8 +22,7 @@ export const config: IFieldConfig = {
   icon: <NumberIcon />,
   description: "Numeric value.",
   contextMenuActions: BasicContextMenuActions,
-  TableCell: withBasicCell(BasicCell),
-  TableEditor: TextEditor,
+  TableCell: withRenderTableCell(DisplayCell, EditorCell),
   SideDrawerField,
   filter: {
     operators: filterOperators,

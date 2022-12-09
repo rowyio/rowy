@@ -13,8 +13,8 @@ export default function Customization({
   updatePublicSettings,
 }: IProjectSettingsChildProps) {
   const [customizedThemeColor, setCustomizedThemeColor] = useState(
-    publicSettings.theme?.light?.palette?.primary?.main ||
-      publicSettings.theme?.dark?.palette?.primary?.main
+    (publicSettings.theme?.light?.palette?.primary as any)?.main ||
+      (publicSettings.theme?.dark?.palette?.primary as any)?.main
   );
 
   const handleSave = ({ light, dark }: { light: string; dark: string }) => {
@@ -50,8 +50,12 @@ export default function Customization({
       <Collapse in={customizedThemeColor} style={{ marginTop: 0 }}>
         <Suspense fallback={<Loading />}>
           <ThemeColorPicker
-            currentLight={publicSettings.theme?.light?.palette?.primary?.main}
-            currentDark={publicSettings.theme?.dark?.palette?.primary?.main}
+            currentLight={
+              (publicSettings.theme?.light?.palette?.primary as any)?.main
+            }
+            currentDark={
+              (publicSettings.theme?.dark?.palette?.primary as any)?.main
+            }
             handleSave={handleSave}
           />
         </Suspense>

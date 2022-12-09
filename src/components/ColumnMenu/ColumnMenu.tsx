@@ -7,6 +7,7 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
+  Divider,
 } from "@mui/material";
 import FilterIcon from "@mui/icons-material/FilterList";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
@@ -28,17 +29,16 @@ import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import EvalIcon from "@mui/icons-material/PlayCircleOutline";
 
 import MenuContents, { IMenuContentsProps } from "./MenuContents";
-import ColumnHeader from "@src/components/Table/Column";
+import ColumnHeader from "@src/components/Table/Mock/Column";
 
 import {
-  globalScope,
-  userRolesAtom,
+  projectScope,
   userSettingsAtom,
   updateUserSettingsAtom,
   confirmDialogAtom,
   rowyRunAtom,
   altPressAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableIdAtom,
@@ -50,12 +50,18 @@ import {
   columnModalAtom,
   tableFiltersPopoverAtom,
   tableNextPageAtom,
+  tableSchemaAtom,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 import { analytics, logEvent } from "@src/analytics";
-import { formatSubTableName, getTableSchemaPath } from "@src/utils/table";
+import {
+  formatSubTableName,
+  getTableBuildFunctionPathname,
+  getTableSchemaPath,
+} from "@src/utils/table";
 import { runRoutes } from "@src/constants/runRoutes";
+import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 
 export interface IMenuModalProps {
   name: string;
@@ -73,12 +79,21 @@ export interface IMenuModalProps {
   ) => void;
 }
 
-export default function ColumnMenu() {
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
-  const [userSettings] = useAtom(userSettingsAtom, globalScope);
-  const [updateUserSettings] = useAtom(updateUserSettingsAtom, globalScope);
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+export interface IColumnMenuProps {
+  canAddColumns: boolean;
+  canEditColumns: boolean;
+  canDeleteColumns: boolean;
+}
+
+export default function ColumnMenu({
+  canAddColumns,
+  canEditColumns,
+  canDeleteColumns,
+}: IColumnMenuProps) {
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
+  const [updateUserSettings] = useAtom(updateUserSettingsAtom, projectScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
   const [tableId] = useAtom(tableIdAtom, tableScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
@@ -91,8 +106,10 @@ export default function ColumnMenu() {
     tableScope
   );
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
+  const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
+  const snackLogContext = useSnackLogContext();
 
-  const [altPress] = useAtom(altPressAtom, globalScope);
+  const [altPress] = useAtom(altPressAtom, projectScope);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   if (!columnMenu) return null;
@@ -117,8 +134,42 @@ export default function ColumnMenu() {
   const userDocHiddenFields =
     userSettings.tables?.[formatSubTableName(tableId)]?.hiddenFields ?? [];
 
+  let referencedColumns: string[] = [];
+  let referencedExtensions: string[] = [];
+  Object.entries(tableSchema?.columns ?? {}).forEach(([key, c], index) => {
+    if (
+      c.config?.listenerFields?.includes(column.key) ||
+      c.config?.requiredFields?.includes(column.key)
+    ) {
+      referencedColumns.push(c.name);
+    }
+  });
+  tableSchema?.extensionObjects?.forEach((extension) => {
+    if (extension.requiredFields.includes(column.key)) {
+      referencedExtensions.push(extension.name);
+    }
+  });
+  const requireRebuild =
+    referencedColumns.length || referencedExtensions.length;
+
   const handleDeleteColumn = () => {
     deleteColumn(column.key);
+    if (requireRebuild) {
+      snackLogContext.requestSnackLog();
+      rowyRun({
+        route: runRoutes.buildFunction,
+        body: {
+          tablePath: tableSettings.collection,
+          // pathname must match old URL format
+          pathname: getTableBuildFunctionPathname(
+            tableSettings.id,
+            tableSettings.tableType
+          ),
+          tableConfigPath: getTableSchemaPath(tableSettings),
+        },
+      });
+      logEvent(analytics, "deployed_extensions");
+    }
     logEvent(analytics, "delete_column", { type: column.type });
     handleClose();
   };
@@ -205,7 +256,7 @@ export default function ColumnMenu() {
         });
         handleClose();
       },
-      active: !column.editable,
+      active: column.editable === false,
     },
     {
       label: "Disable resize",
@@ -329,6 +380,7 @@ export default function ColumnMenu() {
                 </>
               ),
               handleConfirm: handleEvaluateAll,
+              confirm: "Evaluate",
             }),
     },
   ];
@@ -343,6 +395,7 @@ export default function ColumnMenu() {
         openColumnModal({ type: "new", index: column.index - 1 });
         handleClose();
       },
+      disabled: !canAddColumns,
     },
     {
       label: "Insert to the right…",
@@ -352,6 +405,7 @@ export default function ColumnMenu() {
         openColumnModal({ type: "new", index: column.index + 1 });
         handleClose();
       },
+      disabled: !canAddColumns,
     },
     {
       label: `Delete column${altPress ? "" : "…"}`,
@@ -359,8 +413,8 @@ export default function ColumnMenu() {
       icon: <ColumnRemoveIcon />,
       onClick: altPress
         ? handleDeleteColumn
-        : () =>
-            confirm({
+        : () => {
+            return confirm({
               title: "Delete column?",
               body: (
                 <>
@@ -372,23 +426,53 @@ export default function ColumnMenu() {
                   <Typography sx={{ mt: 1 }}>
                     Key: <code style={{ userSelect: "all" }}>{column.key}</code>
                   </Typography>
+                  {requireRebuild ? (
+                    <>
+                      <Divider sx={{ my: 2 }} />
+                      {referencedColumns.length ? (
+                        <Typography sx={{ mt: 1 }}>
+                          This column will be removed as a dependency of the
+                          following columns:{" "}
+                          <Typography fontWeight="bold" component="span">
+                            {referencedColumns.join(", ")}
+                          </Typography>
+                        </Typography>
+                      ) : null}
+                      {referencedExtensions.length ? (
+                        <Typography sx={{ mt: 1 }}>
+                          This column will be removed as a dependency from the
+                          following Extensions:{" "}
+                          <Typography fontWeight="bold" component="span">
+                            {referencedExtensions.join(", ")}
+                          </Typography>
+                        </Typography>
+                      ) : null}
+                      <Typography sx={{ mt: 1, fontWeight: "bold" }}>
+                        You need to re-deploy this table’s cloud function.
+                      </Typography>
+                    </>
+                  ) : null}
                 </>
               ),
-              confirm: "Delete",
+              confirm: requireRebuild ? "Delete & re-deploy" : "Delete",
               confirmColor: "error",
               handleConfirm: handleDeleteColumn,
-            }),
+            });
+          },
       color: "error" as "error",
+      disabled: !canDeleteColumns,
     },
   ];
 
   let menuItems = [...localViewActions];
 
-  if (userRoles.includes("ADMIN") || userRoles.includes("OPS")) {
+  if (canEditColumns) {
     menuItems.push.apply(menuItems, configActions);
     if (column.type === FieldType.derivative) {
       menuItems.push.apply(menuItems, derivativeActions);
     }
+  }
+  if (canAddColumns || canDeleteColumns) {
     menuItems.push.apply(menuItems, columnActions);
   }
 

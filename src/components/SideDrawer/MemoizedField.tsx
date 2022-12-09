@@ -53,7 +53,7 @@ export const MemoizedField = memo(
 
     // Should not reach this state
     if (isEmpty(fieldComponent)) {
-      // console.error('Could not find SideDrawerField component', field);
+      console.error("Could not find SideDrawerField component", field);
       return null;
     }
 
@@ -78,10 +78,6 @@ export const MemoizedField = memo(
           },
           onSubmit: handleSubmit,
           disabled,
-          // TODO: Remove
-          control: {} as any,
-          useFormMethods: {} as any,
-          docRef: _rowy_ref,
         })}
       </FieldWrapper>
     );

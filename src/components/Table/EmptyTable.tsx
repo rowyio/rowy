@@ -1,10 +1,15 @@
 import { useAtom, useSetAtom } from "jotai";
+import { Offline, Online } from "react-detect-offline";
 
 import { Grid, Stack, Typography, Button, Divider } from "@mui/material";
-import { Import as ImportIcon } from "@src/assets/icons";
-import { AddColumn as AddColumnIcon } from "@src/assets/icons";
+import {
+  Import as ImportIcon,
+  AddColumn as AddColumnIcon,
+} from "@src/assets/icons";
+import OfflineIcon from "@mui/icons-material/CloudOff";
 
-import ImportCsv from "@src/components/TableToolbar/ImportCsv";
+import EmptyState from "@src/components/EmptyState";
+import ImportData from "@src/components/TableToolbar/ImportData/ImportData";
 
 import {
   tableScope,
@@ -13,7 +18,7 @@ import {
   columnModalAtom,
   tableModalAtom,
 } from "@src/atoms/tableScope";
-import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
+import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 
 export default function EmptyTable() {
   const openColumnModal = useSetAtom(columnModalAtom, tableScope);
@@ -22,10 +27,14 @@ export default function EmptyTable() {
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   // const { tableState, importWizardRef, columnMenuRef } = useProjectContext();
-
+  // check if theres any rows, and if rows include fields other than rowy_ref
+  const hasData =
+    tableRows.length > 0
+      ? tableRows.some((row) => Object.keys(row).length > 1)
+      : false;
   let contents = <></>;
 
-  if (tableRows.length > 0) {
+  if (hasData) {
     contents = (
       <>
         <div>
@@ -72,10 +81,10 @@ export default function EmptyTable() {
         <Grid container spacing={1}>
           <Grid item xs>
             <Typography paragraph>
-              You can import data from an external CSV file:
+              You can import data from an external source:
             </Typography>
 
-            <ImportCsv
+            <ImportData
               render={(onClick) => (
                 <Button
                   variant="contained"
@@ -83,7 +92,7 @@ export default function EmptyTable() {
                   startIcon={<ImportIcon />}
                   onClick={onClick}
                 >
-                  Import CSV
+                  Import data
                 </Button>
               )}
               PopoverProps={{
@@ -125,20 +134,35 @@ export default function EmptyTable() {
   }
 
   return (
-    <Stack
-      spacing={3}
-      justifyContent="center"
-      alignItems="center"
-      sx={{
-        height: `calc(100vh - ${APP_BAR_HEIGHT}px)`,
-        width: "100%",
-        p: 2,
-        maxWidth: 480,
-        margin: "0 auto",
-        textAlign: "center",
-      }}
-    >
-      {contents}
-    </Stack>
+    <>
+      <Offline>
+        <EmptyState
+          role="alert"
+          Icon={OfflineIcon}
+          message="You’re offline"
+          description="Go online to view this table’s data"
+          style={{ height: `calc(100vh - ${TOP_BAR_HEIGHT}px)` }}
+        />
+      </Offline>
+
+      <Online>
+        <Stack
+          spacing={3}
+          justifyContent="center"
+          alignItems="center"
+          sx={{
+            height: `calc(100vh - ${TOP_BAR_HEIGHT}px)`,
+            width: "100%",
+            p: 2,
+            maxWidth: 480,
+            margin: "0 auto",
+            textAlign: "center",
+          }}
+          id="empty-table"
+        >
+          {contents}
+        </Stack>
+      </Online>
+    </>
   );
 }

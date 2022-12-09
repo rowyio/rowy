@@ -26,11 +26,11 @@ import EmptyState from "@src/components/EmptyState";
 import CloudLogSeverityIcon, { SEVERITY_LEVELS } from "./CloudLogSeverityIcon";
 
 import {
-  globalScope,
+  projectScope,
   projectIdAtom,
   rowyRunAtom,
   compatibleRowyRunVersionAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -40,11 +40,11 @@ import {
 import { cloudLogFetcher } from "./utils";
 
 export default function CloudLogsModal({ onClose }: ITableModalProps) {
-  const [projectId] = useAtom(projectIdAtom, globalScope);
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
   const [compatibleRowyRunVersion] = useAtom(
     compatibleRowyRunVersionAtom,
-    globalScope
+    projectScope
   );
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);

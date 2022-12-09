@@ -93,7 +93,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
             onChange={(e) => {
               setNewOption(e.target.value);
             }}
-            onKeyPress={(e: any) => {
+            onKeyDown={(e: any) => {
               if (e.key === "Enter") {
                 handleAdd();
               }

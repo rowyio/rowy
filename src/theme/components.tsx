@@ -4,6 +4,7 @@ import type {} from "@mui/lab/themeAugmentation";
 import { MultiSelectProps } from "@rowy/multiselect";
 import { toRem } from "./typography";
 
+import ModalTransition from "@src/components/Modal/ModalTransition";
 import RadioIcon from "@src/theme/RadioIcon";
 import CheckboxIcon from "@src/theme/CheckboxIcon";
 import CheckboxIndeterminateIcon from "@src/theme/CheckboxIndeterminateIcon";
@@ -81,22 +82,22 @@ export const components = (theme: Theme): ThemeOptions => {
 
           body: { cursor: "default" },
 
-          "@supports selector(:has(a))": {
-            body: {
-              transition: "background-color 0s",
-              transitionDelay: theme.transitions.duration.leavingScreen + "ms",
-            },
+          // "@supports selector(:has(a))": {
+          //   body: {
+          //     transition: "background-color 0s",
+          //     transitionDelay: theme.transitions.duration.leavingScreen + "ms",
+          //   },
 
-            "#root": {
-              transformOrigin: `50% ${theme.spacing(1)}`,
-              transition: theme.transitions.create([
-                "transform",
-                "border-radius",
-              ]),
-              transitionDuration: `${theme.transitions.duration.leavingScreen}ms, 0s`,
-              transitionDelay: `0s, ${theme.transitions.duration.leavingScreen}ms`,
-            },
-          },
+          //   "#root": {
+          //     transformOrigin: `50% 0%`,
+          //     transition: theme.transitions.create([
+          //       "transform",
+          //       "border-radius",
+          //     ]),
+          //     transitionDuration: `${theme.transitions.duration.leavingScreen}ms, 0s`,
+          //     transitionDelay: `0s, ${theme.transitions.duration.leavingScreen}ms`,
+          //   },
+          // },
 
           "code, pre, pre.MuiTypography-root": {
             fontFamily: theme.typography.fontFamilyMono,
@@ -248,6 +249,9 @@ export const components = (theme: Theme): ThemeOptions => {
       },
 
       MuiDialog: {
+        defaultProps: {
+          TransitionComponent: ModalTransition,
+        },
         styleOverrides: {
           root: {
             "--dialog-title-height": "64px",
@@ -257,7 +261,7 @@ export const components = (theme: Theme): ThemeOptions => {
           },
 
           paper: {
-            borderRadius: (theme.shape.borderRadius as number) * 2,
+            borderRadius: (theme.shape.borderRadius as number) * 3,
 
             "--dialog-spacing": theme.spacing(3),
             [theme.breakpoints.down("sm")]: {
@@ -271,52 +275,44 @@ export const components = (theme: Theme): ThemeOptions => {
           paperFullScreen: {
             borderBottomLeftRadius: 0,
             borderBottomRightRadius: 0,
-            marginTop: `calc(env(safe-area-inset-top) + ${theme.spacing(2)})`,
-            maxHeight: `calc(100% - env(safe-area-inset-top) - ${theme.spacing(
-              2
-            )})`,
+            marginTop: `calc(env(safe-area-inset-top) + 10px)`,
+            maxHeight: `calc(100% - env(safe-area-inset-top) - 10px)`,
             maxWidth: "100% !important",
 
             paddingLeft: "env(safe-area-inset-left)",
             paddingRight: "env(safe-area-inset-right)",
             paddingBottom: "env(safe-area-inset-bottom)",
 
-            "body:has([data-open=true] &)": {
-              backgroundColor: theme.palette.common.black,
-              transitionDelay: "0s",
+            // "body:has([data-open=true] &)": {
+            //   backgroundColor: theme.palette.common.black,
+            //   transitionDelay: "0s",
 
-              "#root": {
-                borderRadius: (theme.shape.borderRadius as number) * 2,
-                overflow: "hidden",
-                filter: `grayscale(100%) contrast(${
-                  theme.palette.mode === "dark" ? "80" : "75"
-                }%)`,
+            //   "#root": {
+            //     borderRadius: (theme.shape.borderRadius as number) * 2,
+            //     overflow: "hidden",
+            //     filter: `grayscale(100%) contrast(${
+            //       theme.palette.mode === "dark" ? "80" : "75"
+            //     }%)`,
 
-                transform: `scale(0.9) translateY(${theme.spacing(1)})`,
-                transition: theme.transitions.create(
-                  ["transform", "border-radius"],
-                  {
-                    easing: theme.transitions.easing.easeOut,
-                  }
-                ),
-                transitionDuration: `${theme.transitions.duration.enteringScreen}ms, 0s`,
-                transitionDelay: "0s, 0s",
-              },
-            },
+            //     transform: `scale(0.9)`,
+            //     transition: theme.transitions.create(
+            //       ["transform", "border-radius"],
+            //       {
+            //         easing: theme.transitions.easing.easeOut,
+            //       }
+            //     ),
+            //     transitionDuration: `${theme.transitions.duration.enteringScreen}ms, 0s`,
+            //     transitionDelay: "0s, 0s",
+            //   },
+            // },
           },
         },
       },
       MuiDialogTitle: {
         styleOverrides: {
           root: {
-            padding: "var(--dialog-spacing)",
-            paddingTop: (64 - 28) / 2,
-            paddingBottom: (64 - 28) / 2,
-
-            [theme.breakpoints.down("sm")]: {
-              paddingTop: (56 - 28) / 2,
-              paddingBottom: (56 - 28) / 2,
-            },
+            ...(theme.typography.h5 as any),
+            padding: `calc((var(--dialog-title-height) - ${theme.typography.h5.lineHeight} * ${theme.typography.h5.fontSize}) / 2) var(--dialog-spacing)`,
           },
         },
       },
@@ -386,6 +382,18 @@ export const components = (theme: Theme): ThemeOptions => {
                 paddingRight: theme.spacing(1),
               },
             },
+
+            "input[type='search']::-webkit-search-cancel-button": {
+              appearance: "none",
+              mask: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3e%3cpath d='M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.59-13L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z'/%3e%3c/svg%3e") no-repeat 50% 50%`,
+              backgroundColor: "currentColor",
+              opacity: 0.67,
+
+              width: "1.5rem",
+              height: "1.5rem",
+              marginLeft: theme.spacing(0.5),
+              marginRight: 0,
+            },
           },
         },
       },
@@ -395,7 +403,17 @@ export const components = (theme: Theme): ThemeOptions => {
             caretColor: theme.palette.primary.main,
             ".Mui-error &": { caretColor: theme.palette.error.main },
           },
-          inputSizeSmall: theme.typography.body2 as any,
+          inputSizeSmall: {
+            ...(theme.typography.body2 as any),
+            [theme.breakpoints.only("xs")]: {
+              ...(theme.typography.body1 as any),
+              "&, &.MuiSelect-select": {
+                minHeight: `${theme.typography.body1.lineHeight}em`,
+              },
+              paddingTop: theme.spacing(0.5),
+              paddingBottom: theme.spacing(0.5),
+            },
+          },
         },
       },
       MuiFilledInput: {
@@ -535,7 +553,10 @@ export const components = (theme: Theme): ThemeOptions => {
             ".MuiMenu-list &": { whiteSpace: "normal" },
           },
           primary: {
-            ".MuiSelect-select &": theme.typography.body2,
+            ".MuiSelect-select &": {
+              ...(theme.typography.body2 as any),
+              [theme.breakpoints.only("xs")]: theme.typography.body1,
+            },
           },
           secondary: {
             ".MuiSelect-select &": { display: "none" },
@@ -545,6 +566,13 @@ export const components = (theme: Theme): ThemeOptions => {
 
       MuiMenu: {
         styleOverrides: {
+          root: {
+            ".MuiDialog-root + & .MuiMenu-paper, form:has(.MuiDialog-root) + & .MuiMenu-paper, .MuiDialog-root & .MuiMenu-paper":
+              {
+                backgroundImage:
+                  "linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2))", // elevation 50
+              },
+          },
           list: { padding: theme.spacing(0.5, 0) },
         },
       },
@@ -652,6 +680,12 @@ export const components = (theme: Theme): ThemeOptions => {
         },
       },
 
+      MuiButtonBase: {
+        defaultProps: {
+          focusRipple: true,
+        },
+      },
+
       MuiButton: {
         defaultProps: {
           variant: "outlined",
@@ -725,12 +759,12 @@ export const components = (theme: Theme): ThemeOptions => {
           },
 
           contained: {
-            boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[2]}`,
+            boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.4) inset, 0 0 0 1px rgba(255, 255, 255, 0.08) inset, ${theme.shadows[2]}`,
             "&:hover": {
-              boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[4]}`,
+              boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.4) inset, 0 0 0 1px rgba(255, 255, 255, 0.08) inset, ${theme.shadows[4]}`,
             },
             "&:active": {
-              boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[8]}`,
+              boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.4) inset, 0 0 0 1px rgba(255, 255, 255, 0.08) inset, ${theme.shadows[8]}`,
             },
           },
           containedPrimary: {
@@ -1339,13 +1373,20 @@ export const components = (theme: Theme): ThemeOptions => {
         },
       },
 
+      MuiSkeleton: {
+        styleOverrides: {
+          rectangular: { borderRadius: theme.shape.borderRadius },
+        },
+      },
+
       MuiRating: {
         styleOverrides: {
-          iconFilled: { color: theme.palette.text.secondary },
           icon: {
             // https://github.com/mui/material-ui/issues/32557
             "& .MuiSvgIcon-root": { pointerEvents: "auto" },
+            color: theme.palette.text.secondary,
           },
+          iconEmpty: { opacity: 0.38 },
         },
       },
 
@@ -1361,23 +1402,23 @@ export const components = (theme: Theme): ThemeOptions => {
         },
       },
 
-      MuiYearPicker: {
-        styleOverrides: {
-          root: {
-            "& .PrivatePickersYear-yearButton": {
-              ...(theme.typography.button as any),
-              fontSize: "1rem",
-            },
-          },
-        },
-      },
-      MuiPickersDay: {
-        styleOverrides: {
-          root: {
-            background: "none",
-          },
-        },
-      },
+      // MuiYearPicker: {
+      //   styleOverrides: {
+      //     root: {
+      //       "& .PrivatePickersYear-yearButton": {
+      //         ...(theme.typography.button as any),
+      //         fontSize: "1rem",
+      //       },
+      //     },
+      //   },
+      // },
+      // MuiPickersDay: {
+      //   styleOverrides: {
+      //     root: {
+      //       background: "none",
+      //     },
+      //   },
+      // },
 
       RowyMultiSelect: {
         defaultProps: {

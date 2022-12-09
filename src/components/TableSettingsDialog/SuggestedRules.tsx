@@ -13,7 +13,7 @@ import {
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import { IFieldComponentProps } from "@rowy/form-builder";
 
-import { globalScope, projectIdAtom } from "@src/atoms/globalScope";
+import { projectScope, projectIdAtom } from "@src/atoms/projectScope";
 
 type customizationOptions = "allRead" | "authRead" | "subcollections" | "user";
 
@@ -23,7 +23,7 @@ export default function SuggestedRules({
   useFormMethods: { control },
   label,
 }: ISuggestedRulesProps) {
-  const [projectId] = useAtom(projectIdAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
 
   const watched = useWatch({
     control,

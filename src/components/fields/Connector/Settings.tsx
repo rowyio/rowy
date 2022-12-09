@@ -1,5 +1,5 @@
-import { lazy, Suspense, useState } from "react";
-import { get } from "lodash-es";
+import { lazy, Suspense, useEffect } from "react";
+import { useAtom, useSetAtom } from "jotai";
 
 import {
   Grid,
@@ -11,7 +11,6 @@ import {
   Link,
 } from "@mui/material";
 
-import SteppedAccordion from "@src/components/SteppedAccordion";
 import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
@@ -21,6 +20,11 @@ import connectorDefs from "!!raw-loader!./connector.d.ts";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { baseFunction } from "./utils";
 import { ISettingsProps } from "@src/components/fields/types";
+import {
+  projectScope,
+  projectSettingsAtom,
+  rowyRunModalAtom,
+} from "@src/atoms/projectScope";
 
 //import typeDefs from "!!raw-loader!./types.d.ts";
 const CodeEditor = lazy(
@@ -46,6 +50,13 @@ const diagnosticsOptions = {
 };
 
 export default function Settings({ config, onChange }: ISettingsProps) {
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, projectScope);
+  useEffect(() => {
+    if (!projectSettings.rowyRunUrl)
+      openRowyRunModal({ feature: "Connector fields" });
+  }, [projectSettings.rowyRunUrl]);
+
   return (
     <>
       <div>
@@ -61,7 +72,16 @@ export default function Settings({ config, onChange }: ISettingsProps) {
         </Suspense>
         <CodeEditorHelper
           docLink={WIKI_LINKS.fieldTypesConnector + "#examples"}
-          additionalVariables={[]}
+          additionalVariables={[
+            {
+              key: "row",
+              description: `row has the value of doc.data() it has type definitions using this table's schema, but you can access any field in the document.`,
+            },
+            {
+              key: "ref",
+              description: `reference object that represents the reference to the current row in firestore db (ie: doc.ref).`,
+            },
+          ]}
         />
       </div>
       <FormControl>

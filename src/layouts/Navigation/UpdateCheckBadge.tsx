@@ -1,10 +1,19 @@
+import { useAtom } from "jotai";
+
 import { Badge, BadgeProps } from "@mui/material";
+
+import { projectScope, userRolesAtom } from "@src/atoms/projectScope";
 import useUpdateCheck from "@src/hooks/useUpdateCheck";
 
 export default function UpdateCheckBadge(props: Partial<BadgeProps>) {
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [latestUpdate] = useUpdateCheck();
 
-  if (!latestUpdate.rowy && !latestUpdate.rowyRun) return <>{props.children}</>;
+  if (
+    !userRoles.includes("ADMIN") ||
+    (!latestUpdate.rowy && !latestUpdate.rowyRun)
+  )
+    return <>{props.children}</>;
 
   return (
     <Badge

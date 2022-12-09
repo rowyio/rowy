@@ -28,6 +28,7 @@ import "tinymce/plugins/image";
 import "tinymce/plugins/paste";
 import "tinymce/plugins/help";
 import "tinymce/plugins/code";
+import "tinymce/plugins/fullscreen";
 
 const Styles = styled("div", {
   shouldForwardProp: (prop) => prop !== "focus",
@@ -47,6 +48,11 @@ const Styles = styled("div", {
       "&:hover": {
         boxShadow: `0 -1px 0 0 ${theme.palette.text.primary} inset,
                     0 0 0 1px ${theme.palette.action.inputOutline} inset`,
+      },
+
+      "&.tox-fullscreen": {
+        zIndex: theme.zIndex.modal,
+        backgroundColor: theme.palette.background.paper,
       },
     },
 
@@ -242,10 +248,16 @@ export default function RichTextEditor({
           ].join("\n"),
           minHeight: 300,
           menubar: false,
-          plugins: ["autoresize", "lists link image", "paste help", "code"],
+          plugins: [
+            "fullscreen",
+            "autoresize",
+            "lists link image",
+            "paste help",
+            "code",
+          ],
           statusbar: false,
           toolbar:
-            "formatselect | bold italic forecolor | link | bullist numlist outdent indent | removeformat code | help",
+            "formatselect | bold italic forecolor | link | fullscreen | bullist numlist outdent indent | removeformat code | help",
           body_id: id,
         }}
         value={value}

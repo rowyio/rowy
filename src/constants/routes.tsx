@@ -1,6 +1,6 @@
 import Logo from "@src/assets/Logo";
-import BreadcrumbsTableRoot from "@src/components/Table/BreadcrumbsTableRoot";
-import { GrowProps } from "@mui/material";
+import BreadcrumbsTableRoot from "@src/components/Table/Breadcrumbs/BreadcrumbsTableRoot";
+import { FadeProps, Typography } from "@mui/material";
 
 export enum ROUTES {
   home = "/",
@@ -35,33 +35,25 @@ export enum ROUTES {
   settings = "/settings",
   userSettings = "/settings/user",
   projectSettings = "/settings/project",
-  userManagement = "/settings/userManagement",
-  debugSettings = "/settings/debug",
+  members = "/members",
+  debug = "/debug",
 
-  test = "/test",
-  themeTest = "/test/theme",
-  rowyRunTest = "/test/rowyRunTest",
+  tutorial = "/tutorial",
+  tableTutorial = "/tutorial/table",
 }
 
 export const ROUTE_TITLES = {
   [ROUTES.tables]: {
     title: "Tables",
-    titleComponent: (open, pinned) =>
-      !(open && pinned) && (
-        <Logo
-          style={{
-            display: "block",
-            margin: "0 auto",
-          }}
-        />
+    titleComponent: (open, isPermanent) =>
+      !(open && isPermanent) && (
+        <Logo style={{ display: "block", margin: "0 auto" }} />
       ),
   },
 
   [ROUTES.table]: {
     title: "Table",
-    titleComponent: (open, pinned) => (
-      <BreadcrumbsTableRoot sx={{ ml: open && pinned ? -48 / 8 : 2 }} />
-    ),
+    titleComponent: (_open, _isPermanent) => <BreadcrumbsTableRoot />,
     titleTransitionProps: { style: { transformOrigin: "0 50%" } },
     leftAligned: true,
   },
@@ -69,19 +61,27 @@ export const ROUTE_TITLES = {
   [ROUTES.settings]: "Settings",
   [ROUTES.userSettings]: "Settings",
   [ROUTES.projectSettings]: "Project Settings",
-  [ROUTES.userManagement]: "User Management",
-  [ROUTES.debugSettings]: "Debug",
+  [ROUTES.members]: "Members",
+  [ROUTES.debug]: "Debug",
 
-  [ROUTES.test]: "Test",
-  [ROUTES.themeTest]: "Theme Test",
-  [ROUTES.rowyRunTest]: "Rowy Run Test",
+  [ROUTES.tutorial]: "Tutorial",
+  [ROUTES.tableTutorial]: {
+    title: "Tutorial",
+    titleComponent: (_o, _i) => (
+      <Typography component="h1" variant="h6">
+        Tutorial
+      </Typography>
+    ),
+    titleTransitionProps: { style: { transformOrigin: "0 50%" } },
+    leftAligned: true,
+  },
 } as Record<
   ROUTES,
   | string
   | {
       title: string;
-      titleComponent: (open: boolean, pinned: boolean) => React.ReactNode;
-      titleTransitionProps?: Partial<GrowProps>;
+      titleComponent: (open: boolean, isPermanent: boolean) => React.ReactNode;
+      titleTransitionProps?: Partial<FadeProps>;
       leftAligned?: boolean;
     }
 >;

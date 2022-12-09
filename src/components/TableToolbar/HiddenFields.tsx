@@ -1,28 +1,46 @@
-import { useEffect, useRef, useMemo, useState } from "react";
-import { useAtom } from "jotai";
+import {
+  useEffect,
+  useRef,
+  useMemo,
+  useState,
+  forwardRef,
+  ChangeEvent,
+} from "react";
+import { useAtom, useSetAtom } from "jotai";
 import { isEqual } from "lodash-es";
 import { colord } from "colord";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "react-beautiful-dnd";
 
 import { Box, AutocompleteProps, Theme } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOffOutlined";
 import IconSlash from "@src/components/IconSlash";
+import DragIndicatorOutlinedIcon from "@mui/icons-material/DragIndicatorOutlined";
 
 import ColumnSelect, { ColumnItem } from "@src/components/Table/ColumnSelect";
 import ButtonWithStatus from "@src/components/ButtonWithStatus";
 
 import {
-  globalScope,
+  projectScope,
   userSettingsAtom,
   updateUserSettingsAtom,
-} from "@src/atoms/globalScope";
-import { tableScope, tableIdAtom } from "@src/atoms/tableScope";
+} from "@src/atoms/projectScope";
+import {
+  tableScope,
+  tableIdAtom,
+  updateColumnAtom,
+} from "@src/atoms/tableScope";
 import { formatSubTableName } from "@src/utils/table";
 
 export default function HiddenFields() {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const [userSettings] = useAtom(userSettingsAtom, globalScope);
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
   const [tableId] = useAtom(tableIdAtom, tableScope);
 
   const [open, setOpen] = useState(false);
@@ -47,7 +65,7 @@ export default function HiddenFields() {
   // }));
 
   // Save when MultiSelect closes
-  const [updateUserSettings] = useAtom(updateUserSettingsAtom, globalScope);
+  const [updateUserSettings] = useAtom(updateUserSettingsAtom, projectScope);
   const handleSave = () => {
     // Only update if there were any changes because it’s slow to update
     if (!isEqual(hiddenFields, userDocHiddenFields) && updateUserSettings) {
@@ -57,6 +75,9 @@ export default function HiddenFields() {
     }
     setOpen(false);
   };
+
+  // disable drag if search box is not empty
+  const [disableDrag, setDisableDrag] = useState<boolean>(false);
   const renderOption: AutocompleteProps<
     any,
     true,
@@ -67,48 +88,118 @@ export default function HiddenFields() {
       colord(theme.palette.background.paper)
         .mix("#fff", theme.palette.mode === "dark" ? 0.16 : 0)
         .alpha(1);
-
     return (
-      <li {...props}>
-        <ColumnItem option={option}>
-          <Box
-            sx={[
-              { position: "relative", height: "1.5rem" },
-              selected
-                ? { color: "primary.main" }
-                : {
-                    opacity: 0,
-                    ".MuiAutocomplete-option.Mui-focused &": { opacity: 0.5 },
+      <Draggable
+        draggableId={option.value}
+        index={option.index}
+        isDragDisabled={disableDrag}
+      >
+        {(provided) => (
+          <li {...props} ref={provided.innerRef} {...provided.draggableProps}>
+            <Box
+              sx={[{ position: "relative", height: "1.5rem" }]}
+              {...provided.dragHandleProps}
+            >
+              <DragIndicatorOutlinedIcon
+                color="disabled"
+                sx={[
+                  {
+                    marginRight: "6px",
+                    opacity: (theme) =>
+                      disableDrag ? theme.palette.action.disabledOpacity : 1,
                   },
-            ]}
-          >
-            <VisibilityIcon />
-            <IconSlash
-              sx={[
-                {
-                  "& .icon-slash-mask": {
-                    stroke: (theme) => slashColor(theme).toHslString(),
-                  },
-                  ".Mui-focused & .icon-slash-mask": {
-                    stroke: (theme) =>
-                      slashColor(theme)
-                        .mix(
-                          theme.palette.primary.main,
-                          theme.palette.action.selectedOpacity +
-                            theme.palette.action.hoverOpacity
-                        )
-                        .alpha(1)
-                        .toHslString(),
-                  },
-                },
-                selected ? { strokeDashoffset: 0 } : {},
-              ]}
-            />
-          </Box>
-        </ColumnItem>
-      </li>
+                ]}
+              />
+            </Box>
+            <ColumnItem option={option}>
+              <Box
+                sx={[
+                  { position: "relative", height: "1.5rem" },
+                  selected
+                    ? { color: "primary.main" }
+                    : {
+                        opacity: 0,
+                        ".MuiAutocomplete-option.Mui-focused &": {
+                          opacity: 0.5,
+                        },
+                      },
+                ]}
+              >
+                <VisibilityIcon />
+                <IconSlash
+                  sx={[
+                    {
+                      "& .icon-slash-mask": {
+                        stroke: (theme) => slashColor(theme).toHslString(),
+                      },
+                      ".Mui-focused & .icon-slash-mask": {
+                        stroke: (theme) =>
+                          slashColor(theme)
+                            .mix(
+                              theme.palette.primary.main,
+                              theme.palette.action.selectedOpacity +
+                                theme.palette.action.hoverOpacity
+                            )
+                            .alpha(1)
+                            .toHslString(),
+                      },
+                    },
+                    selected ? { strokeDashoffset: 0 } : {},
+                  ]}
+                />
+              </Box>
+            </ColumnItem>
+          </li>
+        )}
+      </Draggable>
     );
   };
+
+  const updateColumn = useSetAtom(updateColumnAtom, tableScope);
+
+  // updates column on drag end
+  function handleOnDragEnd(result: DropResult) {
+    if (!result.destination) return;
+    updateColumn({
+      key: result.draggableId,
+      config: {},
+      index: result.destination.index,
+    });
+  }
+
+  // checks whether to disable reordering when search filter is applied
+  function checkToDisableDrag(e: ChangeEvent<HTMLInputElement>) {
+    setDisableDrag(e.target.value !== "");
+  }
+
+  const ListboxComponent = forwardRef(function ListboxComponent(
+    props: React.HTMLAttributes<HTMLElement>,
+    ulRef: any /*React.ForwardedRef<HTMLUListElement>*/
+  ) {
+    const { children, ...other } = props;
+
+    return (
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable droppableId="columns_manager" direction="vertical">
+          {(provided) => (
+            <ul
+              {...other}
+              {...provided.droppableProps}
+              ref={(ref) => {
+                provided.innerRef(ref);
+                if (ulRef !== null) {
+                  ulRef(ref);
+                }
+              }}
+            >
+              {props.children}
+              {provided.placeholder}
+            </ul>
+          )}
+        </Droppable>
+      </DragDropContext>
+    );
+  });
 
   return (
     <>
@@ -123,6 +214,7 @@ export default function HiddenFields() {
       <ColumnSelect
         TextFieldProps={{
           style: { display: "none" },
+          onInput: checkToDisableDrag,
           SelectProps: {
             open,
             MenuProps: {
@@ -138,11 +230,19 @@ export default function HiddenFields() {
             },
           },
         }}
-        {...{ AutocompleteProps: { renderOption } }}
+        {...{
+          AutocompleteProps: {
+            renderOption,
+            ListboxComponent,
+          },
+        }}
         label="Hidden fields"
         labelPlural="fields"
         value={hiddenFields ?? []}
-        onChange={setHiddenFields}
+        onChange={(updates: string[]) => {
+          setHiddenFields(updates);
+          setDisableDrag(false);
+        }}
         onClose={handleSave}
         clearText="Show all"
         selectAllText="Hide all"
