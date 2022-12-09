@@ -2,7 +2,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { IEditorCellProps } from "@src/components/fields/types";
 import { setSeconds } from "date-fns";
 
-import DateTimePicker from "@mui/lab/DateTimePicker";
+import { DateTimePicker } from "@mui/x-date-pickers";
 import { TextField } from "@mui/material";
 import { ChevronDown } from "@src/assets/icons";
 
@@ -68,6 +68,7 @@ export default function DateTime({
             },
             "& .MuiInputAdornment-root": { m: 0 },
           }}
+          autoFocus
           onKeyDown={(e) => e.stopPropagation()}
           onClick={(e) => e.stopPropagation()}
           inputProps={{ ...props.inputProps, tabIndex }}
@@ -77,7 +78,6 @@ export default function DateTime({
       value={transformedValue}
       onChange={(date) => handleDateChange(date ? setSeconds(date, 0) : null)}
       inputFormat={format}
-      clearable
       OpenPickerButtonProps={{
         size: "small",
         className: "row-hover-iconButton end",
@@ -88,6 +88,7 @@ export default function DateTime({
       disableOpenPicker={false}
       disabled={disabled}
       PopperProps={{ onClick: (e) => e.stopPropagation() }}
+      hideTabs={false}
     />
   );
 }

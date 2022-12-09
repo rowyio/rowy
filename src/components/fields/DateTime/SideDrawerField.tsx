@@ -1,7 +1,7 @@
 import { ISideDrawerFieldProps } from "@src/components/fields/types";
 import { setSeconds } from "date-fns";
 
-import DateTimePicker from "@mui/lab/DateTimePicker";
+import { DateTimePicker } from "@mui/x-date-pickers";
 import { TextField } from "@mui/material";
 import { ChevronDown } from "@src/assets/icons";
 
@@ -52,11 +52,10 @@ export default function DateTime({
       )}
       label={column.name}
       value={transformedValue}
-      onChange={(date) => handleChange(date ? setSeconds(date, 0) : null)}
+      onChange={(date: any) => handleChange(date ? setSeconds(date, 0) : null)}
       onAccept={onSubmit}
       inputFormat={format}
       mask={format.replace(/[A-Za-z]/g, "_")}
-      clearable
       OpenPickerButtonProps={{
         size: "small",
         sx: { width: 32, height: 32 },
@@ -64,6 +63,7 @@ export default function DateTime({
       components={{ OpenPickerIcon: ChevronDown }}
       disableOpenPicker={false}
       disabled={disabled}
+      hideTabs={false}
     />
   );
 }
