@@ -20,6 +20,7 @@ import {
   ColumnPlusBefore as ColumnPlusBeforeIcon,
   ColumnPlusAfter as ColumnPlusAfterIcon,
   ColumnRemove as ColumnRemoveIcon,
+  CloudLogs as LogsIcon,
 } from "@src/assets/icons";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -51,6 +52,8 @@ import {
   tableFiltersPopoverAtom,
   tableNextPageAtom,
   tableSchemaAtom,
+  cloudLogFiltersAtom,
+  tableModalAtom,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
@@ -107,6 +110,8 @@ export default function ColumnMenu({
   );
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
+  const setModal = useSetAtom(tableModalAtom, tableScope);
+  const setCloudLogFilters = useSetAtom(cloudLogFiltersAtom, tableScope);
   const snackLogContext = useSnackLogContext();
 
   const [altPress] = useAtom(altPressAtom, projectScope);
@@ -382,6 +387,19 @@ export default function ColumnMenu({
               handleConfirm: handleEvaluateAll,
               confirm: "Evaluate",
             }),
+    },
+    {
+      key: "logs",
+      label: altPress ? "Logs" : "Logs…",
+      icon: <LogsIcon />,
+      onClick: () => {
+        setModal("cloudLogs");
+        setCloudLogFilters({
+          type: "rowy",
+          timeRange: { type: "days", value: 7 },
+          column: [column.key],
+        });
+      },
     },
   ];
 

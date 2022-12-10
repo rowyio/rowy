@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { useAtom } from "jotai";
-import { startCase } from "lodash-es";
+import { startCase, upperCase } from "lodash-es";
 import { ITableModalProps } from "@src/components/TableModals";
 
 import {
@@ -12,6 +12,7 @@ import {
   TextField,
   InputAdornment,
   Button,
+  Box,
 } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { CloudLogs as LogsIcon } from "@src/assets/icons";
@@ -23,7 +24,10 @@ import TimeRangeSelect from "./TimeRangeSelect";
 import CloudLogList from "./CloudLogList";
 import BuildLogs from "./BuildLogs";
 import EmptyState from "@src/components/EmptyState";
-import CloudLogSeverityIcon, { SEVERITY_LEVELS } from "./CloudLogSeverityIcon";
+import CloudLogSeverityIcon, {
+  SEVERITY_LEVELS,
+  SEVERITY_LEVELS_ROWY,
+} from "./CloudLogSeverityIcon";
 
 import {
   projectScope,
@@ -119,8 +123,6 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
                 aria-label="Filter by log type"
               >
                 <ToggleButton value="rowy">Rowy Logging</ToggleButton>
-                <ToggleButton value="webhook">Webhooks</ToggleButton>
-                <ToggleButton value="functions">Functions</ToggleButton>
                 <ToggleButton value="audit">Audit</ToggleButton>
                 <ToggleButton value="build">Build</ToggleButton>
               </ToggleButtonGroup>
@@ -141,36 +143,6 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
             )}
 
             {cloudLogFilters.type === "rowy" && <></>}
-            {cloudLogFilters.type === "webhook" && (
-              <MultiSelect
-                multiple
-                label="Webhook:"
-                labelPlural="webhooks"
-                options={
-                  Array.isArray(tableSchema.webhooks)
-                    ? tableSchema.webhooks.map((x) => ({
-                        label: x.name,
-                        value: x.endpoint,
-                      }))
-                    : []
-                }
-                value={cloudLogFilters.webhook ?? []}
-                onChange={(v) =>
-                  setCloudLogFilters((prev) => ({ ...prev, webhook: v }))
-                }
-                TextFieldProps={{
-                  id: "webhook",
-                  className: "labelHorizontal",
-                  sx: { "& .MuiInputBase-root": { width: 180 } },
-                  fullWidth: false,
-                }}
-                itemRenderer={(option) => (
-                  <>
-                    {option.label}&nbsp;<code>{option.value}</code>
-                  </>
-                )}
-              />
-            )}
             {cloudLogFilters.type === "audit" && (
               <TextField
                 id="auditRowId"
@@ -204,7 +176,6 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
               />
             )}
 
-            {/* Spacer */}
             <div style={{ flexGrow: 1 }} />
 
             {cloudLogFilters.type !== "build" && (
@@ -220,10 +191,311 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
                   </Typography>
                 )}
 
+                {cloudLogFilters.type !== "rowy" && (
+                  <MultiSelect
+                    aria-label="Severity"
+                    labelPlural="severity levels"
+                    options={Object.keys(SEVERITY_LEVELS)}
+                    value={cloudLogFilters.severity ?? []}
+                    onChange={(severity) =>
+                      setCloudLogFilters((prev) => ({ ...prev, severity }))
+                    }
+                    TextFieldProps={{
+                      style: { width: 130 },
+                      placeholder: "Severity",
+                      SelectProps: {
+                        renderValue: () => {
+                          if (
+                            !Array.isArray(cloudLogFilters.severity) ||
+                            cloudLogFilters.severity.length === 0
+                          )
+                            return `Severity`;
+
+                          if (cloudLogFilters.severity.length === 1)
+                            return (
+                              <>
+                                Severity{" "}
+                                <CloudLogSeverityIcon
+                                  severity={cloudLogFilters.severity[0]}
+                                  style={{ marginTop: -2, marginBottom: -7 }}
+                                />
+                              </>
+                            );
+
+                          return `Severity (${cloudLogFilters.severity.length})`;
+                        },
+                      },
+                    }}
+                    itemRenderer={(option) => (
+                      <>
+                        <CloudLogSeverityIcon
+                          severity={option.value}
+                          sx={{ mr: 1 }}
+                        />
+                        {startCase(option.value.toLowerCase())}
+                      </>
+                    )}
+                  />
+                )}
+                <TimeRangeSelect
+                  aria-label="Time range"
+                  value={cloudLogFilters.timeRange}
+                  onChange={(value) =>
+                    setCloudLogFilters((c) => ({ ...c, timeRange: value }))
+                  }
+                />
+                <TableToolbarButton
+                  onClick={() => mutate()}
+                  title="Refresh"
+                  icon={<RefreshIcon />}
+                  disabled={isValidating}
+                />
+              </>
+            )}
+          </Stack>
+
+          {isValidating && (
+            <LinearProgress
+              style={{
+                borderRadius: 0,
+                marginTop: -4,
+                marginBottom: -1,
+                minHeight: 4,
+              }}
+            />
+          )}
+        </>
+      }
+    >
+      {cloudLogFilters.type === "build" ? (
+        <BuildLogs />
+      ) : (
+        <Box
+          sx={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            overflowY: "visible",
+          }}
+        >
+          <Box mt={1}>
+            {cloudLogFilters.type === "rowy" ? (
+              <Stack
+                direction="row"
+                spacing={2}
+                justifyContent="flex-start"
+                alignItems="center"
+                sx={{
+                  overflowX: "auto",
+                  overflowY: "hidden",
+                }}
+              >
+                <Button
+                  onClick={(v) => {
+                    setCloudLogFilters((prev) => ({
+                      ...prev,
+                      functionType: undefined,
+                      loggingSource: undefined,
+                      webhook: undefined,
+                      extension: undefined,
+                      severity: undefined,
+                    }));
+                  }}
+                >
+                  Reset
+                </Button>
+                <MultiSelect
+                  multiple
+                  SearchBoxProps={{
+                    sx: { display: "none" },
+                  }}
+                  aria-label="Type:"
+                  options={[
+                    "extension",
+                    "hooks",
+                    "action",
+                    "derivative-script",
+                    "derivative-function",
+                    "defaultValue",
+                    "connector",
+                  ]}
+                  value={cloudLogFilters.functionType ?? []}
+                  onChange={(v) => {
+                    setCloudLogFilters((prev) => ({
+                      ...prev,
+                      functionType: v,
+                    }));
+                  }}
+                  TextFieldProps={{
+                    id: "functionType",
+                    className: "labelHorizontal",
+                    sx: { "& .MuiInputBase-root": { width: 200 } },
+                    fullWidth: false,
+                    SelectProps: {
+                      renderValue: () => {
+                        if (cloudLogFilters?.functionType?.length === 1) {
+                          return `Type (${cloudLogFilters.functionType[0]})`;
+                        } else if (cloudLogFilters?.functionType?.length) {
+                          return `Type (${cloudLogFilters.functionType.length})`;
+                        } else {
+                          return `Type`;
+                        }
+                      },
+                    },
+                  }}
+                  itemRenderer={(option) => <>{upperCase(option.value)}</>}
+                />
+                <MultiSelect
+                  multiple
+                  aria-label="Source:"
+                  options={["backend-scripts", "backend-function", "hooks"]}
+                  value={cloudLogFilters.loggingSource ?? []}
+                  onChange={(v) => {
+                    setCloudLogFilters((prev) => ({
+                      ...prev,
+                      loggingSource: v,
+                    }));
+                  }}
+                  TextFieldProps={{
+                    id: "loggingSource",
+                    className: "labelHorizontal",
+                    sx: { "& .MuiInputBase-root": { width: 200 } },
+                    fullWidth: false,
+                    SelectProps: {
+                      renderValue: () => {
+                        if (cloudLogFilters?.loggingSource?.length === 1) {
+                          return `Source (${cloudLogFilters.loggingSource[0]})`;
+                        } else if (cloudLogFilters?.loggingSource?.length) {
+                          return `Source (${cloudLogFilters.loggingSource.length})`;
+                        } else {
+                          return `Source`;
+                        }
+                      },
+                    },
+                  }}
+                  itemRenderer={(option) => <>{upperCase(option.value)}</>}
+                />
+                <MultiSelect
+                  multiple
+                  aria-label="Webhook:"
+                  labelPlural="webhooks"
+                  options={
+                    Array.isArray(tableSchema.webhooks)
+                      ? tableSchema.webhooks.map((x) => ({
+                          label: x.name,
+                          value: x.endpoint,
+                        }))
+                      : []
+                  }
+                  value={cloudLogFilters.webhook ?? []}
+                  onChange={(v) =>
+                    setCloudLogFilters((prev) => ({ ...prev, webhook: v }))
+                  }
+                  TextFieldProps={{
+                    id: "webhook",
+                    className: "labelHorizontal",
+                    sx: { "& .MuiInputBase-root": { width: 180 } },
+                    fullWidth: false,
+                    SelectProps: {
+                      renderValue: () => {
+                        if (cloudLogFilters?.webhook?.length) {
+                          return `Webhook (${cloudLogFilters.webhook.length})`;
+                        } else {
+                          return `Webhook`;
+                        }
+                      },
+                    },
+                  }}
+                  itemRenderer={(option) => (
+                    <>
+                      {option.label}&nbsp;<code>{option.value}</code>
+                    </>
+                  )}
+                />
+                <MultiSelect
+                  multiple
+                  aria-label={"Extension"}
+                  labelPlural="extensions"
+                  options={
+                    Array.isArray(tableSchema.extensionObjects)
+                      ? tableSchema.extensionObjects.map((x) => ({
+                          label: x.name,
+                          value: x.name,
+                          type: x.type,
+                        }))
+                      : []
+                  }
+                  value={cloudLogFilters.extension ?? []}
+                  onChange={(v) =>
+                    setCloudLogFilters((prev) => ({ ...prev, extension: v }))
+                  }
+                  TextFieldProps={{
+                    id: "extension",
+                    className: "labelHorizontal",
+                    sx: { "& .MuiInputBase-root": { width: 180 } },
+                    fullWidth: false,
+                    placeholder: "Extension",
+                    SelectProps: {
+                      renderValue: () => {
+                        if (cloudLogFilters?.extension?.length === 1) {
+                          return `Extension (${cloudLogFilters.extension[0]})`;
+                        } else if (cloudLogFilters?.extension?.length) {
+                          return `Extension (${cloudLogFilters.extension.length})`;
+                        } else {
+                          return `Extension`;
+                        }
+                      },
+                    },
+                  }}
+                  itemRenderer={(option) => (
+                    <>
+                      {option.label}&nbsp;<code>{option.type}</code>
+                    </>
+                  )}
+                />
+                <MultiSelect
+                  multiple
+                  aria-label={"Column"}
+                  options={Object.entries(tableSchema.columns ?? {}).map(
+                    ([key, config]) => ({
+                      label: config.name,
+                      value: key,
+                      type: config.type,
+                    })
+                  )}
+                  value={cloudLogFilters.column ?? []}
+                  onChange={(v) =>
+                    setCloudLogFilters((prev) => ({ ...prev, column: v }))
+                  }
+                  TextFieldProps={{
+                    id: "column",
+                    className: "labelHorizontal",
+                    sx: { "& .MuiInputBase-root": { width: 200 } },
+                    fullWidth: false,
+                    placeholder: "Column",
+                    SelectProps: {
+                      renderValue: () => {
+                        if (cloudLogFilters?.column?.length === 1) {
+                          return `Column (${cloudLogFilters.column[0]})`;
+                        } else if (cloudLogFilters?.column?.length) {
+                          return `Column (${cloudLogFilters.column.length})`;
+                        } else {
+                          return `Column`;
+                        }
+                      },
+                    },
+                  }}
+                  itemRenderer={(option) => (
+                    <>
+                      {option.label}&nbsp;<code>{option.value}</code>&nbsp;
+                      <code>{option.type}</code>
+                    </>
+                  )}
+                />
                 <MultiSelect
                   aria-label="Severity"
                   labelPlural="severity levels"
-                  options={Object.keys(SEVERITY_LEVELS)}
+                  options={Object.keys(SEVERITY_LEVELS_ROWY)}
                   value={cloudLogFilters.severity ?? []}
                   onChange={(severity) =>
                     setCloudLogFilters((prev) => ({ ...prev, severity }))
@@ -264,86 +536,61 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
                     </>
                   )}
                 />
-                <TimeRangeSelect
-                  aria-label="Time range"
-                  value={cloudLogFilters.timeRange}
-                  onChange={(value) =>
-                    setCloudLogFilters((c) => ({ ...c, timeRange: value }))
-                  }
-                />
-                <TableToolbarButton
-                  onClick={() => mutate()}
-                  title="Refresh"
-                  icon={<RefreshIcon />}
-                  disabled={isValidating}
-                />
-              </>
+              </Stack>
+            ) : null}
+          </Box>
+          <Box
+            sx={{
+              overflowY: "scroll",
+            }}
+          >
+            {Array.isArray(data) && data.length > 0 ? (
+              <Box>
+                <CloudLogList items={data} sx={{ mx: -1.5, mt: 1.5 }} />
+                {cloudLogFilters.timeRange.type !== "range" && (
+                  <Button
+                    style={{
+                      marginLeft: "auto",
+                      marginRight: "auto",
+                      display: "flex",
+                    }}
+                    onClick={() =>
+                      setCloudLogFilters((c) => ({
+                        ...c,
+                        timeRange: {
+                          ...c.timeRange,
+                          value: (c.timeRange as any).value * 2,
+                        },
+                      }))
+                    }
+                  >
+                    Load more (last {cloudLogFilters.timeRange.value * 2}{" "}
+                    {cloudLogFilters.timeRange.type})
+                  </Button>
+                )}
+              </Box>
+            ) : isValidating ? (
+              <EmptyState
+                Icon={LogsIcon}
+                message="Fetching logs…"
+                description={"\xa0"}
+              />
+            ) : (
+              <EmptyState
+                Icon={LogsIcon}
+                message="No logs"
+                description={
+                  cloudLogFilters.type === "rowy"
+                    ? "There are no logs matching the filters"
+                    : cloudLogFilters.type === "audit" &&
+                      tableSettings.audit === false
+                    ? "Auditing is disabled in this table"
+                    : "\xa0"
+                }
+              />
             )}
-          </Stack>
-
-          {isValidating && (
-            <LinearProgress
-              style={{
-                borderRadius: 0,
-                marginTop: -4,
-                marginBottom: -1,
-                minHeight: 4,
-              }}
-            />
-          )}
-
-          {/* <code>{logQueryUrl}</code> */}
-        </>
-      }
-    >
-      {cloudLogFilters.type === "build" ? (
-        <BuildLogs />
-      ) : Array.isArray(data) && data.length > 0 ? (
-        <>
-          <CloudLogList items={data} sx={{ mx: -1.5, mt: 1.5 }} />
-          {cloudLogFilters.timeRange.type !== "range" && (
-            <Button
-              style={{
-                marginLeft: "auto",
-                marginRight: "auto",
-                display: "flex",
-              }}
-              onClick={() =>
-                setCloudLogFilters((c) => ({
-                  ...c,
-                  timeRange: {
-                    ...c.timeRange,
-                    value: (c.timeRange as any).value * 2,
-                  },
-                }))
-              }
-            >
-              Load more (last {cloudLogFilters.timeRange.value * 2}{" "}
-              {cloudLogFilters.timeRange.type})
-            </Button>
-          )}
-        </>
-      ) : isValidating ? (
-        <EmptyState
-          Icon={LogsIcon}
-          message="Fetching logs…"
-          description={"\xa0"}
-        />
-      ) : (
-        <EmptyState
-          Icon={LogsIcon}
-          message="No logs"
-          description={
-            cloudLogFilters.type === "webhook" &&
-            (!Array.isArray(tableSchema.webhooks) ||
-              tableSchema.webhooks?.length === 0)
-              ? "There are no webhooks in this table"
-              : cloudLogFilters.type === "audit" &&
-                tableSettings.audit === false
-              ? "Auditing is disabled in this table"
-              : "\xa0"
-          }
-        />
+          </Box>
+        </Box>
       )}
     </Modal>
   );
