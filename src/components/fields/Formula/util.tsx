@@ -124,3 +124,19 @@ export const getDisplayCell = (type: FieldType) => {
       return ShortTextDisplayCell;
   }
 };
+
+export const getFunctionBody = (fn: string) => {
+  const sanitizedFn = fn.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, "");
+  const matches = sanitizedFn.match(/=>\s*({?[\s\S]*}?)$/);
+
+  if (!matches) {
+    return null;
+  }
+
+  const body = matches[1].trim();
+  const isOneLiner = body[0] !== "{" && body[body.length - 1] !== "}";
+
+  if (isOneLiner) return `return ${body}`;
+
+  return body.slice(1, body.length - 1);
+};

@@ -3,7 +3,11 @@ import { TableRow } from "@src/types/table";
 import { useAtom } from "jotai";
 import { pick, zipObject } from "lodash-es";
 import { useEffect, useMemo, useState } from "react";
-import { listenerFieldTypes, useDeepCompareMemoize } from "./util";
+import {
+  getFunctionBody,
+  listenerFieldTypes,
+  useDeepCompareMemoize,
+} from "./util";
 
 export const useFormula = ({
   row,
@@ -40,17 +44,17 @@ export const useFormula = ({
   );
 
   useEffect(() => {
+    setError(null);
     setLoading(true);
 
     const worker = new Worker(new URL("./worker.ts", import.meta.url), {
       type: "module",
     });
-    const timeout = setTimeout(() => {
-      setError(new Error("Timeout"));
-      setLoading(false);
-      worker.terminate();
-    }, 10000);
-
+    // const timeout = setTimeout(() => {
+    //   setError(new Error("timeout"));
+    //   setLoading(false);
+    //   worker.terminate();
+    // }, 1000);
     worker.onmessage = ({ data: { result, error } }: any) => {
       worker.terminate();
       if (error) {
@@ -59,18 +63,17 @@ export const useFormula = ({
         setResult(result);
       }
       setLoading(false);
-      clearInterval(timeout);
+      // clearInterval(timeout);
     };
 
-    const functionBody = formulaFn.replace(/^.*=>\s*{/, "").replace(/}$/, "");
     worker.postMessage({
-      formulaFn: functionBody,
+      formulaFn: getFunctionBody(formulaFn),
       row: availableFields,
     });
 
     return () => {
       worker.terminate();
-      clearInterval(timeout);
+      // clearInterval(timeout);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [useDeepCompareMemoize(listeners), formulaFn]);

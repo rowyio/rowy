@@ -13,7 +13,7 @@ export default function Formula(props: IDisplayCellProps) {
   const DisplayCell = getDisplayCell(type);
 
   if (error) {
-    return <>Error</>;
+    return <>Error ${error}</>;
   }
 
   return <DisplayCell {...props} value={result} disabled={true} />;
