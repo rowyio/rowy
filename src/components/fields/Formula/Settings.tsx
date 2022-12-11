@@ -26,6 +26,12 @@ const CodeEditor = lazy(
     import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
+const diagnosticsOptions = {
+  noSemanticValidation: false,
+  noSyntaxValidation: false,
+  noSuggestionDiagnostics: true,
+};
+
 export default function Settings({
   config,
   onChange,
@@ -113,6 +119,7 @@ export default function Settings({
         </Stack>
         <Suspense fallback={<FieldSkeleton height={200} />}>
           <CodeEditor
+            diagnosticsOptions={diagnosticsOptions}
             value={formulaFn}
             extraLibs={[
               formulaDefs.replace(
