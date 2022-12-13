@@ -91,7 +91,7 @@ export function emptyWebhookObject(
 ): IWebhook {
   return {
     name: `${type} webhook`,
-    active: false,
+    active: true,
     endpoint: generateId(),
     type,
     parser: webhookSchemas[type].parser?.template(table),
