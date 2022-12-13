@@ -1,4 +1,5 @@
 import { useSearchParams, Link } from "react-router-dom";
+import { useEffect } from "react";
 
 import { Typography, Link as MuiLink } from "@mui/material";
 
@@ -6,6 +7,7 @@ import AuthLayout from "@src/layouts/AuthLayout";
 import FirebaseUi from "@src/components/FirebaseUi";
 
 import { ROUTES } from "@src/constants/routes";
+import { analytics, logEvent } from "@src/analytics";
 
 export default function SignUpPage() {
   const [searchParams] = useSearchParams();
@@ -15,6 +17,10 @@ export default function SignUpPage() {
   if (typeof redirect === "string" && redirect.length > 0) {
     uiConfig.signInSuccessUrl = redirect;
   }
+
+  useEffect(() => {
+    logEvent(analytics, "signup_event");
+  }, []);
 
   return (
     <AuthLayout
