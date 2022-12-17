@@ -163,6 +163,11 @@ export default function HiddenFields() {
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
 
+  // function to revalidate quickAccessTableColumnsOrdered
+  function revalidateCache() {
+    setQuickAccessTableColumnsOrdered(tableColumnsOrdered);
+  }
+
   // function to reorder columns from cashed tableColumnsOrdered
   const optimisticReorder = useCallback(
     (from: number, to: number) => {
@@ -229,7 +234,10 @@ export default function HiddenFields() {
     <>
       <ButtonWithStatus
         startIcon={<VisibilityOffIcon />}
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => {
+          revalidateCache();
+          setOpen((o) => !o);
+        }}
         active={hiddenFields.length > 0}
         ref={buttonRef}
       >
