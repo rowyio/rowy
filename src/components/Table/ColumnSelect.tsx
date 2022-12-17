@@ -22,14 +22,22 @@ export interface IColumnSelectProps {
   filterColumns?: (column: ColumnConfig) => boolean;
   showFieldNames?: boolean;
   options?: ColumnOption[];
+  tableColumnsOrdered?: ColumnConfig[];
 }
 
 export default function ColumnSelect({
   filterColumns,
   showFieldNames,
+  tableColumnsOrdered: tableColumnsOrdered_,
   ...props
 }: IColumnSelectProps & Omit<MultiSelectProps<string>, "options">) {
-  const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
+  // if tableColumnsOrdered is passed(in case of HiddenFields) else traditional way to get tableColumnsOrders (backward compitable)
+  let [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
+
+  if (tableColumnsOrdered_) {
+    tableColumnsOrdered = tableColumnsOrdered_;
+  }
+
   const options =
     props.options ||
     (filterColumns

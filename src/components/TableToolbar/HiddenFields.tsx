@@ -2,6 +2,7 @@ import {
   useEffect,
   useRef,
   useMemo,
+  useCallback,
   useState,
   forwardRef,
   ChangeEvent,
@@ -34,6 +35,7 @@ import {
   tableScope,
   tableIdAtom,
   updateColumnAtom,
+  tableColumnsOrderedAtom,
 } from "@src/atoms/tableScope";
 import { formatSubTableName } from "@src/utils/table";
 
@@ -59,6 +61,10 @@ export default function HiddenFields() {
     setHiddenFields(userDocHiddenFields);
   }, [userDocHiddenFields]);
 
+  const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
+  // cashed tableColumnsOrdered from quick updates(reorder).
+  const [quickAccessTableColumnsOrdered, setQuickAccessTableColumnsOrdered] =
+    useState(tableColumnsOrdered);
   // const tableColumns = tableColumnsOrdered.map(({ key, name }) => ({
   //   value: key,
   //   label: name,
@@ -157,9 +163,27 @@ export default function HiddenFields() {
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
 
+  // function to reorder columns from cashed tableColumnsOrdered
+  const optimisticReorder = useCallback(
+    (from: number, to: number) => {
+      let temp = Array.from(quickAccessTableColumnsOrdered);
+      const currentColumn = temp.splice(from, 1)[0];
+      temp.splice(to, 0, currentColumn);
+
+      // update indexes
+      for (let i = from < to ? from : to; i < temp.length; i++) {
+        temp[i].index = i;
+      }
+      setQuickAccessTableColumnsOrdered(temp);
+    },
+    [quickAccessTableColumnsOrdered]
+  );
+
   // updates column on drag end
   function handleOnDragEnd(result: DropResult) {
-    if (!result.destination) return;
+    if (!result.destination || result.destination.index === result.source.index)
+      return;
+    optimisticReorder(result.source.index, result.destination.index);
     updateColumn({
       key: result.draggableId,
       config: {},
@@ -212,6 +236,7 @@ export default function HiddenFields() {
         {hiddenFields.length > 0 ? `${hiddenFields.length} hidden` : "Hide"}
       </ButtonWithStatus>
       <ColumnSelect
+        tableColumnsOrdered={quickAccessTableColumnsOrdered}
         TextFieldProps={{
           style: { display: "none" },
           onInput: checkToDisableDrag,
