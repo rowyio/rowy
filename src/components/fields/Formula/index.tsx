@@ -1,5 +1,4 @@
-import { Derivative as DerivativeIcon } from "@src/assets/icons";
-
+import FormulaIcon from "@mui/icons-material/Functions";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 import DisplayCell from "./DisplayCell";
@@ -12,7 +11,7 @@ export const config: IFieldConfig = {
   group: "Client Function",
   dataType: "any",
   initialValue: "",
-  icon: <DerivativeIcon />,
+  icon: <FormulaIcon />,
   description: "Client Function (Alpha)",
   TableCell: withRenderTableCell(DisplayCell as any, null, undefined, {
     usesRowData: true,
