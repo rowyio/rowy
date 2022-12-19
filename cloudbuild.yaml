@@ -1,8 +1,8 @@
 steps:
-  - name: node:10.17.0
+  - name: node:lts
     entrypoint: yarn
     args: ["install"]
-  - name: node:10.17.0
+  - name: node:lts
     entrypoint: yarn
     args:
       - env
@@ -10,17 +10,19 @@ steps:
       - "${_FIREBASE_WEB_API_KEY}"
       - "${_ALGOLIA_APP_ID}"
       - "${_ALGOLIA_APP_KEY}"
-  - name: node:10.17.0
+  - name: node:lts
     entrypoint: yarn
     args: ["build"]
-  - name: node:10.17.0
+    env:
+      - NODE_OPTIONS=--openssl-legacy-provider
+  - name: gcr.io/$PROJECT_ID/firebase
     entrypoint: yarn
     args:
       - "target"
       - "${_HOSTING_TARGET}"
       - --project
       - "${_PROJECT_ID}"
-  - name: node:10.17.0
+  - name: gcr.io/$PROJECT_ID/firebase
     entrypoint: yarn
     args:
       - deploy
