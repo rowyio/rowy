@@ -41,7 +41,6 @@ export const StatusSingleSelect = forwardRef(function StatusSingleSelect({
           paddingLeft: "var(--cell-padding)",
         }}
       >
-        {value}
         {getLabel(value, sortedConditions)}
       </div>
     );

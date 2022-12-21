@@ -105,7 +105,7 @@ export default function BuildLogsSnack({
         p: 2,
         pt: 1,
         borderRadius: 1,
-        zIndex: 1,
+        zIndex: (theme) => theme.zIndex.snackbar,
         transition: (theme) => theme.transitions.create("height"),
         height: expanded ? "calc(100% - 300px)" : 50,
       }}

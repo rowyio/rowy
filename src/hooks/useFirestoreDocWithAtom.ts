@@ -88,15 +88,12 @@ export function useFirestoreDocWithAtom<T = TableRow>(
       { includeMetadataChanges: true },
       (docSnapshot) => {
         try {
-          // Create doc if it doesn’t exist and we’re online
-          // WARNING: If offline and we doc doesn’t exist in cache, it will
-          // ovewrite with default values when we go online
-          if (
-            !docSnapshot.exists() &&
-            !!createIfNonExistent &&
-            !docSnapshot.metadata.fromCache
-          ) {
-            setDoc(docSnapshot.ref, createIfNonExistent);
+          // If doc doesn’t exist, set data atom to default value
+          // But don’t create a new document in db, since this has previously
+          // caused documents to be reset, and the bug is hard to reproduce.
+          // Instead, when the user updates the document, it will be created.
+          if (!docSnapshot.exists() && !!createIfNonExistent) {
+            // Temporarily set the data atom to the default data
             setDataAtom({ ...createIfNonExistent, _rowy_ref: docSnapshot.ref });
           } else {
             setDataAtom({

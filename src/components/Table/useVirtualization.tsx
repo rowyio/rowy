@@ -68,11 +68,11 @@ export function useVirtualization(
         const columnDef = leafColumns[index].columnDef;
         const schemaWidth = columnDef.size;
         const localWidth = columnSizing[columnDef.id || ""];
+        const definedWidth = localWidth || schemaWidth;
 
-        return Math.max(
-          MIN_COL_WIDTH,
-          localWidth || schemaWidth || DEFAULT_COL_WIDTH
-        );
+        if (definedWidth === undefined) return DEFAULT_COL_WIDTH;
+        if (definedWidth < MIN_COL_WIDTH) return MIN_COL_WIDTH;
+        return definedWidth;
       },
       [leafColumns, columnSizing]
     ),
