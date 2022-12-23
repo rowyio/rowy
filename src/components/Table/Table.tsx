@@ -1,341 +1,292 @@
-import React, { useMemo, useState, Suspense } from "react";
+import { useMemo, useRef, useState, useEffect, useCallback } from "react";
+import useStateRef from "react-usestateref";
 import { useAtom, useSetAtom } from "jotai";
-import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { findIndex } from "lodash-es";
+import { useThrottledCallback } from "use-debounce";
+import {
+  createColumnHelper,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import type {
+  ColumnPinningState,
+  VisibilityState,
+} from "@tanstack/react-table";
+import { DropResult } from "react-beautiful-dnd";
+import { get } from "lodash-es";
 
-// import "react-data-grid/dist/react-data-grid.css";
-import DataGrid, {
-  Column,
-  DataGridHandle,
-  //  SelectColumn as _SelectColumn,
-} from "react-data-grid";
-import { LinearProgress } from "@mui/material";
-
-import TableContainer, { OUT_OF_ORDER_MARGIN } from "./TableContainer";
-import ColumnHeader, { COLUMN_HEADER_HEIGHT } from "./ColumnHeader";
-import FinalColumnHeader from "./FinalColumnHeader";
-import FinalColumn from "./formatters/FinalColumn";
-import TableRow from "./TableRow";
+import StyledTable from "./Styled/StyledTable";
+import TableHeader from "./TableHeader";
+import TableBody from "./TableBody";
+import FinalColumn from "./FinalColumn/FinalColumn";
+import ContextMenu from "./ContextMenu";
 import EmptyState from "@src/components/EmptyState";
 // import BulkActions from "./BulkActions";
-import AddRow from "@src/components/TableToolbar/AddRow";
-import { AddRow as AddRowIcon } from "@src/assets/icons";
-import Loading from "@src/components/Loading";
-import ContextMenu from "./ContextMenu";
 
 import {
-  globalScope,
-  userRolesAtom,
-  userSettingsAtom,
-  navPinnedAtom,
-} from "@src/atoms/globalScope";
-import {
   tableScope,
-  tableIdAtom,
-  tableSettingsAtom,
   tableSchemaAtom,
   tableColumnsOrderedAtom,
   tableRowsAtom,
   tableNextPageAtom,
   tablePageAtom,
   updateColumnAtom,
-  updateFieldAtom,
-  selectedCellAtom,
 } from "@src/atoms/tableScope";
-
 import { getFieldType, getFieldProp } from "@src/components/fields";
-import { FieldType } from "@src/constants/fields";
-import { formatSubTableName } from "@src/utils/table";
-import { ColumnConfig } from "@src/types/table";
+import { useKeyboardNavigation } from "./useKeyboardNavigation";
+import { useSaveColumnSizing } from "./useSaveColumnSizing";
+import type { TableRow, ColumnConfig } from "@src/types/table";
 
-export type DataGridColumn = ColumnConfig & Column<any> & { isNew?: true };
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
-export const MAX_COL_WIDTH = 380;
+export const MIN_COL_WIDTH = 80;
+export const TABLE_PADDING = 16;
+export const OUT_OF_ORDER_MARGIN = 8;
+export const DEBOUNCE_DELAY = 500;
 
-const rowKeyGetter = (row: any) => row.id;
-const rowClass = (row: any) => (row._rowy_outOfOrder ? "out-of-order" : "");
-//const SelectColumn = { ..._SelectColumn, width: 42, maxWidth: 42 };
+declare module "@tanstack/table-core" {
+  /** The `column.meta` property contains the column config from tableSchema */
+  interface ColumnMeta<TData, TValue> extends ColumnConfig {}
+}
 
+const columnHelper = createColumnHelper<TableRow>();
+const getRowId = (row: TableRow) => row._rowy_ref.path || row._rowy_ref.id;
+
+export interface ITableProps {
+  /** Determines if “Add column” button is displayed */
+  canAddColumns: boolean;
+  /** Determines if columns can be rearranged */
+  canEditColumns: boolean;
+  /**
+   * Determines if any cell can be edited.
+   * If false, `Table` only ever renders `EditorCell`.
+   */
+  canEditCells: boolean;
+  /** The hidden columns saved to user settings */
+  hiddenColumns?: string[];
+  /**
+   * Displayed when `tableRows` is empty.
+   * Loading state handled by Suspense in parent component.
+   */
+  emptyState?: React.ReactNode;
+}
+
+/**
+ * Takes table schema and row data from `tableScope` and makes it compatible
+ * with TanStack Table. Renders table children and cell context menu.
+ *
+ * - Calls `useKeyboardNavigation` hook
+ * - Handles rearranging columns
+ * - Handles infinite scrolling
+ * - Stores local state for resizing columns, and asks admins if they want to
+ *   save to table schema for all users
+ */
 export default function Table({
-  dataGridRef,
-}: {
-  dataGridRef?: React.MutableRefObject<DataGridHandle | null>;
-}) {
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
-  const [userSettings] = useAtom(userSettingsAtom, globalScope);
-  const [navPinned] = useAtom(navPinnedAtom, globalScope);
-
-  const [tableId] = useAtom(tableIdAtom, tableScope);
-  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
+  canAddColumns,
+  canEditColumns,
+  canEditCells,
+  hiddenColumns,
+  emptyState,
+}: ITableProps) {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
-  const setTablePage = useSetAtom(tablePageAtom, tableScope);
-  const [selectedCell, setSelectedCell] = useAtom(selectedCellAtom, tableScope);
+  const [tablePage, setTablePage] = useAtom(tablePageAtom, tableScope);
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
-  const updateField = useSetAtom(updateFieldAtom, tableScope);
 
-  const userDocHiddenFields =
-    userSettings.tables?.[formatSubTableName(tableId)]?.hiddenFields;
+  // Store a **state** and reference to the container element
+  // so the state can re-render `TableBody`, preventing virtualization
+  // not detecting scroll if the container element was initially `null`
+  const [containerEl, setContainerEl, containerRef] =
+    useStateRef<HTMLDivElement | null>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
-  // Get column configs from table schema and map them to DataGridColumns
-  // Also filter out hidden columns and add end column
+  // Get column defs from table schema
+  // Also add end column for admins (canAddColumns || canEditCells)
   const columns = useMemo(() => {
-    const _columns: DataGridColumn[] = tableColumnsOrdered
-      .filter((column) => {
-        if (column.hidden) return false;
-        if (
-          Array.isArray(userDocHiddenFields) &&
-          userDocHiddenFields.includes(column.key)
-        )
-          return false;
-        return true;
-      })
-      .map((column: any) => ({
-        draggable: true,
-        resizable: true,
-        frozen: column.fixed,
-        headerRenderer: ColumnHeader,
-        formatter:
-          getFieldProp("TableCell", getFieldType(column)) ??
-          function InDev() {
-            return null;
-          },
-        editor:
-          getFieldProp("TableEditor", getFieldType(column)) ??
-          function InDev() {
-            return null;
-          },
-        ...column,
-        editable:
-          tableSettings.readOnly && !userRoles.includes("ADMIN")
-            ? false
-            : column.editable ?? true,
-        width: (column.width as number)
-          ? (column.width as number) > MAX_COL_WIDTH
-            ? MAX_COL_WIDTH
-            : (column.width as number)
-          : DEFAULT_COL_WIDTH,
-      }));
+    const _columns = tableColumnsOrdered
+      // Hide column for all users using table schema
+      .filter((column) => !column.hidden)
+      .map((columnConfig) =>
+        columnHelper.accessor((row) => get(row, columnConfig.fieldName), {
+          id: columnConfig.fieldName,
+          meta: columnConfig,
+          size: columnConfig.width,
+          enableResizing: columnConfig.resizable !== false,
+          minSize: MIN_COL_WIDTH,
+          cell: getFieldProp("TableCell", getFieldType(columnConfig)),
+        })
+      );
 
-    if (userRoles.includes("ADMIN") || !tableSettings.readOnly) {
-      _columns.push({
-        isNew: true,
-        key: "new",
-        fieldName: "_rowy_new",
-        name: "Add column",
-        type: FieldType.last,
-        index: _columns.length ?? 0,
-        width: 154,
-        headerRenderer: FinalColumnHeader,
-        headerCellClass: "final-column-header",
-        cellClass: "final-column-cell",
-        formatter: FinalColumn,
-        editable: false,
-      });
+    if (canAddColumns || canEditCells) {
+      _columns.push(
+        columnHelper.display({
+          id: "_rowy_column_actions",
+          cell: FinalColumn as any,
+        })
+      );
     }
 
     return _columns;
-  }, [
-    tableColumnsOrdered,
-    userDocHiddenFields,
-    tableSettings.readOnly,
-    userRoles,
-  ]);
-  const selectedColumnIndex = useMemo(() => {
-    if (!selectedCell?.columnKey) return -1;
-    return findIndex(columns, ["key", selectedCell.columnKey]);
-  }, [selectedCell?.columnKey, columns]);
+  }, [tableColumnsOrdered, canAddColumns, canEditCells]);
 
-  // Handle columns with field names that use dot notation (nested fields)
-  const rows =
-    useMemo(() => {
-      // const columnsWithNestedFieldNames = columns
-      //   .map((col) => col.fieldName)
-      //   .filter((fieldName) => fieldName.includes("."));
+  // Get user’s hidden columns from props and memoize into a `VisibilityState`
+  const columnVisibility: VisibilityState = useMemo(() => {
+    if (!Array.isArray(hiddenColumns)) return {};
+    return hiddenColumns.reduce((a, c) => ({ ...a, [c]: false }), {});
+  }, [hiddenColumns]);
 
-      // if (columnsWithNestedFieldNames.length === 0)
-      return tableRows;
+  // Get frozen columns and memoize into a `ColumnPinningState`
+  const columnPinning: ColumnPinningState = useMemo(
+    () => ({
+      left: columns
+        .filter(
+          (c) => c.meta?.fixed && c.id && columnVisibility[c.id] !== false
+        )
+        .map((c) => c.id!),
+    }),
+    [columns, columnVisibility]
+  );
+  const lastFrozen: string | undefined =
+    columnPinning.left![columnPinning.left!.length - 1];
 
-      // return tableRows.map((row) =>
-      //   columnsWithNestedFieldNames.reduce(
-      //     (acc, fieldName) => ({
-      //       ...acc,
-      //       [fieldName]: get(row, fieldName),
-      //     }),
-      //     { ...row }
-      //   )
-      // );
-    }, [tableRows]) ?? [];
+  // Call TanStack Table
+  const table = useReactTable({
+    data: tableRows,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getRowId,
+    columnResizeMode: "onChange",
+  });
 
-  // const [selectedRowsSet, setSelectedRowsSet] = useState<Set<React.Key>>();
-  // const [selectedRows, setSelectedRows] = useState<any[]>([]);
+  // Store local `columnSizing` state so we can save it to table schema
+  // in `useSaveColumnSizing`. This could be generalized by storing the
+  // entire table state.
+  const [columnSizing, setColumnSizing] = useState(
+    table.initialState.columnSizing
+  );
+  table.setOptions((prev) => ({
+    ...prev,
+    state: { ...prev.state, columnVisibility, columnPinning, columnSizing },
+    onColumnSizingChange: setColumnSizing,
+  }));
+  // Get rows and columns for virtualization
+  const { rows } = table.getRowModel();
+  const leafColumns = table.getVisibleLeafColumns();
 
-  // Gets more rows when scrolled down.
-  // https://github.com/adazzle/react-data-grid/blob/ead05032da79d7e2b86e37cdb9af27f2a4d80b90/stories/demos/AllFeatures.tsx#L60
-  const handleScroll = useThrottledCallback(
-    (event: React.UIEvent<HTMLDivElement>) => {
-      // Select corresponding header cell when scrolled to prevent jumping
-      dataGridRef?.current?.selectCell({
-        idx: selectedColumnIndex || 0,
-        rowIdx: -1,
+  // Handle keyboard navigation
+  const { handleKeyDown } = useKeyboardNavigation({
+    gridRef,
+    tableRows,
+    leafColumns,
+  });
+
+  // Handle prompt to save local column sizes if user `canEditColumns`
+  useSaveColumnSizing(columnSizing, canEditColumns);
+
+  const handleDropColumn = useCallback(
+    (result: DropResult) => {
+      if (result.destination?.index === undefined || !result.draggableId)
+        return;
+
+      console.log(result.draggableId, result.destination.index);
+
+      updateColumn({
+        key: result.draggableId,
+        index: result.destination.index,
+        config: {},
       });
-
-      const target = event.target as HTMLDivElement;
-
-      if (navPinned && !columns[0].fixed)
-        setShowLeftScrollDivider(target.scrollLeft > 16);
-
-      const offset = 800;
-      const isAtBottom =
-        target.clientHeight + target.scrollTop >= target.scrollHeight - offset;
-      if (!isAtBottom) return;
-      // Call for the next page
-      setTablePage((p) => p + 1);
     },
-    250
+    [updateColumn]
   );
 
-  const [showLeftScrollDivider, setShowLeftScrollDivider] = useState(false);
+  const fetchMoreOnBottomReached = useThrottledCallback(
+    (containerElement?: HTMLDivElement | null) => {
+      if (!containerElement) return;
 
-  const rowHeight = tableSchema.rowHeight ?? DEFAULT_ROW_HEIGHT;
-  const handleResize = useDebouncedCallback(
-    (colIndex: number, width: number) => {
-      const column = columns[colIndex];
-      if (!column.key) return;
-      updateColumn({ key: column.key, config: { width } });
+      const { scrollHeight, scrollTop, clientHeight } = containerElement;
+      if (scrollHeight - scrollTop - clientHeight < 300) {
+        setTablePage((p) => p + 1);
+      }
     },
-    1000
+    DEBOUNCE_DELAY
   );
+  // Check on mount and after fetch to see if the table is at the bottom
+  // for large screen heights
+  useEffect(() => {
+    fetchMoreOnBottomReached(containerRef.current);
+  }, [
+    fetchMoreOnBottomReached,
+    tablePage,
+    tableNextPage.loading,
+    containerRef,
+  ]);
 
   return (
-    <Suspense fallback={<Loading message="Loading fields" />}>
-      {/* <Hotkeys selectedCell={selectedCell} /> */}
-      <TableContainer rowHeight={rowHeight} className="table-container">
-        <DndProvider backend={HTML5Backend}>
-          {showLeftScrollDivider && <div className="left-scroll-divider" />}
-
-          <DataGrid
-            onColumnResize={handleResize}
-            onScroll={handleScroll}
-            ref={(handle) => {
-              if (dataGridRef) dataGridRef.current = handle;
-            }}
-            rows={rows}
-            columns={columns}
-            // Increase row height of out of order rows to add margins
-            rowHeight={({ row }) => {
-              if (row._rowy_outOfOrder)
-                return rowHeight + OUT_OF_ORDER_MARGIN + 1;
-
-              return rowHeight;
-            }}
-            headerRowHeight={DEFAULT_ROW_HEIGHT + 1}
-            className="rdg-light" // Handle dark mode in MUI theme
-            cellNavigationMode="LOOP_OVER_ROW"
-            rowRenderer={TableRow}
-            rowKeyGetter={rowKeyGetter}
-            rowClass={rowClass}
-            // selectedRows={selectedRowsSet}
-            // onSelectedRowsChange={(newSelectedSet) => {
-            //   const newSelectedArray = newSelectedSet
-            //     ? [...newSelectedSet]
-            //     : [];
-            //   const prevSelectedRowsArray = selectedRowsSet
-            //     ? [...selectedRowsSet]
-            //     : [];
-            //   const addedSelections = difference(
-            //     newSelectedArray,
-            //     prevSelectedRowsArray
-            //   );
-            //   const removedSelections = difference(
-            //     prevSelectedRowsArray,
-            //     newSelectedArray
-            //   );
-            //   addedSelections.forEach((id) => {
-            //     const newRow = find(rows, { id });
-            //     setSelectedRows([...selectedRows, newRow]);
-            //   });
-            //   removedSelections.forEach((rowId) => {
-            //     setSelectedRows(selectedRows.filter((row) => row.id !== rowId));
-            //   });
-            //   setSelectedRowsSet(newSelectedSet);
-            // }}
-            // onRowsChange={() => {
-            //console.log('onRowsChange',rows)
-            // }}
-            // TODO: onFill={(e) => {
-            //   console.log("onFill", e);
-            //   const { columnKey, sourceRow, targetRows } = e;
-            //   if (updateCell)
-            //     targetRows.forEach((row) =>
-            //       updateCell(row._rowy_ref, columnKey, sourceRow[columnKey])
-            //     );
-            //   return [];
-            // }}
-            onPaste={(e, ...args) => {
-              console.log("onPaste", e, ...args);
-              const value = e.sourceRow[e.sourceColumnKey];
-              updateField({
-                path: e.targetRow._rowy_ref.path,
-                fieldName: e.targetColumnKey,
-                value,
-              });
-            }}
-            onSelectedCellChange={({ rowIdx, idx }) => {
-              if (!rows[rowIdx]?._rowy_ref) return; // May be the header row
-
-              const path = rows[rowIdx]._rowy_ref.path;
-              if (!path) return;
-
-              const columnKey = tableColumnsOrdered.filter((col) =>
-                userDocHiddenFields
-                  ? !userDocHiddenFields.includes(col.key)
-                  : true
-              )[idx]?.key;
-              if (!columnKey) return; // May be the final column
-
-              setSelectedCell({ path, columnKey });
-            }}
+    <div
+      ref={(el) => setContainerEl(el)}
+      onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
+      style={{ overflow: "auto", width: "100%", height: "100%" }}
+    >
+      <StyledTable
+        ref={gridRef}
+        role="grid"
+        aria-readonly={!canEditCells}
+        aria-colcount={columns.length}
+        aria-rowcount={tableRows.length + 1}
+        style={
+          {
+            width: table.getTotalSize(),
+            userSelect: "none",
+            "--row-height": `${tableSchema.rowHeight || DEFAULT_ROW_HEIGHT}px`,
+          } as any
+        }
+        onKeyDown={handleKeyDown}
+      >
+        <div
+          className="thead"
+          role="rowgroup"
+          style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 10,
+            padding: `0 ${TABLE_PADDING}px`,
+          }}
+        >
+          <TableHeader
+            headerGroups={table.getHeaderGroups()}
+            handleDropColumn={handleDropColumn}
+            canAddColumns={canAddColumns}
+            canEditColumns={canEditColumns}
+            lastFrozen={lastFrozen}
+            columnSizing={columnSizing}
           />
-        </DndProvider>
+        </div>
 
-        {tableRows.length === 0 && (
-          <EmptyState
-            Icon={AddRowIcon}
-            message="Add a row to get started"
-            description={
-              <div>
-                <br />
-                <AddRow />
-              </div>
-            }
-            style={{
-              position: "absolute",
-              inset: 0,
-              top: COLUMN_HEADER_HEIGHT,
-              height: "auto",
-            }}
+        {tableRows.length === 0 ? (
+          emptyState ?? <EmptyState sx={{ py: 8 }} />
+        ) : (
+          <TableBody
+            containerEl={containerEl}
+            containerRef={containerRef}
+            leafColumns={leafColumns}
+            rows={rows}
+            canEditCells={canEditCells}
+            lastFrozen={lastFrozen}
+            columnSizing={columnSizing}
           />
         )}
-        {tableNextPage.loading && <LinearProgress />}
-      </TableContainer>
+      </StyledTable>
+
+      <div
+        id="rowy-table-editable-cell-description"
+        style={{ display: "none" }}
+      >
+        Press Enter to edit.
+      </div>
 
       <ContextMenu />
-      {/* 
-      <BulkActions
-        selectedRows={selectedRows}
-        columns={columns}
-        clearSelection={() => {
-          setSelectedRowsSet(new Set());
-          setSelectedRows([]);
-        }}
-      /> */}
-    </Suspense>
+    </div>
   );
 }

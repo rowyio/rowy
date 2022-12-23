@@ -1,15 +1,13 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withPopoverCell from "@src/components/fields/_withTableCell/withPopoverCell";
+import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import ConnectServiceIcon from "@mui/icons-material/Http";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
-import InlineCell from "./InlineCell";
-import NullEditor from "@src/components/Table/editors/NullEditor";
+import DisplayCell from "./DisplayCell";
 
-const PopoverCell = lazy(
+const EditorCell = lazy(
   () =>
-    import("./PopoverCell" /* webpackChunkName: "PopoverCell-ConnectService" */)
+    import("./EditorCell" /* webpackChunkName: "EditorCell-ConnectService" */)
 );
 const SideDrawerField = lazy(
   () =>
@@ -30,11 +28,10 @@ export const config: IFieldConfig = {
   icon: <ConnectServiceIcon />,
   description:
     "Connects to an external web service to fetch a list of results.",
-  TableCell: withPopoverCell(BasicCell, InlineCell, PopoverCell, {
-    anchorOrigin: { horizontal: "left", vertical: "bottom" },
-    transparent: true,
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "popover", {
+    disablePadding: true,
+    transparentPopover: true,
   }),
-  TableEditor: NullEditor as any,
   SideDrawerField,
   requireConfiguration: true,
   settings: Settings,

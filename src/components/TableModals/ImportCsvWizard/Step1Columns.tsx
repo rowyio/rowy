@@ -10,20 +10,35 @@ import {
   FormControlLabel,
   Checkbox,
   Chip,
+  FormControl,
+  RadioGroup,
+  Radio,
+  TextField,
+  MenuItem,
+  Alert,
+  AlertTitle,
+  Stack,
+  Box,
 } from "@mui/material";
 import ArrowIcon from "@mui/icons-material/ArrowForward";
+import { TableColumn as TableColumnIcon } from "@src/assets/icons";
 
 import { IStepProps } from ".";
+import { CsvConfig } from "@src/components/TableModals/ImportCsvWizard";
 import FadeList from "@src/components/TableModals/ScrollableList";
-import Column, { COLUMN_HEADER_HEIGHT } from "@src/components/Table/Column";
-import MultiSelect from "@rowy/multiselect";
+import Column, {
+  COLUMN_HEADER_HEIGHT,
+} from "@src/components/Table/Mock/Column";
+import ColumnSelect from "@src/components/Table/ColumnSelect";
 
 import {
   tableScope,
   tableSchemaAtom,
   tableColumnsOrderedAtom,
+  ImportCsvData,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
+import { getFieldProp } from "@src/components/fields";
 import { suggestType } from "@src/components/TableModals/ImportExistingWizard/utils";
 
 export default function Step1Columns({
@@ -32,7 +47,9 @@ export default function Step1Columns({
   updateConfig,
   setConfig,
   isXs,
-}: IStepProps) {
+}: IStepProps & {
+  csvData: NonNullable<ImportCsvData & { invalidRows: Record<string, any> }>;
+}) {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
 
@@ -47,6 +64,7 @@ export default function Step1Columns({
     config.pairs.map((pair) => pair.csvKey)
   );
 
+  // When a field is selected to be imported
   const handleSelect =
     (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
       const checked = e.target.checked;
@@ -59,12 +77,23 @@ export default function Step1Columns({
           find(tableColumns, (column) =>
             column.label.toLowerCase().includes(field.toLowerCase())
           )?.value ?? null;
-        if (match) {
-          setConfig((config) => ({
-            ...config,
-            pairs: [...config.pairs, { csvKey: field, columnKey: match }],
-          }));
+
+        const columnKey = camelCase(field);
+        const columnConfig: Partial<CsvConfig> = { pairs: [], newColumns: [] };
+        columnConfig.pairs = [{ csvKey: field, columnKey: match ?? columnKey }];
+        if (!match) {
+          columnConfig.newColumns = [
+            {
+              name: field,
+              fieldName: columnKey,
+              key: columnKey,
+              type: suggestType(csvData.rows, field) || FieldType.shortText,
+              index: -1,
+              config: {},
+            },
+          ];
         }
+        updateConfig(columnConfig);
       } else {
         const newValue = [...selectedFields];
         newValue.splice(newValue.indexOf(field), 1);
@@ -95,9 +124,10 @@ export default function Step1Columns({
       }
     };
 
+  // When a field is mapped to a new column
   const handleChange = (csvKey: string) => (value: string) => {
     const columnKey = !!tableSchema.columns?.[value] ? value : camelCase(value);
-
+    if (columnKey === "") return;
     // Check if this pair already exists in config
     const configIndex = findIndex(config.pairs, { csvKey });
     if (configIndex > -1) {
@@ -124,6 +154,17 @@ export default function Step1Columns({
         ],
       });
     }
+  };
+
+  const stepErrors = () => {
+    const errors = [];
+    if (config.pairs.length < 1) {
+      errors.push("You must select at least one column to import!");
+    }
+    if (config.documentId === "column" && !config.documentIdCsvKey) {
+      errors.push("You must select a column for document ID!");
+    }
+    return errors;
   };
 
   return (
@@ -194,9 +235,8 @@ export default function Step1Columns({
 
               <Grid item xs>
                 {selected && (
-                  <MultiSelect
+                  <ColumnSelect
                     multiple={false}
-                    options={tableColumns}
                     value={columnKey}
                     onChange={handleChange(field) as any}
                     TextFieldProps={{
@@ -206,21 +246,34 @@ export default function Step1Columns({
                           if (!columnKey) return "Select or add column";
                           else
                             return (
-                              <>
+                              <Stack
+                                direction="row"
+                                gap={1}
+                                alignItems="center"
+                              >
+                                <Box sx={{ width: 24, height: 24 }}>
+                                  {!isNewColumn ? (
+                                    getFieldProp("icon", matchingColumn?.type)
+                                  ) : (
+                                    <TableColumnIcon color="disabled" />
+                                  )}
+                                </Box>
                                 {matchingColumn?.name}
                                 {isNewColumn && (
                                   <Chip
                                     label="New"
+                                    color="primary"
                                     size="small"
-                                    sx={{
-                                      marginLeft: (theme) =>
-                                        theme.spacing(1) + " !important",
-                                      backgroundColor: "action.focus",
+                                    variant="outlined"
+                                    style={{
+                                      marginLeft: "auto",
                                       pointerEvents: "none",
+                                      height: 24,
+                                      fontWeight: "normal",
                                     }}
                                   />
                                 )}
-                              </>
+                              </Stack>
                             );
                         },
                         sx: [
@@ -251,14 +304,14 @@ export default function Step1Columns({
                           !columnKey && { color: "text.disabled" },
                         ],
                       },
+                      sx: { "& .MuiInputLabel-root": { display: "none" } },
                     }}
                     clearable={false}
                     displayEmpty
-                    labelPlural="columns"
                     freeText
-                    AddButtonProps={{ children: "Add new column…" }}
+                    AddButtonProps={{ children: "Create column…" }}
                     AddDialogProps={{
-                      title: "Add new column",
+                      title: "Create column",
                       textFieldLabel: "Column name",
                     }}
                   />
@@ -268,6 +321,81 @@ export default function Step1Columns({
           );
         })}
       </FadeList>
+      <Grid container marginTop={2}>
+        <Typography variant="subtitle2" gutterBottom component="h2">
+          Document Ids (Optional)
+        </Typography>
+        <Divider />
+        <Grid item xs={12}>
+          <FormControl>
+            <RadioGroup
+              defaultValue="auto"
+              name="radio-buttons-group"
+              sx={{ flexDirection: "row" }}
+              onChange={(e) => {
+                const documentId = e.currentTarget.value as "auto" | "column";
+                setConfig((prev: CsvConfig) => ({
+                  ...prev,
+                  documentId,
+                  documentIdCsvKey: null,
+                }));
+              }}
+            >
+              <FormControlLabel
+                value="auto"
+                control={<Radio checked={config.documentId === "auto"} />}
+                label="Auto-Generated"
+              />
+              <FormControlLabel
+                value="column"
+                control={<Radio checked={config.documentId === "column"} />}
+                label="Pick Column"
+              />
+              <TextField
+                disabled={config.documentId !== "column"}
+                select
+                value={config.documentIdCsvKey ?? ""}
+                onChange={(e) =>
+                  setConfig((prev) => ({
+                    ...prev,
+                    documentIdCsvKey: e.target.value,
+                  }))
+                }
+                sx={{ width: isXs ? "100%" : 200, margin: "auto" }}
+                SelectProps={{
+                  displayEmpty: true,
+                  renderValue: (value) => (
+                    <>{value ? value : "Select ID Column"}</>
+                  ),
+                  MenuProps: {
+                    sx: { height: 200 },
+                    anchorOrigin: { vertical: "bottom", horizontal: "right" },
+                    transformOrigin: { vertical: "top", horizontal: "right" },
+                  },
+                }}
+                helperText={
+                  config.documentId === "column" &&
+                  csvData.invalidRows &&
+                  `Invalid Rows: ${csvData.invalidRows.length}/${csvData.rows.length}`
+                }
+              >
+                {csvData.columns.map((column) => (
+                  <MenuItem key={column} value={column}>
+                    {column}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12}>
+          {stepErrors().map((error, index) => (
+            <Alert key={index} severity="error" sx={{ my: 1 }}>
+              <AlertTitle>{error}</AlertTitle>
+            </Alert>
+          ))}
+        </Grid>
+      </Grid>
     </div>
   );
 }

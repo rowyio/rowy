@@ -1,8 +1,8 @@
 import { ISideDrawerFieldProps } from "@src/components/fields/types";
 
 import { Box, Stack, TextField } from "@mui/material";
-import DatePicker from "@mui/lab/DatePicker";
-import DateTimeIcon from "@mui/icons-material/AccessTime";
+import { DateTimePicker } from "@mui/x-date-pickers";
+import { ChevronDown } from "@src/assets/icons";
 
 import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
 import { getDurationString } from "./utils";
@@ -42,7 +42,7 @@ export default function Duration({
       </Box>
 
       <Stack direction="row" spacing={1} sx={{ mt: 0.5 }}>
-        <DatePicker
+        <DateTimePicker
           renderInput={(props) => (
             <TextField
               {...props}
@@ -50,12 +50,6 @@ export default function Duration({
               fullWidth
               hiddenLabel
               aria-label={column.name as string}
-              InputProps={{
-                ...props.InputProps,
-                endAdornment: props.InputProps?.endAdornment || (
-                  <DateTimeIcon color="action" />
-                ),
-              }}
               sx={{
                 "& .MuiInputBase-input": { fontVariantNumeric: "tabular-nums" },
                 "& .MuiInputAdornment-root": { m: 0 },
@@ -71,15 +65,14 @@ export default function Duration({
           onAccept={onSubmit}
           inputFormat={format}
           mask={format.replace(/[A-Za-z]/g, "_")}
-          clearable
           OpenPickerButtonProps={{ size: "small" }}
-          components={{ OpenPickerIcon: DateTimeIcon }}
+          components={{ OpenPickerIcon: ChevronDown }}
           disableOpenPicker={false}
-          showToolbar
           disabled={disabled}
+          hideTabs={false}
         />
 
-        <DatePicker
+        <DateTimePicker
           renderInput={(props) => (
             <TextField
               {...props}
@@ -87,12 +80,6 @@ export default function Duration({
               label="End"
               hiddenLabel
               aria-label={column.name as string}
-              InputProps={{
-                ...props.InputProps,
-                endAdornment: props.InputProps?.endAdornment || (
-                  <DateTimeIcon color="action" />
-                ),
-              }}
               sx={{
                 "& .MuiInputBase-input": { fontVariantNumeric: "tabular-nums" },
                 "& .MuiInputAdornment-root": { m: 0 },
@@ -108,12 +95,11 @@ export default function Duration({
           onAccept={onSubmit}
           inputFormat={format}
           mask={format.replace(/[A-Za-z]/g, "_")}
-          clearable
           OpenPickerButtonProps={{ size: "small" }}
-          components={{ OpenPickerIcon: DateTimeIcon }}
+          components={{ OpenPickerIcon: ChevronDown }}
           disableOpenPicker={false}
-          showToolbar
           disabled={disabled}
+          hideTabs={false}
         />
       </Stack>
     </>

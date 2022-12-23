@@ -3,11 +3,11 @@ import ErrorFallback from "@src/components/ErrorFallback";
 // import SwrProvider from "@src/contexts/SwrContext";
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import { Provider, Atom } from "jotai";
-import { globalScope } from "@src/atoms/globalScope";
+import { Provider as JotaiProvider, Atom } from "jotai";
+import { projectScope } from "@src/atoms/projectScope";
 import { DebugAtoms } from "@src/atoms/utils";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
 import RowyThemeProvider from "@src/theme/RowyThemeProvider";
@@ -29,15 +29,26 @@ export default function Providers({
   initialAtomValues,
 }: IProvidersProps) {
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <ErrorBoundary
+      fallbackRender={
+        // Can’t use <ErrorFallback> here because it uses useLocation,
+        // which needs to be inside a <Router>
+        ({ error }) => (
+          <div role="alert">
+            <h1>Something went wrong</h1>
+            <p>{error.message}</p>
+          </div>
+        )
+      }
+    >
       <BrowserRouter>
         <HelmetProvider>
-          <Provider
-            key={globalScope.description}
-            scope={globalScope}
+          <JotaiProvider
+            key={projectScope.description}
+            scope={projectScope}
             initialValues={initialAtomValues}
           >
-            <DebugAtoms scope={globalScope} />
+            <DebugAtoms scope={projectScope} />
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <CacheProvider value={muiCache}>
                 <RowyThemeProvider>
@@ -53,7 +64,7 @@ export default function Providers({
                 </RowyThemeProvider>
               </CacheProvider>
             </LocalizationProvider>
-          </Provider>
+          </JotaiProvider>
         </HelmetProvider>
       </BrowserRouter>
     </ErrorBoundary>
