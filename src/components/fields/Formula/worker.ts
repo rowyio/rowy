@@ -8,7 +8,7 @@ onmessage = async ({ data }) => {
   } catch (error: any) {
     console.error("error: ", error);
     postMessage({
-      error: new Error("Something went wrong. Check console logs."),
+      error,
     });
   } finally {
     // eslint-disable-next-line no-restricted-globals

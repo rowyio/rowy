@@ -1,6 +1,8 @@
 import { lazy, Suspense } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { ISettingsProps } from "@src/components/fields/types";
+import { useAtom } from "jotai";
+import MultiSelect from "@rowy/multiselect";
+
 import {
   Grid,
   InputLabel,
@@ -9,13 +11,13 @@ import {
   FormHelperText,
   Tooltip,
 } from "@mui/material";
-import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 
-import { useAtom } from "jotai";
+import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
+import { ISettingsProps } from "@src/components/fields/types";
 import { tableColumnsOrderedAtom, tableScope } from "@src/atoms/tableScope";
-import { defaultFn, listenerFieldTypes, outputFieldTypes } from "./util";
-import MultiSelect from "@rowy/multiselect";
 import FieldsDropdown from "@src/components/ColumnModals/FieldsDropdown";
+
+import { defaultFn, listenerFieldTypes, outputFieldTypes } from "./util";
 import { getFieldProp } from "..";
 
 /* eslint-disable import/no-webpack-loader-syntax */

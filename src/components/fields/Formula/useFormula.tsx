@@ -1,8 +1,10 @@
-import { tableColumnsOrderedAtom, tableScope } from "@src/atoms/tableScope";
-import { TableRow } from "@src/types/table";
-import { useAtom } from "jotai";
-import { pick, zipObject } from "lodash-es";
 import { useEffect, useMemo, useState } from "react";
+import { pick, zipObject } from "lodash-es";
+import { useAtom } from "jotai";
+
+import { TableRow } from "@src/types/table";
+import { tableColumnsOrderedAtom, tableScope } from "@src/atoms/tableScope";
+
 import {
   getFunctionBody,
   listenerFieldTypes,
@@ -50,11 +52,6 @@ export const useFormula = ({
     const worker = new Worker(new URL("./worker.ts", import.meta.url), {
       type: "module",
     });
-    // const timeout = setTimeout(() => {
-    //   setError(new Error("timeout"));
-    //   setLoading(false);
-    //   worker.terminate();
-    // }, 1000);
     worker.onmessage = ({ data: { result, error } }: any) => {
       worker.terminate();
       if (error) {
@@ -63,7 +60,6 @@ export const useFormula = ({
         setResult(result);
       }
       setLoading(false);
-      // clearInterval(timeout);
     };
 
     worker.postMessage({
@@ -73,7 +69,6 @@ export const useFormula = ({
 
     return () => {
       worker.terminate();
-      // clearInterval(timeout);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [useDeepCompareMemoize(listeners), formulaFn]);
