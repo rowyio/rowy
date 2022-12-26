@@ -22,26 +22,11 @@ to start.
 
 ## Working on existing issues
 
-If you are working on an [issue](https://github.com/rowyio/rowy/issues), share
-that you are working on it by commenting on the issue and posting a message on
-#contributions channel in Rowy's
-[Discord](https://discord.com/invite/fjBugmvzZP). This allows others in the
-community and the maintainers a chance to provide feedback and guidance before
-you spend time working on it. Before you get started working on an
-[issue](https://github.com/rowyio/rowy/issues), please make sure to share that
-you are working on it by commenting on the issue and posting a message on
-#contributions channel in Rowy's
-[Discord](https://discord.com/invite/fjBugmvzZP). The maintainers will then
-assign the issue to you after making sure any relevant information or context in
-addition is provided before you can start on the task.
 
-Once you are assigned a task, please provide periodic updates or share any
-questions or roadblocks on either discord or the Github issue, so that the
-commmunity or the project maintainers can provide you any feedback or guidance
-as needed. If you are inactive for more than 1-2 week on a issue that was
-assigned to you, then we will assume you have stopped working on it and we will
-unassign it from you - so that we can give a chance to others in the community
-to work on it.
+
+Before you get started working on an [issue](https://github.com/rowyio/rowy/issues), please make sure to share that you are working on it by commenting on the issue and posting a message on #contributions channel in Rowy's [Discord](https://discord.com/invite/fjBugmvzZP). The maintainers will then assign the issue to you after making sure any relevant information or context in addition is provided before you can start on the task.
+
+Once you are assigned a task, please provide periodic updates or share any questions or roadblocks on either discord or the Github issue, so that the commmunity or the project maintainers can provide you any feedback or guidance as needed. If you are inactive for more than 1-2 week on a issue that was assigned to you, then we will assume you have stopped working on it and we will unassign it from you - so that we can give a chance to others in the community to work on it.
 
 ## File a feature request
 

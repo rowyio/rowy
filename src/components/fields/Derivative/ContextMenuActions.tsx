@@ -2,13 +2,17 @@ import { useAtom } from "jotai";
 import { find, get } from "lodash-es";
 import { useSnackbar } from "notistack";
 
+import { Button } from "@mui/material";
 import ReEvalIcon from "@mui/icons-material/ReplayOutlined";
 import EvalIcon from "@mui/icons-material/PlayCircleOutline";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import {
   projectScope,
   compatibleRowyRunVersionAtom,
   rowyRunAtom,
+  projectIdAtom,
+  projectSettingsAtom,
 } from "@src/atoms/projectScope";
 import {
   tableScope,
@@ -34,6 +38,8 @@ export const ContextMenuActions: IFieldConfig["contextMenuActions"] = (
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [compatibleRowyRunVersion] = useAtom(
     compatibleRowyRunVersionAtom,
@@ -76,8 +82,32 @@ export const ContextMenuActions: IFieldConfig["contextMenuActions"] = (
       } else {
         enqueueSnackbar("Cell evaluated", { variant: "success" });
       }
-    } catch (error) {
-      enqueueSnackbar(`Failed: ${error}`, { variant: "error" });
+    } catch (error: any) {
+      if (error.message === "Failed to fetch") {
+        enqueueSnackbar(
+          "Evaluation failed. Rowy Run is likely out of memory. Please allocate more in GCP console.",
+          {
+            variant: "warning",
+            persist: true,
+            action: (snackbarId) => (
+              <Button
+                href={`https://console.cloud.google.com/run/deploy/${
+                  projectSettings.rowyRunRegion ?? "us-central1"
+                }/rowy-backend?project=${projectId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => closeSnackbar(snackbarId)}
+                variant="contained"
+                color="secondary"
+              >
+                Open GCP Console <InlineOpenInNewIcon />
+              </Button>
+            ),
+          }
+        );
+      } else {
+        enqueueSnackbar(`Failed: ${error}`, { variant: "error" });
+      }
     }
   };
   const isEmpty =

@@ -311,6 +311,17 @@ export const tableSettings = (
       label: "Suggested Firestore Rules",
       watchedField: "collection",
     },
+    {
+      step: "accessControls",
+      type: FieldType.multiSelect,
+      name: "modifiableBy",
+      label: "Modifiable by",
+      labelPlural: "Modifier Roles",
+      options: roles ?? [],
+      defaultValue: ["ADMIN"],
+      required: true,
+      freeText: true,
+    },
 
     // Step 4: Auditing
     {
