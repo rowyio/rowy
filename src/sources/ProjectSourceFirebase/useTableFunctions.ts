@@ -145,10 +145,25 @@ export function useTableFunctions() {
           // Shallow merge new settings with old
           tables[tableIndex] = { ...tables[tableIndex], ...settings };
 
+          // Create tablesSettings object from tables array
+          const tablesSettings = tables.reduce(
+            (acc, table) => {
+              if (table.tableType === "primaryCollection") {
+                acc.pc[table.id] = table;
+              } else {
+                acc.cg[table.id] = table;
+              }
+              return acc;
+            },
+            {
+              pc: {},
+              cg: {},
+            } as Record<string, Record<string, TableSettings>>
+          );
           // Updates settings doc with new tables array
           const promiseUpdateSettings = setDoc(
             doc(firebaseDb, SETTINGS),
-            { tables },
+            { tables, tablesSettings },
             { merge: true }
           );
 
