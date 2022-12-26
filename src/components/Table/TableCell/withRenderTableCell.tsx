@@ -164,6 +164,7 @@ export default function withRenderTableCell(
           <DisplayCellComponent {...basicCellProps} />
         </div>
       );
+
       if (disabled || (editorMode !== "inline" && !focusInsideCell))
         return displayCell;
 

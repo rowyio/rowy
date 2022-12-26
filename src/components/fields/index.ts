@@ -33,6 +33,7 @@ import Json from "./Json";
 import Code from "./Code";
 import Action from "./Action";
 import Derivative from "./Derivative";
+import Formula from "./Formula";
 import Markdown from "./Markdown";
 // // import Aggregate from "./Aggregate";
 import Status from "./Status";
@@ -86,6 +87,8 @@ export const FIELDS: IFieldConfig[] = [
   Derivative,
   // // Aggregate,
   Status,
+  /** CLIENT FUNCTION */
+  Formula,
   /** AUDITING */
   CreatedBy,
   UpdatedBy,
