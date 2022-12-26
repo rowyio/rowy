@@ -12,6 +12,8 @@ import CheckboxDisplayCell from "@src/components/fields/Checkbox/DisplayCell";
 import PercentageDisplayCell from "@src/components/fields/Percentage/DisplayCell";
 import RatingDisplayCell from "@src/components/fields/Rating/DisplayCell";
 import SliderDisplayCell from "@src/components/fields/Slider/DisplayCell";
+import SingleSelectDisplayCell from "@src/components/fields/SingleSelect/DisplayCell";
+import MultiSelectDisplayCell from "@src/components/fields/MultiSelect/DisplayCell";
 import ColorDisplayCell from "@src/components/fields/Color/DisplayCell";
 import GeoPointDisplayCell from "@src/components/fields/GeoPoint/DisplayCell";
 import DateDisplayCell from "@src/components/fields/Date/DisplayCell";
@@ -38,17 +40,7 @@ export function useDeepCompareMemoize<T>(value: T) {
 
 export const listenerFieldTypes = Object.values(FieldType).filter(
   (type) =>
-    ![
-      FieldType.action,
-      FieldType.status,
-      FieldType.formula,
-      FieldType.aggregate,
-      FieldType.connectService,
-      FieldType.connectTable,
-      FieldType.connector,
-      FieldType.subTable,
-      FieldType.last,
-    ].includes(type)
+    ![FieldType.formula, FieldType.subTable, FieldType.last].includes(type)
 );
 
 export const outputFieldTypes = Object.values(FieldType).filter(
@@ -99,6 +91,10 @@ export const getDisplayCell = (type: FieldType) => {
       return RatingDisplayCell;
     case FieldType.slider:
       return SliderDisplayCell;
+    case FieldType.singleSelect:
+      return SingleSelectDisplayCell;
+    case FieldType.multiSelect:
+      return MultiSelectDisplayCell;
     case FieldType.color:
       return ColorDisplayCell;
     case FieldType.geoPoint:
@@ -120,23 +116,6 @@ export const getDisplayCell = (type: FieldType) => {
     case FieldType.createdBy:
       return CreatedByDisplayCell;
     default:
-      // FieldType url, email, phone, singleSelect, multiSelect
       return ShortTextDisplayCell;
   }
-};
-
-export const getFunctionBody = (fn: string) => {
-  const sanitizedFn = fn.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, "");
-  const matches = sanitizedFn.match(/=>\s*({?[\s\S]*}?)$/);
-
-  if (!matches) {
-    return null;
-  }
-
-  const body = matches[1].trim();
-  const isOneLiner = body[0] !== "{" && body[body.length - 1] !== "}";
-
-  if (isOneLiner) return `return ${body}`;
-
-  return body.slice(1, body.length - 1);
 };

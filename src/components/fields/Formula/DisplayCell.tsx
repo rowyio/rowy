@@ -2,13 +2,13 @@ import CircularProgressOptical from "@src/components/CircularProgressOptical";
 import { IDisplayCellProps } from "@src/components/fields/types";
 
 import { useFormula } from "./useFormula";
-import { getDisplayCell } from "./util";
+import { defaultFn, getDisplayCell } from "./util";
 
 export default function Formula(props: IDisplayCellProps) {
   const { result, error, loading } = useFormula({
     row: props.row,
     listenerFields: props.column.config?.listenerFields || [],
-    formulaFn: props.column.config?.formulaFn || "",
+    formulaFn: props.column.config?.formulaFn || defaultFn,
   });
 
   const type = props.column.config?.renderFieldType;

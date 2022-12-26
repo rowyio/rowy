@@ -5,11 +5,7 @@ import { useAtom } from "jotai";
 import { TableRow } from "@src/types/table";
 import { tableColumnsOrderedAtom, tableScope } from "@src/atoms/tableScope";
 
-import {
-  getFunctionBody,
-  listenerFieldTypes,
-  useDeepCompareMemoize,
-} from "./util";
+import { listenerFieldTypes, useDeepCompareMemoize } from "./util";
 
 export const useFormula = ({
   row,
@@ -63,7 +59,7 @@ export const useFormula = ({
     };
 
     worker.postMessage({
-      formulaFn: getFunctionBody(formulaFn),
+      formulaFn,
       row: availableFields,
     });
 
