@@ -232,7 +232,7 @@ export function emptyExtensionObject(
 ): IExtension {
   return {
     name: `${type} extension`,
-    active: false,
+    active: true,
     triggers: [],
     type,
     extensionBody: extensionBodyTemplate[type] ?? extensionBodyTemplate["task"],
