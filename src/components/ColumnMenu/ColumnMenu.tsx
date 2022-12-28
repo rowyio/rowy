@@ -25,7 +25,6 @@ import {
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import EditIcon from "@mui/icons-material/EditOutlined";
-// import ReorderIcon from "@mui/icons-material/Reorder";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import EvalIcon from "@mui/icons-material/PlayCircleOutline";
 
@@ -319,24 +318,19 @@ export default function ColumnMenu({
       },
       disabled: !isConfigurable,
     },
-    // {
-    //   label: "Re-order",
-    //   icon: <ReorderIcon />,
-    //   onClick: () => alert("REORDER"),
-    // },
-
-    // {
-    //   label: "Hide for everyone",
-    //   activeLabel: "Show",
-    //   icon: <VisibilityOffIcon />,
-    //   activeIcon: <VisibilityIcon />,
-    //   onClick: () => {
-    //     actions.update(column.key, { hidden: !column.hidden });
-    //     handleClose();
-    //   },
-    //   active: column.hidden,
-    //   color: "error" as "error",
-    // },
+    {
+      key: "logs",
+      label: altPress ? "Logs" : "Logs…",
+      icon: <LogsIcon />,
+      onClick: () => {
+        setModal("cloudLogs");
+        setCloudLogFilters({
+          type: "column",
+          timeRange: { type: "days", value: 7 },
+          column: [column.key],
+        });
+      },
+    },
   ];
 
   // TODO: Generalize
@@ -387,19 +381,6 @@ export default function ColumnMenu({
               handleConfirm: handleEvaluateAll,
               confirm: "Evaluate",
             }),
-    },
-    {
-      key: "logs",
-      label: altPress ? "Logs" : "Logs…",
-      icon: <LogsIcon />,
-      onClick: () => {
-        setModal("cloudLogs");
-        setCloudLogFilters({
-          type: "rowy",
-          timeRange: { type: "days", value: 7 },
-          column: [column.key],
-        });
-      },
     },
   ];
 

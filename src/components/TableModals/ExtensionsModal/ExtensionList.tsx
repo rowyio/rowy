@@ -107,8 +107,7 @@ export default function ExtensionList({
                     onClick={() => {
                       setModal("cloudLogs");
                       setCloudLogFilters({
-                        type: "rowy",
-                        functionType: ["extension"],
+                        type: "extension",
                         timeRange: { type: "days", value: 7 },
                         extension: [extensionObject.name],
                       });

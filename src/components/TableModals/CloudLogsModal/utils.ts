@@ -12,43 +12,21 @@ export const cloudLogFetcher = (
   // https://cloud.google.com/logging/docs/view/logging-query-language
   let logQuery: string[] = [];
 
+  if (["extension", "webhook", "column"].includes(cloudLogFilters.type)) {
+    // mandatory filter to remove unwanted gcp diagnostic logs
+    logQuery.push(
+      ["backend-scripts", "backend-function", "hooks"]
+        .map((loggingSource) => {
+          return `jsonPayload.loggingSource = "${loggingSource}"`;
+        })
+        .join(encodeURIComponent(" OR "))
+    );
+  }
+
   switch (cloudLogFilters.type) {
-    case "rowy":
+    case "extension":
       logQuery.push(`logName = "projects/${projectId}/logs/rowy-logging"`);
-      if (cloudLogFilters?.functionType?.length)
-        logQuery.push(
-          cloudLogFilters.functionType
-            .map((functionType) => {
-              return `jsonPayload.functionType = "${functionType}"`;
-            })
-            .join(encodeURIComponent(" OR "))
-        );
-      if (cloudLogFilters?.loggingSource?.length) {
-        logQuery.push(
-          cloudLogFilters.loggingSource
-            .map((loggingSource) => {
-              return `jsonPayload.loggingSource = "${loggingSource}"`;
-            })
-            .join(encodeURIComponent(" OR "))
-        );
-      } else {
-        // mandatory filter to remove unwanted gcp diagnostic logs
-        logQuery.push(
-          ["backend-scripts", "backend-function", "hooks"]
-            .map((loggingSource) => {
-              return `jsonPayload.loggingSource = "${loggingSource}"`;
-            })
-            .join(encodeURIComponent(" OR "))
-        );
-      }
-      if (cloudLogFilters?.webhook?.length) {
-        logQuery.push(
-          cloudLogFilters.webhook
-            .map((id) => `jsonPayload.url : "${id}"`)
-            .join(encodeURIComponent(" OR "))
-        );
-      }
-      if (cloudLogFilters?.extension?.length)
+      if (cloudLogFilters?.extension?.length) {
         logQuery.push(
           cloudLogFilters.extension
             .map((extensionName) => {
@@ -56,7 +34,25 @@ export const cloudLogFetcher = (
             })
             .join(encodeURIComponent(" OR "))
         );
-      if (cloudLogFilters?.column?.length)
+      } else {
+        logQuery.push(`jsonPayload.functionType = "extension"`);
+      }
+      break;
+
+    case "webhook":
+      if (cloudLogFilters?.webhook?.length) {
+        logQuery.push(
+          cloudLogFilters.webhook
+            .map((id) => `jsonPayload.url : "${id}"`)
+            .join(encodeURIComponent(" OR "))
+        );
+      } else {
+        logQuery.push(`jsonPayload.functionType = "hooks"`);
+      }
+      break;
+
+    case "column":
+      if (cloudLogFilters?.column?.length) {
         logQuery.push(
           cloudLogFilters.column
             .map((column) => {
@@ -64,6 +60,21 @@ export const cloudLogFetcher = (
             })
             .join(encodeURIComponent(" OR "))
         );
+      } else {
+        logQuery.push(
+          [
+            "connector",
+            "derivative-script",
+            "action",
+            "derivative-function",
+            "defaultValue",
+          ]
+            .map((functionType) => {
+              return `jsonPayload.functionType = "${functionType}"`;
+            })
+            .join(encodeURIComponent(" OR "))
+        );
+      }
       break;
 
     case "audit":

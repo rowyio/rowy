@@ -126,8 +126,7 @@ export default function WebhookList({
                     onClick={() => {
                       setModal("cloudLogs");
                       setCloudLogFilters({
-                        type: "rowy",
-                        functionType: ["hooks"],
+                        type: "webhook",
                         timeRange: { type: "days", value: 7 },
                         webhook: [webhook.endpoint],
                       });
