@@ -318,7 +318,15 @@ export default function ColumnMenu({
       },
       disabled: !isConfigurable,
     },
-    {
+  ];
+
+  if (
+    column?.config?.defaultValue?.type === "dynamic" ||
+    [FieldType.action, FieldType.derivative, FieldType.connector].includes(
+      column.type
+    )
+  ) {
+    configActions.push({
       key: "logs",
       label: altPress ? "Logs" : "Logs…",
       icon: <LogsIcon />,
@@ -330,8 +338,8 @@ export default function ColumnMenu({
           column: [column.key],
         });
       },
-    },
-  ];
+    });
+  }
 
   // TODO: Generalize
   const handleEvaluateAll = async () => {

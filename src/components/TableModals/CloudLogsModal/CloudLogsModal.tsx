@@ -43,6 +43,7 @@ import {
   cloudLogFiltersAtom,
 } from "@src/atoms/tableScope";
 import { cloudLogFetcher } from "./utils";
+import { FieldType } from "@src/constants/fields";
 
 export default function CloudLogsModal({ onClose }: ITableModalProps) {
   const [projectId] = useAtom(projectIdAtom, projectScope);
@@ -312,13 +313,21 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
                   <MultiSelect
                     multiple
                     aria-label={"Column"}
-                    options={Object.entries(tableSchema.columns ?? {}).map(
-                      ([key, config]) => ({
+                    options={Object.entries(tableSchema.columns ?? {})
+                      .filter(
+                        ([key, config]) =>
+                          config?.config?.defaultValue?.type === "dynamic" ||
+                          [
+                            FieldType.action,
+                            FieldType.derivative,
+                            FieldType.connector,
+                          ].includes(config.type)
+                      )
+                      .map(([key, config]) => ({
                         label: config.name,
                         value: key,
                         type: config.type,
-                      })
-                    )}
+                      }))}
                     value={cloudLogFilters.column ?? []}
                     onChange={(v) =>
                       setCloudLogFilters((prev) => ({ ...prev, column: v }))
