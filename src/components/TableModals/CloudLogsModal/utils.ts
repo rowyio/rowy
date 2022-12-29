@@ -86,6 +86,10 @@ export const cloudLogFetcher = (
         );
       break;
 
+    case "functions":
+      logQuery.push(`resource.labels.function_name = "R-${tablePath}"`);
+      break;
+
     default:
       break;
   }

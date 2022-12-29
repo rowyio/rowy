@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { CloudLogs as LogsIcon } from "@src/assets/icons";
+import ClearIcon from "@mui/icons-material/Clear";
 
 import Modal from "@src/components/Modal";
 import TableToolbarButton from "@src/components/TableToolbar/TableToolbarButton";
@@ -122,9 +123,13 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
                     timeRange: c.timeRange,
                   }));
                   if (
-                    ["extension", "webhook", "column", "audit"].includes(
-                      newType
-                    )
+                    [
+                      "extension",
+                      "webhook",
+                      "column",
+                      "audit",
+                      "functions",
+                    ].includes(newType)
                   ) {
                     setTimeout(() => {
                       mutate();
@@ -138,6 +143,9 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
                 <ToggleButton value="column">Column</ToggleButton>
                 <ToggleButton value="audit">Audit</ToggleButton>
                 <ToggleButton value="build">Build</ToggleButton>
+                <ToggleButton value="functions">
+                  Functions (legacy)
+                </ToggleButton>
               </ToggleButtonGroup>
             ) : (
               <ToggleButtonGroup
@@ -165,10 +173,10 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
                   display="block"
                   style={{ userSelect: "none" }}
                 >
-                  {isValidating ? "Loading" : `${data?.length ?? 0} entries`}
+                  {isValidating ? "" : `${data?.length ?? 0} entries`}
                 </Typography>
-                <Button
-                  onClick={(v) => {
+                <TableToolbarButton
+                  onClick={() => {
                     setCloudLogFilters((prev) => ({
                       ...prev,
                       functionType: undefined,
@@ -178,11 +186,10 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
                       severity: undefined,
                     }));
                   }}
+                  title="Clear Filters"
+                  icon={<ClearIcon />}
                   disabled={isValidating}
-                >
-                  Reset
-                </Button>
-
+                />
                 <TableToolbarButton
                   onClick={() => mutate()}
                   title="Refresh"
@@ -212,7 +219,7 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
             overflowY: "visible",
           }}
         >
-          {["extension", "webhook", "column", "audit"].includes(
+          {["extension", "webhook", "column", "audit", "functions"].includes(
             cloudLogFilters.type
           ) ? (
             <Stack
@@ -228,6 +235,9 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
                 flex: "0 0 32px",
               }}
             >
+              {cloudLogFilters.type === "functions" ? (
+                <Box width={"100%"}></Box>
+              ) : null}
               {cloudLogFilters.type === "extension" ? (
                 <>
                   <MultiSelect
