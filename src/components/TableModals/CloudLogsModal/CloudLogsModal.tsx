@@ -489,15 +489,18 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
                       marginRight: "auto",
                       display: "flex",
                     }}
-                    onClick={() =>
+                    onClick={() => {
                       setCloudLogFilters((c) => ({
                         ...c,
                         timeRange: {
                           ...c.timeRange,
                           value: (c.timeRange as any).value * 2,
                         },
-                      }))
-                    }
+                      }));
+                      setTimeout(() => {
+                        mutate();
+                      }, 0);
+                    }}
                   >
                     Load more (last {cloudLogFilters.timeRange.value * 2}{" "}
                     {cloudLogFilters.timeRange.type})
