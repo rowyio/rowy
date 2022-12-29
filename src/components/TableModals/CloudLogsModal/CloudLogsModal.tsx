@@ -116,11 +116,20 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
               <ToggleButtonGroup
                 value={cloudLogFilters.type}
                 exclusive
-                onChange={(_, v) => {
+                onChange={(_, newType) => {
                   setCloudLogFilters((c) => ({
-                    type: v,
+                    type: newType,
                     timeRange: c.timeRange,
                   }));
+                  if (
+                    ["extension", "webhook", "column", "audit"].includes(
+                      newType
+                    )
+                  ) {
+                    setTimeout(() => {
+                      mutate();
+                    }, 0);
+                  }
                 }}
                 aria-label="Filter by log type"
               >
@@ -169,6 +178,7 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
                       severity: undefined,
                     }));
                   }}
+                  disabled={isValidating}
                 >
                   Reset
                 </Button>
