@@ -52,11 +52,11 @@ function CodeEditor({ type, column, handleChange }: ICodeEditorProps) {
   } else if (column.config?.defaultValue?.dynamicValueFn) {
     dynamicValueFn = column.config?.defaultValue?.dynamicValueFn;
   } else if (column.config?.defaultValue?.script) {
-    dynamicValueFn = `const dynamicValueFn : DefaultValue = async ({row,ref,db,storage,auth})=>{
+    dynamicValueFn = `const dynamicValueFn : DefaultValue = async ({row,ref,db,storage,auth,logging})=>{
     ${column.config?.defaultValue.script}
     }`;
   } else {
-    dynamicValueFn = `const dynamicValueFn : DefaultValue = async ({row,ref,db,storage,auth})=>{
+    dynamicValueFn = `const dynamicValueFn : DefaultValue = async ({row,ref,db,storage,auth,logging})=>{
       // Write your default value code here
       // for example:
       // generate random hex color

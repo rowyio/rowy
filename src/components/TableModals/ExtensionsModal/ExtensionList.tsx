@@ -14,6 +14,7 @@ import {
 import {
   Extension as ExtensionIcon,
   Copy as DuplicateIcon,
+  CloudLogs as LogsIcon,
 } from "@src/assets/icons";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
@@ -21,6 +22,12 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EmptyState from "@src/components/EmptyState";
 import { extensionNames, IExtension } from "./utils";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
+import { useSetAtom } from "jotai";
+import {
+  cloudLogFiltersAtom,
+  tableModalAtom,
+  tableScope,
+} from "@src/atoms/tableScope";
 
 export interface IExtensionListProps {
   extensions: IExtension[];
@@ -37,6 +44,9 @@ export default function ExtensionList({
   handleEdit,
   handleDelete,
 }: IExtensionListProps) {
+  const setModal = useSetAtom(tableModalAtom, tableScope);
+  const setCloudLogFilters = useSetAtom(cloudLogFiltersAtom, tableScope);
+
   if (extensions.length === 0)
     return (
       <EmptyState
@@ -89,6 +99,21 @@ export default function ExtensionList({
                     onClick={() => handleDuplicate(index)}
                   >
                     <DuplicateIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Logs">
+                  <IconButton
+                    aria-label="Logs"
+                    onClick={() => {
+                      setModal("cloudLogs");
+                      setCloudLogFilters({
+                        type: "extension",
+                        timeRange: { type: "days", value: 7 },
+                        extension: [extensionObject.name],
+                      });
+                    }}
+                  >
+                    <LogsIcon />
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Edit">

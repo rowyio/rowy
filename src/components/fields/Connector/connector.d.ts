@@ -15,6 +15,7 @@ type ConnectorContext = {
   auth: firebaseauth.BaseAuth;
   query: string;
   user: ConnectorUser;
+  logging: RowyLogging;
 };
 type ConnectorResult = any[];
 type Connector = (

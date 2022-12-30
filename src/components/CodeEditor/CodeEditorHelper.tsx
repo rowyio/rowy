@@ -38,6 +38,10 @@ export default function CodeEditorHelper({
       key: "rowy",
       description: `rowy provides a set of functions that are commonly used, such as easy file uploads & access to GCP Secret Manager`,
     },
+    {
+      key: "logging",
+      description: `logging.log is encouraged to replace console.log`,
+    },
   ];
 
   return (

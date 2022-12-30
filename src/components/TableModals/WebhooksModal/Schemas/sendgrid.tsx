@@ -13,7 +13,7 @@ export const webhookSendgrid = {
     extraLibs: null,
     template: (
       table: TableSettings
-    ) => `const sendgridParser: Parser = async ({ req, db, ref }) => {
+    ) => `const sendgridParser: Parser = async ({ req, db, ref, logging }) => {
       const { body } = req 
       const eventHandler = async (sgEvent) => {
           // Event handlers can be modiefed to preform different actions based on the sendgrid event
@@ -35,7 +35,7 @@ export const webhookSendgrid = {
     extraLibs: null,
     template: (
       table: TableSettings
-    ) => `const condition: Condition = async({ref,req,db}) => {
+    ) => `const condition: Condition = async({ref, req, db, logging}) => {
       // feel free to add your own code logic here
       return true;
     }`,
