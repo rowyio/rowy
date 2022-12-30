@@ -42,9 +42,14 @@ enum FileType {
   TSV = "text/tab-separated-values",
   JSON = "application/json",
 }
+
 // extract the column names and return the names
-function extractFields(data: JSON): string[] {
-  return _remove(Object.keys(data), (col: string) => col !== "id");
+function extractFields(data: JSON[]): string[] {
+  let columns = new Set<string>();
+  for (let jsonRow of data) {
+    columns = new Set([...columns, ...Object.keys(jsonRow)]);
+  }
+  return _remove([...columns], (col: string) => col !== "id");
 }
 
 function convertJSONToCSV(rawData: string): string | false {
@@ -57,7 +62,7 @@ function convertJSONToCSV(rawData: string): string | false {
   if (rawDataJSONified.length < 1) {
     return false;
   }
-  const fields = extractFields(rawDataJSONified[0]);
+  const fields = extractFields(rawDataJSONified);
   const opts = { fields };
 
   try {
@@ -115,7 +120,7 @@ export default function ImportFromFile() {
     };
   }, [setImportCsv]);
 
-  const parseFile = (rawData: string) => {
+  const parseFile = useCallback((rawData: string) => {
     if (importTypeRef.current === "json") {
       if (!hasProperJsonStructure(rawData)) {
         return setError("Invalid Structure! It must be an Array");
@@ -127,7 +132,7 @@ export default function ImportFromFile() {
       rawData = converted;
     }
     parseCsv(rawData);
-  };
+  }, []);
 
   const parseCsv = useCallback(
     (csvString: string) =>
@@ -145,6 +150,7 @@ export default function ImportFromFile() {
                 {}
               )
             );
+            console.log(mappedRows);
             setImportCsv({
               importType: importTypeRef.current,
               csvData: { columns, rows: mappedRows },
