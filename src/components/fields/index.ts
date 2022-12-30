@@ -42,6 +42,7 @@ import CreatedAt from "./CreatedAt";
 import UpdatedAt from "./UpdatedAt";
 import User from "./User";
 import Id from "./Id";
+import Array from "./Array";
 import { ColumnConfig } from "@src/types/table";
 
 // Export field configs in order for FieldsDropdown
@@ -81,6 +82,7 @@ export const FIELDS: IFieldConfig[] = [
   Json,
   Code,
   Markdown,
+  Array,
   /** CLOUD FUNCTION */
   Action,
   Derivative,
