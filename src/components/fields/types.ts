@@ -113,9 +113,3 @@ export interface IFilterCustomInputProps {
   operator: TableFilter["operator"];
   [key: string]: any;
 }
-
-export interface RowyLogging {
-  log: (payload: any) => void;
-  warn: (payload: any) => void;
-  error: (payload: any) => void;
-}

@@ -15,11 +15,7 @@ type ActionContext = {
   auth: firebaseauth.BaseAuth;
   actionParams: actionParams;
   user: ActionUser;
-  logging: {
-    log: (payload: any) => void;
-    warn: (payload: any) => void;
-    error: (payload: any) => void;
-  };
+  logging: RowyLogging;
 };
 
 type ActionResult = {

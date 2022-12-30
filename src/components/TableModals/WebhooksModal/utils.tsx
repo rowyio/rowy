@@ -35,11 +35,7 @@ export const parserExtraLibs = [
         send: (v:any)=>void;
         sendStatus: (status:number)=>void
       };
-      logging: {
-        log: (payload: any) => void;
-        warn: (payload: any) => void;
-        error: (payload: any) => void;
-      };
+      logging: RowyLogging;
     }
   ) => Promise<any>;`,
 ];
@@ -54,11 +50,7 @@ export const conditionExtraLibs = [
         send: (v:any)=>void
         sendStatus: (status:number)=>void
       };
-      logging: {
-        log: (payload: any) => void;
-        warn: (payload: any) => void;
-        error: (payload: any) => void;
-      };
+      logging: RowyLogging;
     }
   ) => Promise<any>;`,
 ];

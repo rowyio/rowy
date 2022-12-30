@@ -4,10 +4,6 @@ type DefaultValueContext = {
   storage: firebasestorage.Storage;
   db: FirebaseFirestore.Firestore;
   auth: firebaseauth.BaseAuth;
-  logging: {
-    log: (payload: any) => void;
-    warn: (payload: any) => void;
-    error: (payload: any) => void;
-  };
+  logging: RowyLogging;
 };
 type DefaultValue = (context: DefaultValueContext) => "PLACEHOLDER_OUTPUT_TYPE";
