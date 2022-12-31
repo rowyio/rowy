@@ -29,8 +29,7 @@ export default function ColumnSelect({
   showFieldNames,
   ...props
 }: IColumnSelectProps & Omit<MultiSelectProps<string>, "options">) {
-  let [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
-
+  const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
   const options =
     props.options ||
     (filterColumns
