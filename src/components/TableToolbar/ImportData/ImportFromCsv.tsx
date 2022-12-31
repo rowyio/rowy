@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { parse } from "csv-parse/browser/esm";
+import { parse as parseJSON } from "json2csv";
 import { useDropzone } from "react-dropzone";
 import { useDebouncedCallback } from "use-debounce";
 import { useSnackbar } from "notistack";
@@ -28,9 +29,6 @@ import {
 } from "@src/atoms/tableScope";
 import { analytics, logEvent } from "@src/analytics";
 
-import { parse as parseJSON } from "json2csv";
-import { remove as _remove } from "lodash-es";
-
 export enum ImportMethod {
   paste = "paste",
   upload = "upload",
@@ -49,7 +47,8 @@ function extractFields(data: JSON[]): string[] {
   for (let jsonRow of data) {
     columns = new Set([...columns, ...Object.keys(jsonRow)]);
   }
-  return _remove([...columns], (col: string) => col !== "id");
+  columns.delete("id");
+  return [...columns];
 }
 
 function convertJSONToCSV(rawData: string): string | false {
