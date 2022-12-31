@@ -167,7 +167,13 @@ export function useFirestoreDocWithAtom<T = TableRow>(
       // reset the atom’s value to prevent writes
       if (updateDataAtom) setUpdateDataAtom(undefined);
     };
-  }, [memoizedDocRef, updateDataAtom, setUpdateDataAtom]);
+  }, [
+    memoizedDocRef,
+    updateDataAtom,
+    setUpdateDataAtom,
+    enqueueSnackbar,
+    setDataAtom,
+  ]);
 }
 
 export default useFirestoreDocWithAtom;
