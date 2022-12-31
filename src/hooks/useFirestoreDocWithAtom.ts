@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import useMemoValue from "use-memo-value";
 import { useAtom, PrimitiveAtom, useSetAtom } from "jotai";
 import { set } from "lodash-es";
+import { useSnackbar } from "notistack";
+
 import {
   Firestore,
   doc,
@@ -64,6 +66,7 @@ export function useFirestoreDocWithAtom<T = TableRow>(
     dataScope
   );
   const handleError = useErrorHandler();
+  const { enqueueSnackbar } = useSnackbar();
 
   // Create the doc ref and memoize using Firestore’s refEqual
   const memoizedDocRef = useMemoValue(
@@ -145,7 +148,17 @@ export function useFirestoreDocWithAtom<T = TableRow>(
           }
         }
 
-        return setDoc(memoizedDocRef, updateToDb, { merge: true });
+        setDataAtom((prev) => {
+          return {
+            ...prev,
+            ...updateToDb,
+          };
+        });
+        return setDoc(memoizedDocRef, updateToDb, { merge: true }).catch(
+          (e) => {
+            enqueueSnackbar((e as Error).message, { variant: "error" });
+          }
+        );
       });
     }
 
