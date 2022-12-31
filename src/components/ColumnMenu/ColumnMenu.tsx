@@ -20,11 +20,11 @@ import {
   ColumnPlusBefore as ColumnPlusBeforeIcon,
   ColumnPlusAfter as ColumnPlusAfterIcon,
   ColumnRemove as ColumnRemoveIcon,
+  CloudLogs as LogsIcon,
 } from "@src/assets/icons";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import EditIcon from "@mui/icons-material/EditOutlined";
-// import ReorderIcon from "@mui/icons-material/Reorder";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import EvalIcon from "@mui/icons-material/PlayCircleOutline";
 
@@ -51,6 +51,8 @@ import {
   tableFiltersPopoverAtom,
   tableNextPageAtom,
   tableSchemaAtom,
+  cloudLogFiltersAtom,
+  tableModalAtom,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
@@ -107,6 +109,8 @@ export default function ColumnMenu({
   );
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
+  const setModal = useSetAtom(tableModalAtom, tableScope);
+  const setCloudLogFilters = useSetAtom(cloudLogFiltersAtom, tableScope);
   const snackLogContext = useSnackLogContext();
 
   const [altPress] = useAtom(altPressAtom, projectScope);
@@ -314,25 +318,28 @@ export default function ColumnMenu({
       },
       disabled: !isConfigurable,
     },
-    // {
-    //   label: "Re-order",
-    //   icon: <ReorderIcon />,
-    //   onClick: () => alert("REORDER"),
-    // },
-
-    // {
-    //   label: "Hide for everyone",
-    //   activeLabel: "Show",
-    //   icon: <VisibilityOffIcon />,
-    //   activeIcon: <VisibilityIcon />,
-    //   onClick: () => {
-    //     actions.update(column.key, { hidden: !column.hidden });
-    //     handleClose();
-    //   },
-    //   active: column.hidden,
-    //   color: "error" as "error",
-    // },
   ];
+
+  if (
+    column?.config?.defaultValue?.type === "dynamic" ||
+    [FieldType.action, FieldType.derivative, FieldType.connector].includes(
+      column.type
+    )
+  ) {
+    configActions.push({
+      key: "logs",
+      label: altPress ? "Logs" : "Logs…",
+      icon: <LogsIcon />,
+      onClick: () => {
+        setModal("cloudLogs");
+        setCloudLogFilters({
+          type: "column",
+          timeRange: { type: "days", value: 7 },
+          column: [column.key],
+        });
+      },
+    });
+  }
 
   // TODO: Generalize
   const handleEvaluateAll = async () => {

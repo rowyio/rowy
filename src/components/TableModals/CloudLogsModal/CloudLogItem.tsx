@@ -187,22 +187,32 @@ export default function CloudLogItem({
         )}
 
         <Typography variant="inherit" noWrap className="log-preview">
-          {data.payload === "textPayload" && data.textPayload}
-          {get(data, "httpRequest.requestUrl")?.split(".run.app").pop()}
-          {data.payload === "jsonPayload" && (
-            <Typography
-              variant="inherit"
-              color="error"
-              fontWeight="bold"
-              component="span"
-            >
-              {data.jsonPayload.error}{" "}
-            </Typography>
+          {data.logName.endsWith("rowy-logging") && data.jsonPayload.payload ? (
+            <>
+              {typeof data.jsonPayload.payload === "string"
+                ? data.jsonPayload.payload
+                : JSON.stringify(data.jsonPayload.payload)}
+            </>
+          ) : (
+            <>
+              {data.payload === "textPayload" && data.textPayload}
+              {get(data, "httpRequest.requestUrl")?.split(".run.app").pop()}
+              {data.payload === "jsonPayload" && (
+                <Typography
+                  variant="inherit"
+                  color="error"
+                  fontWeight="bold"
+                  component="span"
+                >
+                  {data.jsonPayload.error}{" "}
+                </Typography>
+              )}
+              {data.payload === "jsonPayload" &&
+                stringify(data.jsonPayload.body ?? data.jsonPayload, {
+                  space: 2,
+                })}
+            </>
           )}
-          {data.payload === "jsonPayload" &&
-            stringify(data.jsonPayload.body ?? data.jsonPayload, {
-              space: 2,
-            })}
         </Typography>
       </AccordionSummary>
 

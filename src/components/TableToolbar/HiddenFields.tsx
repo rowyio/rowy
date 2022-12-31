@@ -29,6 +29,7 @@ import {
   projectScope,
   userSettingsAtom,
   updateUserSettingsAtom,
+  userRolesAtom,
 } from "@src/atoms/projectScope";
 import {
   tableScope,
@@ -41,6 +42,9 @@ export default function HiddenFields() {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const [userSettings] = useAtom(userSettingsAtom, projectScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
+  const canEditColumns =
+    userRoles.includes("ADMIN") || userRoles.includes("OPS");
   const [tableId] = useAtom(tableIdAtom, tableScope);
 
   const [open, setOpen] = useState(false);
@@ -76,7 +80,7 @@ export default function HiddenFields() {
     setOpen(false);
   };
 
-  // disable drag if search box is not empty
+  // disable drag if search box is not empty and user does not have permission
   const [disableDrag, setDisableDrag] = useState<boolean>(false);
   const renderOption: AutocompleteProps<
     any,
@@ -92,7 +96,7 @@ export default function HiddenFields() {
       <Draggable
         draggableId={option.value}
         index={option.index}
-        isDragDisabled={disableDrag}
+        isDragDisabled={disableDrag || !canEditColumns}
       >
         {(provided) => (
           <li {...props} ref={provided.innerRef} {...provided.draggableProps}>
@@ -106,7 +110,9 @@ export default function HiddenFields() {
                   {
                     marginRight: "6px",
                     opacity: (theme) =>
-                      disableDrag ? theme.palette.action.disabledOpacity : 1,
+                      disableDrag || !canEditColumns
+                        ? theme.palette.action.disabledOpacity
+                        : 1,
                   },
                 ]}
               />
@@ -159,7 +165,8 @@ export default function HiddenFields() {
 
   // updates column on drag end
   function handleOnDragEnd(result: DropResult) {
-    if (!result.destination) return;
+    if (!result.destination || result.destination.index === result.source.index)
+      return;
     updateColumn({
       key: result.draggableId,
       config: {},
@@ -169,7 +176,7 @@ export default function HiddenFields() {
 
   // checks whether to disable reordering when search filter is applied
   function checkToDisableDrag(e: ChangeEvent<HTMLInputElement>) {
-    setDisableDrag(e.target.value !== "");
+    setDisableDrag(e.target.value !== "" || !canEditColumns);
   }
 
   const ListboxComponent = forwardRef(function ListboxComponent(
@@ -205,7 +212,9 @@ export default function HiddenFields() {
     <>
       <ButtonWithStatus
         startIcon={<VisibilityOffIcon />}
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => {
+          setOpen((o) => !o);
+        }}
         active={hiddenFields.length > 0}
         ref={buttonRef}
       >

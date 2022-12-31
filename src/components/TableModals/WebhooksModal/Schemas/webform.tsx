@@ -14,7 +14,7 @@ export const webhook = {
     extraLibs: null,
     template: (
       table: TableSettings
-    ) => `const formParser: Parser = async({req, db,ref}) => {
+    ) => `const formParser: Parser = async({req, db, ref, logging}) => {
       // request is the request object from the webhook
       // db is the database object
       // ref is the reference to collection of the table
@@ -45,7 +45,7 @@ export const webhook = {
     extraLibs: null,
     template: (
       table: TableSettings
-    ) => `const condition: Condition = async({ref,req,db}) => {
+    ) => `const condition: Condition = async({ref, req, db, logging}) => {
       // feel free to add your own code logic here
       return true;
     }`,

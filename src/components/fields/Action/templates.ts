@@ -1,4 +1,4 @@
-export const RUN_ACTION_TEMPLATE = `const action:Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
+export const RUN_ACTION_TEMPLATE = `const action:Action = async ({row,ref,db,storage,auth,actionParams,user,logging}) => {
     // Write your action code here
     // for example:
     // const authToken = await rowy.secrets.get("service")
@@ -26,7 +26,7 @@ export const RUN_ACTION_TEMPLATE = `const action:Action = async ({row,ref,db,sto
     // checkout the documentation for more info: https://docs.rowy.io/field-types/action#script
   }`;
 
-export const UNDO_ACTION_TEMPLATE = `const action : Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
+export const UNDO_ACTION_TEMPLATE = `const action : Action = async ({row,ref,db,storage,auth,actionParams,user,logging}) => {
     // Write your undo code here
     // for example:
     // const authToken = await rowy.secrets.get("service")

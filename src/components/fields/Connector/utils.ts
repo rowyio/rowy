@@ -11,7 +11,7 @@ export const replacer = (data: any) => (m: string, key: string) => {
   return get(data, objKey, defaultValue);
 };
 
-export const baseFunction = `const connectorFn: Connector = async ({query, row, user}) => {
+export const baseFunction = `const connectorFn: Connector = async ({query, row, user, logging}) => {
   // TODO: Implement your service function here
   return [];
 };`;
