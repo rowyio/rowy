@@ -26,6 +26,7 @@ export const cloudLogFetcher = (
   switch (cloudLogFilters.type) {
     case "extension":
       logQuery.push(`logName = "projects/${projectId}/logs/rowy-logging"`);
+      logQuery.push(`jsonPayload.tablePath : "${tablePath}"`);
       if (cloudLogFilters?.extension?.length) {
         logQuery.push(
           cloudLogFilters.extension
@@ -40,6 +41,7 @@ export const cloudLogFetcher = (
       break;
 
     case "webhook":
+      logQuery.push(`jsonPayload.tablePath : "${tablePath}"`);
       if (cloudLogFilters?.webhook?.length) {
         logQuery.push(
           cloudLogFilters.webhook
@@ -52,6 +54,7 @@ export const cloudLogFetcher = (
       break;
 
     case "column":
+      logQuery.push(`jsonPayload.tablePath : "${tablePath}"`);
       if (cloudLogFilters?.column?.length) {
         logQuery.push(
           cloudLogFilters.column
