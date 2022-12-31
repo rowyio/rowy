@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { parse } from "csv-parse/browser/esm";
+import { parse as parseJSON } from "json2csv";
 import { useDropzone } from "react-dropzone";
 import { useDebouncedCallback } from "use-debounce";
 import { useSnackbar } from "notistack";
@@ -34,7 +35,70 @@ export enum ImportMethod {
   url = "url",
 }
 
-export default function ImportFromCsv() {
+enum FileType {
+  CSV = "text/csv",
+  TSV = "text/tab-separated-values",
+  JSON = "application/json",
+}
+
+// extract the column names and return the names
+function extractFields(data: JSON[]): string[] {
+  let columns = new Set<string>();
+  for (let jsonRow of data) {
+    columns = new Set([...columns, ...Object.keys(jsonRow)]);
+  }
+  columns.delete("id");
+  return [...columns];
+}
+
+function convertJSONToCSV(rawData: string): string | false {
+  let rawDataJSONified: JSON[];
+  try {
+    rawDataJSONified = JSON.parse(rawData);
+  } catch (e) {
+    return false;
+  }
+  if (rawDataJSONified.length < 1) {
+    return false;
+  }
+  const fields = extractFields(rawDataJSONified);
+  const opts = { fields };
+
+  try {
+    const csv = parseJSON(rawDataJSONified, opts);
+    return csv;
+  } catch (err) {
+    return false;
+  }
+}
+
+function hasProperJsonStructure(raw: string) {
+  try {
+    raw = JSON.parse(raw);
+    const type = Object.prototype.toString.call(raw);
+    // we don't want '[object Object]'
+    return type === "[object Array]";
+  } catch (err) {
+    return false;
+  }
+}
+
+function checkIsJson(raw: string): boolean {
+  raw = typeof raw !== "string" ? JSON.stringify(raw) : raw;
+
+  try {
+    raw = JSON.parse(raw);
+  } catch (e) {
+    return false;
+  }
+
+  if (typeof raw === "object" && raw !== null) {
+    return true;
+  }
+  return false;
+}
+
+export default function ImportFromFile() {
   const [{ importType: importTypeCsv, csvData }, setImportCsv] = useAtom(
     importCsvAtom,
     tableScope
@@ -55,6 +119,20 @@ export default function ImportFromCsv() {
     };
   }, [setImportCsv]);
 
+  const parseFile = useCallback((rawData: string) => {
+    if (importTypeRef.current === "json") {
+      if (!hasProperJsonStructure(rawData)) {
+        return setError("Invalid Structure! It must be an Array");
+      }
+      const converted = convertJSONToCSV(rawData);
+      if (!converted) {
+        return setError("No columns detected");
+      }
+      rawData = converted;
+    }
+    parseCsv(rawData);
+  }, []);
+
   const parseCsv = useCallback(
     (csvString: string) =>
       parse(csvString, { delimiter: [",", "\t"] }, (err, rows) => {
@@ -71,6 +149,7 @@ export default function ImportFromCsv() {
                 {}
               )
             );
+            console.log(mappedRows);
             setImportCsv({
               importType: importTypeRef.current,
               csvData: { columns, rows: mappedRows },
@@ -86,13 +165,17 @@ export default function ImportFromCsv() {
     async (acceptedFiles: File[]) => {
       try {
         const file = acceptedFiles[0];
-        const reader = new FileReader();
-        reader.onload = (event: any) => parseCsv(event.target.result);
-        reader.readAsText(file);
         importTypeRef.current =
-          file.type === "text/tab-separated-values" ? "tsv" : "csv";
+          file.type === FileType.TSV
+            ? "tsv"
+            : file.type === FileType.JSON
+            ? "json"
+            : "csv";
+        const reader = new FileReader();
+        reader.onload = (event: any) => parseFile(event.target.result);
+        reader.readAsText(file);
       } catch (error) {
-        enqueueSnackbar(`Please import a .tsv or .csv file`, {
+        enqueueSnackbar(`Please import a .tsv or .csv or .json file`, {
           variant: "error",
           anchorOrigin: {
             vertical: "top",
@@ -107,10 +190,14 @@ export default function ImportFromCsv() {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
-    accept: ["text/csv", "text/tab-separated-values"],
+    accept: [FileType.CSV, FileType.TSV, FileType.JSON],
   });
 
   function setDataTypeRef(data: string) {
+    if (checkIsJson(data)) {
+      return (importTypeRef.current = "json");
+    }
+
     const getFirstLine = data?.match(/^(.*)/)?.[0];
     /*
      *  Catching edge case with regex
@@ -128,8 +215,8 @@ export default function ImportFromCsv() {
       : (importTypeRef.current = "csv");
   }
   const handlePaste = useDebouncedCallback((value: string) => {
-    parseCsv(value);
     setDataTypeRef(value);
+    parseFile(value);
   }, 1000);
 
   const handleUrl = useDebouncedCallback((value: string) => {
@@ -138,8 +225,8 @@ export default function ImportFromCsv() {
     fetch(value, { mode: "no-cors" })
       .then((res) => res.text())
       .then((data) => {
-        parseCsv(data);
         setDataTypeRef(data);
+        parseFile(data);
         setLoading(false);
       })
       .catch((e) => {
@@ -217,7 +304,7 @@ export default function ImportFromCsv() {
             <input {...getInputProps()} />
             {isDragActive ? (
               <Typography variant="button" color="primary">
-                Drop CSV or TSV file here…
+                Drop CSV or TSV or JSON file here…
               </Typography>
             ) : (
               <>
@@ -227,8 +314,8 @@ export default function ImportFromCsv() {
                 <Grid item>
                   <Typography variant="button" color="inherit">
                     {validCsv
-                      ? "Valid CSV or TSV"
-                      : "Click to upload or drop CSV or TSV file here"}
+                      ? "Valid CSV or TSV or JSON"
+                      : "Click to upload or drop CSV or TSV or JSON file here"}
                   </Typography>
                 </Grid>
               </>
@@ -249,7 +336,7 @@ export default function ImportFromCsv() {
             inputProps={{ minRows: 3 }}
             autoFocus
             fullWidth
-            label="Paste CSV or TSV text"
+            label="Paste CSV or TSV or JSON text"
             placeholder="column, column, …"
             onChange={(e) => {
               if (csvData !== null)
@@ -279,7 +366,7 @@ export default function ImportFromCsv() {
             variant="filled"
             autoFocus
             fullWidth
-            label="Paste URL to CSV or TSV file"
+            label="Paste URL to CSV or TSV or JSON file"
             placeholder="https://"
             onChange={(e) => {
               if (csvData !== null)

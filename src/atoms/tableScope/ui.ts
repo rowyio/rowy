@@ -109,7 +109,7 @@ export type ImportAirtableData = { records: Record<string, any>[] };
 
 /** Store import CSV popover and wizard state */
 export const importCsvAtom = atom<{
-  importType: "csv" | "tsv";
+  importType: "csv" | "tsv" | "json";
   csvData: ImportCsvData | null;
 }>({ importType: "csv", csvData: null });
 
