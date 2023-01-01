@@ -14,6 +14,8 @@ import {
   Button,
   Box,
   CircularProgress,
+  Alert,
+  Link,
 } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { CloudLogs as LogsIcon } from "@src/assets/icons";
@@ -45,6 +47,7 @@ import {
 } from "@src/atoms/tableScope";
 import { cloudLogFetcher } from "./utils";
 import { FieldType } from "@src/constants/fields";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 export default function CloudLogsModal({ onClose }: ITableModalProps) {
   const [projectId] = useAtom(projectIdAtom, projectScope);
@@ -164,7 +167,6 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
             )}
 
             <div style={{ flexGrow: 1 }} />
-
             {cloudLogFilters.type !== "build" && (
               <>
                 <Typography
@@ -474,6 +476,24 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
               />
             </Stack>
           ) : null}
+          {["extension", "webhook", "column"].includes(
+            cloudLogFilters.type
+          ) && (
+            <Alert severity="info">
+              Remember to use <code>logging</code> functions,{" "}
+              <code>log,warning,error</code> for them to appear in the logs
+              bellow{" "}
+              <Link
+                component="a"
+                color="inherit"
+                target="_blank"
+                rel="noopener noreferrer"
+                href={WIKI_LINKS.cloudLogs}
+              >
+                Learn more
+              </Link>
+            </Alert>
+          )}
           <Box
             sx={{
               overflowY: "scroll",
