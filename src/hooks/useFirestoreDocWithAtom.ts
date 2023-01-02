@@ -148,12 +148,6 @@ export function useFirestoreDocWithAtom<T = TableRow>(
           }
         }
 
-        setDataAtom((prev) => {
-          return {
-            ...prev,
-            ...updateToDb,
-          };
-        });
         return setDoc(memoizedDocRef, updateToDb, { merge: true }).catch(
           (e) => {
             enqueueSnackbar((e as Error).message, { variant: "error" });
@@ -167,13 +161,7 @@ export function useFirestoreDocWithAtom<T = TableRow>(
       // reset the atom’s value to prevent writes
       if (updateDataAtom) setUpdateDataAtom(undefined);
     };
-  }, [
-    memoizedDocRef,
-    updateDataAtom,
-    setUpdateDataAtom,
-    enqueueSnackbar,
-    setDataAtom,
-  ]);
+  }, [memoizedDocRef, updateDataAtom, setUpdateDataAtom, enqueueSnackbar]);
 }
 
 export default useFirestoreDocWithAtom;

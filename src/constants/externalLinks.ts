@@ -67,6 +67,7 @@ const WIKI_PATHS = {
   importAirtable: "/import-export-data/import-airtable",
   importAirtableApiKey: "/import-export-data/import-airtable#api-key",
   importAirtableTableUrl: "/import-export-data/import-airtable#table-url",
+  cloudLogs: "/cloud-logs",
 };
 export const WIKI_LINKS = mapValues(
   WIKI_PATHS,
