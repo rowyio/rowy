@@ -19,6 +19,7 @@ import { useErrorHandler } from "react-error-boundary";
 import { projectScope } from "@src/atoms/projectScope";
 import { UpdateDocFunction, TableRow } from "@src/types/table";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
+import { useUpdateAtom } from "jotai/utils";
 
 /** Options for {@link useFirestoreDocWithAtom} */
 interface IUseFirestoreDocWithAtomOptions<T> {
@@ -60,7 +61,7 @@ export function useFirestoreDocWithAtom<T = TableRow>(
   } = options || {};
 
   const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
-  const setDataAtom = useSetAtom(dataAtom, dataScope);
+  const setDataAtom = useUpdateAtom(dataAtom, dataScope);
   const setUpdateDataAtom = useSetAtom(
     options?.updateDataAtom || (dataAtom as any),
     dataScope
@@ -148,6 +149,13 @@ export function useFirestoreDocWithAtom<T = TableRow>(
           }
         }
 
+        // using `setDataAtom` here we are quickly changing state to instantly update the UI
+        // after that on actual update `setDataAtom` called once again with the final data
+        // the fix is mainly to fix the flicker effect on column reordering
+        setDataAtom((prev) => {
+          return { ...prev, ...updateToDb };
+        });
+
         return setDoc(memoizedDocRef, updateToDb, { merge: true }).catch(
           (e) => {
             enqueueSnackbar((e as Error).message, { variant: "error" });
@@ -161,7 +169,13 @@ export function useFirestoreDocWithAtom<T = TableRow>(
       // reset the atom’s value to prevent writes
       if (updateDataAtom) setUpdateDataAtom(undefined);
     };
-  }, [memoizedDocRef, updateDataAtom, setUpdateDataAtom, enqueueSnackbar]);
+  }, [
+    memoizedDocRef,
+    updateDataAtom,
+    setUpdateDataAtom,
+    enqueueSnackbar,
+    setDataAtom,
+  ]);
 }
 
 export default useFirestoreDocWithAtom;
