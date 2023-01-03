@@ -181,14 +181,13 @@ export const tableRowsAtom = atom<TableRow[]>((get) => {
       rowsDbMap.delete(row._rowy_ref.path);
       return merged;
     }
-
     return row;
   });
 
   // Merge the two arrays
   return [
     ...rowsLocalToMerge,
-    ...rowsDb.filter((row) => rowsDbMap.get(row._rowy_ref.path)),
+    ...rowsDb.filter((row) => rowsDbMap.has(row._rowy_ref.path)),
   ];
 });
 
