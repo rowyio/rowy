@@ -32,6 +32,7 @@ const SUPPORTED_TYPES = new Set([
   FieldType.phone,
   FieldType.richText,
   FieldType.url,
+  FieldType.json,
 ]);
 
 export function useMenuAction(
