@@ -97,7 +97,15 @@ export function useMenuAction(
   const handlePaste = useCallback(async () => {
     try {
       if (!selectedCell || !selectedCol) return;
-      const text = await navigator.clipboard.readText();
+      let text;
+      try {
+        text = await navigator.clipboard.readText();
+      } catch (e) {
+        enqueueSnackbar(`Read clilboard permission denied.`, {
+          variant: "error",
+        });
+        return;
+      }
       const cellDataType = getFieldProp("dataType", getFieldType(selectedCol));
       let parsed;
       switch (cellDataType) {
@@ -118,7 +126,10 @@ export function useMenuAction(
         value: parsed,
       });
     } catch (error) {
-      enqueueSnackbar(`Failed to paste: ${error}`, { variant: "error" });
+      enqueueSnackbar(
+        `${selectedCol?.type} field does not support the data type being pasted`,
+        { variant: "error" }
+      );
     }
     if (handleClose) handleClose();
   }, [selectedCell, selectedCol, updateField, enqueueSnackbar, handleClose]);
@@ -141,9 +152,12 @@ export function useMenuAction(
       if (enableAction) {
         return func();
       } else {
-        enqueueSnackbar(`Simple copy not supported with this type.`, {
-          variant: "info",
-        });
+        enqueueSnackbar(
+          `${selectedCol?.type} field cannot be copied using keyboard shortcut`,
+          {
+            variant: "info",
+          }
+        );
       }
     };
   };
