@@ -35,6 +35,7 @@ import { getFieldType, getFieldProp } from "@src/components/fields";
 import { useKeyboardNavigation } from "./useKeyboardNavigation";
 import { useSaveColumnSizing } from "./useSaveColumnSizing";
 import type { TableRow, ColumnConfig } from "@src/types/table";
+import { TableKbShortcutProvider } from "@src/contexts/TableKbShortcutContext";
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
@@ -267,15 +268,17 @@ export default function Table({
         {tableRows.length === 0 ? (
           emptyState ?? <EmptyState sx={{ py: 8 }} />
         ) : (
-          <TableBody
-            containerEl={containerEl}
-            containerRef={containerRef}
-            leafColumns={leafColumns}
-            rows={rows}
-            canEditCells={canEditCells}
-            lastFrozen={lastFrozen}
-            columnSizing={columnSizing}
-          />
+          <TableKbShortcutProvider>
+            <TableBody
+              containerEl={containerEl}
+              containerRef={containerRef}
+              leafColumns={leafColumns}
+              rows={rows}
+              canEditCells={canEditCells}
+              lastFrozen={lastFrozen}
+              columnSizing={columnSizing}
+            />
+          </TableKbShortcutProvider>
         )}
       </StyledTable>
 
