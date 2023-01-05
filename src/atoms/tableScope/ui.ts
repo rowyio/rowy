@@ -109,7 +109,7 @@ export type ImportAirtableData = { records: Record<string, any>[] };
 
 /** Store import CSV popover and wizard state */
 export const importCsvAtom = atom<{
-  importType: "csv" | "tsv";
+  importType: "csv" | "tsv" | "json";
   csvData: ImportCsvData | null;
 }>({ importType: "csv", csvData: null });
 
@@ -142,14 +142,26 @@ export const selectedCellAtom = atom<SelectedCell | null>(null);
 export const contextMenuTargetAtom = atom<HTMLElement | null>(null);
 
 export type CloudLogFilters = {
-  type: "webhook" | "functions" | "audit" | "build";
+  type: "extension" | "webhook" | "column" | "audit" | "build" | "functions";
   timeRange:
     | { type: "seconds" | "minutes" | "hours" | "days"; value: number }
     | { type: "range"; start: Date; end: Date };
   severity?: Array<keyof typeof SEVERITY_LEVELS>;
   webhook?: string[];
+  extension?: string[];
+  column?: string[];
   auditRowId?: string;
   buildLogExpanded?: number;
+  functionType?: (
+    | "connector"
+    | "derivative-script"
+    | "action"
+    | "derivative-function"
+    | "extension"
+    | "defaultValue"
+    | "hooks"
+  )[];
+  loggingSource?: ("backend-scripts" | "backend-function" | "hooks")[];
 };
 /** Store cloud log modal filters in URL */
 export const cloudLogFiltersAtom = atomWithHash<CloudLogFilters>(

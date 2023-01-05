@@ -22,6 +22,12 @@ export const SEVERITY_LEVELS = {
   EMERGENCY: "One or more systems are unusable.",
 };
 
+export const SEVERITY_LEVELS_ROWY = {
+  DEFAULT: "The log entry has no assigned severity level.",
+  WARNING: "Warning events might cause problems.",
+  ERROR: "Error events are likely to cause problems.",
+};
+
 export interface ICloudLogSeverityIconProps extends SvgIconProps {
   severity: keyof typeof SEVERITY_LEVELS;
 }

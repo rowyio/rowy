@@ -21,17 +21,33 @@ const requestType = [
 
 export const parserExtraLibs = [
   requestType,
-  `type Parser = (args:{req:WebHookRequest,db: FirebaseFirestore.Firestore,ref: FirebaseFirestore.CollectionReference,res:{
-    send:(v:any)=>void
-    sendStatus:(status:number)=>void
-  }}) => Promise<any>;`,
+  `type Parser = (
+    args: {
+      req: WebHookRequest;
+      db: FirebaseFirestore.Firestore;
+      ref: FirebaseFirestore.CollectionReference;
+      res: {
+        send: (v:any)=>void;
+        sendStatus: (status:number)=>void
+      };
+      logging: RowyLogging;
+    }
+  ) => Promise<any>;`,
 ];
 export const conditionExtraLibs = [
   requestType,
-  `type Condition = (args:{req:WebHookRequest,db: FirebaseFirestore.Firestore,ref: FirebaseFirestore.CollectionReference,res:{
-    send:(v:any)=>void
-    sendStatus:(status:number)=>void
-  }}) => Promise<any>;`,
+  `type Condition = (
+    args: {
+      req: WebHookRequest;
+      db: FirebaseFirestore.Firestore;
+      ref: FirebaseFirestore.CollectionReference;
+      res: {
+        send: (v:any)=>void;
+        sendStatus: (status:number)=>void;
+      };
+      logging: RowyLogging;
+    }
+  ) => Promise<any>;`,
 ];
 
 const additionalVariables = [
@@ -48,30 +64,29 @@ export const webhookBasic = {
     extraLibs: parserExtraLibs,
     template: (
       table: TableSettings
-    ) => `const basicParser: Parser = async({req, db,ref}) => {
-      // request is the request object from the webhook
-      // db is the database object
-      // ref is the reference to collection of the table
-      // the returned object will be added as a new row to the table
-      // eg: adding the webhook body as row
-      const {body} = req;
-      ${
-        table.audit !== false
-          ? `
-      // auditField
-      const ${
-        table.auditFieldCreatedBy ?? "_createdBy"
-      } = await rowy.metadata.serviceAccountUser()
-      return {
-        ...body,
-        ${table.auditFieldCreatedBy ?? "_createdBy"}
-      }
-      `
-          : `
-      return body;
-      `
-      }
-      
+    ) => `const basicParser: Parser = async({req, db, ref, logging}) => {
+    // request is the request object from the webhook
+    // db is the database object
+    // ref is the reference to collection of the table
+    // the returned object will be added as a new row to the table
+    // eg: adding the webhook body as row
+    const {body} = req;
+    ${
+      table.audit !== false
+        ? `
+    // auditField
+    const ${
+      table.auditFieldCreatedBy ?? "_createdBy"
+    } = await rowy.metadata.serviceAccountUser()
+    return {
+      ...body,
+      ${table.auditFieldCreatedBy ?? "_createdBy"}
+    }
+    `
+        : `
+    return body;
+    `
+    }
   }`,
   },
   condition: {
@@ -79,7 +94,7 @@ export const webhookBasic = {
     extraLibs: conditionExtraLibs,
     template: (
       table: TableSettings
-    ) => `const condition: Condition = async({ref,req,db}) => {
+    ) => `const condition: Condition = async({ref, req, db, logging}) => {
       // feel free to add your own code logic here
       return true;
     }`,

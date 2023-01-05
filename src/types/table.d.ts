@@ -75,6 +75,7 @@ export type TableSettings = {
   description?: string;
   details?: string;
   thumbnailURL?: string;
+  modifiableBy?: string[];
 
   _createdBy?: {
     displayName?: string;

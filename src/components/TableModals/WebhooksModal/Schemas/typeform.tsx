@@ -13,7 +13,7 @@ export const webhookTypeform = {
     extraLibs: null,
     template: (
       table: TableSettings
-    ) => `const typeformParser: Parser = async({req, db,ref}) =>{
+    ) => `const typeformParser: Parser = async({req, db, ref, logging}) =>{
       // this reduces the form submission into a single object of key value pairs
       // eg: {name: "John", age: 20}
       // ⚠️ ensure that you have assigned ref values of the fields
@@ -73,7 +73,7 @@ export const webhookTypeform = {
     extraLibs: null,
     template: (
       table: TableSettings
-    ) => `const condition: Condition = async({ref,req,db}) => {
+    ) => `const condition: Condition = async({ref, req, db, logging}) => {
       // feel free to add your own code logic here
       return true;
     }`,

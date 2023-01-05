@@ -61,7 +61,7 @@ export interface IRuntimeOptions {
 export const triggerTypes: ExtensionTrigger[] = ["create", "update", "delete"];
 
 const extensionBodyTemplate = {
-  task: `const extensionBody: TaskBody = async({row, db, change, ref}) => {
+  task: `const extensionBody: TaskBody = async({row, db, change, ref, logging}) => {
   // task extensions are very flexible you can do anything from updating other documents in your database, to making an api request to 3rd party service.
   
   // example:
@@ -87,7 +87,7 @@ const extensionBodyTemplate = {
       })
   */
 }`,
-  docSync: `const extensionBody: DocSyncBody = async({row, db, change, ref}) => {
+  docSync: `const extensionBody: DocSyncBody = async({row, db, change, ref, logging}) => {
   // feel free to add your own code logic here
 
   return ({
@@ -96,7 +96,7 @@ const extensionBodyTemplate = {
     targetPath: "",  // fill in the path here
   })
 }`,
-  historySnapshot: `const extensionBody: HistorySnapshotBody = async({row, db, change, ref}) => {
+  historySnapshot: `const extensionBody: HistorySnapshotBody = async({row, db, change, ref, logging}) => {
   // feel free to add your own code logic here
   
   return ({
@@ -104,7 +104,7 @@ const extensionBodyTemplate = {
     collectionId: "historySnapshots",    // optionally change the sub-collection id of where the history snapshots are stored
   })
 }`,
-  algoliaIndex: `const extensionBody: AlgoliaIndexBody = async({row, db, change, ref}) => {
+  algoliaIndex: `const extensionBody: AlgoliaIndexBody = async({row, db, change, ref, logging}) => {
   // feel free to add your own code logic here
   
   return ({
@@ -114,7 +114,7 @@ const extensionBodyTemplate = {
     objectID: ref.id,    // algolia object ID, ref.id is one possible choice
   })
 }`,
-  meiliIndex: `const extensionBody: MeiliIndexBody = async({row, db, change, ref}) => {
+  meiliIndex: `const extensionBody: MeiliIndexBody = async({row, db, change, ref, logging}) => {
   // feel free to add your own code logic here
 
   return({
@@ -124,7 +124,7 @@ const extensionBodyTemplate = {
     objectID: ref.id,    // algolia object ID, ref.id is one possible choice
   })
 }`,
-  bigqueryIndex: `const extensionBody: BigqueryIndexBody = async({row, db, change, ref}) => {
+  bigqueryIndex: `const extensionBody: BigqueryIndexBody = async({row, db, change, ref, logging}) => {
   // feel free to add your own code logic here
 
   return ({
@@ -134,7 +134,7 @@ const extensionBodyTemplate = {
     objectID: ref.id,    // algolia object ID, ref.id is one possible choice
   })
 }`,
-  slackMessage: `const extensionBody: SlackMessageBody = async({row, db, change, ref}) => {
+  slackMessage: `const extensionBody: SlackMessageBody = async({row, db, change, ref, logging}) => {
   // feel free to add your own code logic here
   
   return ({
@@ -144,7 +144,7 @@ const extensionBodyTemplate = {
     attachments: [],    // the attachments parameter to pass in to slack api
   })
 }`,
-  sendgridEmail: `const extensionBody: SendgridEmailBody = async({row, db, change, ref}) => {
+  sendgridEmail: `const extensionBody: SendgridEmailBody = async({row, db, change, ref, logging}) => {
   // feel free to add your own code logic here
   
   return ({
@@ -164,7 +164,7 @@ const extensionBodyTemplate = {
     },
   })
 }`,
-  apiCall: `const extensionBody: ApiCallBody = async({row, db, change, ref}) => {
+  apiCall: `const extensionBody: ApiCallBody = async({row, db, change, ref, logging}) => {
   // feel free to add your own code logic here
   
   return ({
@@ -174,7 +174,7 @@ const extensionBodyTemplate = {
     callback: ()=>{},
   })
 }`,
-  twilioMessage: `const extensionBody: TwilioMessageBody = async({row, db, change, ref}) => {
+  twilioMessage: `const extensionBody: TwilioMessageBody = async({row, db, change, ref, logging}) => {
  /** 
    * 
    * Setup twilio secret key: https://docs.rowy.io/extensions/twilio-message#secret-manager-setup
@@ -190,7 +190,7 @@ const extensionBodyTemplate = {
     body: "Hi there!" // message text
   })
 }`,
-  pushNotification: `const extensionBody: PushNotificationBody = async({row, db, change, ref}) => {
+  pushNotification: `const extensionBody: PushNotificationBody = async({row, db, change, ref, logging}) => {
   // you can FCM token from the row or from the user document in the database
   // const FCMtoken = row.FCMtoken
   // or push through topic  
@@ -232,19 +232,20 @@ export function emptyExtensionObject(
 ): IExtension {
   return {
     name: `${type} extension`,
-    active: false,
+    active: true,
     triggers: [],
     type,
     extensionBody: extensionBodyTemplate[type] ?? extensionBodyTemplate["task"],
     requiredFields: [],
     trackedFields: [],
-    conditions: `const condition: Condition = async({row, change}) => {
+    conditions: `const condition: Condition = async({row, change, logging}) => {
   // feel free to add your own code logic here
   return true;
 }`,
     lastEditor: user,
   };
 }
+
 export function sparkToExtensionObjects(
   sparkConfig: string,
   user: IExtensionEditor
