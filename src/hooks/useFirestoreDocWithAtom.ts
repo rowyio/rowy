@@ -19,7 +19,6 @@ import { useErrorHandler } from "react-error-boundary";
 import { projectScope } from "@src/atoms/projectScope";
 import { UpdateDocFunction, TableRow } from "@src/types/table";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
-import { useUpdateAtom } from "jotai/utils";
 
 /** Options for {@link useFirestoreDocWithAtom} */
 interface IUseFirestoreDocWithAtomOptions<T> {
