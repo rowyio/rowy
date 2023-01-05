@@ -61,7 +61,7 @@ export function useFirestoreDocWithAtom<T = TableRow>(
   } = options || {};
 
   const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
-  const setDataAtom = useUpdateAtom(dataAtom, dataScope);
+  const setDataAtom = useSetAtom(dataAtom, dataScope);
   const setUpdateDataAtom = useSetAtom(
     options?.updateDataAtom || (dataAtom as any),
     dataScope
@@ -152,9 +152,11 @@ export function useFirestoreDocWithAtom<T = TableRow>(
         // using `setDataAtom` here we are quickly changing state to instantly update the UI
         // after that on actual update `setDataAtom` called once again with the final data
         // the fix is mainly to fix the flicker effect on column reordering
-        setDataAtom((prev) => {
-          return { ...prev, ...updateToDb };
-        });
+        if (disableSuspense) {
+          setDataAtom((prev) => {
+            return { ...prev, ...updateToDb };
+          });
+        }
 
         return setDoc(memoizedDocRef, updateToDb, { merge: true }).catch(
           (e) => {
@@ -175,6 +177,7 @@ export function useFirestoreDocWithAtom<T = TableRow>(
     setUpdateDataAtom,
     enqueueSnackbar,
     setDataAtom,
+    disableSuspense,
   ]);
 }
 
