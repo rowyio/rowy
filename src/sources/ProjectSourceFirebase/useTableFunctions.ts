@@ -84,7 +84,7 @@ export function useTableFunctions() {
             if (
               checked &&
               // Make sure we don’t have
-              !Object.values(columns).some((column) => column.type === type)
+              !Object.values(columns)?.some((column) => column.type === type)
             )
               columns["_" + camelCase(type)] = {
                 type,

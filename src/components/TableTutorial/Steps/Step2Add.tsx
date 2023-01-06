@@ -44,7 +44,7 @@ function StepComponent({ setComplete }: ITableTutorialStepComponentProps) {
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
   useEffect(() => {
     if (
-      tableColumnsOrdered.some(
+      tableColumnsOrdered?.some(
         (c) =>
           c.type === FieldType.rating && c.name.toLowerCase().includes("rating")
       )

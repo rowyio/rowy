@@ -48,7 +48,7 @@ export const tablesAtom = atom<TableSettings[]>((get) => {
   return sortBy(tables, "name")
     .filter((table) =>
       userRoles.includes("ADMIN") || Array.isArray(table.roles)
-        ? table.roles.some((role) => userRoles.includes(role))
+        ? table.roles?.some((role) => userRoles.includes(role))
         : false
     )
     .map((table) => ({
