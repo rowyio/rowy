@@ -1,5 +1,5 @@
 import { lazy, Suspense, createElement, useState } from "react";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -17,6 +17,7 @@ import {
   projectScope,
   compatibleRowyRunVersionAtom,
   projectSettingsAtom,
+  rowyRunModalAtom,
 } from "@src/atoms/projectScope";
 import { ColumnConfig } from "@src/types/table";
 
@@ -93,6 +94,7 @@ export default function DefaultValueInput({
   column,
 }: IDefaultValueInputProps) {
   const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, projectScope);
 
   const _type =
     column.type !== FieldType.derivative
@@ -152,9 +154,23 @@ export default function DefaultValueInput({
                 "Dynamic"
               ) : (
                 <>
-                  Dynamic —{" "}
+                  Dynamic{" "}
                   <Typography color="error" variant="inherit" component="span">
-                    Requires Rowy Run setup
+                    Requires
+                    <span
+                      style={{
+                        marginLeft: "3px",
+                        cursor: "pointer",
+                        pointerEvents: "all",
+                        textDecoration: "underline",
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openRowyRunModal({ feature: "Dynamic Default Value" });
+                      }}
+                    >
+                      Cloud Function
+                    </span>
                   </Typography>
                 </>
               )
