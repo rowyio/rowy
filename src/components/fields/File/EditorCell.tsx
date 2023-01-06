@@ -88,14 +88,16 @@ export default function File_({
                   onDelete={
                     disabled
                       ? undefined
-                      : () =>
+                      : (e) => {
+                          e.preventDefault();
                           confirm({
                             handleConfirm: () => handleDelete(file),
                             title: "Delete file?",
                             body: "This file cannot be recovered after",
                             confirm: "Delete",
                             confirmColor: "error",
-                          })
+                          });
+                        }
                   }
                   tabIndex={tabIndex}
                   style={{ width: "100%", cursor: "pointer" }}
