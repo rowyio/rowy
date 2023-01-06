@@ -22,12 +22,31 @@ export const handleFirestoreError = (
     return;
   }
 
-  if (
-    error.message.includes("indexes?create_composite=") ||
-    error.message.includes("/firestore/indexes?")
-  ) {
+  if (error.message.includes("indexes?create_composite=")) {
     enqueueSnackbar(
       "Filtering while having another column sorted requires a new Firestore index",
+      {
+        variant: "warning",
+        action: (
+          <Button
+            variant="contained"
+            color="secondary"
+            href={"https" + error.message.split("https").pop()}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Create index
+            <InlineOpenInNewIcon style={{ lineHeight: "16px" }} />
+          </Button>
+        ),
+      }
+    );
+    return;
+  }
+
+  if (error.message.includes("/firestore/indexes?")) {
+    enqueueSnackbar(
+      "Filtering on a group collection requires a new Firestore index",
       {
         variant: "warning",
         action: (
