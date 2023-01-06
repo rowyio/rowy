@@ -22,7 +22,10 @@ export const handleFirestoreError = (
     return;
   }
 
-  if (error.message.includes("indexes?create_composite=")) {
+  if (
+    error.message.includes("indexes?create_composite=") ||
+    error.message.includes("/firestore/indexes?")
+  ) {
     enqueueSnackbar(
       "Filtering while having another column sorted requires a new Firestore index",
       {
