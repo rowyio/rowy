@@ -1,7 +1,14 @@
 import { useEffect, useCallback } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { useAtomCallback } from "jotai/utils";
-import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  collection,
+  getDocs,
+} from "firebase/firestore";
 import { camelCase, find, findIndex, isEmpty } from "lodash-es";
 
 import {
@@ -23,7 +30,7 @@ import {
   TABLE_GROUP_SCHEMAS,
 } from "@src/config/dbPaths";
 import { rowyUser } from "@src/utils/table";
-import { TableSettings, TableSchema } from "@src/types/table";
+import { TableSettings, TableSchema, SubTablesSchema } from "@src/types/table";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 
@@ -220,7 +227,7 @@ export function useTableFunctions() {
   // Set the getTableSchema function
   const setGetTableSchema = useSetAtom(getTableSchemaAtom, projectScope);
   useEffect(() => {
-    setGetTableSchema(() => async (id: string) => {
+    setGetTableSchema(() => async (id: string, withSubtables?: boolean) => {
       // Get latest tables
       const tables = (await readTables()) || [];
       const table = find(tables, ["id", id]);
@@ -232,9 +239,34 @@ export function useTableFunctions() {
           : TABLE_SCHEMAS,
         id
       );
-      return getDoc(tableSchemaDocRef).then(
-        (doc) => (doc.data() || {}) as TableSchema
-      );
+
+      let tableSchema: TableSchema | Promise<TableSchema> = getDoc(
+        tableSchemaDocRef
+      ).then((doc) => (doc.data() || {}) as TableSchema);
+
+      if (withSubtables) {
+        let subTables: SubTablesSchema | Promise<SubTablesSchema> = getDocs(
+          collection(
+            firebaseDb,
+            `${
+              table?.tableType === "collectionGroup"
+                ? TABLE_GROUP_SCHEMAS
+                : TABLE_SCHEMAS
+            }/${id}/subTables`
+          )
+        ).then((querySnapshot) => {
+          let subTables: SubTablesSchema = {};
+          querySnapshot.forEach((doc) => {
+            subTables[doc.id] = doc.data();
+          });
+          return subTables;
+        });
+
+        [tableSchema, subTables] = await Promise.all([tableSchema, subTables]);
+        tableSchema.subTables = subTables;
+      }
+
+      return tableSchema as TableSchema;
     });
   }, [firebaseDb, readTables, setGetTableSchema]);
 }
