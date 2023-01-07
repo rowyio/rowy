@@ -15,77 +15,23 @@ import {
 import AddIcon from "@mui/icons-material/AddCircle";
 import RemoveIcon from "@mui/icons-material/CancelRounded";
 
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { DndProvider } from "react-dnd";
-import { useDrag, useDrop } from "react-dnd";
+import {
+  DragDropContext,
+  Draggable,
+  DraggingStyle,
+  Droppable,
+  NotDraggingStyle,
+} from "react-beautiful-dnd";
+import DragIndicatorOutlinedIcon from "@mui/icons-material/DragIndicatorOutlined";
 
-interface IsettingsDraggableProps {
-  options: string[];
-  option: string;
-  index: number;
-  onChange: (key: string) => (value: any) => void;
-}
-
-function DraggableSettingsCard({
-  options,
-  option,
-  index,
-  onChange,
-}: IsettingsDraggableProps) {
-  const [{ isDragging }, dragRef] = useDrag({
-    type: "SETTING_DRAG",
-    item: { key: index },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
-
-  const [{ isOver }, dropRef] = useDrop({
-    accept: "SETTING_DRAG",
-    drop: ({ key }: { key: number }) => {
-      const temp = options[key];
-      options[key] = options[index];
-      options[index] = temp;
-      onChange("options")([...options]);
-    },
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
-  });
-
-  return (
-    <div key={index}>
-      <Grid
-        ref={(ref) => {
-          dragRef(ref);
-          dropRef(ref);
-        }}
-        style={{ cursor: "move" }}
-        container
-        direction="row"
-        key={`option-${option}`}
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <Grid item>
-          <Typography>{option}</Typography>
-        </Grid>
-        <Grid item>
-          <IconButton
-            aria-label="Remove"
-            onClick={() =>
-              onChange("options")(options.filter((o: string) => o !== option))
-            }
-          >
-            {<RemoveIcon />}
-          </IconButton>
-        </Grid>
-      </Grid>
-      <Divider />
-    </div>
-  );
-}
+const getItemStyle = (
+  isDragging: boolean,
+  draggableStyle: DraggingStyle | NotDraggingStyle | undefined
+) => ({
+  backgroundColor: isDragging ? "rgba(255, 255, 255, 0.08)" : "",
+  borderRadius: "4px",
+  ...draggableStyle,
+});
 
 export default function Settings({ onChange, config }: ISettingsProps) {
   const listEndRef: any = useRef(null);
@@ -103,6 +49,13 @@ export default function Settings({ onChange, config }: ISettingsProps) {
     }
   };
 
+  const handleOnDragEnd = (result: any) => {
+    if (!result.destination) return;
+    const [removed] = options.splice(result.source.index, 1);
+    options.splice(result.destination.index, 0, removed);
+    onChange("options")([...options]);
+  };
+
   return (
     <div>
       <InputLabel>Options</InputLabel>
@@ -114,45 +67,65 @@ export default function Settings({ onChange, config }: ISettingsProps) {
           marginBottom: 5,
         }}
       >
-        <DndProvider backend={HTML5Backend}>
-          {options?.map((option: string, index: number) => (
-            <DraggableSettingsCard
-              options={options}
-              option={option}
-              index={index}
-              onChange={onChange}
-            />
-          ))}
-        </DndProvider>
-
-        {/* {options?.map((option: string) => (
-          <>
-            <Grid
-              container
-              direction="row"
-              key={`option-${option}`}
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Grid item>
-                <Typography>{option}</Typography>
-              </Grid>
-              <Grid item>
-                <IconButton
-                  aria-label="Remove"
-                  onClick={() =>
-                    onChange("options")(
-                      options.filter((o: string) => o !== option)
-                    )
-                  }
-                >
-                  {<RemoveIcon />}
-                </IconButton>
-              </Grid>
-            </Grid>
-            <Divider />
-          </>
-        ))} */}
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          <Droppable droppableId="options_manager" direction="vertical">
+            {(provided) => (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {options?.map((option: string, index: number) => (
+                  <Draggable key={option} draggableId={option} index={index}>
+                    {(provided, snapshot) => (
+                      <>
+                        <Grid
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          style={getItemStyle(
+                            snapshot.isDragging,
+                            provided.draggableProps.style
+                          )}
+                          container
+                          direction="row"
+                          key={`option-${option}`}
+                          justifyContent="space-between"
+                          alignItems="center"
+                        >
+                          <Grid
+                            {...provided.dragHandleProps}
+                            item
+                            sx={{ display: "flex" }}
+                          >
+                            <DragIndicatorOutlinedIcon
+                              color="disabled"
+                              sx={[
+                                {
+                                  marginRight: "6px",
+                                },
+                              ]}
+                            />
+                            <Typography>{option}</Typography>
+                          </Grid>
+                          <Grid item>
+                            <IconButton
+                              aria-label="Remove"
+                              onClick={() =>
+                                onChange("options")(
+                                  options.filter((o: string) => o !== option)
+                                )
+                              }
+                            >
+                              {<RemoveIcon />}
+                            </IconButton>
+                          </Grid>
+                        </Grid>
+                        <Divider />
+                      </>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
         <div ref={listEndRef} style={{ height: 40 }} />
       </div>
 
