@@ -128,7 +128,6 @@ export function useTableFunctions() {
               );
             Object.keys(_schema.subTables).forEach((subTableId: string) => {
               if (_schema.subTables) {
-                console.log(subTableId);
                 batch.set(
                   subTableCollectionRef(subTableId),
                   _schema.subTables[subTableId]
@@ -222,7 +221,6 @@ export function useTableFunctions() {
               );
             Object.keys(_schema.subTables).forEach((subTableId: string) => {
               if (_schema.subTables) {
-                console.log(subTableId);
                 batch.set(
                   subTableCollectionRef(subTableId),
                   _schema.subTables[subTableId]

@@ -116,7 +116,7 @@ export type TableSchema = {
 };
 
 export type SubTablesSchema = {
-  [key: string]: TablesSchema;
+  [key: string]: TableSchema;
 };
 
 export type ColumnConfig = {
