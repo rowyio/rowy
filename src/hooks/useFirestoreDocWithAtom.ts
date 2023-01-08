@@ -148,15 +148,6 @@ export function useFirestoreDocWithAtom<T = TableRow>(
           }
         }
 
-        // using `setDataAtom` here we are quickly changing state to instantly update the UI
-        // after that on actual update `setDataAtom` called once again with the final data
-        // the fix is mainly to fix the flicker effect on column reordering
-        if (disableSuspense) {
-          setDataAtom((prev) => {
-            return { ...prev, ...updateToDb };
-          });
-        }
-
         return setDoc(memoizedDocRef, updateToDb, { merge: true }).catch(
           (e) => {
             enqueueSnackbar((e as Error).message, { variant: "error" });
@@ -186,7 +177,7 @@ export default useFirestoreDocWithAtom;
  * Create the Firestore document reference.
  * Put code in a function so the results can be compared by useMemoValue.
  */
-const getDocRef = <T>(
+export const getDocRef = <T>(
   firebaseDb: Firestore,
   path: string | undefined,
   pathSegments?: Array<string | undefined>
