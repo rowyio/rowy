@@ -175,7 +175,7 @@ const getDocRef = <T>(
   path: string | undefined,
   pathSegments?: Array<string | undefined>
 ) => {
-  if (!path || (Array.isArray(pathSegments) && pathSegments.some((x) => !x)))
+  if (!path || (Array.isArray(pathSegments) && pathSegments?.some((x) => !x)))
     return null;
 
   return doc(
