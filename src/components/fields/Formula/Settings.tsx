@@ -22,6 +22,8 @@ import { getFieldProp } from "..";
 
 /* eslint-disable import/no-webpack-loader-syntax */
 import formulaDefs from "!!raw-loader!./formula.d.ts";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
+import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 
 const CodeEditor = lazy(
   () =>
@@ -97,28 +99,18 @@ export default function Settings({
 
       <InputLabel>Formula script</InputLabel>
       <div>
-        <Stack
-          direction="row"
-          alignItems="flex-start"
-          justifyItems="space-between"
-          justifyContent="space-between"
-          marginBottom={1}
-        >
-          <Typography variant="body2" color="textSecondary">
-            Available:
-          </Typography>
-          <Grid
-            container
-            spacing={1}
-            style={{ flexGrow: 1, marginTop: -8, marginLeft: 0 }}
-          >
-            <Grid item>
-              <Tooltip title="Current row's data">
-                <code>row</code>
-              </Tooltip>
-            </Grid>
-          </Grid>
-        </Stack>
+        <CodeEditorHelper
+          disableDefaultVariables
+          disableSecretManagerLink
+          disableCloudManagerLink
+          docLink={WIKI_LINKS.fieldTypesFormula}
+          additionalVariables={[
+            {
+              key: "row",
+              description: `Current row's data`,
+            },
+          ]}
+        />
         <Suspense fallback={<FieldSkeleton height={200} />}>
           <CodeEditor
             diagnosticsOptions={diagnosticsOptions}

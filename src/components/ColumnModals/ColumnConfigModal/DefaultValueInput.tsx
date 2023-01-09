@@ -53,17 +53,20 @@ function CodeEditor({ type, column, handleChange }: ICodeEditorProps) {
     dynamicValueFn = column.config?.defaultValue?.dynamicValueFn;
   } else if (column.config?.defaultValue?.script) {
     dynamicValueFn = `const dynamicValueFn : DefaultValue = async ({row,ref,db,storage,auth,logging})=>{
-    ${column.config?.defaultValue.script}
-    }`;
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
+  ${column.config?.defaultValue.script}
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+}`;
   } else {
     dynamicValueFn = `const dynamicValueFn : DefaultValue = async ({row,ref,db,storage,auth,logging})=>{
-      // Write your default value code here
-      // for example:
-      // generate random hex color
-      // const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
-      // return color;
-      // checkout the documentation for more info: https://docs.rowy.io/how-to/default-values#dynamic
-    }`;
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
+  // Example: generate random hex color
+  // const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
+  // return color;
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+}`;
   }
 
   return (

@@ -66,10 +66,11 @@ export const outputFieldTypes = Object.values(FieldType).filter(
 );
 
 export const defaultFn = `const formula:Formula = async ({ row })=> {
-  // Write your formula code here
-  // for example:
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
+  // Example:
   // return row.a + row.b;
-  // checkout the documentation for more info: https://docs.rowy.io/field-types/formula
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }
 `;
 
