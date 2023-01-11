@@ -110,8 +110,13 @@ export type TableSchema = {
   webhooks?: IWebhook[];
   runtimeOptions?: IRuntimeOptions;
 
+  subTables?: SubTablesSchema;
   /** @deprecated Migrate to Extensions */
   sparks?: string;
+};
+
+export type SubTablesSchema = {
+  [key: string]: TableSchema;
 };
 
 export type ColumnConfig = {

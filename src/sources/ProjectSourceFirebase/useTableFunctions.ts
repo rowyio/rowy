@@ -1,7 +1,15 @@
 import { useEffect, useCallback } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { useAtomCallback } from "jotai/utils";
-import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  collection,
+  getDocs,
+  writeBatch,
+} from "firebase/firestore";
 import { camelCase, find, findIndex, isEmpty } from "lodash-es";
 
 import {
@@ -23,7 +31,7 @@ import {
   TABLE_GROUP_SCHEMAS,
 } from "@src/config/dbPaths";
 import { rowyUser } from "@src/utils/table";
-import { TableSettings, TableSchema } from "@src/types/table";
+import { TableSettings, TableSchema, SubTablesSchema } from "@src/types/table";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 
@@ -104,6 +112,32 @@ export function useTableFunctions() {
             { merge: true }
           );
 
+          // adding subtables
+          const batch = writeBatch(firebaseDb);
+
+          if (_schema?.subTables) {
+            const subTableCollectionRef = (id: string) =>
+              doc(
+                firebaseDb,
+                settings.tableType !== "collectionGroup"
+                  ? TABLE_SCHEMAS
+                  : TABLE_GROUP_SCHEMAS,
+                settings.id,
+                "subTables",
+                id
+              );
+            Object.keys(_schema.subTables).forEach((subTableId: string) => {
+              if (_schema.subTables) {
+                batch.set(
+                  subTableCollectionRef(subTableId),
+                  _schema.subTables[subTableId]
+                );
+              }
+            });
+
+            delete _schema.subTables;
+          }
+
           // Creates schema doc with columns
           const { functionConfigPath, functionBuilderRef, ...schemaToWrite } =
             _schema ?? {};
@@ -121,7 +155,11 @@ export function useTableFunctions() {
           );
 
           // Wait for both to complete
-          await Promise.all([promiseUpdateSettings, promiseAddSchema]);
+          await Promise.all([
+            promiseUpdateSettings,
+            promiseAddSchema,
+            batch.commit(),
+          ]);
         }
     );
   }, [currentUser, firebaseDb, readTables, setCreateTable]);
@@ -167,6 +205,32 @@ export function useTableFunctions() {
             { merge: true }
           );
 
+          // adding subtables
+          const batch = writeBatch(firebaseDb);
+
+          if (_schema?.subTables) {
+            const subTableCollectionRef = (id: string) =>
+              doc(
+                firebaseDb,
+                settings.tableType !== "collectionGroup"
+                  ? TABLE_SCHEMAS
+                  : TABLE_GROUP_SCHEMAS,
+                settings.id,
+                "subTables",
+                id
+              );
+            Object.keys(_schema.subTables).forEach((subTableId: string) => {
+              if (_schema.subTables) {
+                batch.set(
+                  subTableCollectionRef(subTableId),
+                  _schema.subTables[subTableId]
+                );
+              }
+            });
+
+            delete _schema.subTables;
+          }
+
           // Updates schema doc if param is provided
           const { functionConfigPath, functionBuilderRef, ...schemaToWrite } =
             _schema ?? {};
@@ -182,7 +246,11 @@ export function useTableFunctions() {
             : await setDoc(tableSchemaDocRef, schemaToWrite, { merge: true });
 
           // Wait for both to complete
-          await Promise.all([promiseUpdateSettings, promiseUpdateSchema]);
+          await Promise.all([
+            promiseUpdateSettings,
+            promiseUpdateSchema,
+            batch.commit(),
+          ]);
         }
     );
   }, [firebaseDb, readTables, setUpdateTable]);
@@ -220,7 +288,7 @@ export function useTableFunctions() {
   // Set the getTableSchema function
   const setGetTableSchema = useSetAtom(getTableSchemaAtom, projectScope);
   useEffect(() => {
-    setGetTableSchema(() => async (id: string) => {
+    setGetTableSchema(() => async (id: string, withSubtables?: boolean) => {
       // Get latest tables
       const tables = (await readTables()) || [];
       const table = find(tables, ["id", id]);
@@ -232,9 +300,34 @@ export function useTableFunctions() {
           : TABLE_SCHEMAS,
         id
       );
-      return getDoc(tableSchemaDocRef).then(
-        (doc) => (doc.data() || {}) as TableSchema
-      );
+
+      let tableSchema: TableSchema | Promise<TableSchema> = getDoc(
+        tableSchemaDocRef
+      ).then((doc) => (doc.data() || {}) as TableSchema);
+
+      if (withSubtables) {
+        let subTables: SubTablesSchema | Promise<SubTablesSchema> = getDocs(
+          collection(
+            firebaseDb,
+            `${
+              table?.tableType === "collectionGroup"
+                ? TABLE_GROUP_SCHEMAS
+                : TABLE_SCHEMAS
+            }/${id}/subTables`
+          )
+        ).then((querySnapshot) => {
+          let subTables: SubTablesSchema = {};
+          querySnapshot.forEach((doc) => {
+            subTables[doc.id] = doc.data();
+          });
+          return subTables;
+        });
+
+        [tableSchema, subTables] = await Promise.all([tableSchema, subTables]);
+        tableSchema.subTables = subTables;
+      }
+
+      return tableSchema as TableSchema;
     });
   }, [firebaseDb, readTables, setGetTableSchema]);
 }
