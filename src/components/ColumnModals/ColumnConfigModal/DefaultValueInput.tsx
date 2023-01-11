@@ -1,5 +1,5 @@
 import { lazy, Suspense, createElement, useState } from "react";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -17,6 +17,7 @@ import {
   projectScope,
   compatibleRowyRunVersionAtom,
   projectSettingsAtom,
+  rowyRunModalAtom,
 } from "@src/atoms/projectScope";
 import { ColumnConfig } from "@src/types/table";
 
@@ -53,17 +54,20 @@ function CodeEditor({ type, column, handleChange }: ICodeEditorProps) {
     dynamicValueFn = column.config?.defaultValue?.dynamicValueFn;
   } else if (column.config?.defaultValue?.script) {
     dynamicValueFn = `const dynamicValueFn : DefaultValue = async ({row,ref,db,storage,auth,logging})=>{
-    ${column.config?.defaultValue.script}
-    }`;
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
+  ${column.config?.defaultValue.script}
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+}`;
   } else {
     dynamicValueFn = `const dynamicValueFn : DefaultValue = async ({row,ref,db,storage,auth,logging})=>{
-      // Write your default value code here
-      // for example:
-      // generate random hex color
-      // const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
-      // return color;
-      // checkout the documentation for more info: https://docs.rowy.io/how-to/default-values#dynamic
-    }`;
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
+  // Example: generate random hex color
+  // const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
+  // return color;
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+}`;
   }
 
   return (
@@ -93,6 +97,7 @@ export default function DefaultValueInput({
   column,
 }: IDefaultValueInputProps) {
   const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, projectScope);
 
   const _type =
     column.type !== FieldType.derivative
@@ -152,9 +157,23 @@ export default function DefaultValueInput({
                 "Dynamic"
               ) : (
                 <>
-                  Dynamic —{" "}
+                  Dynamic{" "}
                   <Typography color="error" variant="inherit" component="span">
-                    Requires Rowy Run setup
+                    Requires
+                    <span
+                      style={{
+                        marginLeft: "3px",
+                        cursor: "pointer",
+                        pointerEvents: "all",
+                        textDecoration: "underline",
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openRowyRunModal({ feature: "Dynamic Default Value" });
+                      }}
+                    >
+                      Cloud Function
+                    </span>
                   </Typography>
                 </>
               )

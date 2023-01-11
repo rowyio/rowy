@@ -170,12 +170,12 @@ export default useFirestoreDocWithAtom;
  * Create the Firestore document reference.
  * Put code in a function so the results can be compared by useMemoValue.
  */
-const getDocRef = <T>(
+export const getDocRef = <T>(
   firebaseDb: Firestore,
   path: string | undefined,
   pathSegments?: Array<string | undefined>
 ) => {
-  if (!path || (Array.isArray(pathSegments) && pathSegments.some((x) => !x)))
+  if (!path || (Array.isArray(pathSegments) && pathSegments?.some((x) => !x)))
     return null;
 
   return doc(
