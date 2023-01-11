@@ -2,14 +2,14 @@
 <img src="src/assets/logo-sticker.svg" alt="Rowy" height="69" />
 </p>
 
-<h1 align="center">
-✨ Low-code for Firebase and GCP ✨ <br/>
-</h1>
 <h3 align="center">
-Airtable-like UI for Firestore meets IDE in browser for cloud functions
+✨ Low-code backend ✨ <br/>
 </h3>
-<p align="center">
-Connect to your database, manage data in table-UI with role based access controls. Build cloud function workflows in JS/TS using any NPM or APIs. Forget CLIs, configs, and DevOps. Focus on building your apps with a platform designed for developer productivity.
+<h4 align="center">
+Manage your database and build automations as easy as using a spreadsheet. 
+</h4>
+<p align="center" >
+Connect to your database (Firestore), manage data on an Airtable-like UI with role based access controls. Build cloud function workflows in JS/TS using any NPM or APIs. Forget CLIs, configs, and DevOps. Focus on building your apps with a platform designed for developer productivity. Low-code for Firebase and Google Cloud.
 </p>
 
 <div align="center">
