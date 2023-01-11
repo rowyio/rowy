@@ -72,7 +72,7 @@ export const webhookNames: Record<WebhookType, string> = {
   // twitter: "Twitter",
   stripe: "Stripe",
   basic: "Basic",
-  webform: "Web form",
+  webform: "Web Form",
 };
 
 export interface IWebhookEditor {

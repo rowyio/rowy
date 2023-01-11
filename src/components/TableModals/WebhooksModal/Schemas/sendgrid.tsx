@@ -14,21 +14,25 @@ export const webhookSendgrid = {
     template: (
       table: TableSettings
     ) => `const sendgridParser: Parser = async ({ req, db, ref, logging }) => {
-      const { body } = req 
-      const eventHandler = async (sgEvent) => {
-          // Event handlers can be modiefed to preform different actions based on the sendgrid event
-          // List of events & docs : https://docs.sendgrid.com/for-developers/tracking-events/event#events
-          const { event, docPath } = sgEvent
-          // event param is provided by default
-          // however docPath or other custom parameter needs be passed in the custom_args variable in Sengrid Extension 
-          return db.doc(docPath).update({ sgStatus: event })
-      }
-      // 
-      if (Array.isArray(body)) {
-          // when multiple events are passed in one call
-          await Promise.allSettled(body.map(eventHandler))
-      } else eventHandler(body)
-  };`,
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
+  const { body } = req 
+  const eventHandler = async (sgEvent) => {
+    // Event handlers can be modiefed to preform different actions based on the sendgrid event
+    // List of events & docs : https://docs.sendgrid.com/for-developers/tracking-events/event#events
+    const { event, docPath } = sgEvent
+    // Event param is provided by default
+    // However docPath or other custom parameter needs be passed in the custom_args variable in Sengrid Extension 
+    return db.doc(docPath).update({ sgStatus: event })
+  }
+  if (Array.isArray(body)) {
+    // Multiple events are passed in one call
+    await Promise.allSettled(body.map(eventHandler))
+  } else {
+    eventHandler(body)
+  }
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+};`,
   },
   condition: {
     additionalVariables: null,
@@ -36,9 +40,11 @@ export const webhookSendgrid = {
     template: (
       table: TableSettings
     ) => `const condition: Condition = async({ref, req, db, logging}) => {
-      // feel free to add your own code logic here
-      return true;
-    }`,
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
+  return true;
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+}`,
   },
   auth: (
     webhookObject: IWebhook,
