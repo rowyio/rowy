@@ -57,6 +57,9 @@ export default function Step1Columns({
     config.pairs.map((pair) => pair.fieldKey)
   );
 
+
+  const fieldKeys = Object.keys(airtableData.records[0].fields);
+
   // When a field is selected to be imported
   const handleSelect =
     (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -123,6 +126,47 @@ export default function Step1Columns({
       }
     };
 
+  const handleSelectAll = () => {
+    if (selectedFields.length !== fieldKeys.length) {
+      setSelectedFields(fieldKeys)
+      fieldKeys.forEach(field => {
+        // Try to match each field to a column in the table
+        const match =
+          find(tableColumns, (column) =>
+            column.label.toLowerCase().includes(field.toLowerCase())
+          )?.value ?? null;
+
+        const columnKey = camelCase(field);
+        const columnConfig: Partial<AirtableConfig> = {
+          pairs: [],
+          newColumns: [],
+        };
+        columnConfig.pairs = [
+          { fieldKey: field, columnKey: match ?? columnKey },
+        ];
+        if (!match) {
+          columnConfig.newColumns = [
+            {
+              name: field,
+              fieldName: columnKey,
+              key: columnKey,
+              type:
+                suggestType(airtableData.records, field) || FieldType.shortText,
+              index: -1,
+              config: {},
+            },
+          ];
+        }
+        updateConfig(columnConfig);
+      })
+    } else {
+      setSelectedFields([])
+      setConfig((config) => ({ ...config, newColumns: [], pairs: [] }))
+    }
+
+  };
+
+
   // When a field is mapped to a new column
   const handleChange = (fieldKey: string) => (value: string) => {
     if (!value) return;
@@ -159,7 +203,6 @@ export default function Step1Columns({
     }
   };
 
-  const fieldKeys = Object.keys(airtableData.records[0].fields);
   return (
     <div>
       <Grid container spacing={7}>
@@ -180,14 +223,36 @@ export default function Step1Columns({
       <Divider />
 
       <FadeList>
+        <li>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={selectedFields.length === fieldKeys.length}
+                indeterminate={
+                  selectedFields.length !== 0 &&
+                  selectedFields.length !== fieldKeys.length
+                }
+                onChange={handleSelectAll}
+                color="default"
+              />
+            }
+            label={selectedFields.length == fieldKeys.length ? "Clear all" : "Select all"}
+            sx={{
+              height: 42,
+              mr: 0,
+              alignItems: "center",
+              "& .MuiFormControlLabel-label": { mt: 0, flex: 1 },
+            }}
+          />
+        </li>
         {fieldKeys.map((field) => {
           const selected = selectedFields.indexOf(field) > -1;
           const columnKey =
             find(config.pairs, { fieldKey: field })?.columnKey ?? null;
           const matchingColumn = columnKey
             ? tableSchema.columns?.[columnKey] ??
-              find(config.newColumns, { key: columnKey }) ??
-              null
+            find(config.newColumns, { key: columnKey }) ??
+            null
             : null;
           const isNewColumn = !!find(config.newColumns, { key: columnKey });
           return (
