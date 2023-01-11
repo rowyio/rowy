@@ -10,6 +10,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@mantine/hooks": "^5.10.0",
     "@mdi/js": "^6.6.96",
     "@monaco-editor/react": "^4.4.4",
     "@mui/icons-material": "^5.10.16",
