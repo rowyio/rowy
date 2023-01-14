@@ -1,21 +1,13 @@
-import {
-  createContext,
-  useContext,
-  useCallback,
-  useState,
-  useEffect,
-} from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { useSnackbar } from "notistack";
 import { get, find } from "lodash-es";
-import { useHotkeys } from "@mantine/hooks";
 
 import {
   tableScope,
   tableSchemaAtom,
   tableRowsAtom,
   updateFieldAtom,
-  selectedCellAtom,
   SelectedCell,
 } from "@src/atoms/tableScope";
 import { getFieldProp, getFieldType } from "@src/components/fields";
@@ -45,7 +37,6 @@ export function useMenuAction(
   const updateField = useSetAtom(updateFieldAtom, tableScope);
   const [cellValue, setCellValue] = useState<string | undefined>();
   const [selectedCol, setSelectedCol] = useState<ColumnConfig>();
-  const [enableAction, setEnableAction] = useState(false);
 
   const handleCopy = useCallback(async () => {
     try {
@@ -135,10 +126,6 @@ export function useMenuAction(
   }, [selectedCell, selectedCol, updateField, enqueueSnackbar, handleClose]);
 
   useEffect(() => {
-    setEnableAction(SUPPORTED_TYPES.has(selectedCol?.type));
-  }, [selectedCol]);
-
-  useEffect(() => {
     if (!selectedCell) return setCellValue("");
     const selectedCol = tableSchema.columns?.[selectedCell.columnKey];
     if (!selectedCol) return setCellValue("");
@@ -147,20 +134,23 @@ export function useMenuAction(
     setCellValue(get(selectedRow, selectedCol.fieldName));
   }, [selectedCell, tableSchema, tableRows]);
 
-  const checkEnabled = (func: Function) => {
-    return function () {
-      if (enableAction) {
-        return func();
-      } else {
-        enqueueSnackbar(
-          `${selectedCol?.type} field cannot be copied using keyboard shortcut`,
-          {
-            variant: "info",
-          }
-        );
-      }
-    };
-  };
+  const checkEnabled = useCallback(
+    (func: Function) => {
+      return function () {
+        if (SUPPORTED_TYPES.has(selectedCol?.type)) {
+          return func();
+        } else {
+          enqueueSnackbar(
+            `${selectedCol?.type} field cannot be copied using keyboard shortcut`,
+            {
+              variant: "info",
+            }
+          );
+        }
+      };
+    },
+    [selectedCol]
+  );
 
   return {
     handleCopy: checkEnabled(handleCopy),
@@ -168,27 +158,4 @@ export function useMenuAction(
     handlePaste: handlePaste,
     cellValue,
   };
-}
-
-const TableKbShortcutContext = createContext<null>(null);
-
-export function useTableKbShortcut() {
-  return useContext(TableKbShortcutContext);
-}
-
-export function TableKbShortcutProvider(props: { children: any }) {
-  const [selectedCell] = useAtom(selectedCellAtom, tableScope);
-  const { handleCopy, handlePaste, handleCut } = useMenuAction(selectedCell);
-
-  useHotkeys([
-    ["mod+C", handleCopy],
-    ["mod+X", handleCut],
-    ["mod+V", handlePaste],
-  ]);
-
-  return (
-    <TableKbShortcutContext.Provider value={null}>
-      {props.children}
-    </TableKbShortcutContext.Provider>
-  );
 }
