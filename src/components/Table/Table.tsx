@@ -32,11 +32,11 @@ import {
   updateColumnAtom,
   selectedCellAtom,
 } from "@src/atoms/tableScope";
-import { useMenuAction } from "@src/contexts/TableKbShortcutContext";
 import { getFieldType, getFieldProp } from "@src/components/fields";
 import { useKeyboardNavigation } from "./useKeyboardNavigation";
+import { useMenuAction } from "./useMenuAction";
 import { useSaveColumnSizing } from "./useSaveColumnSizing";
-import useHotKeys from "./useHotKeys";
+import useHotKeys from "./useHotKey";
 import type { TableRow, ColumnConfig } from "@src/types/table";
 
 export const DEFAULT_ROW_HEIGHT = 41;
@@ -186,7 +186,7 @@ export default function Table({
   });
   const [selectedCell] = useAtom(selectedCellAtom, tableScope);
   const { handleCopy, handlePaste, handleCut } = useMenuAction(selectedCell);
-  const { handler } = useHotKeys([
+  const { handler: hotKeysHandler } = useHotKeys([
     ["mod+C", handleCopy],
     ["mod+X", handleCut],
     ["mod+V", handlePaste],
@@ -254,7 +254,7 @@ export default function Table({
         }
         onKeyDown={(e) => {
           handleKeyDown(e);
-          handler(e);
+          hotKeysHandler(e);
         }}
       >
         <div

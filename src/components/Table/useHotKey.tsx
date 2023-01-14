@@ -20,7 +20,7 @@ export default function useHotKeys(actions: HotKeysAction[]) {
     [actions]
   );
 
-  return { handler };
+  return { handler } as const;
 }
 
 type KeyboardModifiers = {
