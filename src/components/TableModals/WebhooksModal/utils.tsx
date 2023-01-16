@@ -36,6 +36,8 @@ export const parserExtraLibs = [
         sendStatus: (status:number)=>void
       };
       logging: RowyLogging;
+      auth:firebaseauth.BaseAuth;
+      storage:firebasestorage.Storage;
     }
   ) => Promise<any>;`,
 ];
@@ -51,6 +53,8 @@ export const conditionExtraLibs = [
         sendStatus: (status:number)=>void
       };
       logging: RowyLogging;
+      auth:firebaseauth.BaseAuth;
+      storage:firebasestorage.Storage;
     }
   ) => Promise<any>;`,
 ];
