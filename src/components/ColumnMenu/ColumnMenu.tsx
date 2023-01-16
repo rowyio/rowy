@@ -234,14 +234,24 @@ export default function ColumnMenu({
           defaultQuery: {
             key: column.fieldName,
             operator:
-              getFieldProp("filter", column.type)!.operators[0]?.value || "==",
+              getFieldProp(
+                "filter",
+                column.type === FieldType.derivative
+                  ? column.config?.renderFieldType
+                  : column.type
+              )!.operators[0]?.value || "==",
             value: "",
           },
         });
         handleClose();
       },
       active: column.hidden,
-      disabled: !getFieldProp("filter", column.type),
+      disabled: !getFieldProp(
+        "filter",
+        column.type === FieldType.derivative
+          ? column.config?.renderFieldType
+          : column.type
+      ),
     },
   ];
 
