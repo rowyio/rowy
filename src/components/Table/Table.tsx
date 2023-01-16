@@ -30,12 +30,14 @@ import {
   tableNextPageAtom,
   tablePageAtom,
   updateColumnAtom,
+  selectedCellAtom,
 } from "@src/atoms/tableScope";
 import { getFieldType, getFieldProp } from "@src/components/fields";
 import { useKeyboardNavigation } from "./useKeyboardNavigation";
+import { useMenuAction } from "./useMenuAction";
 import { useSaveColumnSizing } from "./useSaveColumnSizing";
+import useHotKeys from "./useHotKey";
 import type { TableRow, ColumnConfig } from "@src/types/table";
-import { TableKbShortcutProvider } from "@src/contexts/TableKbShortcutContext";
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
@@ -182,6 +184,13 @@ export default function Table({
     tableRows,
     leafColumns,
   });
+  const [selectedCell] = useAtom(selectedCellAtom, tableScope);
+  const { handleCopy, handlePaste, handleCut } = useMenuAction(selectedCell);
+  const { handler: hotKeysHandler } = useHotKeys([
+    ["mod+C", handleCopy],
+    ["mod+X", handleCut],
+    ["mod+V", handlePaste],
+  ]);
 
   // Handle prompt to save local column sizes if user `canEditColumns`
   useSaveColumnSizing(columnSizing, canEditColumns);
@@ -243,7 +252,10 @@ export default function Table({
             "--row-height": `${tableSchema.rowHeight || DEFAULT_ROW_HEIGHT}px`,
           } as any
         }
-        onKeyDown={handleKeyDown}
+        onKeyDown={(e) => {
+          handleKeyDown(e);
+          hotKeysHandler(e);
+        }}
       >
         <div
           className="thead"
@@ -268,17 +280,15 @@ export default function Table({
         {tableRows.length === 0 ? (
           emptyState ?? <EmptyState sx={{ py: 8 }} />
         ) : (
-          <TableKbShortcutProvider>
-            <TableBody
-              containerEl={containerEl}
-              containerRef={containerRef}
-              leafColumns={leafColumns}
-              rows={rows}
-              canEditCells={canEditCells}
-              lastFrozen={lastFrozen}
-              columnSizing={columnSizing}
-            />
-          </TableKbShortcutProvider>
+          <TableBody
+            containerEl={containerEl}
+            containerRef={containerRef}
+            leafColumns={leafColumns}
+            rows={rows}
+            canEditCells={canEditCells}
+            lastFrozen={lastFrozen}
+            columnSizing={columnSizing}
+          />
         )}
       </StyledTable>
 
