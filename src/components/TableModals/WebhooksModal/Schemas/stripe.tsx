@@ -17,8 +17,9 @@ export const webhookStripe = {
     extraLibs: null,
     template: (
       table: TableSettings
-    ) => `const sendgridParser: Parser = async ({ req, db, ref, logging }) => {
+    ) => `const stripeParser: Parser = async ({ req, db, ref, logging }) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("stripeParser started")
   
   const event = req.body
   switch (event.type) {
@@ -39,6 +40,7 @@ export const webhookStripe = {
       table: TableSettings
     ) => `const condition: Condition = async({ref, req, db, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("condition started")
   
   return true;
   // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY

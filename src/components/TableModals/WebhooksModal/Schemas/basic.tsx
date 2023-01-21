@@ -66,7 +66,8 @@ export const webhookBasic = {
       table: TableSettings
     ) => `const basicParser: Parser = async({req, db, ref, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
-    
+  logging.log("basicParser started")
+  
   // Optionally return an object to be added as a new row to the table
   // Example: add the webhook body as row
   const {body} = req;
@@ -91,6 +92,7 @@ export const webhookBasic = {
       table: TableSettings
     ) => `const condition: Condition = async({ref, req, db, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("condition started")
   
   return true;
   // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY

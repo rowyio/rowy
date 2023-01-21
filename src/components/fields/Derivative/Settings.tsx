@@ -66,13 +66,15 @@ export default function Settings({
     ? config.derivativeFn
     : config?.script
     ? `const derivative:Derivative = async ({row,ref,db,storage,auth,logging})=>{
-    // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
-    
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("derivative started")
+  
   ${config.script.replace(/utilFns.getSecret/g, "rowy.secrets.get")}
   // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`
     : `const derivative:Derivative = async ({row,ref,db,storage,auth,logging})=>{
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("derivative started")
   
   // Example:
   // const sum = row.a + row.b;

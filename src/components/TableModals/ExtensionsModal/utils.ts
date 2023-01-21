@@ -63,6 +63,7 @@ export const triggerTypes: ExtensionTrigger[] = ["create", "update", "delete"];
 const extensionBodyTemplate = {
   task: `const extensionBody: TaskBody = async({row, db, change, ref, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
   
   // Task Extension is very flexible, you can do anything.
   // From updating other documents in your database, to making an api request to 3rd party service.
@@ -90,7 +91,8 @@ const extensionBodyTemplate = {
 }`,
   docSync: `const extensionBody: DocSyncBody = async({row, db, change, ref, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
-
+  logging.log("extensionBody started")
+  
   return ({
     fieldsToSync: [],    // a list of string of column names
     row: row,    // object of data to sync, usually the row itself
@@ -100,6 +102,7 @@ const extensionBodyTemplate = {
 }`,
   historySnapshot: `const extensionBody: HistorySnapshotBody = async({row, db, change, ref, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
   
   return ({
     trackedFields: [],    // a list of string of column names
@@ -109,6 +112,7 @@ const extensionBodyTemplate = {
 }`,
   algoliaIndex: `const extensionBody: AlgoliaIndexBody = async({row, db, change, ref, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
   
   return ({
     fieldsToSync: [],    // a list of string of column names
@@ -120,7 +124,8 @@ const extensionBodyTemplate = {
 }`,
   meiliIndex: `const extensionBody: MeiliIndexBody = async({row, db, change, ref, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
-
+  logging.log("extensionBody started")
+  
   return({
     fieldsToSync: [],    // a list of string of column names
     row: row,    // object of data to sync, usually the row itself
@@ -131,7 +136,8 @@ const extensionBodyTemplate = {
 }`,
   bigqueryIndex: `const extensionBody: BigqueryIndexBody = async({row, db, change, ref, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
-
+  logging.log("extensionBody started")
+  
   return ({
     fieldsToSync: [],    // a list of string of column names
     row: row,    // object of data to sync, usually the row itself
@@ -142,6 +148,7 @@ const extensionBodyTemplate = {
 }`,
   slackMessage: `const extensionBody: SlackMessageBody = async({row, db, change, ref, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
   
   return ({
     channels: [],    // a list of slack channel IDs in string
@@ -153,6 +160,7 @@ const extensionBodyTemplate = {
 }`,
   sendgridEmail: `const extensionBody: SendgridEmailBody = async({row, db, change, ref, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
   
   return ({
     from: "Name<example@domain.com>",   // send from field
@@ -174,6 +182,7 @@ const extensionBodyTemplate = {
 }`,
   apiCall: `const extensionBody: ApiCallBody = async({row, db, change, ref, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
   
   return ({
     body: "",
@@ -185,6 +194,7 @@ const extensionBodyTemplate = {
 }`,
   twilioMessage: `const extensionBody: TwilioMessageBody = async({row, db, change, ref, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
   
   // Setup twilio secret key: https://docs.rowy.io/extensions/twilio-message#secret-manager-setup
   // Add any code here to customize your message or dynamically get the from/to numbers
@@ -197,6 +207,7 @@ const extensionBodyTemplate = {
 }`,
   pushNotification: `const extensionBody: PushNotificationBody = async({row, db, change, ref, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
   
   // You can use FCM token from the row or from the user document in the database
   // const FCMtoken = row.FCMtoken
@@ -248,6 +259,7 @@ export function emptyExtensionObject(
     trackedFields: [],
     conditions: `const condition: Condition = async({row, change, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("condition started")
   
   return true;
   // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
