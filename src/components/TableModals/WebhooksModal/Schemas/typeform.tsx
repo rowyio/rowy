@@ -15,6 +15,7 @@ export const webhookTypeform = {
       table: TableSettings
     ) => `const typeformParser: Parser = async({req, db, ref, logging}) =>{
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("typeformParser started")
   
   // This reduces the form submission into a single object of key value pairs
   // Example: {name: "John", age: 20}
@@ -73,6 +74,7 @@ export const webhookTypeform = {
       table: TableSettings
     ) => `const condition: Condition = async({ref, req, db, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("condition started")
   
   return true;
   // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
