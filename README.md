@@ -108,7 +108,7 @@ Alternatively, you can manually install by
 
 ## Roadmap
 
-[View our roadmap](https://demo.rowy.io/table/roadmap) on Rowy - Upvote,
+[View our roadmap](https://roadmap.rowy.io/) on Rowy - Upvote,
 downvote, share your thoughts!
 
 If you'd like to propose a feature, submit an issue
@@ -129,5 +129,5 @@ If you'd like to propose a feature, submit an issue
 
 ## Help
 
-- Live chat support on [Discord](https://discord.gg/fjBugmvzZP)
+- Live chat support on [Discord](https://www.rowy.io/discord)
 - [Email](mailto:hello@rowy.io)
