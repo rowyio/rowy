@@ -1,6 +1,11 @@
 import { find } from "lodash-es";
+import { useAtom } from "jotai";
 import { Field, FieldType } from "@rowy/form-builder";
-import { TableSettingsDialogState } from "@src/atoms/projectScope";
+import {
+  projectIdAtom,
+  projectScope,
+  TableSettingsDialogState,
+} from "@src/atoms/projectScope";
 
 import { Link, ListItemText, Typography } from "@mui/material";
 import OpenInNewIcon from "@src/components/InlineOpenInNewIcon";
@@ -8,6 +13,21 @@ import WarningIcon from "@mui/icons-material/WarningAmber";
 
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { FieldType as TableFieldType } from "@src/constants/fields";
+
+function CollectionLink() {
+  const [projectId] = useAtom(projectIdAtom, projectScope);
+
+  return (
+    <Link
+      href={`https://console.firebase.google.com/project/${projectId}/firestore/data`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Your collections
+      <OpenInNewIcon />
+    </Link>
+  );
+}
 
 export const tableSettings = (
   mode: TableSettingsDialogState["mode"],
@@ -105,14 +125,7 @@ export const tableSettings = (
               ) : (
                 "Choose which Firestore collection to display."
               )}{" "}
-              <Link
-                href={`https://console.firebase.google.com/project/_/firestore/data`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Your collections
-                <OpenInNewIcon />
-              </Link>
+              <CollectionLink />
             </>
           ),
           AddButtonProps: {
