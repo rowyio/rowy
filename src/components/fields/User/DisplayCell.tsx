@@ -1,30 +1,108 @@
+import { useAtom } from "jotai";
+import { Avatar, AvatarGroup, ButtonBase, Stack, Tooltip } from "@mui/material";
+import { allUsersAtom, projectScope } from "@src/atoms/projectScope";
 import { IDisplayCellProps } from "@src/components/fields/types";
+import { ChevronDown } from "@src/assets/icons/ChevronDown";
+import { UserDataType } from "./UserSelect";
 
-import { Tooltip, Stack, Avatar } from "@mui/material";
+export default function User({
+  value,
+  showPopoverCell,
+  disabled,
+  tabIndex,
+}: IDisplayCellProps) {
+  const [users] = useAtom(allUsersAtom, projectScope);
 
-import { format } from "date-fns";
-import { DATE_TIME_FORMAT } from "@src/constants/dates";
+  let userValue: UserDataType[] = [];
+  let emails = new Set();
 
-export default function User({ value, column }: IDisplayCellProps) {
-  if (!value || !value.displayName) return null;
+  if (value !== undefined) {
+    for (const user of users) {
+      if (user.user && user.user?.email && value.includes(user.user.email)) {
+        if (!emails.has(user.user.email)) {
+          emails.add(user.user.email);
+          userValue.push(user.user);
+        }
+      }
+    }
+  }
 
-  const chip = (
-    <Stack spacing={0.75} direction="row" alignItems="center">
-      <Avatar
-        alt="Avatar"
-        src={value.photoURL}
-        style={{ width: 20, height: 20 }}
-      />
-      <span>{value.displayName}</span>
+  if (userValue.length === 0) {
+    return (
+      <ButtonBase
+        onClick={() => showPopoverCell(true)}
+        style={{
+          width: "100%",
+          height: "100%",
+          font: "inherit",
+          color: "inherit !important",
+          letterSpacing: "inherit",
+          textAlign: "inherit",
+          justifyContent: "flex-end",
+        }}
+        tabIndex={tabIndex}
+      >
+        <ChevronDown className="row-hover-iconButton end" />
+      </ButtonBase>
+    );
+  }
+
+  const rendered = (
+    <Stack
+      spacing={0.75}
+      direction="row"
+      alignItems="center"
+      style={{
+        flexGrow: 1,
+        overflow: "hidden",
+        paddingLeft: "var(--cell-padding)",
+      }}
+    >
+      {userValue.length > 1 ? (
+        <AvatarGroup
+          sx={{
+            "& .MuiAvatar-root": { width: 20, height: 20, fontSize: 12 },
+          }}
+          max={5}
+        >
+          {userValue.map((user: UserDataType) => (
+            <Tooltip title={`${user.displayName}(${user.email})`}>
+              <Avatar alt={user.displayName} src={user.photoURL} />
+            </Tooltip>
+          ))}
+        </AvatarGroup>
+      ) : (
+        <>
+          <Avatar
+            alt="Avatar"
+            src={userValue[0].photoURL}
+            style={{ width: 20, height: 20 }}
+          />
+          <span>{userValue[0].displayName}</span>
+        </>
+      )}
     </Stack>
   );
 
-  if (!value.timestamp) return chip;
-
-  const dateLabel = format(
-    value.timestamp.toDate ? value.timestamp.toDate() : value.timestamp,
-    column.config?.format || DATE_TIME_FORMAT
+  if (disabled) {
+    return rendered;
+  }
+  return (
+    <ButtonBase
+      onClick={() => showPopoverCell(true)}
+      style={{
+        width: "100%",
+        height: "100%",
+        font: "inherit",
+        color: "inherit !important",
+        letterSpacing: "inherit",
+        textAlign: "inherit",
+        justifyContent: "flex-start",
+      }}
+      tabIndex={tabIndex}
+    >
+      {rendered}
+      <ChevronDown className="row-hover-iconButton end" />
+    </ButtonBase>
   );
-
-  return <Tooltip title={dateLabel}>{chip}</Tooltip>;
 }
