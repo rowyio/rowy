@@ -13,14 +13,8 @@ import {
 } from "@src/atoms/tableScope";
 import { useMonaco } from "@monaco-editor/react";
 import type { languages } from "monaco-editor/esm/vs/editor/editor.api";
-import githubLightTheme from "./github-light-default.json";
-import githubDarkTheme from "./github-dark-default.json";
-
 import { useTheme } from "@mui/material";
 import type { SystemStyleObject, Theme } from "@mui/system";
-
-// TODO:
-// import { getFieldType, getFieldProp } from "@src/components/fields";
 
 /* eslint-disable import/no-webpack-loader-syntax */
 import firestoreDefs from "!!raw-loader!./firestore.d.ts";
@@ -77,24 +71,26 @@ export default function useMonacoCustomizations({
     if (!monaco) return;
 
     try {
-      monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+      monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
         moduleResolution:
           monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+        module: monaco.languages.typescript.ModuleKind.CommonJS,
         target: monaco.languages.typescript.ScriptTarget.ES2020,
         allowNonTsExtensions: true,
+        typeRoots: ["node_modules/@types"],
       });
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(firestoreDefs);
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(firestoreDefs);
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(
         firebaseAuthDefs
       );
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(
         firebaseStorageDefs
       );
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(
         utilsDefs,
         "ts:filename/utils.d.ts"
       );
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(rowyUtilsDefs);
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(rowyUtilsDefs);
     } catch (error) {
       console.error(
         "An error occurred during initialization of Monaco: ",
@@ -108,7 +104,7 @@ export default function useMonacoCustomizations({
     if (!monaco) return;
     if (!extraLibs) return;
     try {
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(
         extraLibs.join("\n"),
         "ts:filename/extraLibs.d.ts"
       );
@@ -123,7 +119,7 @@ export default function useMonacoCustomizations({
     if (!monaco) return;
 
     try {
-      monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+      monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
         ...JSON.parse(stringifiedDiagnosticsOptions),
         diagnosticCodesToIgnore: [
           1323, // remove dynamic import error
@@ -143,11 +139,11 @@ export default function useMonacoCustomizations({
       .map((row) => row[columnKey])
       .filter((entry) => entry !== undefined)
       .map((entry) => JSON.stringify(entry));
-    monaco?.languages.typescript.javascriptDefaults.addExtraLib(
+    monaco?.languages.typescript.typescriptDefaults.addExtraLib(
       `type ${interfaceName} = any;`
     );
     // if (!samples || samples.length === 0) {
-    //   monaco?.languages.typescript.javascriptDefaults.addExtraLib(
+    //   monaco?.languages.typescript.typescriptDefaults.addExtraLib(
     //     `type ${interfaceName} = any;`
     //   );
     //   return;
@@ -165,7 +161,7 @@ export default function useMonacoCustomizations({
     //     rendererOptions: { "just-types": "true" },
     //   });
     //   const newLib = result.lines.join("\n").replaceAll("export ", "");
-    //  monaco?.languages.typescript.javascriptDefaults.addExtraLib(newLib);
+    //  monaco?.languages.typescript.typescriptDefaults.addExtraLib(newLib);
     //}
   };
 
@@ -184,12 +180,11 @@ export default function useMonacoCustomizations({
             .join("\n")}
         }
         `;
-      monaco?.languages.typescript.javascriptDefaults.addExtraLib(secretsDef);
+      monaco?.languages.typescript.typescriptDefaults.addExtraLib(secretsDef);
     } catch (error) {
       console.error("Could not set secret definitions: ", error);
     }
   };
-  //TODO: types
   const setBaseDefinitions = () => {
     const rowDefinition =
       tableColumnsOrdered
@@ -208,13 +203,13 @@ export default function useMonacoCustomizations({
       .map((key) => `"${key}"`)
       .join("|\n");
 
-    monaco?.languages.typescript.javascriptDefaults.addExtraLib(
+    monaco?.languages.typescript.typescriptDefaults.addExtraLib(
       ["/**", " * extensions type configuration", " */", extensionsDefs].join(
         "\n"
       ),
       "ts:filename/extensions.d.ts"
     );
-    monaco?.languages.typescript.javascriptDefaults.addExtraLib(
+    monaco?.languages.typescript.typescriptDefaults.addExtraLib(
       [
         "// basic types that are used in all places",
         "declare var require: any;",

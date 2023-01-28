@@ -8961,7 +8961,7 @@ mkdirp@^0.5.1, mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.6"
 
-monaco-editor-auto-typings@^0.4.0:
+monaco-editor-auto-typings@^0.4.3:
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/monaco-editor-auto-typings/-/monaco-editor-auto-typings-0.4.3.tgz#24498064ff876c641467815e65d54ae75f31cd7f"
   integrity sha512-7lpiWHkg8eX2DRJGApaFq1wGn95Ute3Xv4PLz36qFyTytzz86irjxwMl00JnOOGX/R0eUbfuudbEtkQh2VK9Gg==

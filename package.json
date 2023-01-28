@@ -39,7 +39,7 @@
     "match-sorter": "^6.3.1",
     "material-ui-popup-state": "^4.0.1",
     "mdi-material-ui": "^7.3.0",
-    "monaco-editor-auto-typings": "^0.4.0",
+    "monaco-editor-auto-typings": "^0.4.3",
     "notistack": "^2.0.4",
     "path-browserify": "^1.0.1",
     "pb-util": "^1.0.3",
