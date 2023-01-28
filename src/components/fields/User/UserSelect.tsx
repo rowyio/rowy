@@ -84,9 +84,15 @@ export default function UserSelect({
     return <UserListItem user={option.user} {...props} />;
   };
 
+  if (value === undefined) {
+    value = [];
+  } else if (!Array.isArray(value)) {
+    value = [value.email];
+  }
+
   return (
     <MultiSelect
-      value={value || []}
+      value={value}
       options={options}
       label={column.name}
       labelPlural={column.name}

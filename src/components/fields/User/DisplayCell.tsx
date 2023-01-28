@@ -17,6 +17,9 @@ export default function User({
   let emails = new Set();
 
   if (value !== undefined) {
+    if (!Array.isArray(value)) {
+      value = [value.email];
+    }
     for (const user of users) {
       if (user.user && user.user?.email && value.includes(user.user.email)) {
         if (!emails.has(user.user.email)) {
