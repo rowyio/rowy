@@ -1,5 +1,5 @@
-import { Suspense, lazy } from "react";
-import { useAtom } from "jotai";
+import { Suspense, lazy, useEffect, useState } from "react";
+import { useAtom, useSetAtom } from "jotai";
 import { ErrorBoundary } from "react-error-boundary";
 import { isEmpty, intersection } from "lodash-es";
 
@@ -33,6 +33,7 @@ import {
   tableSchemaAtom,
   columnModalAtom,
   tableModalAtom,
+  tableSortsAtom,
 } from "@src/atoms/tableScope";
 import useBeforeUnload from "@src/hooks/useBeforeUnload";
 import ActionParamsProvider from "@src/components/fields/Action/FormDialog/Provider";
@@ -77,6 +78,7 @@ export default function TablePage({
   const [tableId] = useAtom(tableIdAtom, tableScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
+  const setTableSorts = useSetAtom(tableSortsAtom, tableScope);
   const snackLogContext = useSnackLogContext();
 
   // Set permissions here so we can pass them to the `Table` component, which
@@ -95,6 +97,15 @@ export default function TablePage({
   // Warn user about leaving when they have a table modal open
   useBeforeUnload(columnModalAtom, tableScope);
   useBeforeUnload(tableModalAtom, tableScope);
+
+  // Initially set the TableSorts values from table schema
+  const [setSort, setSetSort] = useState(true);
+  useEffect(() => {
+    if (setSort && Object.keys(tableSchema).length) {
+      setTableSorts(tableSchema.sorts || []);
+      setSetSort(false);
+    }
+  }, [tableSchema, setSort, setTableSorts, setSetSort]);
 
   if (!(tableSchema as any)._rowy_ref)
     return (
