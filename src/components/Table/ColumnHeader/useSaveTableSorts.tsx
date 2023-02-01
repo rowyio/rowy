@@ -9,13 +9,13 @@ import CircularProgressOptical from "@src/components/CircularProgressOptical";
 import { tableScope, updateTableSchemaAtom } from "@src/atoms/tableScope";
 import { TableSort } from "@src/types/table";
 
-function useSaveTableSortBy(canEditColumns: boolean) {
+function useSaveTableSorts(canEditColumns: boolean) {
   const [updateTableSchema] = useAtom(updateTableSchemaAtom, tableScope);
   if (!updateTableSchema) throw new Error("Cannot update table schema");
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [snackbarId, setSnackbarId] = useState<SnackbarKey | null>(null);
 
-  // Offer to save when table sort by changes
+  // Offer to save when table sorts changes
   const trigger = useCallback(
     (sorts: TableSort[]) => {
       if (!canEditColumns) return;
@@ -82,4 +82,4 @@ function SaveTableSortButton({ updateTable }: { updateTable: Function }) {
   );
 }
 
-export default useSaveTableSortBy;
+export default useSaveTableSorts;

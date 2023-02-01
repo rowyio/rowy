@@ -9,7 +9,7 @@ import IconSlash, {
 } from "@src/components/IconSlash";
 
 import { tableScope, tableSortsAtom } from "@src/atoms/tableScope";
-import useSaveTableSortBy from "./useSaveTableSorts";
+import useSaveTableSorts from "./useSaveTableSorts";
 
 export const SORT_STATES = ["none", "desc", "asc"] as const;
 
@@ -35,13 +35,16 @@ export const ColumnHeaderSort = memo(function ColumnHeaderSort({
   const nextSort =
     SORT_STATES[SORT_STATES.indexOf(currentSort) + 1] ?? SORT_STATES[0];
 
-  const trigger = useSaveTableSortBy(canEditColumns);
+  const triggerSaveTableSorts = useSaveTableSorts(canEditColumns);
 
   const handleSortClick = () => {
     if (nextSort === "none") setTableSorts([]);
     else setTableSorts([{ key: sortKey, direction: nextSort }]);
-    trigger([
-      { key: sortKey, direction: nextSort === "none" ? "asc" : nextSort },
+    triggerSaveTableSorts([
+      {
+        key: sortKey,
+        direction: nextSort === "none" ? "asc" : nextSort,
+      },
     ]);
   };
 
