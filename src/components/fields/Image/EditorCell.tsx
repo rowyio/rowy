@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import { IEditorCellProps } from "@src/components/fields/types";
 import { useAtom, useSetAtom } from "jotai";
 import { assignIn } from "lodash-es";
@@ -17,6 +17,9 @@ import { FileValue } from "@src/types/table";
 import useFileUpload from "@src/components/fields/File/useFileUpload";
 import { IMAGE_MIME_TYPES } from "./index";
 import { imgSx, thumbnailSx, deleteImgHoverSx } from "./DisplayCell";
+
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 export default function Image_({
   column,
@@ -84,62 +87,100 @@ export default function Image_({
           marginLeft: "0 !important",
         }}
       >
-        <Grid container spacing={0.5} wrap="nowrap">
-          {Array.isArray(value) &&
-            value.map((file: FileValue, i) => (
-              <Grid item key={file.downloadURL}>
-                <ButtonBase
-                  aria-label="Delete…"
-                  sx={imgSx(rowHeight)}
-                  className="img"
-                  onClick={() => {
-                    confirm({
-                      title: "Delete image?",
-                      body: "This image cannot be recovered after",
-                      confirm: "Delete",
-                      confirmColor: "error",
-                      handleConfirm: () => handleDelete(file),
-                    });
-                  }}
-                  disabled={disabled}
-                  tabIndex={tabIndex}
-                >
-                  <Thumbnail
-                    imageUrl={file.downloadURL}
-                    size={thumbnailSize}
-                    objectFit="contain"
-                    sx={thumbnailSx}
-                  />
-                  <Grid
-                    container
-                    justifyContent="center"
-                    alignItems="center"
-                    sx={deleteImgHoverSx}
-                  >
-                    <DeleteIcon color="error" />
-                  </Grid>
-                </ButtonBase>
+        <DragDropContext onDragEnd={() => console.log("Drag Ended")}>
+          <Droppable droppableId="image-droppable" direction="horizontal">
+            {(provided) => (
+              <Grid
+                container
+                spacing={0.5}
+                wrap="nowrap"
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {Array.isArray(value) &&
+                  value.map((file: FileValue, i) => (
+                    <Draggable
+                      key={file.downloadURL}
+                      draggableId={file.downloadURL}
+                      index={i}
+                    >
+                      {(provided) => (
+                        <Grid
+                          item
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            ...provided.draggableProps.style,
+                          }}
+                        >
+                          <div
+                            {...provided.dragHandleProps}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <DragIndicatorIcon />
+                          </div>
+                          <ButtonBase
+                            aria-label="Delete…"
+                            sx={imgSx(rowHeight)}
+                            className="img"
+                            onClick={() => {
+                              confirm({
+                                title: "Delete image?",
+                                body: "This image cannot be recovered after",
+                                confirm: "Delete",
+                                confirmColor: "error",
+                                handleConfirm: () => handleDelete(file),
+                              });
+                            }}
+                            disabled={disabled}
+                            tabIndex={tabIndex}
+                          >
+                            <Thumbnail
+                              imageUrl={file.downloadURL}
+                              size={thumbnailSize}
+                              objectFit="contain"
+                              sx={thumbnailSx}
+                            />
+                            <Grid
+                              container
+                              justifyContent="center"
+                              alignItems="center"
+                              sx={deleteImgHoverSx}
+                            >
+                              <DeleteIcon color="error" />
+                            </Grid>
+                          </ButtonBase>
+                        </Grid>
+                      )}
+                    </Draggable>
+                  ))}
+                {localImages &&
+                  localImages.map((image) => (
+                    <Grid item>
+                      <Box
+                        sx={[
+                          imgSx(rowHeight),
+                          {
+                            boxShadow: (theme) =>
+                              `0 0 0 1px ${theme.palette.divider} inset`,
+                          },
+                        ]}
+                        style={{
+                          backgroundImage: `url("${image.localURL}")`,
+                        }}
+                      />
+                    </Grid>
+                  ))}
+                {provided.placeholder}
               </Grid>
-            ))}
-
-          {localImages &&
-            localImages.map((image) => (
-              <Grid item>
-                <Box
-                  sx={[
-                    imgSx(rowHeight),
-                    {
-                      boxShadow: (theme) =>
-                        `0 0 0 1px ${theme.palette.divider} inset`,
-                    },
-                  ]}
-                  style={{
-                    backgroundImage: `url("${image.localURL}")`,
-                  }}
-                />
-              </Grid>
-            ))}
-        </Grid>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
 
       {!loading ? (
