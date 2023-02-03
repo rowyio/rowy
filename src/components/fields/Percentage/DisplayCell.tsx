@@ -2,6 +2,7 @@ import { IDisplayCellProps } from "@src/components/fields/types";
 
 import { useTheme } from "@mui/material";
 import { resultColorsScale } from "@src/utils/color";
+import { multiply100WithPrecision } from "./utils";
 
 export default function Percentage({ column, value }: IDisplayCellProps) {
   const theme = useTheme();
@@ -34,7 +35,7 @@ export default function Percentage({ column, value }: IDisplayCellProps) {
           zIndex: 1,
         }}
       >
-        {Math.round(percentage * 100)}%
+        {multiply100WithPrecision(percentage)}%
       </div>
     </>
   );
