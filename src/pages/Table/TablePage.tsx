@@ -99,13 +99,13 @@ export default function TablePage({
   useBeforeUnload(tableModalAtom, tableScope);
 
   // Initially set the TableSorts values from table schema
-  const [setSort, setSetSort] = useState(true);
+  const [applySort, setApplySort] = useState(true);
   useEffect(() => {
-    if (setSort && Object.keys(tableSchema).length) {
+    if (applySort && Object.keys(tableSchema).length) {
       setTableSorts(tableSchema.sorts || []);
-      setSetSort(false);
+      setApplySort(false);
     }
-  }, [tableSchema, setSort, setTableSorts, setSetSort]);
+  }, [tableSchema, applySort, setTableSorts, setApplySort]);
 
   if (!(tableSchema as any)._rowy_ref)
     return (
