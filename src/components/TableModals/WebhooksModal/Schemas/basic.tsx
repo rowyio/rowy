@@ -68,6 +68,9 @@ export const webhookBasic = {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
   logging.log("basicParser started")
   
+  // Import any NPM package needed
+  // const lodash = require('lodash');
+  
   // Optionally return an object to be added as a new row to the table
   // Example: add the webhook body as row
   const {body} = req;

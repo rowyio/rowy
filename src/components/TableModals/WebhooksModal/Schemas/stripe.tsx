@@ -21,6 +21,9 @@ export const webhookStripe = {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
   logging.log("stripeParser started")
   
+  // Import any NPM package needed
+  // const lodash = require('lodash');
+  
   const event = req.body
   switch (event.type) {
     case "payment_intent.succeeded":

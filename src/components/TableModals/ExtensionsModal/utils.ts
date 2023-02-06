@@ -65,6 +65,9 @@ const extensionBodyTemplate = {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
   logging.log("extensionBody started")
   
+  // Import any NPM package needed
+  // const vision = require('@google-cloud/vision');
+  
   // Task Extension is very flexible, you can do anything.
   // From updating other documents in your database, to making an api request to 3rd party service.
   // Example: post notification to different discord channels based on row data
@@ -150,6 +153,9 @@ const extensionBodyTemplate = {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
   logging.log("extensionBody started")
   
+  // Import any NPM package needed
+  // const lodash = require('lodash');
+  
   return ({
     channels: [],    // a list of slack channel IDs in string
     blocks: [],    // the blocks parameter to pass in to slack api
@@ -161,6 +167,9 @@ const extensionBodyTemplate = {
   sendgridEmail: `const extensionBody: SendgridEmailBody = async({row, db, change, ref, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
   logging.log("extensionBody started")
+  
+  // Import any NPM package needed
+  // const lodash = require('lodash');
   
   return ({
     from: "Name<example@domain.com>",   // send from field
@@ -184,6 +193,9 @@ const extensionBodyTemplate = {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
   logging.log("extensionBody started")
   
+  // Import any NPM package needed
+  // const lodash = require('lodash');
+  
   return ({
     body: "",
     url: "",
@@ -195,6 +207,9 @@ const extensionBodyTemplate = {
   twilioMessage: `const extensionBody: TwilioMessageBody = async({row, db, change, ref, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
   logging.log("extensionBody started")
+  
+  // Import any NPM package needed
+  // const lodash = require('lodash');
   
   // Setup twilio secret key: https://docs.rowy.io/extensions/twilio-message#secret-manager-setup
   // Add any code here to customize your message or dynamically get the from/to numbers
@@ -208,6 +223,9 @@ const extensionBodyTemplate = {
   pushNotification: `const extensionBody: PushNotificationBody = async({row, db, change, ref, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
   logging.log("extensionBody started")
+  
+  // Import any NPM package needed
+  // const lodash = require('lodash');
   
   // You can use FCM token from the row or from the user document in the database
   // const FCMtoken = row.FCMtoken
