@@ -1,4 +1,4 @@
-import { Fragment, useMemo } from "react";
+import { useMemo } from "react";
 import { IEditorCellProps } from "@src/components/fields/types";
 import { useAtom, useSetAtom } from "jotai";
 import { assignIn } from "lodash-es";
@@ -19,7 +19,13 @@ import { IMAGE_MIME_TYPES } from "./index";
 import { imgSx, thumbnailSx, deleteImgHoverSx } from "./DisplayCell";
 
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+  ResponderProvided,
+} from "react-beautiful-dnd";
 
 export default function Image_({
   column,
@@ -31,11 +37,17 @@ export default function Image_({
 }: IEditorCellProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
 
-  const { loading, progress, handleDelete, localFiles, dropzoneState } =
-    useFileUpload(_rowy_ref, column.key, {
-      multiple: true,
-      accept: IMAGE_MIME_TYPES,
-    });
+  const {
+    loading,
+    progress,
+    handleDelete,
+    localFiles,
+    dropzoneState,
+    handleUpdate,
+  } = useFileUpload(_rowy_ref, column.key, {
+    multiple: true,
+    accept: IMAGE_MIME_TYPES,
+  });
 
   const localImages = useMemo(
     () =>
@@ -47,6 +59,28 @@ export default function Image_({
 
   const { getRootProps, getInputProps, isDragActive } = dropzoneState;
   const dropzoneProps = getRootProps();
+
+  const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
+    const { destination, source, draggableId } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    const newValue = Array.from(value);
+
+    newValue.splice(source.index, 1);
+    newValue.splice(destination.index, 0, value[source.index]);
+
+    handleUpdate([...newValue]);
+  };
 
   let thumbnailSize = "100x100";
   if (rowHeight > 50) thumbnailSize = "200x200";
@@ -87,7 +121,7 @@ export default function Image_({
           marginLeft: "0 !important",
         }}
       >
-        <DragDropContext onDragEnd={() => console.log("Drag Ended")}>
+        <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="image-droppable" direction="horizontal">
             {(provided) => (
               <Grid
