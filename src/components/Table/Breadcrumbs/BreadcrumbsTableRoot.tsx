@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { useParams, Link as RouterLink } from "react-router-dom";
-import { find, camelCase, uniq } from "lodash-es";
+import { find, camelCase } from "lodash-es";
 
 import {
   Stack,
@@ -11,9 +11,6 @@ import {
   Tooltip,
 } from "@mui/material";
 import ReadOnlyIcon from "@mui/icons-material/EditOffOutlined";
-
-import InfoTooltip from "@src/components/InfoTooltip";
-import RenderedMarkdown from "@src/components/RenderedMarkdown";
 
 import {
   projectScope,
@@ -82,28 +79,6 @@ export default function BreadcrumbsTableRoot(props: StackProps) {
         >
           <ReadOnlyIcon fontSize="small" sx={{ ml: 0.5 }} color="action" />
         </Tooltip>
-      )}
-
-      {tableSettings.description && (
-        <InfoTooltip
-          description={
-            <div>
-              <RenderedMarkdown
-                children={tableSettings.description}
-                restrictionPreset="singleLine"
-              />
-            </div>
-          }
-          buttonLabel="Table info"
-          tooltipProps={{
-            componentsProps: {
-              popper: { sx: { zIndex: "appBar" } },
-              tooltip: { sx: { maxWidth: "75vw" } },
-            } as any,
-          }}
-          defaultOpen={!dismissed.includes(tableSettings.id)}
-          onClose={() => setDismissed((d) => uniq([...d, tableSettings.id]))}
-        />
       )}
     </Stack>
   );
