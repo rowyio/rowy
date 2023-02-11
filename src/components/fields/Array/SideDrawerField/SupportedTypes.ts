@@ -96,6 +96,9 @@ export function detectType(value: any): ArraySupportedFiledTypes {
       return FieldType.checkbox;
     }
     case "object": {
+      if (+new Date(value)) {
+        return FieldType.dateTime;
+      }
       return FieldType.json;
     }
     default: {
