@@ -66,33 +66,21 @@ export default function FiltersPopover({
 
         {appliedFilters.map((filter) => {
           const fieldName = filter.key === "_rowy_ref.id" ? "ID" : filter.key;
-          const operator = (availableFilters?.operators ?? []).find(
-            (f) => f.value === filter.operator
-          );
-          const operatorLabel = (operator?.label ?? filter.operator).replace(
+          const operatorLabel = filter.operator.replace(
             "id-equal",
             "is"
           );
 
-          const formattedValue = availableFilters?.valueFormatter
-            ? availableFilters.valueFormatter(filter.value, filter.operator)
-            : filter.value.toString();
+          const formattedValue = availableFilters?.forEach(i => i?.valueFormatter ?
+            i.valueFormatter(filter.value, filter.operator)
+            : filter.value.toString());
 
           return (
             <Chip
               key={filter.key}
               label={
                 <Typography variant="inherit" component="span">
-                  {fieldName}{" "}
-                  <Typography
-                    variant="inherit"
-                    display="inline"
-                    color="text.secondary"
-                    fontWeight="normal"
-                  >
-                    {operatorLabel}
-                  </Typography>{" "}
-                  {formattedValue}
+                  {`${fieldName} ${operatorLabel} ${formattedValue}`}
                 </Typography>
               }
               onDelete={

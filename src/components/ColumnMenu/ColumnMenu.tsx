@@ -231,12 +231,12 @@ export default function ColumnMenu({
       icon: <FilterIcon />,
       onClick: () => {
         openTableFiltersPopover({
-          defaultQuery: {
+          defaultQuery: [{
             key: column.fieldName,
             operator:
               getFieldProp("filter", column.type)!.operators[0]?.value || "==",
             value: "",
-          },
+          }],
         });
         handleClose();
       },

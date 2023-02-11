@@ -43,10 +43,10 @@ export default function FilterInputs(this: any, {
 
   const [numFilters, setNumFilters] = useState(1)
 
-  const columnType = selectedColumn ? getFieldType(selectedColumn) : null;
+  const columnTypes = selectedColumn.length > 0 ? selectedColumn.map(i => getFieldType(i)) : null;
 
-  const operators = availableFilters?.operators ?? [];
-  const renderedOperatorItems = operators.map((operator) => (
+  const operatorsLists = availableFilters?.map(a => a?.operators ?? []) || [];
+  const renderedOperatorItems = operatorsLists.map((operator: any) => (
     <MenuItem key={operator.value} value={operator.value}>
       <ListItemText style={{ flexShrink: 0 }}>{operator.label}</ListItemText>
 
@@ -63,24 +63,27 @@ export default function FilterInputs(this: any, {
   ));
 
   // Insert ListSubheader components in between groups of operators
-  for (let i = 0; i < operators.length; i++) {
-    if (!operators[i].group) continue;
+  // lists of possible operators (j) are all less than 10 items long and users will likely have a few filters (i) at most
+  for (let i = 0; i < operatorsLists.length; i++) {
+    for (let j = 0; j < i; j++) {
+      if (!operatorsLists[i][j].group) continue;
 
-    if (i === 0 || operators[i - 1].group !== operators[i].group) {
+    if (j === 0 || operatorsLists[i][j-1].group !== operatorsLists[i][j].group) {
       renderedOperatorItems.splice(
-        i === 0 ? 0 : i + 1,
+        j === 0 ? 0 : j + 1,
         0,
-        <ListSubheader key={operators[i].group}>
-          {operators[i].group}
+        <ListSubheader key={operatorsLists[i][j].group}>
+          {operatorsLists[i][j].group}
         </ListSubheader>
       );
 
-      if (i > 0)
+      if (j > 0)
         renderedOperatorItems.splice(
-          i + 1,
+          j + 1,
           0,
-          <Divider key={`divider-${operators[i].group}`} variant="middle" />
+          <Divider key={`divider-${operatorsLists[i][j].group}`} variant="middle" />
         );
+    }
     }
   }
 
@@ -105,8 +108,8 @@ export default function FilterInputs(this: any, {
               multiple={false}
               label="Column"
               options={filterColumns}
-              value={query.key}
-              onChange={handleChangeColumn}
+              value={query[i]?.key}
+              onChange={(e: string | null) => handleChangeColumn(e, i)}
               disabled={disabled}
             />
           </Grid>
@@ -117,9 +120,9 @@ export default function FilterInputs(this: any, {
               select
               variant="filled"
               fullWidth
-              value={query.operator}
+              value={query[i]?.operator}
               disabled={
-                disabled || !query.key || availableFilters?.operators?.length === 0
+                disabled || !query[i] || availableFilters[i]?.operators?.length === 0
               }
               onChange={(e) => {
                 setQuery((query) => ({
@@ -137,33 +140,33 @@ export default function FilterInputs(this: any, {
             </TextField>
           </Grid>
 
-          <Grid item xs={4} key={query.key + query.operator}>
-            {query.key && query.operator && (
+          <Grid item xs={4} key={query[i]?.key + query[i]?.operator}>
+            {query[i]?.key && query[i]?.operator && (
               <ErrorBoundary FallbackComponent={InlineErrorFallback}>
                 <InputLabel
                   variant="filled"
-                  id={`filters-label-${query.key}`}
-                  htmlFor={`sidedrawer-field-${query.key}`}
+                  id={`filters-label-${query[i].key}`}
+                  htmlFor={`sidedrawer-field-${query[i]?.key}`}
                 >
                   Value
                 </InputLabel>
 
                 <Suspense fallback={<FieldSkeleton />}>
-                  {columnType &&
+                  {columnTypes &&
                     createElement(
-                      query.key === "_rowy_ref.id"
+                      query[i].key === "_rowy_ref.id"
                         ? IdFilterInput
-                        : getFieldProp("filter.customInput" as any, columnType) ||
-                        getFieldProp("SideDrawerField", columnType),
+                        : getFieldProp("filter.customInput" as any, columnTypes[i]) ||
+                        getFieldProp("SideDrawerField", columnTypes[i]),
                       {
                         column: selectedColumn,
                         _rowy_ref: {},
-                        value: query.value,
+                        value: query[i]?.value,
                         onChange: (value: any) => {
                           setQuery((query) => ({ ...query, value }));
                         },
                         disabled,
-                        operator: query.operator,
+                        operator: query[i]?.operator,
                       }
                     )}
                 </Suspense>
