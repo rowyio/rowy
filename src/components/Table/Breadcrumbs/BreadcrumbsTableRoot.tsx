@@ -15,7 +15,6 @@ import ReadOnlyIcon from "@mui/icons-material/EditOffOutlined";
 import {
   projectScope,
   userRolesAtom,
-  tableDescriptionDismissedAtom,
   tablesAtom,
 } from "@src/atoms/projectScope";
 import { ROUTES } from "@src/constants/routes";
@@ -28,10 +27,6 @@ export default function BreadcrumbsTableRoot(props: StackProps) {
   const { id } = useParams();
 
   const [userRoles] = useAtom(userRolesAtom, projectScope);
-  const [dismissed, setDismissed] = useAtom(
-    tableDescriptionDismissedAtom,
-    projectScope
-  );
   const [tables] = useAtom(tablesAtom, projectScope);
 
   const tableSettings = find(tables, ["id", id]);
