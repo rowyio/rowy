@@ -1,15 +1,14 @@
-<p align="center">
-<img src="src/assets/logo-sticker.svg" alt="Rowy" height="69" />
-</p>
+<a href="https://www.rowy.io/" target="_blank">
+<img width="100%" src="https://user-images.githubusercontent.com/307298/218350866-cfd7c011-2247-4074-8b1d-06c26a4d0b96.png" />
+</a>
 
-<h3 align="center">
-✨ Low-code backend ✨ <br/>
-</h3>
 <h4 align="center">
-Manage your database and build automations as easy as using a spreadsheet. 
+✨ Airtable-like UI for managing database ✨ Build any automation, with or without code ✨
 </h4>
 <p align="center" >
-Connect to your database (Firestore), manage data on an Airtable-like UI with role based access controls. Build cloud function workflows in JS/TS using any NPM or APIs. Forget CLIs, configs, and DevOps. Focus on building your apps with a platform designed for developer productivity. Low-code for Firebase and Google Cloud.
+Connect to your database and create Cloud Functions in low-code - without leaving your browser.<br/>
+Focus on building your apps.
+Low-code for Firebase and Google Cloud.
 </p>
 
 <div align="center">
@@ -27,27 +26,35 @@ Connect to your database (Firestore), manage data on an Airtable-like UI with ro
 [![GitHub stars](https://img.shields.io/github/stars/rowyio/rowy)](https://github.com/rowyio/rowy/stargazers/)
 
 </div>
-<img width="100%" src="https://user-images.githubusercontent.com/307298/157184506-f94f3f5b-e6d3-49df-9a2c-f665511883f2.png" />
 
 ## Live Demo
 
 💥 Check out the [live demo](https://demo.rowy.io/) of Rowy 💥
 
-## Quick Deploy
-
-Set up Rowy on your Google Cloud Platform project with this easy deploy button.
-
-[<img width="250" alt="Guided quick start button" src="https://user-images.githubusercontent.com/307298/185548050-e9208fb6-fe53-4c84-bbfa-53c08e03c15f.png">](https://rowy.app/)
-
-https://rowy.app
-
-## Documentation
-
-You can find the full documentation with how-to guides and templates
-[here](http://docs.rowy.io/).
-
 ## Features
 
+<!-- <table>
+    <tr>
+    <th>
+      <a href="#">Database</a>
+    </th>
+    <th>
+      <a href="#">Code</a>
+    </th>
+    </tr>
+    <tr>
+    <td>
+        <a href="#">
+        <img src=""/>
+    </a>
+    </td>
+    <td>
+        <a href="#">
+        <img src=""/>
+    </a>
+    </td>
+    </tr>
+</table> -->
 https://user-images.githubusercontent.com/307298/157185793-f67511cd-7b7b-4229-9589-d7defbf7a63f.mp4
 
 <!-- <img width="85%" src="https://firebasestorage.googleapis.com/v0/b/rowyio.appspot.com/o/publicDemo%2FRowy%20Website%20Video%20GIF%20Small.gif?alt=media&token=3f699a8f-c1f2-4046-8ed5-e4ff66947cd8" />
@@ -89,22 +96,23 @@ https://user-images.githubusercontent.com/307298/157185793-f67511cd-7b7b-4229-95
 - Built in user management
 - Customizable views for different user roles
 
-## Install
+## Quick guided install
 
-Set up Rowy on your Google Cloud project with this one-click deploy button. Your
-data and cloud functions stay on your own Firestore/GCP.
+Set up Rowy on your Google Cloud Platform project with this easy deploy button. Your
+data and cloud functions stay on your own Firestore/GCP and is managed via a cloud run instance that operates exclusively on your GCP project. So we do do not access or store any of your data on Rowy.
 
-[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://rowy.app/)
+[<img width="200" alt="Guided quick start button" src="https://user-images.githubusercontent.com/307298/185548050-e9208fb6-fe53-4c84-bbfa-53c08e03c15f.png">](https://rowy.app/)
 
-The one-click deploy makes the process of setting up easy with a step by step
-guide and ensures your project is setup correctly.
+https://rowy.app
 
-It deploys [Rowy Run](https://github.com/rowyio/rowyrun), an open-source Cloud
-Run instance that operates exclusively on your GCP project. So we never have
-access to your service account or any of your data.
+## Documentation
 
-Alternatively, you can manually install by
-[following this guide](https://docs.rowy.io/setup/install).
+You can find the full documentation with how-to guides and templates
+[here](http://docs.rowy.io/).
+
+## Manual Install
+
+We recommend the [quick guided install](https://github.com/rowyio/rowy#quick-guided-install) option above. Manual install option is only recommended if you want to develop and contribute to the project. Follow this [guide](https://docs.rowy.io/setup/install#option-2-manual-install) for manual setup.
 
 ## Roadmap
 
