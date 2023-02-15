@@ -60,7 +60,7 @@ export const useFormula = ({
 
     worker.postMessage({
       formulaFn,
-      row: availableFields,
+      row: JSON.stringify(availableFields),
     });
 
     return () => {
