@@ -1,7 +1,7 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useSetAtom } from "jotai";
 import { useAtomCallback } from "jotai/utils";
-import { cloneDeep, findIndex, sortBy } from "lodash-es";
+import { cloneDeep, findIndex, initial, sortBy } from "lodash-es";
 
 import {
   _deleteRowDbAtom,
@@ -15,16 +15,44 @@ import {
 import { TableRow, TableSchema } from "@src/types/table";
 import { updateRowData } from "@src/utils/table";
 
+const initialRows = [
+  {
+    _rowy_ref: {
+      id: "zzzzzzzzzzzzzzzzzzzw",
+      path: "preview-collection/zzzzzzzzzzzzzzzzzzzw",
+    },
+  },
+  {
+    _rowy_ref: {
+      id: "zzzzzzzzzzzzzzzzzzzx",
+      path: "preview-collection/zzzzzzzzzzzzzzzzzzzx",
+    },
+  },
+  {
+    _rowy_ref: {
+      id: "zzzzzzzzzzzzzzzzzzzy",
+      path: "preview-collection/zzzzzzzzzzzzzzzzzzzy",
+    },
+  },
+];
+
 const TableSourcePreview = ({ tableSchema }: { tableSchema: TableSchema }) => {
   const setTableSchemaAtom = useSetAtom(tableSchemaAtom, tableScope);
-  setTableSchemaAtom(() => ({
-    ...tableSchema,
-    _rowy_ref: "preview",
-  }));
-
   const setRows = useSetAtom(tableRowsDbAtom, tableScope);
+
+  useEffect(() => {
+    setRows(initialRows);
+  }, [setRows]);
+
+  useEffect(() => {
+    setTableSchemaAtom(() => ({
+      ...tableSchema,
+      _rowy_ref: "preview",
+    }));
+  }, [tableSchema, setTableSchemaAtom]);
+
   const readRowsDb = useAtomCallback(
-    useCallback((get) => get(tableRowsDbAtom), []),
+    useCallback((get) => get(tableRowsDbAtom) || initialRows, []),
     tableScope
   );
 

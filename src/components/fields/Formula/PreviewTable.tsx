@@ -42,12 +42,12 @@ const PreviewTable = ({ tableSchema }: { tableSchema: TableSchema }) => {
             marginTop: 1,
             marginLeft: 0,
 
-            // tableToolbar
-            "& > div:first-child > *:not(:first-child)": {
+            // table toolbar
+            "& > div:first-child": {
               display: "none",
             },
             // table grid
-            "& > div:nth-child(2)": {
+            "& > div:nth-of-type(2)": {
               height: "unset",
             },
             // emtpy state
@@ -56,11 +56,19 @@ const PreviewTable = ({ tableSchema }: { tableSchema: TableSchema }) => {
             },
             // column actions - add column
             '& [data-col-id="_rowy_column_actions"]': {
-              padding: 0,
-              width: 0,
-            },
-            '& [data-col-id="_rowy_column_actions"] > button': {
               display: "none",
+            },
+            // row headers - sort by, column settings
+            '& [data-row-id="_rowy_header"] > button': {
+              display: "none",
+            },
+            // row headers - drag handler
+            '& [data-row-id="_rowy_header"] > .column-drag-handle': {
+              display: "none !important",
+            },
+            // row headers - resize handler
+            '& [data-row-id="_rowy_header"] >:last-child': {
+              display: "none !important",
             },
           }}
         >

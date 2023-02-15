@@ -21,6 +21,7 @@ import {
 import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 import { ISettingsProps } from "@src/components/fields/types";
 import FieldsDropdown from "@src/components/ColumnModals/FieldsDropdown";
+import { DEFAULT_COL_WIDTH, DEFAULT_ROW_HEIGHT } from "@src/components/Table";
 import { ColumnConfig } from "@src/types/table";
 
 import { defaultFn, listenerFieldTypes, outputFieldTypes } from "./util";
@@ -62,7 +63,7 @@ export default function Settings({
           previewSchema[key] = {
             ...columns[key],
             fixed: false,
-            width: undefined,
+            width: DEFAULT_COL_WIDTH,
           };
         }
         if (columns[key].fieldName === fieldName) {
@@ -74,6 +75,7 @@ export default function Settings({
         }
         return previewSchema;
       }, {} as { [key: string]: ColumnConfig }),
+      rowHeight: DEFAULT_ROW_HEIGHT,
     };
   }, [config, fieldName, tableSchema]);
 
