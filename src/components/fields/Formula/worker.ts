@@ -8,7 +8,7 @@ onmessage = async ({ data }) => {
       "row",
       `const fn = async () => \n${fnBody}\n return fn();`
     );
-    const result = await fn(row);
+    const result = await fn(JSON.parse(row));
     postMessage({ result });
   } catch (error: any) {
     console.error("Error: ", error);
