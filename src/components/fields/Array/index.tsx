@@ -25,6 +25,6 @@ export const config: IFieldConfig = {
     popoverProps: { PaperProps: { sx: { p: 1, minWidth: "200px" } } },
   }),
   SideDrawerField,
-  requireConfiguration: true,
+  requireConfiguration: false,
 };
 export default config;
