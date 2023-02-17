@@ -16,6 +16,10 @@ export const webhook = {
       table: TableSettings
     ) => `const formParser: Parser = async({req, db, ref, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("formParser started")
+  
+  // Import any NPM package needed
+  // const lodash = require('lodash');
   
   // Optionally return an object to be added as a new row to the table
   // Example: add the webhook body as row
@@ -41,6 +45,7 @@ export const webhook = {
       table: TableSettings
     ) => `const condition: Condition = async({ref, req, db, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("condition started")
   
   return true;
   // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY

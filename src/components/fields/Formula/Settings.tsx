@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useMemo } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { useAtom } from "jotai";
 import MultiSelect from "@rowy/multiselect";
@@ -12,12 +12,20 @@ import {
   Tooltip,
 } from "@mui/material";
 
+import {
+  tableColumnsOrderedAtom,
+  tableSchemaAtom,
+  tableScope,
+} from "@src/atoms/tableScope";
+
 import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 import { ISettingsProps } from "@src/components/fields/types";
-import { tableColumnsOrderedAtom, tableScope } from "@src/atoms/tableScope";
 import FieldsDropdown from "@src/components/ColumnModals/FieldsDropdown";
+import { DEFAULT_COL_WIDTH, DEFAULT_ROW_HEIGHT } from "@src/components/Table";
+import { ColumnConfig } from "@src/types/table";
 
 import { defaultFn, listenerFieldTypes, outputFieldTypes } from "./util";
+import PreviewTable from "./PreviewTable";
 import { getFieldProp } from "..";
 
 /* eslint-disable import/no-webpack-loader-syntax */
@@ -38,13 +46,40 @@ const diagnosticsOptions = {
 
 export default function Settings({
   config,
+  fieldName,
   onChange,
   onBlur,
   errors,
 }: ISettingsProps) {
+  const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
   const returnType = getFieldProp("dataType", config.renderFieldType) ?? "any";
   const formulaFn = config?.formulaFn ? config.formulaFn : defaultFn;
+
+  const previewTableSchema = useMemo(() => {
+    const columns = tableSchema.columns || {};
+    return {
+      ...tableSchema,
+      columns: Object.keys(columns).reduce((previewSchema, key) => {
+        if ((config.listenerFields || []).includes(columns[key].fieldName)) {
+          previewSchema[key] = {
+            ...columns[key],
+            fixed: false,
+            width: DEFAULT_COL_WIDTH,
+          };
+        }
+        if (columns[key].fieldName === fieldName) {
+          previewSchema[key] = {
+            ...columns[key],
+            config,
+            fixed: true,
+          };
+        }
+        return previewSchema;
+      }, {} as { [key: string]: ColumnConfig }),
+      rowHeight: DEFAULT_ROW_HEIGHT,
+    };
+  }, [config, fieldName, tableSchema]);
 
   return (
     <Stack spacing={1}>
@@ -125,6 +160,7 @@ export default function Settings({
           />
         </Suspense>
       </div>
+      <PreviewTable tableSchema={previewTableSchema} />
     </Stack>
   );
 }

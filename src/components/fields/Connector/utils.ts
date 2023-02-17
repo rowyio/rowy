@@ -13,6 +13,10 @@ export const replacer = (data: any) => (m: string, key: string) => {
 
 export const baseFunction = `const connectorFn: Connector = async ({query, row, user, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("connectorFn started")
+  
+  // Import any NPM package needed
+  // const lodash = require('lodash');
   
   return [];
   // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY

@@ -16,6 +16,7 @@ import { ISettingsProps } from "@src/components/fields/types";
 import { Color, toColor } from "react-color-palette";
 import { fieldSx } from "@src/components/SideDrawer/utils";
 import { resultColorsScale, defaultColors } from "@src/utils/color";
+import { multiply100WithPrecision } from "./utils";
 
 const colorLabels: { [key: string]: string } = {
   0: "Start",
@@ -160,7 +161,7 @@ const Preview = ({ colors }: { colors: any }) => {
                 }}
               />
               <Typography style={{ position: "relative", zIndex: 1 }}>
-                {Math.floor(value * 100)}%
+                {multiply100WithPrecision(value)}%
               </Typography>
             </Box>
           );

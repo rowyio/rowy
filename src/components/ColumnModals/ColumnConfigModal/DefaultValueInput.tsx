@@ -53,15 +53,17 @@ function CodeEditor({ type, column, handleChange }: ICodeEditorProps) {
   } else if (column.config?.defaultValue?.dynamicValueFn) {
     dynamicValueFn = column.config?.defaultValue?.dynamicValueFn;
   } else if (column.config?.defaultValue?.script) {
-    dynamicValueFn = `const dynamicValueFn : DefaultValue = async ({row,ref,db,storage,auth,logging})=>{
+    dynamicValueFn = `const dynamicValueFn: DefaultValue = async ({row,ref,db,storage,auth,logging})=>{
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("dynamicValueFn started")
   
   ${column.config?.defaultValue.script}
   // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`;
   } else {
-    dynamicValueFn = `const dynamicValueFn : DefaultValue = async ({row,ref,db,storage,auth,logging})=>{
+    dynamicValueFn = `const dynamicValueFn: DefaultValue = async ({row,ref,db,storage,auth,logging})=>{
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("dynamicValueFn started")
   
   // Example: generate random hex color
   // const color = "#" + Math.floor(Math.random() * 16777215).toString(16);

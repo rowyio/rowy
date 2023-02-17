@@ -1,5 +1,9 @@
 export const RUN_ACTION_TEMPLATE = `const action:Action = async ({row,ref,db,storage,auth,actionParams,user,logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("action started")
+  
+  // Import any NPM package needed
+  // const lodash = require('lodash');
   
   // Example:
   /*
@@ -30,6 +34,10 @@ export const RUN_ACTION_TEMPLATE = `const action:Action = async ({row,ref,db,sto
 
 export const UNDO_ACTION_TEMPLATE = `const action : Action = async ({row,ref,db,storage,auth,actionParams,user,logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("action started")
+  
+  // Import any NPM package needed
+  // const lodash = require('lodash');
   
   // Example:
   /*

@@ -15,6 +15,10 @@ export const webhookSendgrid = {
       table: TableSettings
     ) => `const sendgridParser: Parser = async ({ req, db, ref, logging }) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("sendgridParser started")
+  
+  // Import any NPM package needed
+  // const lodash = require('lodash');
   
   const { body } = req 
   const eventHandler = async (sgEvent) => {
@@ -41,6 +45,7 @@ export const webhookSendgrid = {
       table: TableSettings
     ) => `const condition: Condition = async({ref, req, db, logging}) => {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("condition started")
   
   return true;
   // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
