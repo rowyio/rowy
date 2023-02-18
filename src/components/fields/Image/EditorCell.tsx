@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { IEditorCellProps } from "@src/components/fields/types";
-import { useAtom, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { assignIn } from "lodash-es";
 
 import { alpha, Box, Stack, Grid, IconButton, ButtonBase } from "@mui/material";
@@ -11,8 +11,6 @@ import Thumbnail from "@src/components/Thumbnail";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
-import { tableSchemaAtom, tableScope } from "@src/atoms/tableScope";
-import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
 import { FileValue } from "@src/types/table";
 import useFileUpload from "@src/components/fields/File/useFileUpload";
 import { IMAGE_MIME_TYPES } from "./index";
@@ -61,7 +59,7 @@ export default function Image_({
   const dropzoneProps = getRootProps();
 
   const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
-    const { destination, source, draggableId } = result;
+    const { destination, source } = result;
 
     if (!destination) {
       return;
@@ -149,15 +147,17 @@ export default function Image_({
                             ...provided.draggableProps.style,
                           }}
                         >
-                          <div
-                            {...provided.dragHandleProps}
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          >
-                            <DragIndicatorIcon />
-                          </div>
+                          {value.length > 1 && (
+                            <div
+                              {...provided.dragHandleProps}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <DragIndicatorIcon />
+                            </div>
+                          )}
                           <ButtonBase
                             aria-label="Delete…"
                             sx={imgSx(rowHeight)}

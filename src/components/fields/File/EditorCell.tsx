@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { IEditorCellProps } from "@src/components/fields/types";
 import { useSetAtom } from "jotai";
 
@@ -47,7 +46,7 @@ export default function File_({
   const dropzoneProps = getRootProps();
 
   const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
-    const { destination, source, draggableId } = result;
+    const { destination, source } = result;
 
     if (!destination) {
       return;
@@ -127,15 +126,17 @@ export default function File_({
                             ...provided.draggableProps.style,
                           }}
                         >
-                          <div
-                            {...provided.dragHandleProps}
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          >
-                            <DragIndicatorIcon />
-                          </div>
+                          {value.length > 1 && (
+                            <div
+                              {...provided.dragHandleProps}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <DragIndicatorIcon />
+                            </div>
+                          )}
                           <Tooltip
                             title={`File last modified ${format(
                               file.lastModifiedTS,
