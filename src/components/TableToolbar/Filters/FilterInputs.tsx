@@ -41,55 +41,59 @@ export default function FilterInputs(this: any, {
 }: IFilterInputsProps) {
 
 
-  const [numFilters, setNumFilters] = useState(1)
+  const [numFilters, setNumFilters] = useState(query.length)
 
   const columnTypes = selectedColumn.length > 0 ? selectedColumn.map(i => getFieldType(i)) : null;
 
-  const operatorsLists = availableFilters?.map(a => a?.operators ?? []) || [];
-  const renderedOperatorItems = operatorsLists.map((operator: any) => (
-    <MenuItem key={operator.value} value={operator.value}>
-      <ListItemText style={{ flexShrink: 0 }}>{operator.label}</ListItemText>
+  const operatorsLists = availableFilters?.map(a => {
+    const foo = a?.operators ?? []
+    return foo
+  }) || [];
+  const renderedOperatorItems = operatorsLists?.map((operatorList) => {
+    return operatorList.map(operator => {
+      return <MenuItem key={operator.value} value={operator.value}>
+        <ListItemText style={{ flexShrink: 0 }}>{operator.label}</ListItemText>
 
-      {operator.secondaryLabel && (
-        <Typography
-          variant="inherit"
-          color="text.disabled"
-          sx={{ overflow: "hidden", textOverflow: "ellipsis", ml: 1 }}
-        >
-          &nbsp;{operator.secondaryLabel}
-        </Typography>
-      )}
-    </MenuItem>
-  ));
+        {operator.secondaryLabel && (
+          <Typography
+            variant="inherit"
+            color="text.disabled"
+            sx={{ overflow: "hidden", textOverflow: "ellipsis", ml: 1 }}
+          >
+            &nbsp;{operator.secondaryLabel}
+          </Typography>
+        )}
+      </MenuItem>
+    })
+  });
 
   // Insert ListSubheader components in between groups of operators
   // lists of possible operators (j) are all less than 10 items long and users will likely have a few filters (i) at most
   for (let i = 0; i < operatorsLists.length; i++) {
     for (let j = 0; j < i; j++) {
-      if (!operatorsLists[i][j].group) continue;
+      if (operatorsLists[i][j] === undefined) continue;
 
-    if (j === 0 || operatorsLists[i][j-1].group !== operatorsLists[i][j].group) {
-      renderedOperatorItems.splice(
-        j === 0 ? 0 : j + 1,
-        0,
-        <ListSubheader key={operatorsLists[i][j].group}>
-          {operatorsLists[i][j].group}
-        </ListSubheader>
-      );
-
-      if (j > 0)
-        renderedOperatorItems.splice(
-          j + 1,
+      if (j === 0 || operatorsLists[i][j - 1].group !== operatorsLists[i][j].group) {
+        renderedOperatorItems[i].splice(
+          j === 0 ? 0 : j + 1,
           0,
-          <Divider key={`divider-${operatorsLists[i][j].group}`} variant="middle" />
+          <ListSubheader key={operatorsLists[i][j].group}>
+            {operatorsLists[i][j].group}
+          </ListSubheader>
         );
-    }
+
+        if (j > 0)
+          renderedOperatorItems[i].splice(
+            j + 1,
+            0,
+            <Divider key={`divider-${operatorsLists[i][j].group}`} variant="middle" />
+          );
+      }
     }
   }
 
   function handleAddFilter() {
     setNumFilters(numFilters + 1)
-    console.log(numFilters)
   }
 
   function handleDeleteFilter() {
@@ -100,7 +104,6 @@ export default function FilterInputs(this: any, {
   function getFiltersInputs() {
     var rows = []
     for (let i = 0; i < numFilters; i++) {
-      console.log("test")
       rows.push(
         <Grid container spacing={2} sx={{ mb: 3 }}>
           <Grid item xs={4}>
@@ -125,10 +128,10 @@ export default function FilterInputs(this: any, {
                 disabled || !query[i] || availableFilters[i]?.operators?.length === 0
               }
               onChange={(e) => {
-                setQuery((query) => ({
-                  ...query,
-                  operator: e.target.value as string,
-                }));
+                const updateQuery = [...query]
+                const updateAtIdx = { ...updateQuery[i], operator: e.target.value as string }
+                updateQuery[i] = updateAtIdx
+                setQuery(updateQuery);
               }}
               SelectProps={{ displayEmpty: true }}
               sx={{ "& .MuiSelect-select": { display: "flex" } }}
@@ -136,7 +139,7 @@ export default function FilterInputs(this: any, {
               <MenuItem disabled value="" style={{ display: "none" }}>
                 Select operator
               </MenuItem>
-              {renderedOperatorItems}
+              {renderedOperatorItems[i]}
             </TextField>
           </Grid>
 
@@ -163,7 +166,10 @@ export default function FilterInputs(this: any, {
                         _rowy_ref: {},
                         value: query[i]?.value,
                         onChange: (value: any) => {
-                          setQuery((query) => ({ ...query, value }));
+                          const updateQuery = [...query]
+                          const updateAtIdx = { ...updateQuery[i], value: value }
+                          updateQuery[i] = updateAtIdx
+                          setQuery(updateQuery);
                         },
                         disabled,
                         operator: query[i]?.operator,

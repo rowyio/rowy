@@ -49,7 +49,6 @@ export const useFilterInputs = (
     }
 
     const column = find(filterColumns, ["key", value]);
-
     if (column) {
       const filter = getFieldProp("filter", getFieldType(column));
       if (index >= query.length) {
@@ -80,16 +79,16 @@ export const useFilterInputs = (
 
   // Get available filters from selected column type(s)
   function getAvailableFilters(): IFieldConfig["filter"][] {
-    var test: IFieldConfig["filter"][] = new Array<IFieldConfig["filter"]>()
+    var availFilters: IFieldConfig["filter"][] = new Array<IFieldConfig["filter"]>()
     query.forEach(i => {
       if (i.key === "_rowy_ref.id") {
-        test.push({ operators: [{ value: "id-equal", label: "is" }] })
+        availFilters.push({ operators: [{ value: "id-equal", label: "is" }] })
       }
     })
     selectedColumns.forEach(col => {
-      getFieldProp("filter", getFieldType(col))
+      availFilters.push(getFieldProp("filter", getFieldType(col)))
     })
-    return test
+    return availFilters
   }
 
   const availableFilters = getAvailableFilters()
