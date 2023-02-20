@@ -72,6 +72,12 @@ export const useFilterInputs = (
     }
   };
 
+  const handleDeleteFilter = (index: number) => {
+    let updateQuery = [... query]
+    updateQuery.splice(index, 1)
+    setQuery(updateQuery || INITIAL_QUERY)
+  }
+
   // Get the column configs
   const selectedColumns = filterColumns.filter((col, idx) => {
     return col?.key === query[idx]?.key
@@ -97,6 +103,7 @@ export const useFilterInputs = (
     filterColumns,
     selectedColumn: selectedColumns,
     handleChangeColumn,
+    handleDeleteFilter,
     availableFilters,
     query,
     setQuery,

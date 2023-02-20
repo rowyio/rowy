@@ -12,7 +12,8 @@ import {
   TextField,
   InputLabel,
   Button,
-  IconButton
+  IconButton,
+  alpha
 } from "@mui/material";
 
 import AddIcon from '@mui/icons-material/Add';
@@ -25,6 +26,7 @@ import { InlineErrorFallback } from "@src/components/ErrorFallback";
 
 import type { useFilterInputs } from "./useFilterInputs";
 import { getFieldType, getFieldProp } from "@src/components/fields";
+import { FormatLetterCaseUpper } from "mdi-material-ui";
 
 export interface IFilterInputsProps extends ReturnType<typeof useFilterInputs> {
   disabled?: boolean;
@@ -34,6 +36,7 @@ export default function FilterInputs(this: any, {
   filterColumns,
   selectedColumn,
   handleChangeColumn,
+  handleDeleteFilter,
   availableFilters,
   query,
   setQuery,
@@ -96,8 +99,9 @@ export default function FilterInputs(this: any, {
     setNumFilters(numFilters + 1)
   }
 
-  function handleDeleteFilter() {
+  function handleDeleteIconPressed(i : number) {
     setNumFilters(numFilters - 1)
+    handleDeleteFilter(i)
   }
 
   // Render input for given num of filters
@@ -105,8 +109,8 @@ export default function FilterInputs(this: any, {
     var rows = []
     for (let i = 0; i < numFilters; i++) {
       rows.push(
-        <Grid container spacing={2} sx={{ mb: 3 }}>
-          <Grid item xs={4}>
+        <Grid container alignItems="center" spacing={2} sx={{ mb: 3 }}>
+          <Grid item xs>
             <ColumnSelect
               multiple={false}
               label="Column"
@@ -117,7 +121,7 @@ export default function FilterInputs(this: any, {
             />
           </Grid>
 
-          <Grid item xs={4}>
+          <Grid item xs>
             <TextField
               label="Operator"
               select
@@ -143,7 +147,7 @@ export default function FilterInputs(this: any, {
             </TextField>
           </Grid>
 
-          <Grid item xs={4} key={query[i]?.key + query[i]?.operator}>
+          <Grid item xs key={query[i]?.key + query[i]?.operator}>
             {query[i]?.key && query[i]?.operator && (
               <ErrorBoundary FallbackComponent={InlineErrorFallback}>
                 <InputLabel
@@ -178,9 +182,11 @@ export default function FilterInputs(this: any, {
                 </Suspense>
               </ErrorBoundary>
             )}
-            <IconButton onClick={handleDeleteFilter} aria-label="delete filter">
-              <ClearIcon />
-            </IconButton>
+            </Grid>
+            <Grid item xs={1}>
+              <IconButton sx={{mt: 3}} onClick={() => handleDeleteIconPressed(i)} aria-label="delete filter">
+                <ClearIcon />
+              </IconButton>
           </Grid>
         </Grid>)
     }
@@ -190,9 +196,19 @@ export default function FilterInputs(this: any, {
   return (
     <Stack spacing={2}>
       {getFiltersInputs()}
-      <Button onClick={handleAddFilter} variant="contained" endIcon={<AddIcon />}>
+      <Button onClick={handleAddFilter} variant="contained" endIcon={<AddIcon />} sx={{ color: (theme) =>
+                theme.palette.mode === "dark"
+                  ? theme.palette.primary.light
+                  : theme.palette.primary.dark,
+              backgroundColor: (theme) =>
+                alpha(
+                  theme.palette.primary.main,
+                  theme.palette.action.selectedOpacity
+                ),
+              borderColor: "primary.main"}}>
         Add another filter
       </Button>
+      <div />
     </Stack>
   );
 }
