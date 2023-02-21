@@ -6,11 +6,18 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import CheckIcon from "@mui/icons-material/Check";
 
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
-import { tableScope, updateTableSchemaAtom } from "@src/atoms/tableScope";
+import {
+  tableIdAtom,
+  tableScope,
+  updateTableSchemaAtom,
+} from "@src/atoms/tableScope";
+import { projectScope, updateUserSettingsAtom } from "@src/atoms/projectScope";
 import { TableSort } from "@src/types/table";
 
 function useSaveTableSorts(canEditColumns: boolean) {
   const [updateTableSchema] = useAtom(updateTableSchemaAtom, tableScope);
+  const [updateUserSettings] = useAtom(updateUserSettingsAtom, projectScope);
+  const [tableId] = useAtom(tableIdAtom, tableScope);
   if (!updateTableSchema) throw new Error("Cannot update table schema");
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [snackbarId, setSnackbarId] = useState<SnackbarKey | null>(null);
@@ -18,8 +25,14 @@ function useSaveTableSorts(canEditColumns: boolean) {
   // Offer to save when table sorts changes
   const trigger = useCallback(
     (sorts: TableSort[]) => {
+      if (updateUserSettings) {
+        updateUserSettings({
+          tables: {
+            [`${tableId}`]: { sorts },
+          },
+        });
+      }
       if (!canEditColumns) return;
-      console.log(snackbarId);
       if (snackbarId) {
         closeSnackbar(snackbarId);
       }
@@ -27,9 +40,7 @@ function useSaveTableSorts(canEditColumns: boolean) {
         enqueueSnackbar("Apply this sorting for all users?", {
           action: (
             <SaveTableSortButton
-              updateTable={async () =>
-                await updateTableSchema({ sorts: sorts })
-              }
+              updateTable={async () => await updateTableSchema({ sorts })}
             />
           ),
           anchorOrigin: { horizontal: "center", vertical: "top" },
@@ -39,9 +50,11 @@ function useSaveTableSorts(canEditColumns: boolean) {
       return () => (snackbarId ? closeSnackbar(snackbarId) : null);
     },
     [
-      snackbarId,
+      updateUserSettings,
       canEditColumns,
+      snackbarId,
       enqueueSnackbar,
+      tableId,
       closeSnackbar,
       updateTableSchema,
     ]

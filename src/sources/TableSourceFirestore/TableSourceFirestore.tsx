@@ -39,6 +39,7 @@ import { getTableSchemaPath } from "@src/utils/table";
 import { TableSchema } from "@src/types/table";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { projectScope } from "@src/atoms/projectScope";
+import useApplySorts from "./useApplySorts";
 
 /**
  * When rendered, provides atom values for top-level tables and sub-tables
@@ -141,6 +142,7 @@ export const TableSourceFirestore = memo(function TableSourceFirestore() {
     }
   );
 
+  useApplySorts();
   useAuditChange();
   useBulkWriteDb();
 
