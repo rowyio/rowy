@@ -75,6 +75,15 @@ export default function useFileUpload(
     [deleteUpload, docRef, fieldName, updateField]
   );
 
+  // Drag and Drop
+  const handleUpdate = (files: any) => {
+    updateField({
+      path: docRef.path,
+      fieldName,
+      value: files,
+    });
+  };
+
   return {
     localFiles,
     progress,
@@ -83,5 +92,6 @@ export default function useFileUpload(
     handleUpload,
     handleDelete,
     dropzoneState,
+    handleUpdate,
   };
 }

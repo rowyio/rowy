@@ -101,6 +101,7 @@ export type TableSchema = {
   rowHeight?: number;
   filters?: TableFilter[];
   filtersOverridable?: boolean;
+  sorts?: TableSort[];
 
   functionConfigPath?: string;
   functionBuilderRef?: any;

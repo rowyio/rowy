@@ -48,7 +48,7 @@ const inferTypeFromValue = (value: any) => {
   if (typeof value === "boolean") return FieldType.checkbox;
   if (isDate(value)) return FieldType.dateTime;
   // trying to convert the value to date
-  if (+new Date(value)) {
+  if (typeof value !== "number" && +new Date(value)) {
     // date and time are separated by a blank space, checking if time present.
     if (value.split(" ").length > 1) {
       return FieldType.dateTime;
