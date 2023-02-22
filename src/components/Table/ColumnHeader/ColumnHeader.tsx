@@ -233,6 +233,7 @@ export const ColumnHeader = memo(function ColumnHeader({
           sortKey={sortKey}
           currentSort={currentSort}
           tabIndex={focusInsideCell ? 0 : -1}
+          canEditColumns={canEditColumns}
         />
       )}
 
