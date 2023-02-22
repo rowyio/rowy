@@ -19,6 +19,17 @@ export const StyledCell = styled("div")(({ theme }) => ({
     alignItems: "center",
   },
 
+  "& > .cell-contents-contain-none": {
+    padding: "0 var(--cell-padding)",
+    width: "100%",
+    height: "100%",
+    contain: "none",
+    overflow: "hidden",
+
+    display: "flex",
+    alignItems: "center",
+  },
+
   backgroundColor: "var(--cell-background-color)",
 
   border: `1px solid ${theme.palette.divider}`,

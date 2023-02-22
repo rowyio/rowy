@@ -20,6 +20,15 @@ import { FileValue } from "@src/types/table";
 import useFileUpload from "./useFileUpload";
 import { FileIcon } from ".";
 
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+  ResponderProvided,
+} from "react-beautiful-dnd";
+
 export default function File_({
   column,
   _rowy_ref,
@@ -72,52 +81,94 @@ export default function File_({
         </ButtonBase>
       )}
 
-      <Grid container spacing={0.5} style={{ marginTop: 2 }}>
-        {Array.isArray(value) &&
-          value.map((file: FileValue) => (
-            <Grid item key={file.name}>
-              <Tooltip
-                title={`File last modified ${format(
-                  file.lastModifiedTS,
-                  DATE_TIME_FORMAT
-                )}`}
-              >
-                <div>
-                  <Chip
-                    icon={<FileIcon />}
-                    label={file.name}
-                    onClick={() => window.open(file.downloadURL)}
-                    onDelete={
-                      !disabled
-                        ? () =>
-                            confirm({
-                              title: "Delete file?",
-                              body: "This file cannot be recovered after",
-                              confirm: "Delete",
-                              confirmColor: "error",
-                              handleConfirm: () => handleDelete(file),
-                            })
-                        : undefined
-                    }
-                  />
-                </div>
-              </Tooltip>
-            </Grid>
-          ))}
+      <DragDropContext onDragEnd={() => console.log("onDragEnd")}>
+        <Droppable droppableId="sidebar-file-droppable">
+          {(provided) => (
+            <Grid
+              container
+              spacing={0.5}
+              style={{ marginTop: 2 }}
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
+              {Array.isArray(value) &&
+                value.map((file: FileValue, i) => (
+                  <Draggable
+                    key={file.downloadURL}
+                    draggableId={file.downloadURL}
+                    index={i}
+                  >
+                    {(provided) => (
+                      <Grid
+                        item
+                        key={file.name}
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          ...provided.draggableProps.style,
+                        }}
+                      >
+                        {value.length > 1 && (
+                          <div
+                            {...provided.dragHandleProps}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <DragIndicatorIcon />
+                          </div>
+                        )}
+                        <Tooltip
+                          title={`File last modified ${format(
+                            file.lastModifiedTS,
+                            DATE_TIME_FORMAT
+                          )}`}
+                        >
+                          <div>
+                            <Chip
+                              icon={<FileIcon />}
+                              label={file.name}
+                              onClick={() => window.open(file.downloadURL)}
+                              onDelete={
+                                !disabled
+                                  ? () =>
+                                      confirm({
+                                        title: "Delete file?",
+                                        body: "This file cannot be recovered after",
+                                        confirm: "Delete",
+                                        confirmColor: "error",
+                                        handleConfirm: () => handleDelete(file),
+                                      })
+                                  : undefined
+                              }
+                            />
+                          </div>
+                        </Tooltip>
+                      </Grid>
+                    )}
+                  </Draggable>
+                ))}
 
-        {localFiles &&
-          localFiles.map((file) => (
-            <Grid item>
-              <Chip
-                icon={<FileIcon />}
-                label={file.name}
-                deleteIcon={
-                  <CircularProgressOptical size={20} color="inherit" />
-                }
-              />
+              {localFiles &&
+                localFiles.map((file) => (
+                  <Grid item>
+                    <Chip
+                      icon={<FileIcon />}
+                      label={file.name}
+                      deleteIcon={
+                        <CircularProgressOptical size={20} color="inherit" />
+                      }
+                    />
+                  </Grid>
+                ))}
+              {provided.placeholder}
             </Grid>
-          ))}
-      </Grid>
+          )}
+        </Droppable>
+      </DragDropContext>
     </>
   );
 }
