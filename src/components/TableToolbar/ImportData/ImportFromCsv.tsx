@@ -62,7 +62,20 @@ function convertJSONToCSV(rawData: string): string | false {
     return false;
   }
   const fields = extractFields(rawDataJSONified);
-  const opts = { fields };
+  const opts = {
+    fields,
+    transforms: [
+      (value: any) => {
+        // if the value is an array, join it with a comma
+        for (let key in value) {
+          if (Array.isArray(value[key])) {
+            value[key] = value[key].join(",");
+          }
+        }
+        return value;
+      },
+    ],
+  };
 
   try {
     const csv = parseJSON(rawDataJSONified, opts);
