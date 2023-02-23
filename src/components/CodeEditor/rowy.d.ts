@@ -18,9 +18,9 @@ type uploadOptions = {
   fileName?: string;
 };
 type RowyLogging = {
-  log: (payload: any) => void;
-  warn: (payload: any) => void;
-  error: (payload: any) => void;
+  log: (...payload: any[]) => void;
+  warn: (...payload: any[]) => void;
+  error: (...payload: any[]) => void;
 };
 interface Rowy {
   metadata: {
