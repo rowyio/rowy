@@ -25,12 +25,7 @@ export default function useApplySorts() {
 
   useEffect(() => {
     if (applySort && Object.keys(tableSchema).length) {
-      console.log("useApplySorts");
       const userDefaultSort = userSettings.tables?.[tableId]?.sorts || [];
-      console.log({
-        userDefaultSort,
-        tableSchemaSorts: tableSchema.sorts,
-      });
       setTableSorts(
         userDefaultSort.length ? userDefaultSort : tableSchema.sorts || []
       );
