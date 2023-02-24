@@ -84,7 +84,7 @@ export default function UserSelect({
     return <UserListItem user={option.user} {...props} />;
   };
 
-  if (value === undefined) {
+  if (value === undefined || value === null) {
     value = [];
   } else if (!Array.isArray(value)) {
     value = [value.email];

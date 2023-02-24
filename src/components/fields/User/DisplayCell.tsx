@@ -16,7 +16,7 @@ export default function User({
   let userValue: UserDataType[] = [];
   let emails = new Set();
 
-  if (value !== undefined) {
+  if (value !== undefined && value !== null) {
     if (!Array.isArray(value)) {
       value = [value.email];
     }
