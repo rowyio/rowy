@@ -3,14 +3,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { useAtom } from "jotai";
 import MultiSelect from "@rowy/multiselect";
 
-import {
-  Grid,
-  InputLabel,
-  Typography,
-  Stack,
-  FormHelperText,
-  Tooltip,
-} from "@mui/material";
+import { Grid, InputLabel, Stack, FormHelperText } from "@mui/material";
 
 import {
   tableColumnsOrderedAtom,
@@ -142,7 +135,11 @@ export default function Settings({
           additionalVariables={[
             {
               key: "row",
-              description: `Current row's data`,
+              description: `row has the value of doc.data() it has type definitions using this table's schema, but you can only access formula's listener fields.`,
+            },
+            {
+              key: "ref",
+              description: `reference object that holds the readonly reference of the row document.(i.e ref.id)`,
             },
           ]}
         />
