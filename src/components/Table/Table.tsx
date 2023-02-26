@@ -31,6 +31,8 @@ import {
   tablePageAtom,
   updateColumnAtom,
   selectedCellAtom,
+  tableSortsAtom,
+  tableIdAtom,
 } from "@src/atoms/tableScope";
 import { getFieldType, getFieldProp } from "@src/components/fields";
 import { useKeyboardNavigation } from "./useKeyboardNavigation";
@@ -38,6 +40,7 @@ import { useMenuAction } from "./useMenuAction";
 import { useSaveColumnSizing } from "./useSaveColumnSizing";
 import useHotKeys from "./useHotKey";
 import type { TableRow, ColumnConfig } from "@src/types/table";
+import { projectScope, userSettingsAtom } from "@src/atoms/projectScope";
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
@@ -97,6 +100,10 @@ export default function Table({
   const [tablePage, setTablePage] = useAtom(tablePageAtom, tableScope);
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
+
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
+  const [tableId] = useAtom(tableIdAtom, tableScope);
+  const setTableSorts = useSetAtom(tableSortsAtom, tableScope);
 
   // Store a **state** and reference to the container element
   // so the state can re-render `TableBody`, preventing virtualization
@@ -232,6 +239,18 @@ export default function Table({
     tableNextPage.loading,
     containerRef,
   ]);
+
+  // apply user default sort on first render
+  const [applySort, setApplySort] = useState(true);
+  useEffect(() => {
+    if (applySort && Object.keys(tableSchema).length) {
+      const userDefaultSort = userSettings.tables?.[tableId]?.sorts || [];
+      setTableSorts(
+        userDefaultSort.length ? userDefaultSort : tableSchema.sorts || []
+      );
+      setApplySort(false);
+    }
+  }, [tableSchema, userSettings, tableId, setTableSorts, applySort]);
 
   return (
     <div
