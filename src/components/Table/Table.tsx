@@ -34,13 +34,13 @@ import {
   tableSortsAtom,
   tableIdAtom,
 } from "@src/atoms/tableScope";
+import { projectScope, userSettingsAtom } from "@src/atoms/projectScope";
 import { getFieldType, getFieldProp } from "@src/components/fields";
 import { useKeyboardNavigation } from "./useKeyboardNavigation";
 import { useMenuAction } from "./useMenuAction";
 import { useSaveColumnSizing } from "./useSaveColumnSizing";
 import useHotKeys from "./useHotKey";
 import type { TableRow, ColumnConfig } from "@src/types/table";
-import { projectScope, userSettingsAtom } from "@src/atoms/projectScope";
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
@@ -101,6 +101,7 @@ export default function Table({
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
 
+  // Get user settings and tableId for applying sort sorting
   const [userSettings] = useAtom(userSettingsAtom, projectScope);
   const [tableId] = useAtom(tableIdAtom, tableScope);
   const setTableSorts = useSetAtom(tableSortsAtom, tableScope);
