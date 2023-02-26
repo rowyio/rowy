@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useSetAtom } from "jotai";
 import { useAtomCallback } from "jotai/utils";
-import { cloneDeep, findIndex, initial, sortBy } from "lodash-es";
+import { cloneDeep, findIndex, sortBy } from "lodash-es";
 
 import {
   _deleteRowDbAtom,

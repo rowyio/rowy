@@ -1,6 +1,8 @@
+type RowRef = Pick<FirebaseFirestore.DocumentReference, "id", "path">;
+
 type FormulaContext = {
   row: Row;
-  // ref: FirebaseFirestore.DocumentReference;
+  ref: RowRef;
   // storage: firebasestorage.Storage;
   // db: FirebaseFirestore.Firestore;
 };

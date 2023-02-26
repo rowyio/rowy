@@ -2,17 +2,19 @@ import { useEffect, useMemo, useState } from "react";
 import { pick, zipObject } from "lodash-es";
 import { useAtom } from "jotai";
 
-import { TableRow } from "@src/types/table";
+import { TableRow, TableRowRef } from "@src/types/table";
 import { tableColumnsOrderedAtom, tableScope } from "@src/atoms/tableScope";
 
 import { listenerFieldTypes, useDeepCompareMemoize } from "./util";
 
 export const useFormula = ({
   row,
+  ref,
   listenerFields,
   formulaFn,
 }: {
   row: TableRow;
+  ref: TableRowRef;
   listenerFields: string[];
   formulaFn: string;
 }) => {
@@ -61,6 +63,7 @@ export const useFormula = ({
     worker.postMessage({
       formulaFn,
       row: JSON.stringify(availableFields),
+      ref: { id: ref.id, path: ref.path },
     });
 
     return () => {
