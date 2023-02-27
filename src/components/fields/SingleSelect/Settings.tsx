@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/AddCircle";
 import RemoveIcon from "@mui/icons-material/CancelRounded";
+import ColorSelect from "@src/components/ColorSelect";
 
 export default function Settings({ onChange, config }: ISettingsProps) {
   const listEndRef: any = useRef(null);
@@ -52,9 +53,12 @@ export default function Settings({ onChange, config }: ISettingsProps) {
               alignItems="center"
             >
               <Grid item>
-                <Typography>{option}</Typography>
+                <Grid container direction="row" alignItems="center" gap={2}>
+                  <ColorSelect />
+                  <Typography>{option}</Typography>
+                </Grid>
               </Grid>
-              <Grid item>
+              <Grid item spacing={2}>
                 <IconButton
                   aria-label="Remove"
                   onClick={() =>
