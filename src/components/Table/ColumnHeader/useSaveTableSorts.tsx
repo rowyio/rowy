@@ -18,13 +18,13 @@ function useSaveTableSorts(canEditColumns: boolean) {
   const [updateTableSchema] = useAtom(updateTableSchemaAtom, tableScope);
   const [updateUserSettings] = useAtom(updateUserSettingsAtom, projectScope);
   const [tableId] = useAtom(tableIdAtom, tableScope);
-  if (!updateTableSchema) throw new Error("Cannot update table schema");
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [snackbarId, setSnackbarId] = useState<SnackbarKey | null>(null);
 
   // Offer to save when table sorts changes
   const trigger = useCallback(
     (sorts: TableSort[]) => {
+      if (!updateTableSchema) throw new Error("Cannot update table schema");
       if (updateUserSettings) {
         updateUserSettings({
           tables: {
