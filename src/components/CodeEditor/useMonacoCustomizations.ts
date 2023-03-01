@@ -1,9 +1,4 @@
 import { useEffect } from "react";
-// import {
-//   quicktype,
-//   InputData,
-//   jsonInputForTargetLanguage,
-// } from "quicktype-core";
 import { useAtom } from "jotai";
 
 import {
@@ -13,14 +8,9 @@ import {
 } from "@src/atoms/tableScope";
 import { useMonaco } from "@monaco-editor/react";
 import type { languages } from "monaco-editor/esm/vs/editor/editor.api";
-import githubLightTheme from "./github-light-default.json";
-import githubDarkTheme from "./github-dark-default.json";
 
 import { useTheme } from "@mui/material";
 import type { SystemStyleObject, Theme } from "@mui/system";
-
-// TODO:
-// import { getFieldType, getFieldProp } from "@src/components/fields";
 
 /* eslint-disable import/no-webpack-loader-syntax */
 import firestoreDefs from "!!raw-loader!./firestore.d.ts";
@@ -72,7 +62,6 @@ export default function useMonacoCustomizations({
     };
   }, []);
 
-  // Initialize external libs & TypeScript compiler options
   useEffect(() => {
     if (!monaco) return;
 
@@ -95,6 +84,8 @@ export default function useMonacoCustomizations({
         "ts:filename/utils.d.ts"
       );
       monaco.languages.typescript.javascriptDefaults.addExtraLib(rowyUtilsDefs);
+
+      setLoggingReplacementActions();
     } catch (error) {
       console.error(
         "An error occurred during initialization of Monaco: ",
@@ -134,6 +125,52 @@ export default function useMonacoCustomizations({
       console.error("Could not set diagnostics options: ", error);
     }
   }, [monaco, stringifiedDiagnosticsOptions]);
+
+  const setLoggingReplacementActions = () => {
+    if (!monaco) return;
+    const { dispose } = monaco.languages.registerCodeActionProvider(
+      "javascript",
+      {
+        provideCodeActions: (model, range, context, token) => {
+          const actions = context.markers
+            .filter((error) => {
+              return error.message.includes("Rowy Cloud Logging");
+            })
+            .map((error) => {
+              // first sentence of the message is "Replace with logging.[log/warn/error]"
+              const firstSentence = error.message.split(":")[0];
+              const replacement = firstSentence.split("with ")[1];
+              return {
+                title: firstSentence,
+                diagnostics: [error],
+                kind: "quickfix",
+                edit: {
+                  edits: [
+                    {
+                      resource: model.uri,
+                      edit: {
+                        range: error,
+                        text: replacement,
+                      },
+                    },
+                  ],
+                },
+                isPreferred: true,
+              };
+            });
+          return {
+            actions: actions,
+            dispose: () => {},
+          };
+        },
+      }
+    );
+    monaco.editor.onWillDisposeModel((model) => {
+      // dispose code action provider when model is disposed
+      // this makes sure code actions are not displayed multiple times
+      dispose();
+    });
+  };
 
   const addJsonFieldDefinition = async (
     columnKey: string,
