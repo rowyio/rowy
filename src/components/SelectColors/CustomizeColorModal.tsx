@@ -6,11 +6,7 @@ import { Chip, Typography } from "@mui/material";
 import Modal from "@src/components/Modal";
 import ColorPickerInput from "@src/components/ColorPickerInput";
 import { toColor } from "react-color-palette";
-
-interface SelectColorThemeOptions {
-  light: string;
-  dark: string;
-}
+import { SelectColorThemeOptions } from ".";
 
 interface CustomizeColor {
   currentColor: SelectColorThemeOptions;

@@ -9,7 +9,7 @@ import FormatColorResetIcon from "@mui/icons-material/FormatColorReset";
 import { paletteToMui, palette } from "@src/theme/palette";
 import CustomizeColorModal from "./CustomizeColorModal";
 
-interface SelectColorThemeOptions {
+export interface SelectColorThemeOptions {
   light: string;
   dark: string;
 }
@@ -35,17 +35,17 @@ const ColorSelect = () => {
     lightGreen: palette.lightGreen,
   });
 
-  /* Hold the current state of a given option defaults to `default` */
+  /* Hold the current state of a given option defaults to `gray` from the color palette */
   const [color, setColor] = useState<SelectColorThemeOptions>(
     paletteToMui(palette["gray"])
   );
 
-  /* MUI Specific state */
+  /* MUI Specific state for color context menu */
   const [colorSelectAnchor, setColorSelectAnchor] =
     useState<null | HTMLElement>(null);
   const open = Boolean(colorSelectAnchor);
 
-  /* MUI Menu event handlers */
+  /* MUI Menu event handlers for color context menu */
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setColorSelectAnchor(event.currentTarget);
   };
