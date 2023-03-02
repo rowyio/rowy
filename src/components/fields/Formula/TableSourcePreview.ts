@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useAtomCallback } from "jotai/utils";
 import { cloneDeep, findIndex, sortBy } from "lodash-es";
 
@@ -10,39 +10,24 @@ import {
   tableRowsDbAtom,
   tableSchemaAtom,
   tableScope,
+  tableSettingsAtom,
 } from "@src/atoms/tableScope";
 
 import { TableRow, TableSchema } from "@src/types/table";
 import { updateRowData } from "@src/utils/table";
-
-const initialRows = [
-  {
-    _rowy_ref: {
-      id: "zzzzzzzzzzzzzzzzzzzw",
-      path: "preview-collection/zzzzzzzzzzzzzzzzzzzw",
-    },
-  },
-  {
-    _rowy_ref: {
-      id: "zzzzzzzzzzzzzzzzzzzx",
-      path: "preview-collection/zzzzzzzzzzzzzzzzzzzx",
-    },
-  },
-  {
-    _rowy_ref: {
-      id: "zzzzzzzzzzzzzzzzzzzy",
-      path: "preview-collection/zzzzzzzzzzzzzzzzzzzy",
-    },
-  },
-];
+import { serializeRef } from "./util";
 
 const TableSourcePreview = ({ tableSchema }: { tableSchema: TableSchema }) => {
+  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const setTableSchemaAtom = useSetAtom(tableSchemaAtom, tableScope);
   const setRows = useSetAtom(tableRowsDbAtom, tableScope);
-
   useEffect(() => {
-    setRows(initialRows);
-  }, [setRows]);
+    setRows(
+      ["preview-doc-1", "preview-doc-2", "preview-doc-3"].map((docId) => ({
+        _rowy_ref: serializeRef(`${tableSettings.collection}/${docId}`),
+      }))
+    );
+  }, [setRows, tableSettings.collection]);
 
   useEffect(() => {
     setTableSchemaAtom(() => ({
@@ -52,7 +37,7 @@ const TableSourcePreview = ({ tableSchema }: { tableSchema: TableSchema }) => {
   }, [tableSchema, setTableSchemaAtom]);
 
   const readRowsDb = useAtomCallback(
-    useCallback((get) => get(tableRowsDbAtom) || initialRows, []),
+    useCallback((get) => get(tableRowsDbAtom) || [], []),
     tableScope
   );
 
