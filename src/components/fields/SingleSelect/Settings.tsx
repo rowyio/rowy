@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/AddCircle";
 import RemoveIcon from "@mui/icons-material/CancelRounded";
-import ColorSelect from "@src/components/ColorSelect";
+import ColorSelect from "@src/components/SelectColors";
 
 export default function Settings({ onChange, config }: ISettingsProps) {
   const listEndRef: any = useRef(null);
