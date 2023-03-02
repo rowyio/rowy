@@ -5,7 +5,11 @@ import { useAtom } from "jotai";
 import { TableRow, TableRowRef } from "@src/types/table";
 import { tableColumnsOrderedAtom, tableScope } from "@src/atoms/tableScope";
 
-import { listenerFieldTypes, useDeepCompareMemoize } from "./util";
+import {
+  listenerFieldTypes,
+  serializeRef,
+  useDeepCompareMemoize,
+} from "./util";
 
 export const useFormula = ({
   row,
@@ -60,11 +64,13 @@ export const useFormula = ({
       setLoading(false);
     };
 
-    worker.postMessage({
-      formulaFn,
-      row: JSON.stringify(availableFields),
-      ref: { id: ref.id, path: ref.path },
-    });
+    worker.postMessage(
+      JSON.stringify({
+        formulaFn,
+        row: availableFields,
+        ref: serializeRef(ref.path),
+      })
+    );
 
     return () => {
       worker.terminate();
