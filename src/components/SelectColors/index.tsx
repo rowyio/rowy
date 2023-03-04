@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
@@ -14,7 +14,12 @@ export interface SelectColorThemeOptions {
   dark: string;
 }
 
-const ColorSelect = () => {
+interface IColorSelect {
+  handleChange: (value: SelectColorThemeOptions) => void;
+  initialValue: SelectColorThemeOptions;
+}
+
+const ColorSelect: FC<IColorSelect> = ({ handleChange, initialValue }) => {
   /* Get current */
   const theme = useTheme();
   const mode = theme.palette.mode;
@@ -37,8 +42,13 @@ const ColorSelect = () => {
 
   /* Hold the current state of a given option defaults to `gray` from the color palette */
   const [color, setColor] = useState<SelectColorThemeOptions>(
-    paletteToMui(palette["gray"])
+    initialValue || paletteToMui(palette["gray"])
   );
+
+  const onChange = (color: SelectColorThemeOptions) => {
+    setColor(color);
+    handleChange(color);
+  };
 
   /* MUI Specific state for color context menu */
   const [colorSelectAnchor, setColorSelectAnchor] =
@@ -121,7 +131,7 @@ const ColorSelect = () => {
                   },
                 }}
                 size="small"
-                onClick={() => setColor(paletteToMui(palettes[key]))}
+                onClick={() => onChange(paletteToMui(palettes[key]))}
                 key={index}
               />
             </Grid>
@@ -131,7 +141,7 @@ const ColorSelect = () => {
         <Box pt={1} px={2}>
           <CustomizeColorModal
             currentColor={color}
-            onChange={(color) => setColor(color)}
+            onChange={(color) => onChange(color)}
           />
         </Box>
 

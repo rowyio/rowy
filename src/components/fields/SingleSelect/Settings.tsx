@@ -14,12 +14,21 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/AddCircle";
 import RemoveIcon from "@mui/icons-material/CancelRounded";
-import ColorSelect from "@src/components/SelectColors";
+import ColorSelect, {
+  SelectColorThemeOptions,
+} from "@src/components/SelectColors";
 
 export default function Settings({ onChange, config }: ISettingsProps) {
   const listEndRef: any = useRef(null);
   const options = config.options ?? [];
   const [newOption, setNewOption] = useState("");
+
+  /* State for holding Chip Colors for Select and MultiSelect */
+  const colors = config.colors ?? [];
+  const [chipColors, setChipColors] = useState<{}>(
+    Object.assign({}, colors) || {}
+  );
+
   const handleAdd = () => {
     if (newOption.trim() !== "") {
       if (options.includes(newOption)) {
@@ -30,6 +39,14 @@ export default function Settings({ onChange, config }: ISettingsProps) {
         listEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
       }
     }
+  };
+
+  const handleChipColorChange = (
+    index: number,
+    color: SelectColorThemeOptions
+  ) => {
+    setChipColors((current) => ({ ...current, [index]: color }));
+    onChange("colors")(Object.values(chipColors));
   };
 
   return (
@@ -43,7 +60,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
           marginBottom: 5,
         }}
       >
-        {options?.map((option: string) => (
+        {options?.map((option: string, index: number) => (
           <>
             <Grid
               container
@@ -54,7 +71,12 @@ export default function Settings({ onChange, config }: ISettingsProps) {
             >
               <Grid item>
                 <Grid container direction="row" alignItems="center" gap={2}>
-                  <ColorSelect />
+                  <ColorSelect
+                    initialValue={colors[index]}
+                    handleChange={(color) =>
+                      handleChipColorChange(index, color)
+                    }
+                  />
                   <Typography>{option}</Typography>
                 </Grid>
               </Grid>
