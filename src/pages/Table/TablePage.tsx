@@ -33,6 +33,7 @@ import {
   tableSchemaAtom,
   columnModalAtom,
   tableModalAtom,
+  tableSortsAtom,
 } from "@src/atoms/tableScope";
 import useBeforeUnload from "@src/hooks/useBeforeUnload";
 import ActionParamsProvider from "@src/components/fields/Action/FormDialog/Provider";
@@ -81,8 +82,10 @@ export default function TablePage({
 
   // Set permissions here so we can pass them to the `Table` component, which
   // shouldn’t access `projectScope` at all, to separate concerns.
-  const canAddColumns =
-    userRoles.includes("ADMIN") || userRoles.includes("OPS");
+  const canAddColumns = Boolean(
+    userRoles.includes("ADMIN") ||
+      tableSettings.modifiableBy?.some((r) => userRoles.includes(r))
+  );
   const canEditColumns = canAddColumns;
   const canDeleteColumns = canAddColumns;
   const canEditCells =

@@ -18,6 +18,24 @@ import ColorSelect, {
   SelectColorThemeOptions,
 } from "@src/components/SelectColors";
 
+import {
+  DragDropContext,
+  Draggable,
+  DraggingStyle,
+  Droppable,
+  NotDraggingStyle,
+} from "react-beautiful-dnd";
+import DragIndicatorOutlinedIcon from "@mui/icons-material/DragIndicatorOutlined";
+
+const getItemStyle = (
+  isDragging: boolean,
+  draggableStyle: DraggingStyle | NotDraggingStyle | undefined
+) => ({
+  backgroundColor: isDragging ? "rgba(255, 255, 255, 0.08)" : "",
+  borderRadius: "4px",
+  ...draggableStyle,
+});
+
 export default function Settings({ onChange, config }: ISettingsProps) {
   const listEndRef: any = useRef(null);
   const options = config.options ?? [];
@@ -53,6 +71,13 @@ export default function Settings({ onChange, config }: ISettingsProps) {
     onChange("colors")(Object(colors));
   };
 
+  const handleOnDragEnd = (result: any) => {
+    if (!result.destination) return;
+    const [removed] = options.splice(result.source.index, 1);
+    options.splice(result.destination.index, 0, removed);
+    onChange("options")([...options]);
+  };
+
   return (
     <div>
       <InputLabel>Options</InputLabel>
@@ -64,42 +89,82 @@ export default function Settings({ onChange, config }: ISettingsProps) {
           marginBottom: 5,
         }}
       >
-        {options?.map((option: string, index: number) => (
-          <>
-            <Grid
-              container
-              direction="row"
-              key={`option-${option}`}
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Grid item>
-                <Grid container direction="row" alignItems="center" gap={2}>
-                  <ColorSelect
-                    initialValue={colors[option.toLocaleLowerCase()]}
-                    handleChange={(color) =>
-                      handleChipColorChange(option, color)
-                    }
-                  />
-                  <Typography>{option}</Typography>
-                </Grid>
-              </Grid>
-              <Grid item spacing={2}>
-                <IconButton
-                  aria-label="Remove"
-                  onClick={() =>
-                    onChange("options")(
-                      options.filter((o: string) => o !== option)
-                    )
-                  }
-                >
-                  {<RemoveIcon />}
-                </IconButton>
-              </Grid>
-            </Grid>
-            <Divider />
-          </>
-        ))}
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          <Droppable droppableId="options_manager" direction="vertical">
+            {(provided) => (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {options?.map((option: string, index: number) => (
+                  <Draggable key={option} draggableId={option} index={index}>
+                    {(provided, snapshot) => (
+                      <>
+                        <Grid
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          style={getItemStyle(
+                            snapshot.isDragging,
+                            provided.draggableProps.style
+                          )}
+                          container
+                          direction="row"
+                          key={`option-${option}`}
+                          justifyContent="space-between"
+                          alignItems="center"
+                        >
+                          <Grid
+                            {...provided.dragHandleProps}
+                            item
+                            sx={{ display: "flex" }}
+                          >
+                            <DragIndicatorOutlinedIcon
+                              color="disabled"
+                              sx={[
+                                {
+                                  marginRight: "6px",
+                                },
+                              ]}
+                            />
+                            <Grid item>
+                              <Grid
+                                container
+                                direction="row"
+                                alignItems="center"
+                                gap={2}
+                              >
+                                <ColorSelect
+                                  initialValue={
+                                    colors[option.toLocaleLowerCase()]
+                                  }
+                                  handleChange={(color) =>
+                                    handleChipColorChange(option, color)
+                                  }
+                                />
+                                <Typography>{option}</Typography>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                          <Grid item>
+                            <IconButton
+                              aria-label="Remove"
+                              onClick={() =>
+                                onChange("options")(
+                                  options.filter((o: string) => o !== option)
+                                )
+                              }
+                            >
+                              {<RemoveIcon />}
+                            </IconButton>
+                          </Grid>
+                        </Grid>
+                        <Divider />
+                      </>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
         <div ref={listEndRef} style={{ height: 40 }} />
       </div>
 
@@ -123,7 +188,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
             onChange={(e) => {
               setNewOption(e.target.value);
             }}
-            onKeyDown={(e: any) => {
+            onKeyPress={(e: any) => {
               if (e.key === "Enter") {
                 handleAdd();
               }

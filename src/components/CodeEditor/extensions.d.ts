@@ -26,6 +26,7 @@ type ExtensionContext = {
     extensionBody: any;
   };
   RULES_UTILS: any;
+  logging: RowyLogging;
 };
 
 // extension body definition

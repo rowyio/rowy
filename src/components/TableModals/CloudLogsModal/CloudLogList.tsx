@@ -70,6 +70,13 @@ export default function CloudLogList({ items, ...props }: ICloudLogListProps) {
               "jsonPayload.rowyUser.displayName",
               // Webhook event
               "jsonPayload.params.endpoint",
+              // Rowy Logging
+              "jsonPayload.functionType",
+              "jsonPayload.loggingSource",
+              "jsonPayload.extensionName",
+              "jsonPayload.extensionType",
+              "jsonPayload.webhookName",
+              "jsonPayload.fieldName",
             ]}
           />
         </li>

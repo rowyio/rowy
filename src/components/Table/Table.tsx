@@ -30,10 +30,16 @@ import {
   tableNextPageAtom,
   tablePageAtom,
   updateColumnAtom,
+  selectedCellAtom,
+  tableSortsAtom,
+  tableIdAtom,
 } from "@src/atoms/tableScope";
+import { projectScope, userSettingsAtom } from "@src/atoms/projectScope";
 import { getFieldType, getFieldProp } from "@src/components/fields";
 import { useKeyboardNavigation } from "./useKeyboardNavigation";
+import { useMenuAction } from "./useMenuAction";
 import { useSaveColumnSizing } from "./useSaveColumnSizing";
+import useHotKeys from "./useHotKey";
 import type { TableRow, ColumnConfig } from "@src/types/table";
 
 export const DEFAULT_ROW_HEIGHT = 41;
@@ -94,6 +100,11 @@ export default function Table({
   const [tablePage, setTablePage] = useAtom(tablePageAtom, tableScope);
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
+
+  // Get user settings and tableId for applying sort sorting
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
+  const [tableId] = useAtom(tableIdAtom, tableScope);
+  const setTableSorts = useSetAtom(tableSortsAtom, tableScope);
 
   // Store a **state** and reference to the container element
   // so the state can re-render `TableBody`, preventing virtualization
@@ -181,6 +192,13 @@ export default function Table({
     tableRows,
     leafColumns,
   });
+  const [selectedCell] = useAtom(selectedCellAtom, tableScope);
+  const { handleCopy, handlePaste, handleCut } = useMenuAction(selectedCell);
+  const { handler: hotKeysHandler } = useHotKeys([
+    ["mod+C", handleCopy],
+    ["mod+X", handleCut],
+    ["mod+V", handlePaste],
+  ]);
 
   // Handle prompt to save local column sizes if user `canEditColumns`
   useSaveColumnSizing(columnSizing, canEditColumns);
@@ -223,6 +241,18 @@ export default function Table({
     containerRef,
   ]);
 
+  // apply user default sort on first render
+  const [applySort, setApplySort] = useState(true);
+  useEffect(() => {
+    if (applySort && Object.keys(tableSchema).length) {
+      const userDefaultSort = userSettings.tables?.[tableId]?.sorts || [];
+      setTableSorts(
+        userDefaultSort.length ? userDefaultSort : tableSchema.sorts || []
+      );
+      setApplySort(false);
+    }
+  }, [tableSchema, userSettings, tableId, setTableSorts, applySort]);
+
   return (
     <div
       ref={(el) => setContainerEl(el)}
@@ -242,7 +272,10 @@ export default function Table({
             "--row-height": `${tableSchema.rowHeight || DEFAULT_ROW_HEIGHT}px`,
           } as any
         }
-        onKeyDown={handleKeyDown}
+        onKeyDown={(e) => {
+          handleKeyDown(e);
+          hotKeysHandler(e);
+        }}
       >
         <div
           className="thead"

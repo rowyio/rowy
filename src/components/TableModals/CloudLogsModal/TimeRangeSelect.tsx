@@ -19,7 +19,9 @@ export default function TimeRangeSelect({
   ...props
 }: ITimeRangeSelectProps) {
   return (
-    <fieldset style={{ appearance: "none", padding: 0, border: 0 }}>
+    <fieldset
+      style={{ appearance: "none", padding: 0, border: 0, display: "flex" }}
+    >
       {value && value.type !== "range" && (
         <TextField
           aria-label={`Custom ${value.type} value`}

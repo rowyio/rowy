@@ -141,7 +141,7 @@ export const tableSettingsDialogSchemaAtom = atom(async (get) => {
   const tableId = get(tableSettingsDialogIdAtom);
   const getTableSchema = get(getTableSchemaAtom);
   if (!tableId || !getTableSchema) return {} as TableSchema;
-  return getTableSchema(tableId);
+  return getTableSchema(tableId, true);
 });
 
 /** Open the Get Started checklist from anywhere */

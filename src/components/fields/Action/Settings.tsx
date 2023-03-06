@@ -130,7 +130,7 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
     : config?.runFn
     ? config.runFn
     : config?.script
-    ? `const action:Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
+    ? `const action:Action = async ({row,ref,db,storage,auth,actionParams,user,logging}) => {
       ${config.script.replace(/utilFns.getSecret/g, "rowy.secrets.get")}
     }`
     : RUN_ACTION_TEMPLATE;
@@ -140,7 +140,7 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
     : config.undoFn
     ? config.undoFn
     : get(config, "undo.script")
-    ? `const action : Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
+    ? `const action : Action = async ({row,ref,db,storage,auth,actionParams,user,logging}) => {
     ${get(config, "undo.script")}
   }`
     : UNDO_ACTION_TEMPLATE;

@@ -19,6 +19,7 @@ export interface IFieldConfig {
   dataType: string;
   initializable?: boolean;
   requireConfiguration?: boolean;
+  requireCloudFunction?: boolean;
   initialValue: any;
   icon?: React.ReactNode;
   description?: string;

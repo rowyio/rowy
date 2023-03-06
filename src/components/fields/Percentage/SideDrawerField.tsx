@@ -3,6 +3,7 @@ import { ISideDrawerFieldProps } from "@src/components/fields/types";
 import { TextField, InputAdornment, Box, useTheme } from "@mui/material";
 import { resultColorsScale } from "@src/utils/color";
 import { getFieldId } from "@src/components/SideDrawer/utils";
+import { multiply100WithPrecision } from "./utils";
 
 export default function Percentage({
   column,
@@ -20,7 +21,9 @@ export default function Percentage({
       margin="none"
       onChange={(e) => onChange(Number(e.target.value) / 100)}
       onBlur={onSubmit}
-      value={typeof value === "number" ? value * 100 : value}
+      value={
+        typeof value === "number" ? multiply100WithPrecision(value) : value
+      }
       id={getFieldId(column.key)}
       label=""
       hiddenLabel

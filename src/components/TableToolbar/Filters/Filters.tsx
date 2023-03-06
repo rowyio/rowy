@@ -112,7 +112,9 @@ export default function Filters() {
 
     setLocalFilters(filtersToApply);
     // Reset order so we don’t have to make a new index
-    setTableSorts([]);
+    if (filtersToApply.length) {
+      setTableSorts([]);
+    }
   }, [
     hasTableFilters,
     hasUserFilters,

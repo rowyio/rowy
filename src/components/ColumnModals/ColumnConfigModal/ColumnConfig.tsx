@@ -50,8 +50,9 @@ export default function ColumnConfigModal({
 
   const rendedFieldSettings = useMemo(
     () =>
-      [FieldType.derivative, FieldType.aggregate].includes(column.type) &&
-      newConfig.renderFieldType
+      [FieldType.derivative, FieldType.aggregate, FieldType.formula].includes(
+        column.type
+      ) && newConfig.renderFieldType
         ? getFieldProp("settings", newConfig.renderFieldType)
         : null,
     [newConfig.renderFieldType, column.type]
