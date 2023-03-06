@@ -16,7 +16,12 @@ export default function FormattedChip(props: ChipProps) {
     return (
       <Chip
         size="small"
-        color={paletteColor[label as typeof VARIANTS[number]]}
+        // color={paletteColor[label as typeof VARIANTS[number]]}
+        sx={{
+          backgroundColor: `${
+            paletteColor[label as typeof VARIANTS[number]]
+          }.main`,
+        }}
         {...props}
       />
     );

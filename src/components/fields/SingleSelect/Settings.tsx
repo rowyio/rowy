@@ -24,10 +24,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
   const [newOption, setNewOption] = useState("");
 
   /* State for holding Chip Colors for Select and MultiSelect */
-  const colors = config.colors ?? [];
-  const [chipColors, setChipColors] = useState<{}>(
-    Object.assign({}, colors) || {}
-  );
+  const colors = config.colors ?? {};
 
   const handleAdd = () => {
     if (newOption.trim() !== "") {
@@ -42,11 +39,18 @@ export default function Settings({ onChange, config }: ISettingsProps) {
   };
 
   const handleChipColorChange = (
-    index: number,
+    key: string,
     color: SelectColorThemeOptions
   ) => {
-    setChipColors((current) => ({ ...current, [index]: color }));
-    onChange("colors")(Object.values(chipColors));
+    const _key = key.toLocaleLowerCase();
+    colors[_key] = color;
+    onChange("colors")(Object(colors));
+  };
+
+  const handleChipColorDelete = (key: string) => {
+    const _key = key.toLocaleLowerCase();
+    delete colors[_key];
+    onChange("colors")(Object(colors));
   };
 
   return (
@@ -72,9 +76,9 @@ export default function Settings({ onChange, config }: ISettingsProps) {
               <Grid item>
                 <Grid container direction="row" alignItems="center" gap={2}>
                   <ColorSelect
-                    initialValue={colors[index]}
+                    initialValue={colors[option.toLocaleLowerCase()]}
                     handleChange={(color) =>
-                      handleChipColorChange(index, color)
+                      handleChipColorChange(option, color)
                     }
                   />
                   <Typography>{option}</Typography>
@@ -83,11 +87,12 @@ export default function Settings({ onChange, config }: ISettingsProps) {
               <Grid item spacing={2}>
                 <IconButton
                   aria-label="Remove"
-                  onClick={() =>
+                  onClick={() => {
                     onChange("options")(
                       options.filter((o: string) => o !== option)
-                    )
-                  }
+                    );
+                    handleChipColorDelete(option);
+                  }}
                 >
                   {<RemoveIcon />}
                 </IconButton>

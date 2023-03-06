@@ -1,16 +1,25 @@
 import { IDisplayCellProps } from "@src/components/fields/types";
 
-import { ButtonBase } from "@mui/material";
+import { ButtonBase, Chip } from "@mui/material";
 import { ChevronDown } from "@src/assets/icons";
+import { useTheme } from "@mui/material";
 
 import { sanitiseValue } from "./utils";
+import palette, { paletteToMui } from "@src/theme/palette";
+import ChipList from "@src/components/Table/TableCell/ChipList";
 
 export default function SingleSelect({
   value,
   showPopoverCell,
   disabled,
   tabIndex,
+  column,
+  rowHeight,
 }: IDisplayCellProps) {
+  const defaultColor = paletteToMui(palette.aGray);
+  const colors = column?.config?.colors ?? {};
+  const { mode } = useTheme().palette;
+
   const rendered = (
     <div
       style={{
@@ -19,7 +28,19 @@ export default function SingleSelect({
         paddingLeft: "var(--cell-padding)",
       }}
     >
-      {sanitiseValue(value)}
+      <ChipList rowHeight={rowHeight}>
+        <Chip
+          size="small"
+          label={sanitiseValue(value)}
+          sx={{
+            backgroundColor:
+              Object.keys(colors).length > 0 &&
+              colors[value.toLocaleLowerCase()]
+                ? colors[value.toLocaleLowerCase()][mode]
+                : defaultColor[mode],
+          }}
+        />
+      </ChipList>
     </div>
   );
 
