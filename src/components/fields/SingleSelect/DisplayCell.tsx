@@ -29,17 +29,17 @@ export default function SingleSelect({
       }}
     >
       <ChipList rowHeight={rowHeight}>
-        <Chip
-          size="small"
-          label={sanitiseValue(value)}
-          sx={{
-            backgroundColor:
-              Object.keys(colors).length > 0 &&
-              colors[value.toLocaleLowerCase()]
+        {value && (
+          <Chip
+            size="small"
+            label={sanitiseValue(value)}
+            sx={{
+              backgroundColor: value
                 ? colors[value.toLocaleLowerCase()][mode]
                 : defaultColor[mode],
-          }}
-        />
+            }}
+          />
+        )}
       </ChipList>
     </div>
   );

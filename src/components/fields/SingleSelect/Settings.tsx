@@ -87,12 +87,11 @@ export default function Settings({ onChange, config }: ISettingsProps) {
               <Grid item spacing={2}>
                 <IconButton
                   aria-label="Remove"
-                  onClick={() => {
+                  onClick={() =>
                     onChange("options")(
                       options.filter((o: string) => o !== option)
-                    );
-                    handleChipColorDelete(option);
-                  }}
+                    )
+                  }
                 >
                   {<RemoveIcon />}
                 </IconButton>

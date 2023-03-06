@@ -39,11 +39,9 @@ export default function MultiSelect({
                 <FormattedChip
                   label={item}
                   sx={{
-                    backgroundColor:
-                      Object.keys(colors).length > 0 &&
-                      colors[item.toLocaleLowerCase()]
-                        ? colors[item.toLocaleLowerCase()][mode]
-                        : defaultColor[mode],
+                    backgroundColor: colors[item.toLocaleLowerCase()]
+                      ? colors[item.toLocaleLowerCase()][mode]
+                      : defaultColor[mode],
                   }}
                 />
               </Grid>
