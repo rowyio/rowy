@@ -42,7 +42,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
   const [newOption, setNewOption] = useState("");
 
   /* State for holding Chip Colors for Select and MultiSelect */
-  const colors = config.colors ?? {};
+  let colors = config.colors ?? {};
 
   const handleAdd = () => {
     if (newOption.trim() !== "") {
@@ -65,8 +65,12 @@ export default function Settings({ onChange, config }: ISettingsProps) {
     onChange("colors")(Object(colors));
   };
 
-  const handleChipColorDelete = (key: string) => {
-    const _key = key.toLocaleLowerCase();
+  const handleItemDelete = (option: string) => {
+    onChange("options")(options.filter((o: string) => o !== option));
+  };
+
+  const handleItemColorDelete = (option: string) => {
+    const _key = option.toLocaleLowerCase();
     delete colors[_key];
     onChange("colors")(Object(colors));
   };
@@ -114,6 +118,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                             {...provided.dragHandleProps}
                             item
                             sx={{ display: "flex" }}
+                            alignItems="center"
                           >
                             <DragIndicatorOutlinedIcon
                               color="disabled"
@@ -123,33 +128,30 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                                 },
                               ]}
                             />
-                            <Grid item>
-                              <Grid
-                                container
-                                direction="row"
-                                alignItems="center"
-                                gap={2}
-                              >
-                                <ColorSelect
-                                  initialValue={
-                                    colors[option.toLocaleLowerCase()]
-                                  }
-                                  handleChange={(color) =>
-                                    handleChipColorChange(option, color)
-                                  }
-                                />
-                                <Typography>{option}</Typography>
-                              </Grid>
+                            <Grid
+                              container
+                              direction="row"
+                              alignItems="center"
+                              gap={2}
+                            >
+                              <ColorSelect
+                                initialValue={
+                                  colors[option.toLocaleLowerCase()]
+                                }
+                                handleChange={(color) =>
+                                  handleChipColorChange(option, color)
+                                }
+                              />
+                              <Typography>{option}</Typography>
                             </Grid>
                           </Grid>
                           <Grid item>
                             <IconButton
                               aria-label="Remove"
-                              onClick={() =>
-                                onChange("options")(
-                                  options.filter((o: string) => o !== option)
-                                )
-                              }
+                              onClick={() => {
+                                handleItemDelete(option);
+                                //handleItemColorDelete(option);
+                              }}
                             >
                               {<RemoveIcon />}
                             </IconButton>
