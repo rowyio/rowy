@@ -42,7 +42,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
   const [newOption, setNewOption] = useState("");
 
   /* State for holding Chip Colors for Select and MultiSelect */
-  let colors = config.colors ?? {};
+  const colors = config.colors ?? {};
 
   const handleAdd = () => {
     if (newOption.trim() !== "") {
@@ -57,22 +57,20 @@ export default function Settings({ onChange, config }: ISettingsProps) {
   };
 
   const handleChipColorChange = (
+    type: "save" | "delete",
     key: string,
-    color: SelectColorThemeOptions
+    color?: SelectColorThemeOptions
   ) => {
     const _key = key.toLocaleLowerCase();
-    colors[_key] = color;
-    onChange("colors")(Object(colors));
+    const { [_key]: _, ...newColors } = colors;
+    if (type === "save") colors[_key] = color;
+    else if (type === "delete") return newColors;
   };
 
   const handleItemDelete = (option: string) => {
     onChange("options")(options.filter((o: string) => o !== option));
-  };
-
-  const handleItemColorDelete = (option: string) => {
-    const _key = option.toLocaleLowerCase();
-    delete colors[_key];
-    onChange("colors")(Object(colors));
+    onChange("colors")(handleChipColorChange("delete", option));
+    console.log(options, colors); // Here for debugging reasons
   };
 
   const handleOnDragEnd = (result: any) => {
@@ -139,7 +137,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                                   colors[option.toLocaleLowerCase()]
                                 }
                                 handleChange={(color) =>
-                                  handleChipColorChange(option, color)
+                                  handleChipColorChange("save", option, color)
                                 }
                               />
                               <Typography>{option}</Typography>
@@ -148,10 +146,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                           <Grid item>
                             <IconButton
                               aria-label="Remove"
-                              onClick={() => {
-                                handleItemDelete(option);
-                                //handleItemColorDelete(option);
-                              }}
+                              onClick={() => handleItemDelete(option)}
                             >
                               {<RemoveIcon />}
                             </IconButton>
