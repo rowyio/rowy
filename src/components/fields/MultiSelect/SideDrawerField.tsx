@@ -77,7 +77,11 @@ export default function MultiSelect({
                   <FormattedChip
                     label={item}
                     onDelete={disabled ? undefined : handleDelete(i)}
-                    sx={{ backgroundColor: colors[item.toLowerCase()][mode] }}
+                    sx={{
+                      backgroundColor:
+                        colors[item.toLowerCase()] &&
+                        colors[item.toLowerCase()][mode],
+                    }}
                   />
                 </Grid>
               )

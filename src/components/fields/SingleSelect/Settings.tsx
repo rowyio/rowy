@@ -38,7 +38,7 @@ const getItemStyle = (
 
 export default function Settings({ onChange, config }: ISettingsProps) {
   const listEndRef: any = useRef(null);
-  const options = config.options ?? [];
+  let options = config.options ?? [];
   const [newOption, setNewOption] = useState("");
 
   /* State for holding Chip Colors for Select and MultiSelect */
@@ -62,15 +62,13 @@ export default function Settings({ onChange, config }: ISettingsProps) {
     color?: SelectColorThemeOptions
   ) => {
     const _key = key.toLocaleLowerCase();
-    const { [_key]: _, ...newColors } = colors;
     if (type === "save") colors[_key] = color;
-    else if (type === "delete") return newColors;
+    else if (type === "delete") delete colors[_key];
+    onChange("colors")(colors);
   };
 
-  const handleItemDelete = (option: string) => {
+  const handleItemDelete = async (option: string) => {
     onChange("options")(options.filter((o: string) => o !== option));
-    onChange("colors")(handleChipColorChange("delete", option));
-    console.log(options, colors); // Here for debugging reasons
   };
 
   const handleOnDragEnd = (result: any) => {
@@ -146,7 +144,12 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                           <Grid item>
                             <IconButton
                               aria-label="Remove"
-                              onClick={() => handleItemDelete(option)}
+                              onClick={() =>
+                                handleItemDelete(option).then(() => {
+                                  handleChipColorChange("delete", option);
+                                  console.log(options, colors); // Here for debugging purposes
+                                })
+                              }
                             >
                               {<RemoveIcon />}
                             </IconButton>
