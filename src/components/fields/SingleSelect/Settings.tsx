@@ -38,11 +38,11 @@ const getItemStyle = (
 
 export default function Settings({ onChange, config }: ISettingsProps) {
   const listEndRef: any = useRef(null);
-  let options = config.options ?? [];
+  const options = config.options ?? [];
   const [newOption, setNewOption] = useState("");
 
   /* State for holding Chip Colors for Select and MultiSelect */
-  const colors = config.colors ?? {};
+  let colors = config.colors ?? {};
 
   const handleAdd = () => {
     if (newOption.trim() !== "") {
@@ -145,10 +145,9 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                             <IconButton
                               aria-label="Remove"
                               onClick={() =>
-                                handleItemDelete(option).then(() => {
-                                  handleChipColorChange("delete", option);
-                                  console.log(options, colors); // Here for debugging purposes
-                                })
+                                handleItemDelete(option).then(
+                                  () => handleChipColorChange("delete", option) //@devsgnr
+                                )
                               }
                             >
                               {<RemoveIcon />}
