@@ -7,6 +7,7 @@ import EmptyState from "@src/components/EmptyState";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
+import mockValue from "./mockValue";
 
 export interface ICellProps
   extends Partial<
@@ -31,6 +32,7 @@ export default function Cell({
   ...props
 }: ICellProps) {
   const tableCell = type ? getFieldProp("TableCell", type) : null;
+  value = mockValue(value, type);
 
   return (
     <StyledTable>

@@ -37,7 +37,11 @@ import {
 import { ColumnConfig } from "@src/types/table";
 import { getFieldProp } from "@src/components/fields";
 import { analytics, logEvent } from "@src/analytics";
+import { FieldType } from "@src/constants/fields";
+import { generateId } from "@src/utils/table";
 import { isValidDocId } from "./utils";
+import useUploadFileFromURL from "./useUploadFileFromURL";
+import useConverter from "./useConverter";
 
 export type CsvConfig = {
   pairs: { csvKey: string; columnKey: string }[];
@@ -45,6 +49,8 @@ export type CsvConfig = {
   documentId: "auto" | "column";
   documentIdCsvKey: string | null;
 };
+
+const needsUploadTypes = [FieldType.image, FieldType.file];
 
 export interface IStepProps {
   csvData: NonNullable<ImportCsvData>;
@@ -66,6 +72,10 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
   const isXs = useMediaQuery(theme.breakpoints.down("sm"));
   const snackbarProgressRef = useRef<ISnackbarProgressRef>();
 
+  const snackbarUploadProgressRef = useRef<ISnackbarProgressRef>();
+  const { addTask, runBatchUpload, askPermission } = useUploadFileFromURL();
+  const { needsConverter, getConverter } = useConverter();
+
   const columns = useMemoValue(tableSchema.columns ?? {}, isEqual);
 
   const [config, setConfig] = useState<CsvConfig>({
@@ -74,6 +84,7 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
     documentId: "auto",
     documentIdCsvKey: null,
   });
+
   const updateConfig: IStepProps["updateConfig"] = useCallback((value) => {
     setConfig((prev) => {
       const pairs = uniqBy([...prev.pairs, ...(value.pairs ?? [])], "csvKey");
@@ -122,6 +133,35 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
           isValidDocId(row._rowy_ref?.id) ? "validRows" : "invalidRows"
         )
       : { validRows: parsedRows, invalidRows: [] };
+
+  const { requiredConverts, requiredUploads } = useMemo(() => {
+    const columns = config.pairs.map(({ csvKey, columnKey }) => ({
+      csvKey,
+      columnKey,
+      ...(tableSchema.columns?.[columnKey] ??
+        find(config.newColumns, { key: columnKey }) ??
+        {}),
+    }));
+
+    let requiredConverts: any = {};
+    let requiredUploads: any = {};
+    columns.forEach((column, index) => {
+      if (needsConverter(column.type)) {
+        requiredConverts[index] = getConverter(column.type);
+        console.log({ needsUploadTypes }, column.type);
+        if (needsUploadTypes.includes(column.type)) {
+          requiredUploads[column.fieldName + ""] = true;
+        }
+      }
+    });
+    return { requiredConverts, requiredUploads };
+  }, [
+    config.newColumns,
+    config.pairs,
+    getConverter,
+    needsConverter,
+    tableSchema.columns,
+  ]);
 
   const handleFinish = async () => {
     if (!parsedRows) return;
@@ -176,12 +216,48 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
           { variant: "warning" }
         );
       }
+      const newValidRows = validRows.map((row) => {
+        // Convert required values
+        Object.keys(row).forEach((key, i) => {
+          if (requiredConverts[i]) {
+            row[key] = requiredConverts[i](row[key]);
+          }
+        });
+
+        const id = generateId();
+        const newRow = {
+          _rowy_ref: {
+            path: `${tableSettings.collection}/${row?._rowy_ref?.id ?? id}`,
+            id,
+          },
+          ...row,
+        };
+        return newRow;
+      });
+
       promises.push(
         bulkAddRows({
-          rows: validRows,
+          type: "add",
+          rows: newValidRows,
           collection: tableSettings.collection,
-          onBatchCommit: (batchNumber: number) =>
-            snackbarProgressRef.current?.setProgress(batchNumber),
+          onBatchCommit: async (batchNumber: number) => {
+            if (Object.keys(requiredUploads).length > 0) {
+              newValidRows
+                .slice((batchNumber - 1) * 500, batchNumber * 500 - 1)
+                .forEach((row) => {
+                  Object.keys(requiredUploads).forEach((key) => {
+                    if (requiredUploads[key]) {
+                      addTask({
+                        docRef: row._rowy_ref,
+                        fieldName: key,
+                        files: row[key],
+                      });
+                    }
+                  });
+                });
+            }
+            snackbarProgressRef.current?.setProgress(batchNumber);
+          },
         })
       );
 
@@ -192,6 +268,25 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
         `Imported ${Number(validRows.length).toLocaleString()} rows`,
         { variant: "success" }
       );
+      if (await askPermission()) {
+        const uploadingSnackbar = enqueueSnackbar(
+          `Importing ${Number(
+            validRows.length
+          ).toLocaleString()} rows. This might take a while.`,
+          {
+            persist: true,
+            action: (
+              <SnackbarProgress
+                stateRef={snackbarUploadProgressRef}
+                target={Math.ceil(validRows.length / 500)}
+                label=" batches"
+              />
+            ),
+          }
+        );
+        await runBatchUpload(snackbarUploadProgressRef.current?.setProgress);
+        closeSnackbar(uploadingSnackbar);
+      }
     } catch (e) {
       enqueueSnackbar((e as Error).message, { variant: "error" });
     } finally {

@@ -18,6 +18,9 @@ export const SELECTABLE_TYPES = [
   FieldType.url,
   FieldType.rating,
 
+  FieldType.image,
+  FieldType.file,
+
   FieldType.singleSelect,
   FieldType.multiSelect,
 
@@ -26,6 +29,8 @@ export const SELECTABLE_TYPES = [
 
   FieldType.color,
   FieldType.slider,
+
+  FieldType.reference,
 ];
 
 export const REGEX_EMAIL =
