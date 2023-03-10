@@ -34,6 +34,7 @@ export default function Cell({
   const tableCell = type ? getFieldProp("TableCell", type) : null;
   const { checkAndConvert } = useConverter();
   const value = checkAndConvert(value_, type);
+
   return (
     <StyledTable>
       <StyledCell

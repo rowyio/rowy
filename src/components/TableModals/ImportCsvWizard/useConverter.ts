@@ -16,8 +16,9 @@ export default function useConverter() {
     return doc(firebaseDb, value);
   };
 
-  const imageOrFileConverter = (urls: string): RowyFile[] => {
+  const imageOrFileConverter = (urls: any): RowyFile[] => {
     if (!urls) return [];
+    if (Array.isArray(urls)) return urls;
     if (typeof urls === "string") {
       return urls
         .split(",")
