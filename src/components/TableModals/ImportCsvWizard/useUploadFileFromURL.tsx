@@ -1,13 +1,14 @@
 import { useCallback, useRef } from "react";
 import { useSetAtom } from "jotai";
-import { useSnackbar } from "notistack";
+import { SnackbarKey, useSnackbar } from "notistack";
 import Button from "@mui/material/Button";
 
 import useUploader from "@src/hooks/useFirebaseStorageUploader";
 import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import { TableRowRef } from "@src/types/table";
+import SnackbarProgress from "@src/components/SnackbarProgress";
 
-const MAX_PARALLEL_TASKS = 30;
+const MAX_CONCURRENT_TASKS = 10;
 
 type UploadParamTypes = {
   docRef: TableRowRef;
@@ -75,7 +76,7 @@ export default function useUploadFileFromURL() {
         if (failures.length > 0) {
           return false;
         }
-        updateField({
+        await updateField({
           path: docRef.path,
           fieldName,
           value: uploads,
@@ -91,34 +92,66 @@ export default function useUploadFileFromURL() {
 
   const batchUpload = useCallback(
     async (batch: UploadParamTypes[]) => {
-      await Promise.all(batch.map((job) => handleUpload(job)));
+      await Promise.all(
+        batch.map((job) =>
+          handleUpload(job).then(() => {
+            snackbarProgressRef.current?.setProgress((p: number) => p + 1);
+          })
+        )
+      );
     },
     [handleUpload]
   );
 
-  const runBatchUpload = useCallback(
-    async (setProgress?: any) => {
-      let currentJobs: UploadParamTypes[] = [];
-
-      while (
-        currentJobs.length < MAX_PARALLEL_TASKS &&
-        jobs.current.length > 0
-      ) {
-        const job = jobs.current.shift();
-        if (job) {
-          currentJobs.push(job);
+  const snackbarProgressRef = useRef<any>(null);
+  const snackbarProgressId = useRef<SnackbarKey | null>(null);
+  const showProgress = useCallback(
+    (totalJobs: number) => {
+      snackbarProgressId.current = enqueueSnackbar(
+        `Uploading ${Number(
+          totalJobs
+        ).toLocaleString()} files/images. This might take a while.`,
+        {
+          persist: true,
+          action: (
+            <SnackbarProgress
+              stateRef={snackbarProgressRef}
+              target={totalJobs}
+              label=" uploaded"
+            />
+          ),
         }
-      }
-
-      if (setProgress) setProgress((p: number) => p + currentJobs.length);
-      await batchUpload(currentJobs);
-
-      if (jobs.current.length > 0) {
-        runBatchUpload();
-      }
+      );
     },
-    [batchUpload]
+    [enqueueSnackbar]
   );
+
+  const runBatchUpload = useCallback(async () => {
+    if (!snackbarProgressId.current) {
+      showProgress(jobs.current.length);
+    }
+    let currentJobs: UploadParamTypes[] = [];
+
+    while (
+      currentJobs.length < MAX_CONCURRENT_TASKS &&
+      jobs.current.length > 0
+    ) {
+      const job = jobs.current.shift();
+      if (job) {
+        currentJobs.push(job);
+      }
+    }
+
+    await batchUpload(currentJobs);
+
+    if (jobs.current.length > 0) {
+      await runBatchUpload();
+    }
+
+    if (snackbarProgressId.current) {
+      closeSnackbar(snackbarProgressId.current);
+    }
+  }, [batchUpload, closeSnackbar, showProgress, snackbarProgressId]);
 
   const addTask = useCallback((job: UploadParamTypes) => {
     jobs.current.push(job);

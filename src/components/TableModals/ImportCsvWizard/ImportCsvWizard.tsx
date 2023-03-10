@@ -71,8 +71,6 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down("sm"));
   const snackbarProgressRef = useRef<ISnackbarProgressRef>();
-
-  const snackbarUploadProgressRef = useRef<ISnackbarProgressRef>();
   const { addTask, runBatchUpload, askPermission } = useUploadFileFromURL();
   const { needsConverter, getConverter } = useConverter();
 
@@ -148,7 +146,7 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
     columns.forEach((column, index) => {
       if (needsConverter(column.type)) {
         requiredConverts[index] = getConverter(column.type);
-        console.log({ needsUploadTypes }, column.type);
+        // console.log({ needsUploadTypes }, column.type);
         if (needsUploadTypes.includes(column.type)) {
           requiredUploads[column.fieldName + ""] = true;
         }
@@ -268,24 +266,8 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
         `Imported ${Number(validRows.length).toLocaleString()} rows`,
         { variant: "success" }
       );
-      if (await askPermission()) {
-        const uploadingSnackbar = enqueueSnackbar(
-          `Importing ${Number(
-            validRows.length
-          ).toLocaleString()} rows. This might take a while.`,
-          {
-            persist: true,
-            action: (
-              <SnackbarProgress
-                stateRef={snackbarUploadProgressRef}
-                target={Math.ceil(validRows.length / 500)}
-                label=" batches"
-              />
-            ),
-          }
-        );
-        await runBatchUpload(snackbarUploadProgressRef.current?.setProgress);
-        closeSnackbar(uploadingSnackbar);
+      if (Object.keys(requiredUploads).length && (await askPermission())) {
+        await runBatchUpload();
       }
     } catch (e) {
       enqueueSnackbar((e as Error).message, { variant: "error" });

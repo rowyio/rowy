@@ -17,15 +17,26 @@ export default function useConverter() {
   };
 
   const imageOrFileConverter = (urls: string): RowyFile[] => {
-    return urls.split(",").map((url) => {
-      url = url.trim();
-      return {
-        downloadURL: url,
-        name: url.split("/").pop() || "",
-        lastModifiedTS: +new Date(),
-        type: "",
-      };
-    });
+    if (!urls) return [];
+    if (typeof urls === "string") {
+      return urls
+        .split(",")
+        .map((url) => {
+          url = url.trim();
+          if (url !== "") {
+            return {
+              downloadURL: url,
+              name: url.split("/").pop() || "",
+              lastModifiedTS: +new Date(),
+              type: "",
+            };
+          }
+
+          return null;
+        })
+        .filter((val) => val !== null) as RowyFile[];
+    }
+    return [];
   };
 
   const getConverter = (type: FieldType) => {

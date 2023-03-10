@@ -162,7 +162,7 @@ export default function ImportFromFile() {
                 {}
               )
             );
-            console.log(mappedRows);
+            // console.log(mappedRows);
             setImportCsv({
               importType: importTypeRef.current,
               csvData: { columns, rows: mappedRows },
