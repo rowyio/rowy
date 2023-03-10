@@ -51,10 +51,19 @@ export default function useConverter() {
     }
   };
 
+  const checkAndConvert = (value: any, type: FieldType) => {
+    if (needsConverter(type)) {
+      const converter = getConverter(type);
+      if (converter) return converter(value);
+    }
+    return value;
+  };
+
   return {
     needsConverter,
     referenceConverter,
     imageOrFileConverter,
     getConverter,
+    checkAndConvert,
   };
 }
