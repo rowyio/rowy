@@ -20,7 +20,7 @@ interface IColorSelect {
 }
 
 const ColorSelect: FC<IColorSelect> = ({ handleChange, initialValue }) => {
-  /* Get current */
+  /* Get current theme */
   const theme = useTheme();
   const mode = theme.palette.mode;
 
@@ -38,6 +38,8 @@ const ColorSelect: FC<IColorSelect> = ({ handleChange, initialValue }) => {
     cyan: palette.cyan,
     amber: palette.amber,
     lightGreen: palette.lightGreen,
+    lightBlue: palette.lightBlue,
+    violet: palette.violet,
   });
 
   /* Hold the current state of a given option defaults to `gray` from the color palette */
@@ -117,9 +119,17 @@ const ColorSelect: FC<IColorSelect> = ({ handleChange, initialValue }) => {
           COLOURS
         </Typography>
 
-        <Grid container py={1} px={2} columns={6} rowGap={2}>
+        <Grid
+          container
+          py={1}
+          px={2}
+          rowGap={2}
+          columnGap={2}
+          display="grid"
+          gridTemplateColumns="repeat(7, auto)"
+        >
           {Object.keys(palettes).map((key: string, index: number) => (
-            <Grid item xs={1}>
+            <Grid item xs sx={{ maxWidth: "fit-content" }}>
               <Button
                 sx={{
                   minWidth: "25px",
