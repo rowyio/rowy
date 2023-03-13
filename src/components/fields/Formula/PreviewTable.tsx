@@ -23,14 +23,7 @@ const PreviewTable = ({ tableSchema }: { tableSchema: TableSchema }) => {
         scope={tableScope}
         initialValues={[
           [currentUserAtom, currentUser],
-          [
-            tableSettingsAtom,
-            {
-              ...tableSettings,
-              id: "preview-table",
-              collection: "preview-collection",
-            },
-          ],
+          [tableSettingsAtom, tableSettings],
           [tableRowsDbAtom, []],
         ]}
       >
