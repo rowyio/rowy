@@ -39,7 +39,7 @@ const ColorSelect: FC<IColorSelect> = ({ handleChange, initialValue }) => {
     amber: palette.amber,
     lightGreen: palette.lightGreen,
     lightBlue: palette.lightBlue,
-    violet: palette.violet,
+    indigo: palette.indigo,
   });
 
   /* Hold the current state of a given option defaults to `gray` from the color palette */
