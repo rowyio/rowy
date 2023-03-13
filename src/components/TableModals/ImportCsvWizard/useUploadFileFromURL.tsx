@@ -168,7 +168,7 @@ function getFileFromURL(urls: string[]): Promise<File[]> {
   const promises = urls.map((url) => {
     return fetch(url)
       .then((response) => response.blob())
-      .then((blob) => new File([blob], +new Date() + url, { type: blob.type }));
+      .then((blob) => new File([blob], +new Date() + "", { type: blob.type }));
   });
   return Promise.all(promises);
 }
