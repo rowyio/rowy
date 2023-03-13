@@ -48,7 +48,7 @@ export const columnModalAtom = atomWithHash<{
 
 export type TableFiltersPopoverState = {
   open: boolean;
-  defaultQuery?: TableFilter;
+  defaultQuery?: TableFilter[]
 };
 /**
  * Store table filter popover state.

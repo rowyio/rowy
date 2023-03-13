@@ -240,7 +240,7 @@ export default function ColumnMenu({
       icon: <FilterIcon />,
       onClick: () => {
         openTableFiltersPopover({
-          defaultQuery: {
+          defaultQuery: [{
             key: column.fieldName,
             operator:
               getFieldProp(
@@ -250,7 +250,7 @@ export default function ColumnMenu({
                   : column.type
               )!.operators[0]?.value || "==",
             value: "",
-          },
+          }],
         });
         handleClose();
       },

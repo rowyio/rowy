@@ -15,6 +15,7 @@ export const handleFirestoreError = (
   enqueueSnackbar: ReturnType<typeof useSnackbar>["enqueueSnackbar"],
   elevateError: (error: FirestoreError) => void
 ) => {
+  console.log(error)
   if (error.code === "permission-denied") {
     enqueueSnackbar("You do not have access to this table", {
       variant: "error",
@@ -24,7 +25,7 @@ export const handleFirestoreError = (
 
   if (error.message.includes("indexes?create_composite=")) {
     enqueueSnackbar(
-      "Filtering while having another column sorted requires a new Firestore index",
+      "Filtering while having another column sorted or filtering on multiple columns requires a new Firestore index",
       {
         variant: "warning",
         action: (

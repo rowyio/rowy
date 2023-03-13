@@ -200,11 +200,11 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
     );
     const handleFilterValue = () => {
       openTableFiltersPopover({
-        defaultQuery: {
+        defaultQuery: [{
           key: selectedColumn.fieldName,
           operator: columnFilters!.operators[0]?.value || "==",
           value: cellValue,
-        },
+        }],
       });
       onClose();
     };
