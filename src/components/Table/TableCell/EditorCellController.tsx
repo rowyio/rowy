@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect } from "react";
 import useStateRef from "react-usestateref";
 import { useSetAtom } from "jotai";
 import { isEqual } from "lodash-es";
+import { useSnackbar } from "notistack";
 
 import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import type {
@@ -45,6 +46,8 @@ export default function EditorCellController({
   const [isDirty, setIsDirty, isDirtyRef] = useStateRef(false);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
 
+  const { enqueueSnackbar } = useSnackbar();
+
   // When this cell’s data has updated, update the local value if
   // it’s not dirty and the value is different
   useEffect(() => {
@@ -53,17 +56,20 @@ export default function EditorCellController({
   }, [isDirty, localValueRef, setLocalValue, value]);
 
   // This is where we update the documents
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // props.disabled should always be false as withRenderTableCell would
     // render DisplayCell instead of EditorCell
     if (props.disabled || !isDirtyRef.current) return;
-
-    updateField({
-      path: props._rowy_ref.path,
-      fieldName: props.column.fieldName,
-      value: localValueRef.current,
-      deleteField: localValueRef.current === undefined,
-    });
+    try {
+      await updateField({
+        path: props._rowy_ref.path,
+        fieldName: props.column.fieldName,
+        value: localValueRef.current,
+        deleteField: localValueRef.current === undefined,
+      });
+    } catch (e) {
+      enqueueSnackbar((e as Error).message, { variant: "error" });
+    }
   };
 
   useLayoutEffect(() => {

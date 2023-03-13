@@ -30,6 +30,7 @@ export const config: IFieldConfig = {
   SideDrawerField,
   settings: Settings,
   requireConfiguration: true,
+  requireCloudFunction: true,
   sortKey: "status",
 };
 export default config;

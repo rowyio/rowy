@@ -4,14 +4,14 @@ import withRenderTableCell from "@src/components/Table/TableCell/withRenderTable
 
 import UserIcon from "@mui/icons-material/PersonOutlined";
 import DisplayCell from "./DisplayCell";
+import EditorCell from "./EditorCell";
 
 const SideDrawerField = lazy(
   () =>
     import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-User" */)
 );
 const Settings = lazy(
-  () =>
-    import("../CreatedBy/Settings" /* webpackChunkName: "Settings-CreatedBy" */)
+  () => import("./Settings" /* webpackChunkName: "Settings-User" */)
 );
 
 export const config: IFieldConfig = {
@@ -23,7 +23,10 @@ export const config: IFieldConfig = {
   initialValue: null,
   icon: <UserIcon />,
   description: "User information and optionally, timestamp. Read-only.",
-  TableCell: withRenderTableCell(DisplayCell, null),
+  TableCell: withRenderTableCell(DisplayCell, EditorCell, "popover", {
+    disablePadding: true,
+    transparentPopover: true,
+  }),
   SideDrawerField,
   settings: Settings,
 };

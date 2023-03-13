@@ -61,51 +61,61 @@ export interface IRuntimeOptions {
 export const triggerTypes: ExtensionTrigger[] = ["create", "update", "delete"];
 
 const extensionBodyTemplate = {
-  task: `const extensionBody: TaskBody = async({row, db, change, ref}) => {
-  // task extensions are very flexible you can do anything from updating other documents in your database, to making an api request to 3rd party service.
+  task: `const extensionBody: TaskBody = async({row, db, change, ref, logging}) => {
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
   
-  // example:
-  // we can post notification to different discord channels based on row data
+  // Import any NPM package needed
+  // const vision = require('@google-cloud/vision');
+  
+  // Task Extension is very flexible, you can do anything.
+  // From updating other documents in your database, to making an api request to 3rd party service.
+  // Example: post notification to different discord channels based on row data
   /*
   const topic = row.topic;
   const channel = await db.collection('discordChannels').doc(topic).get();
   const channelUrl = await channel.get("channelUrl");
   const content = "Hello discord channel";
-    return fetch("https://discord.com/api/webhooks/"+channelUrl, {
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          content
-        })
-      }).then(async resp => {
-        const result = await resp.json()
-        if (resp.ok) console.info(result)
-        else console.error(result)
+  return fetch("https://discord.com/api/webhooks/"+channelUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        content
       })
+    }).then(async resp => {
+      const result = await resp.json()
+      if (resp.ok) console.info(result)
+      else console.error(result)
+    })
   */
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,
-  docSync: `const extensionBody: DocSyncBody = async({row, db, change, ref}) => {
-  // feel free to add your own code logic here
-
+  docSync: `const extensionBody: DocSyncBody = async({row, db, change, ref, logging}) => {
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
+  
   return ({
     fieldsToSync: [],    // a list of string of column names
     row: row,    // object of data to sync, usually the row itself
     targetPath: "",  // fill in the path here
   })
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,
-  historySnapshot: `const extensionBody: HistorySnapshotBody = async({row, db, change, ref}) => {
-  // feel free to add your own code logic here
+  historySnapshot: `const extensionBody: HistorySnapshotBody = async({row, db, change, ref, logging}) => {
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
   
   return ({
     trackedFields: [],    // a list of string of column names
     collectionId: "historySnapshots",    // optionally change the sub-collection id of where the history snapshots are stored
   })
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,
-  algoliaIndex: `const extensionBody: AlgoliaIndexBody = async({row, db, change, ref}) => {
-  // feel free to add your own code logic here
+  algoliaIndex: `const extensionBody: AlgoliaIndexBody = async({row, db, change, ref, logging}) => {
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
   
   return ({
     fieldsToSync: [],    // a list of string of column names
@@ -113,29 +123,38 @@ const extensionBodyTemplate = {
     index: "",    // algolia index to sync to
     objectID: ref.id,    // algolia object ID, ref.id is one possible choice
   })
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,
-  meiliIndex: `const extensionBody: MeiliIndexBody = async({row, db, change, ref}) => {
-  // feel free to add your own code logic here
-
+  meiliIndex: `const extensionBody: MeiliIndexBody = async({row, db, change, ref, logging}) => {
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
+  
   return({
     fieldsToSync: [],    // a list of string of column names
     row: row,    // object of data to sync, usually the row itself
     index: "",    // algolia index to sync to
     objectID: ref.id,    // algolia object ID, ref.id is one possible choice
   })
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,
-  bigqueryIndex: `const extensionBody: BigqueryIndexBody = async({row, db, change, ref}) => {
-  // feel free to add your own code logic here
-
+  bigqueryIndex: `const extensionBody: BigqueryIndexBody = async({row, db, change, ref, logging}) => {
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
+  
   return ({
     fieldsToSync: [],    // a list of string of column names
     row: row,    // object of data to sync, usually the row itself
     index: "",    // algolia index to sync to
     objectID: ref.id,    // algolia object ID, ref.id is one possible choice
   })
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,
-  slackMessage: `const extensionBody: SlackMessageBody = async({row, db, change, ref}) => {
-  // feel free to add your own code logic here
+  slackMessage: `const extensionBody: SlackMessageBody = async({row, db, change, ref, logging}) => {
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
+  
+  // Import any NPM package needed
+  // const lodash = require('lodash');
   
   return ({
     channels: [],    // a list of slack channel IDs in string
@@ -143,18 +162,23 @@ const extensionBodyTemplate = {
     text: "",    // the text parameter to pass in to slack api
     attachments: [],    // the attachments parameter to pass in to slack api
   })
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,
-  sendgridEmail: `const extensionBody: SendgridEmailBody = async({row, db, change, ref}) => {
-  // feel free to add your own code logic here
+  sendgridEmail: `const extensionBody: SendgridEmailBody = async({row, db, change, ref, logging}) => {
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
+  
+  // Import any NPM package needed
+  // const lodash = require('lodash');
   
   return ({
     from: "Name<example@domain.com>",   // send from field
     personalizations: [
-        {
-            to: [{ name: "", email: "" }],  // recipient
-            dynamic_template_data: {
-            },  // template parameters
-        },
+      {
+        to: [{ name: "", email: "" }],  // recipient
+        dynamic_template_data: {
+        },  // template parameters
+      },
     ],
     template_id: "",    // sendgrid template ID
     categories: [], // helper info to categorise sendgrid emails
@@ -163,9 +187,14 @@ const extensionBodyTemplate = {
       // add any other custom args you want to pass to sendgrid events here
     },
   })
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,
-  apiCall: `const extensionBody: ApiCallBody = async({row, db, change, ref}) => {
-  // feel free to add your own code logic here
+  apiCall: `const extensionBody: ApiCallBody = async({row, db, change, ref, logging}) => {
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
+  
+  // Import any NPM package needed
+  // const lodash = require('lodash');
   
   return ({
     body: "",
@@ -173,56 +202,64 @@ const extensionBodyTemplate = {
     method: "",
     callback: ()=>{},
   })
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,
-  twilioMessage: `const extensionBody: TwilioMessageBody = async({row, db, change, ref}) => {
- /** 
-   * 
-   * Setup twilio secret key: https://docs.rowy.io/extensions/twilio-message#secret-manager-setup
-   * 
-   * You can add any code logic here to be able to customize your message
-   * or dynamically get the from or to numbers
-   * 
-  **/
+  twilioMessage: `const extensionBody: TwilioMessageBody = async({row, db, change, ref, logging}) => {
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
   
+  // Import any NPM package needed
+  // const lodash = require('lodash');
+  
+  // Setup twilio secret key: https://docs.rowy.io/extensions/twilio-message#secret-manager-setup
+  // Add any code here to customize your message or dynamically get the from/to numbers
   return ({
     from: "", // from phone number registered on twilio
     to: "", // recipient phone number - eg: row.<fieldname>
     body: "Hi there!" // message text
   })
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,
-  pushNotification: `const extensionBody: PushNotificationBody = async({row, db, change, ref}) => {
-  // you can FCM token from the row or from the user document in the database
+  pushNotification: `const extensionBody: PushNotificationBody = async({row, db, change, ref, logging}) => {
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("extensionBody started")
+  
+  // Import any NPM package needed
+  // const lodash = require('lodash');
+  
+  // You can use FCM token from the row or from the user document in the database
   // const FCMtoken = row.FCMtoken
-  // or push through topic  
+  // Or push through topic  
   const topicName = 'industry-tech';
-  // you can return single or array of notification payloads
- return [{
-  notification: {
-    title: 'Hello!',
-  },
-  android: {
+  // You can return single or array of notification payloads
+  return [{
     notification: {
-      imageUrl: 'https://thiscatdoesnotexist.com/'
-    }
-  },
-  apns: {
-    payload: {
-      aps: {
-        'mutable-content': 1
+      title: 'Hello!',
+    },
+    android: {
+      notification: {
+        imageUrl: 'https://thiscatdoesnotexist.com/'
       }
     },
-    fcm_options: {
-      image: 'https://thiscatdoesnotexist.com/'
-    }
-  },
-  webpush: {
-    headers: {
-      image: 'https://thiscatdoesnotexist.com/'
-    }
-  },
-  // topic: topicName, // add topic send to subscribers
-  // token: FCMtoken // add FCM token to send to specific user
-}]
+    apns: {
+      payload: {
+        aps: {
+          'mutable-content': 1
+        }
+      },
+      fcm_options: {
+        image: 'https://thiscatdoesnotexist.com/'
+      }
+    },
+    webpush: {
+      headers: {
+        image: 'https://thiscatdoesnotexist.com/'
+      }
+    },
+    // topic: topicName, // add topic send to subscribers
+    // token: FCMtoken // add FCM token to send to specific user
+  }]
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,
 };
 
@@ -232,19 +269,23 @@ export function emptyExtensionObject(
 ): IExtension {
   return {
     name: `${type} extension`,
-    active: false,
+    active: true,
     triggers: [],
     type,
     extensionBody: extensionBodyTemplate[type] ?? extensionBodyTemplate["task"],
     requiredFields: [],
     trackedFields: [],
-    conditions: `const condition: Condition = async({row, change}) => {
-  // feel free to add your own code logic here
+    conditions: `const condition: Condition = async({row, change, logging}) => {
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("condition started")
+  
   return true;
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,
     lastEditor: user,
   };
 }
+
 export function sparkToExtensionObjects(
   sparkConfig: string,
   user: IExtensionEditor

@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import useMemoValue from "use-memo-value";
 import { useAtom, PrimitiveAtom, useSetAtom } from "jotai";
 import { set } from "lodash-es";
+import { useSnackbar } from "notistack";
+
 import {
   Firestore,
   doc,
@@ -64,6 +66,7 @@ export function useFirestoreDocWithAtom<T = TableRow>(
     dataScope
   );
   const handleError = useErrorHandler();
+  const { enqueueSnackbar } = useSnackbar();
 
   // Create the doc ref and memoize using Firestore’s refEqual
   const memoizedDocRef = useMemoValue(
@@ -145,7 +148,11 @@ export function useFirestoreDocWithAtom<T = TableRow>(
           }
         }
 
-        return setDoc(memoizedDocRef, updateToDb, { merge: true });
+        return setDoc(memoizedDocRef, updateToDb, { merge: true }).catch(
+          (e) => {
+            enqueueSnackbar((e as Error).message, { variant: "error" });
+          }
+        );
       });
     }
 
@@ -154,7 +161,7 @@ export function useFirestoreDocWithAtom<T = TableRow>(
       // reset the atom’s value to prevent writes
       if (updateDataAtom) setUpdateDataAtom(undefined);
     };
-  }, [memoizedDocRef, updateDataAtom, setUpdateDataAtom]);
+  }, [memoizedDocRef, updateDataAtom, setUpdateDataAtom, enqueueSnackbar]);
 }
 
 export default useFirestoreDocWithAtom;
@@ -163,12 +170,12 @@ export default useFirestoreDocWithAtom;
  * Create the Firestore document reference.
  * Put code in a function so the results can be compared by useMemoValue.
  */
-const getDocRef = <T>(
+export const getDocRef = <T>(
   firebaseDb: Firestore,
   path: string | undefined,
   pathSegments?: Array<string | undefined>
 ) => {
-  if (!path || (Array.isArray(pathSegments) && pathSegments.some((x) => !x)))
+  if (!path || (Array.isArray(pathSegments) && pathSegments?.some((x) => !x)))
     return null;
 
   return doc(

@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState, useEffect, useCallback } from "react";
-import useStateRef from "react-usestateref";
+// import useStateRef from "react-usestateref"; // testing with useStateWithRef
 import { useAtom, useSetAtom } from "jotai";
 import { useThrottledCallback } from "use-debounce";
 import {
@@ -30,11 +30,18 @@ import {
   tableNextPageAtom,
   tablePageAtom,
   updateColumnAtom,
+  selectedCellAtom,
+  tableSortsAtom,
+  tableIdAtom,
 } from "@src/atoms/tableScope";
+import { projectScope, userSettingsAtom } from "@src/atoms/projectScope";
 import { getFieldType, getFieldProp } from "@src/components/fields";
 import { useKeyboardNavigation } from "./useKeyboardNavigation";
+import { useMenuAction } from "./useMenuAction";
 import { useSaveColumnSizing } from "./useSaveColumnSizing";
+import useHotKeys from "./useHotKey";
 import type { TableRow, ColumnConfig } from "@src/types/table";
+import useStateWithRef from "./useStateWithRef"; // testing with useStateWithRef
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
@@ -95,11 +102,18 @@ export default function Table({
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
 
+  // Get user settings and tableId for applying sort sorting
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
+  const [tableId] = useAtom(tableIdAtom, tableScope);
+  const setTableSorts = useSetAtom(tableSortsAtom, tableScope);
+
   // Store a **state** and reference to the container element
   // so the state can re-render `TableBody`, preventing virtualization
   // not detecting scroll if the container element was initially `null`
   const [containerEl, setContainerEl, containerRef] =
-    useStateRef<HTMLDivElement | null>(null);
+    // useStateRef<HTMLDivElement | null>(null); // <-- older approach with useStateRef
+    useStateWithRef<HTMLDivElement | null>(null); // <-- newer approach with custom hook
+
   const gridRef = useRef<HTMLDivElement>(null);
 
   // Get column defs from table schema
@@ -181,6 +195,13 @@ export default function Table({
     tableRows,
     leafColumns,
   });
+  const [selectedCell] = useAtom(selectedCellAtom, tableScope);
+  const { handleCopy, handlePaste, handleCut } = useMenuAction(selectedCell);
+  const { handler: hotKeysHandler } = useHotKeys([
+    ["mod+C", handleCopy],
+    ["mod+X", handleCut],
+    ["mod+V", handlePaste],
+  ]);
 
   // Handle prompt to save local column sizes if user `canEditColumns`
   useSaveColumnSizing(columnSizing, canEditColumns);
@@ -223,9 +244,24 @@ export default function Table({
     containerRef,
   ]);
 
+  // apply user default sort on first render
+  const [applySort, setApplySort] = useState(true);
+  useEffect(() => {
+    if (applySort && Object.keys(tableSchema).length) {
+      const userDefaultSort = userSettings.tables?.[tableId]?.sorts || [];
+      setTableSorts(
+        userDefaultSort.length ? userDefaultSort : tableSchema.sorts || []
+      );
+      setApplySort(false);
+    }
+  }, [tableSchema, userSettings, tableId, setTableSorts, applySort]);
+
   return (
     <div
-      ref={(el) => setContainerEl(el)}
+      ref={(el) => {
+        if (!el) return;
+        setContainerEl(el);
+      }}
       onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
       style={{ overflow: "auto", width: "100%", height: "100%" }}
     >
@@ -242,7 +278,10 @@ export default function Table({
             "--row-height": `${tableSchema.rowHeight || DEFAULT_ROW_HEIGHT}px`,
           } as any
         }
-        onKeyDown={handleKeyDown}
+        onKeyDown={(e) => {
+          handleKeyDown(e);
+          hotKeysHandler(e);
+        }}
       >
         <div
           className="thead"

@@ -127,7 +127,9 @@ export default function PopupContents({
       <Grid item xs>
         <List sx={{ overflowY: "auto" }}>
           {hits.map((hit) => {
-            const isSelected = selectedValues.some((v) => v === hit[elementId]);
+            const isSelected = selectedValues?.some(
+              (v) => v === hit[elementId]
+            );
             return (
               <MenuItem
                 key={get(hit, elementId)}

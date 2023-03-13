@@ -86,7 +86,7 @@ export default function WebhookModal({
       disableBackdropClick
       disableEscapeKeyDown
       fullWidth
-      title={`${mode === "add" ? "Add" : "Update"} webhook: ${
+      title={`${mode === "add" ? "Add" : "Update"} Webhook: ${
         webhookNames[webhookObject.type]
       }`}
       sx={{

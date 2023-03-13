@@ -164,6 +164,7 @@ export default function withRenderTableCell(
           <DisplayCellComponent {...basicCellProps} />
         </div>
       );
+
       if (disabled || (editorMode !== "inline" && !focusInsideCell))
         return displayCell;
 
@@ -191,7 +192,7 @@ export default function withRenderTableCell(
       if (editorMode === "inline") {
         return (
           <div
-            className="cell-contents"
+            className="cell-contents-contain-none"
             style={options.disablePadding ? { padding: 0 } : undefined}
             ref={displayCellRef}
           >

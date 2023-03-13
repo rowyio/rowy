@@ -192,7 +192,12 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
         value: null,
         deleteField: true,
       });
-    const columnFilters = getFieldProp("filter", selectedColumn?.type);
+    const columnFilters = getFieldProp(
+      "filter",
+      selectedColumn?.type === FieldType.derivative
+        ? selectedColumn.config?.renderFieldType
+        : selectedColumn?.type
+    );
     const handleFilterValue = () => {
       openTableFiltersPopover({
         defaultQuery: {

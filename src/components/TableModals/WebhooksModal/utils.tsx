@@ -26,17 +26,37 @@ const requestType = [
 
 export const parserExtraLibs = [
   requestType,
-  `type Parser = (args:{req:WebHookRequest,db: FirebaseFirestore.Firestore,ref: FirebaseFirestore.CollectionReference,res:{
-    send:(v:any)=>void
-    sendStatus:(status:number)=>void
-  }}) => Promise<any>;`,
+  `type Parser = (
+    args: {
+      req: WebHookRequest;
+      db: FirebaseFirestore.Firestore;
+      ref: FirebaseFirestore.CollectionReference;
+      res: {
+        send: (v:any)=>void;
+        sendStatus: (status:number)=>void
+      };
+      logging: RowyLogging;
+      auth:firebaseauth.BaseAuth;
+      storage:firebasestorage.Storage;
+    }
+  ) => Promise<any>;`,
 ];
 export const conditionExtraLibs = [
   requestType,
-  `type Condition = (args:{req:WebHookRequest,db: FirebaseFirestore.Firestore,ref: FirebaseFirestore.CollectionReference,res:{
-    send:(v:any)=>void
-    sendStatus:(status:number)=>void
-  }}) => Promise<any>;`,
+  `type Condition = (
+     args: {
+      req:WebHookRequest,
+      db: FirebaseFirestore.Firestore,
+      ref: FirebaseFirestore.CollectionReference,
+      res: {
+        send: (v:any)=>void
+        sendStatus: (status:number)=>void
+      };
+      logging: RowyLogging;
+      auth:firebaseauth.BaseAuth;
+      storage:firebasestorage.Storage;
+    }
+  ) => Promise<any>;`,
 ];
 
 const additionalVariables = [
@@ -56,7 +76,7 @@ export const webhookNames: Record<WebhookType, string> = {
   // twitter: "Twitter",
   stripe: "Stripe",
   basic: "Basic",
-  webform: "Web form",
+  webform: "Web Form",
 };
 
 export interface IWebhookEditor {
@@ -99,7 +119,7 @@ export function emptyWebhookObject(
 ): IWebhook {
   return {
     name: `${type} webhook`,
-    active: false,
+    active: true,
     endpoint: generateId(),
     type,
     parser: webhookSchemas[type].parser?.template(table),

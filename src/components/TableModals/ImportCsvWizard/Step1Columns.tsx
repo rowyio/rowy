@@ -64,6 +64,38 @@ export default function Step1Columns({
     config.pairs.map((pair) => pair.csvKey)
   );
 
+  const handleSelectAll = () => {
+    if (selectedFields.length !== csvData.columns.length) {
+      setSelectedFields(csvData.columns);
+      csvData.columns.forEach(field => {
+        // Try to match each field to a column in the table
+        const match =
+          find(tableColumns, (column) =>
+            column.label.toLowerCase().includes(field.toLowerCase())
+          )?.value ?? null;
+        const columnKey = camelCase(field);
+        const columnConfig: Partial<CsvConfig> = { pairs: [], newColumns: [] };
+        columnConfig.pairs = [{ csvKey: field, columnKey: match ?? columnKey }];
+        if (!match) {
+          columnConfig.newColumns = [
+            {
+              name: field,
+              fieldName: columnKey,
+              key: columnKey,
+              type: suggestType(csvData.rows, field) || FieldType.shortText,
+              index: -1,
+              config: {},
+            },
+          ];
+        }
+        updateConfig(columnConfig);
+      })
+    } else {
+      setSelectedFields([])
+      setConfig((config) => ({ ...config, newColumns: [], pairs: [] }))
+    }
+  };
+
   // When a field is selected to be imported
   const handleSelect =
     (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -187,14 +219,36 @@ export default function Step1Columns({
       <Divider />
 
       <FadeList>
+        <li>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={selectedFields.length === csvData.columns.length}
+                indeterminate={
+                  selectedFields.length !== 0 &&
+                  selectedFields.length !== csvData.columns.length
+                }
+                onChange={handleSelectAll}
+                color="default"
+              />
+            }
+            label={selectedFields.length == csvData.columns.length ? "Clear all" : "Select all"}
+            sx={{
+              height: 42,
+              mr: 0,
+              alignItems: "center",
+              "& .MuiFormControlLabel-label": { mt: 0, flex: 1 },
+            }}
+          />
+        </li>
         {csvData.columns.map((field) => {
           const selected = selectedFields.indexOf(field) > -1;
           const columnKey =
             find(config.pairs, { csvKey: field })?.columnKey ?? null;
           const matchingColumn = columnKey
             ? tableSchema.columns?.[columnKey] ??
-              find(config.newColumns, { key: columnKey }) ??
-              null
+            find(config.newColumns, { key: columnKey }) ??
+            null
             : null;
           const isNewColumn = !!find(config.newColumns, { key: columnKey });
 

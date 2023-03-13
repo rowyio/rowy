@@ -13,70 +13,75 @@ export const webhookTypeform = {
     extraLibs: null,
     template: (
       table: TableSettings
-    ) => `const typeformParser: Parser = async({req, db,ref}) =>{
-      // this reduces the form submission into a single object of key value pairs
-      // eg: {name: "John", age: 20}
-      // ⚠️ ensure that you have assigned ref values of the fields
-      // set the ref value to field key you would like to sync to
-      // docs: https://help.typeform.com/hc/en-us/articles/360050447552-Block-reference-format-restrictions
-      const {submitted_at,hidden,answers} = req.body.form_response
-      const submission  = ({
-      _createdAt: submitted_at,
-      ...hidden,
-      ...answers.reduce((accRow, currAnswer) => {
-        switch (currAnswer.type) {
-          case "date":
-            return {
-              ...accRow,
-              [currAnswer.field.ref]: new Date(currAnswer[currAnswer.type]),
-            };
-          case "choice":
-            return {
-              ...accRow,
-              [currAnswer.field.ref]: currAnswer[currAnswer.type].label,
-            };
-          case "choices":
-            return {
-              ...accRow,
-              [currAnswer.field.ref]: currAnswer[currAnswer.type].labels,
-            };
-          case "file_url":
-          default:
-            return {
-              ...accRow,
-              [currAnswer.field.ref]: currAnswer[currAnswer.type],
-            };
-        }
-      }, {}),
-    })
-
-    ${
-      table.audit !== false
-        ? `
-    // auditField
-    const ${
-      table.auditFieldCreatedBy ?? "_createdBy"
-    } = await rowy.metadata.serviceAccountUser()
-    return {
-      ...submission,
-      ${table.auditFieldCreatedBy ?? "_createdBy"}
-    }
-    `
-        : `
-    return submission
-    `
-    }
-  };`,
+    ) => `const typeformParser: Parser = async({req, db, ref, logging}) =>{
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("typeformParser started")
+  
+  // Import any NPM package needed
+  // const lodash = require('lodash');
+  
+  // This reduces the form submission into a single object of key value pairs
+  // Example: {name: "John", age: 20}
+  // ⚠️ Ensure that you have assigned ref values of the fields
+  // Set the ref value to field key you would like to sync to
+  // Docs: https://help.typeform.com/hc/en-us/articles/360050447552-Block-reference-format-restrictions
+  const {submitted_at,hidden,answers} = req.body.form_response
+  const submission  = ({
+    _createdAt: submitted_at,
+    ...hidden,
+    ...answers.reduce((accRow, currAnswer) => {
+      switch (currAnswer.type) {
+        case "date":
+          return {
+            ...accRow,
+            [currAnswer.field.ref]: new Date(currAnswer[currAnswer.type]),
+          };
+        case "choice":
+          return {
+            ...accRow,
+            [currAnswer.field.ref]: currAnswer[currAnswer.type].label,
+          };
+        case "choices":
+          return {
+            ...accRow,
+            [currAnswer.field.ref]: currAnswer[currAnswer.type].labels,
+          };
+        case "file_url":
+        default:
+          return {
+            ...accRow,
+            [currAnswer.field.ref]: currAnswer[currAnswer.type],
+          };
+      }
+    }, {}),
+  })
+  
+  ${
+    table.audit !== false
+      ? `const ${
+          table.auditFieldCreatedBy ?? "_createdBy"
+        } = await rowy.metadata.serviceAccountUser()
+  return {
+    ...submission,
+    ${table.auditFieldCreatedBy ?? "_createdBy"}
+  }`
+      : `return submission;`
+  }
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+};`,
   },
   condition: {
     additionalVariables: null,
     extraLibs: null,
     template: (
       table: TableSettings
-    ) => `const condition: Condition = async({ref,req,db}) => {
-      // feel free to add your own code logic here
-      return true;
-    }`,
+    ) => `const condition: Condition = async({ref, req, db, logging}) => {
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("condition started")
+  
+  return true;
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+}`,
   },
   auth: (
     webhookObject: IWebhook,
