@@ -1,11 +1,20 @@
 import { projectScope } from "@src/atoms/projectScope";
 import { FieldType } from "@src/constants/fields";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
-import { doc, DocumentReference as Reference } from "firebase/firestore";
+import {
+  doc,
+  DocumentReference as Reference,
+  GeoPoint,
+} from "firebase/firestore";
 import { useAtom } from "jotai";
 
 const needsConverter = (type: FieldType) =>
-  [FieldType.image, FieldType.reference, FieldType.file].includes(type);
+  [
+    FieldType.image,
+    FieldType.reference,
+    FieldType.file,
+    FieldType.geoPoint,
+  ].includes(type);
 
 export default function useConverter() {
   const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
@@ -40,6 +49,41 @@ export default function useConverter() {
     return [];
   };
 
+  const geoPointConverter = (value: any) => {
+    if (!value) return null;
+    if (typeof value === "string") {
+      console.log("value", value);
+      let latitude, longitude;
+      // covered cases:
+      // [3.2, 32.3]
+      // {latitude: 3.2, longitude: 32.3}
+      // "3.2, 32.3"
+      try {
+        const parsed = JSON.parse(value);
+        if (Array.isArray(parsed)) {
+          [latitude, longitude] = parsed;
+        } else {
+          latitude = parsed.latitude;
+          longitude = parsed.longitude;
+        }
+
+        if (latitude && longitude) {
+          latitude = parseFloat(latitude);
+          longitude = parseFloat(longitude);
+        }
+      } catch (e) {
+        [latitude, longitude] = value
+          .split(",")
+          .map((val) => parseFloat(val.trim()));
+      }
+
+      if (latitude && longitude) {
+        return new GeoPoint(latitude, longitude);
+      }
+    }
+    return null;
+  };
+
   const getConverter = (type: FieldType) => {
     switch (type) {
       case FieldType.image:
@@ -47,6 +91,8 @@ export default function useConverter() {
         return imageOrFileConverter;
       case FieldType.reference:
         return referenceConverter;
+      case FieldType.geoPoint:
+        return geoPointConverter;
       default:
         return null;
     }

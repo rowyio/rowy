@@ -27,6 +27,8 @@ export const SELECTABLE_TYPES = [
   FieldType.json,
   FieldType.code,
 
+  FieldType.geoPoint,
+
   FieldType.color,
   FieldType.slider,
 
