@@ -80,7 +80,6 @@ export default function ColumnConfigModal({
     }
     const updatedConfig = set(newConfig, key, update); // Modified by @devsgnr, spread operator `{...newConfig}` instead of just `newConfig` was preventing multiple calls from running properly
     setNewConfig(updatedConfig);
-    console.log(updatedConfig); // Testing Purpose Only @devsgnr
     validateSettings();
   };
 

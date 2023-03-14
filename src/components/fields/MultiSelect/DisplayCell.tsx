@@ -8,6 +8,10 @@ import { sanitiseValue } from "./utils";
 import ChipList from "@src/components/Table/TableCell/ChipList";
 import FormattedChip from "@src/components/FormattedChip";
 import palette, { paletteToMui } from "@src/theme/palette";
+import {
+  getColors,
+  IColors,
+} from "@src/components/fields/SingleSelect/Settings";
 
 export default function MultiSelect({
   value,
@@ -18,7 +22,7 @@ export default function MultiSelect({
   column,
 }: IDisplayCellProps) {
   const defaultColor = paletteToMui(palette.aGray);
-  const colors = column?.config?.colors ?? {};
+  const colors: IColors[] = column?.config?.colors ?? [];
   const { mode } = useTheme().palette;
 
   const rendered =
@@ -39,9 +43,8 @@ export default function MultiSelect({
                 <FormattedChip
                   label={item}
                   sx={{
-                    backgroundColor: colors[item.toLocaleLowerCase()]
-                      ? colors[item.toLocaleLowerCase()][mode]
-                      : defaultColor[mode],
+                    backgroundColor:
+                      getColors(colors, item)[mode] || defaultColor[mode],
                   }}
                 />
               </Grid>
