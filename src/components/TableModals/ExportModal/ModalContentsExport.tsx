@@ -48,6 +48,12 @@ const selectedColumnsJsonReducer =
       };
     }
 
+    if (currentColumn.type === FieldType.reference) {
+      return {
+        ...accumulator,
+        [currentColumn.key]: value ? value.path : "",
+      };
+    }
     return {
       ...accumulator,
       [currentColumn.key]: value,
