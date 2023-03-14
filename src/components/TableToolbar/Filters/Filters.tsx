@@ -42,13 +42,15 @@ import type { TableFilter } from "@src/types/table";
 
 const shouldDisableApplyButton = (values: any[]) => {
   const testMap = values.map((i: any) => {
-    return isEmpty(i) &&
-    !isDate(i) &&
-    typeof i !== "boolean" &&
-    typeof i !== "number"
-  })
-  return testMap.some(x => x === true) ? true : false 
-}
+    return (
+      isEmpty(i) &&
+      !isDate(i) &&
+      typeof i !== "boolean" &&
+      typeof i !== "number"
+    );
+  });
+  return testMap.some((x) => x === true) ? true : false;
+};
 
 enum FilterType {
   yourFilter = "local_filter",
@@ -96,9 +98,7 @@ export default function Filters() {
         : INITIAL_QUERY
     );
     setUserQuery(
-      Array.isArray(userFilters) && userFilters[0]
-        ? userFilters
-        : INITIAL_QUERY
+      Array.isArray(userFilters) && userFilters[0] ? userFilters : INITIAL_QUERY
     );
     setCanOverrideCheckbox(tableFiltersOverridable);
 
@@ -276,8 +276,13 @@ export default function Filters() {
                     disabled={
                       !overrideTableFilters &&
                       !tableFiltersOverridden &&
-                      userFilterInputs.query.map(i => {
-                        if (i?.key === "") { return i } else { return }}).length > 0
+                      userFilterInputs.query.map((i) => {
+                        if (i?.key === "") {
+                          return i;
+                        } else {
+                          return;
+                        }
+                      }).length > 0
                     }
                     onClick={() => {
                       setUserFilters(overrideTableFilters ? null : []);
@@ -294,7 +299,9 @@ export default function Filters() {
                   <Button
                     disabled={
                       (!overrideTableFilters && hasTableFilters) ||
-                      shouldDisableApplyButton(userFilterInputs.query.map(i => i.value))
+                      shouldDisableApplyButton(
+                        userFilterInputs.query.map((i) => i.value)
+                      )
                     }
                     color="primary"
                     variant="contained"
@@ -347,8 +354,15 @@ export default function Filters() {
                   spacing={1}
                 >
                   <Button
-                    disabled={userFilterInputs.query.map(i => {
-                      if (i?.key === "") { return i } else { return }}).length > 0}
+                    disabled={
+                      userFilterInputs.query.map((i) => {
+                        if (i?.key === "") {
+                          return i;
+                        } else {
+                          return;
+                        }
+                      }).length > 0
+                    }
                     onClick={() => {
                       setTableFilters([]);
                       tableFilterInputs.resetQuery();
@@ -359,7 +373,7 @@ export default function Filters() {
 
                   <Button
                     disabled={shouldDisableApplyButton(
-                      userFilterInputs.query.map(i => i.value)
+                      userFilterInputs.query.map((i) => i.value)
                     )}
                     color="primary"
                     variant="contained"
@@ -416,8 +430,19 @@ export default function Filters() {
                   disabled={
                     !overrideTableFilters &&
                     !tableFiltersOverridden &&
-                    userFilterInputs.query.map((i: TableFilter | { key: string, operator: string, value: string }) => {
-                      if (i?.key === "") { return i } else { return }}).length > 0
+                    userFilterInputs.query.map(
+                      (
+                        i:
+                          | TableFilter
+                          | { key: string; operator: string; value: string }
+                      ) => {
+                        if (i?.key === "") {
+                          return i;
+                        } else {
+                          return;
+                        }
+                      }
+                    ).length > 0
                   }
                   onClick={() => {
                     setUserFilters(overrideTableFilters ? null : []);
@@ -433,7 +458,9 @@ export default function Filters() {
                 <Button
                   disabled={
                     (!overrideTableFilters && hasTableFilters) ||
-                    shouldDisableApplyButton(userFilterInputs.query.map(i => i.value))
+                    shouldDisableApplyButton(
+                      userFilterInputs.query.map((i) => i.value)
+                    )
                   }
                   color="primary"
                   variant="contained"
@@ -461,8 +488,21 @@ export default function Filters() {
               spacing={1}
             >
               <Button
-                disabled={userFilterInputs.query.map((i: TableFilter | { key: string, operator: string, value: string }) => {
-                  if (i?.key === "") { return i } else { return }}).length > 0}
+                disabled={
+                  userFilterInputs.query.map(
+                    (
+                      i:
+                        | TableFilter
+                        | { key: string; operator: string; value: string }
+                    ) => {
+                      if (i?.key === "") {
+                        return i;
+                      } else {
+                        return;
+                      }
+                    }
+                  ).length > 0
+                }
                 onClick={() => {
                   setUserFilters([]);
                   userFilterInputs.resetQuery();
@@ -473,7 +513,7 @@ export default function Filters() {
 
               <Button
                 disabled={shouldDisableApplyButton(
-                  userFilterInputs.query.map(i => i.value)
+                  userFilterInputs.query.map((i) => i.value)
                 )}
                 color="primary"
                 variant="contained"

@@ -43,8 +43,11 @@ export const useFilterInputs = (
   // When the user sets a new column, automatically set the operator and value
   const handleChangeColumn = (value: string | null, index: number) => {
     if (value === "_rowy_ref.id") {
-      const updateQuery = [...query, { key: "_rowy_ref.id", operator: "id-equal", value: "" }]
-      setQuery(updateQuery)
+      const updateQuery = [
+        ...query,
+        { key: "_rowy_ref.id", operator: "id-equal", value: "" },
+      ];
+      setQuery(updateQuery);
       return;
     }
 
@@ -53,18 +56,25 @@ export const useFilterInputs = (
       const filter = getFieldProp("filter", getFieldType(column));
       if (index >= query.length) {
         // add new filter to back of list
-        const updateQuery = [...query, {key: column.key, operator: filter.operators[0].value,
-          value: filter.defaultValue ?? ""}]
-        setQuery(updateQuery)
+        const updateQuery = [
+          ...query,
+          {
+            key: column.key,
+            operator: filter.operators[0].value,
+            value: filter.defaultValue ?? "",
+          },
+        ];
+        setQuery(updateQuery);
+        console.log(updateQuery);
       } else {
         // replace existing filter
-        const updateQuery = [...query]
+        const updateQuery = [...query];
         updateQuery[index] = {
           key: column.key,
           operator: filter.operators[0].value,
           value: filter.defaultValue ?? "",
-        }
-        setQuery(updateQuery)
+        };
+        setQuery(updateQuery);
       }
     } else {
       // no change
@@ -73,31 +83,33 @@ export const useFilterInputs = (
   };
 
   const handleDeleteFilter = (index: number) => {
-    let updateQuery = [... query]
-    updateQuery.splice(index, 1)
-    setQuery(updateQuery || INITIAL_QUERY)
-  }
+    let updateQuery = [...query];
+    updateQuery.splice(index, 1);
+    setQuery(updateQuery || INITIAL_QUERY);
+  };
 
   // Get the column configs
   const selectedColumns = filterColumns.filter((col, idx) => {
-    return col?.key === query[idx]?.key
-  })
+    return col?.key === query[idx]?.key;
+  });
 
   // Get available filters from selected column type(s)
   function getAvailableFilters(): IFieldConfig["filter"][] {
-    var availFilters: IFieldConfig["filter"][] = new Array<IFieldConfig["filter"]>()
-    query.forEach(i => {
+    var availFilters: IFieldConfig["filter"][] = new Array<
+      IFieldConfig["filter"]
+    >();
+    query.forEach((i) => {
       if (i.key === "_rowy_ref.id") {
-        availFilters.push({ operators: [{ value: "id-equal", label: "is" }] })
+        availFilters.push({ operators: [{ value: "id-equal", label: "is" }] });
       }
-    })
-    selectedColumns.forEach(col => {
-      availFilters.push(getFieldProp("filter", getFieldType(col)))
-    })
-    return availFilters
+    });
+    selectedColumns.forEach((col) => {
+      availFilters.push(getFieldProp("filter", getFieldType(col)));
+    });
+    return availFilters;
   }
 
-  const availableFilters = getAvailableFilters()
+  const availableFilters = getAvailableFilters();
 
   return {
     filterColumns,

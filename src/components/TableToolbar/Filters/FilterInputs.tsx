@@ -13,11 +13,11 @@ import {
   InputLabel,
   Button,
   IconButton,
-  alpha
+  alpha,
 } from "@mui/material";
 
-import AddIcon from '@mui/icons-material/Add';
-import ClearIcon from '@mui/icons-material/Clear';
+import AddIcon from "@mui/icons-material/Add";
+import ClearIcon from "@mui/icons-material/Clear";
 
 import ColumnSelect from "@src/components/Table/ColumnSelect";
 import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
@@ -32,42 +32,51 @@ export interface IFilterInputsProps extends ReturnType<typeof useFilterInputs> {
   disabled?: boolean;
 }
 
-export default function FilterInputs(this: any, {
-  filterColumns,
-  selectedColumn,
-  handleChangeColumn,
-  handleDeleteFilter,
-  availableFilters,
-  query,
-  setQuery,
-  disabled,
-}: IFilterInputsProps) {
+export default function FilterInputs(
+  this: any,
+  {
+    filterColumns,
+    selectedColumn,
+    handleChangeColumn,
+    handleDeleteFilter,
+    availableFilters,
+    query,
+    setQuery,
+    disabled,
+  }: IFilterInputsProps
+) {
+  const [numFilters, setNumFilters] = useState(query.length);
 
+  const columnTypes =
+    selectedColumn.length > 0
+      ? selectedColumn.map((i) => getFieldType(i))
+      : null;
 
-  const [numFilters, setNumFilters] = useState(query.length)
-
-  const columnTypes = selectedColumn.length > 0 ? selectedColumn.map(i => getFieldType(i)) : null;
-
-  const operatorsLists = availableFilters?.map(a => {
-    const foo = a?.operators ?? []
-    return foo
-  }) || [];
+  const operatorsLists =
+    availableFilters?.map((a) => {
+      const foo = a?.operators ?? [];
+      return foo;
+    }) || [];
   const renderedOperatorItems = operatorsLists?.map((operatorList) => {
-    return operatorList.map(operator => {
-      return <MenuItem key={operator.value} value={operator.value}>
-        <ListItemText style={{ flexShrink: 0 }}>{operator.label}</ListItemText>
+    return operatorList.map((operator) => {
+      return (
+        <MenuItem key={operator.value} value={operator.value}>
+          <ListItemText style={{ flexShrink: 0 }}>
+            {operator.label}
+          </ListItemText>
 
-        {operator.secondaryLabel && (
-          <Typography
-            variant="inherit"
-            color="text.disabled"
-            sx={{ overflow: "hidden", textOverflow: "ellipsis", ml: 1 }}
-          >
-            &nbsp;{operator.secondaryLabel}
-          </Typography>
-        )}
-      </MenuItem>
-    })
+          {operator.secondaryLabel && (
+            <Typography
+              variant="inherit"
+              color="text.disabled"
+              sx={{ overflow: "hidden", textOverflow: "ellipsis", ml: 1 }}
+            >
+              &nbsp;{operator.secondaryLabel}
+            </Typography>
+          )}
+        </MenuItem>
+      );
+    });
   });
 
   // Insert ListSubheader components in between groups of operators
@@ -76,7 +85,10 @@ export default function FilterInputs(this: any, {
     for (let j = 0; j < i; j++) {
       if (operatorsLists[i][j] === undefined) continue;
 
-      if (j === 0 || operatorsLists[i][j - 1].group !== operatorsLists[i][j].group) {
+      if (
+        j === 0 ||
+        operatorsLists[i][j - 1].group !== operatorsLists[i][j].group
+      ) {
         renderedOperatorItems[i].splice(
           j === 0 ? 0 : j + 1,
           0,
@@ -89,27 +101,30 @@ export default function FilterInputs(this: any, {
           renderedOperatorItems[i].splice(
             j + 1,
             0,
-            <Divider key={`divider-${operatorsLists[i][j].group}`} variant="middle" />
+            <Divider
+              key={`divider-${operatorsLists[i][j].group}`}
+              variant="middle"
+            />
           );
       }
     }
   }
 
   function handleAddFilter() {
-    setNumFilters(numFilters + 1)
+    setNumFilters(numFilters + 1);
   }
 
-  function handleDeleteIconPressed(i : number) {
-    setNumFilters(numFilters - 1)
-    handleDeleteFilter(i)
+  function handleDeleteIconPressed(i: number) {
+    setNumFilters(numFilters - 1);
+    handleDeleteFilter(i);
   }
 
   // Render input for given num of filters
   function getFiltersInputs() {
-    var rows = []
+    var rows = [];
     for (let i = 0; i < numFilters; i++) {
       rows.push(
-        <Grid container alignItems="center" spacing={2} sx={{ mb: 3 }}>
+        <Grid container alignItems="center" columnGap={1}>
           <Grid item xs>
             <ColumnSelect
               multiple={false}
@@ -129,13 +144,19 @@ export default function FilterInputs(this: any, {
               fullWidth
               value={query[i]?.operator}
               disabled={
-                disabled || !query[i] || availableFilters[i]?.operators?.length === 0
+                disabled ||
+                !query[i] ||
+                availableFilters[i]?.operators?.length === 0
               }
               onChange={(e) => {
-                const updateQuery = [...query]
-                const updateAtIdx = { ...updateQuery[i], operator: e.target.value as string }
-                updateQuery[i] = updateAtIdx
+                const updateQuery = [...query];
+                const updateAtIdx = {
+                  ...updateQuery[i],
+                  operator: e.target.value as string,
+                };
+                updateQuery[i] = updateAtIdx;
                 setQuery(updateQuery);
+                console.log(updateQuery); // Testing Purpose Only
               }}
               SelectProps={{ displayEmpty: true }}
               sx={{ "& .MuiSelect-select": { display: "flex" } }}
@@ -163,16 +184,21 @@ export default function FilterInputs(this: any, {
                     createElement(
                       query[i].key === "_rowy_ref.id"
                         ? IdFilterInput
-                        : getFieldProp("filter.customInput" as any, columnTypes[i]) ||
-                        getFieldProp("SideDrawerField", columnTypes[i]),
+                        : getFieldProp(
+                            "filter.customInput" as any,
+                            columnTypes[i]
+                          ) || getFieldProp("SideDrawerField", columnTypes[i]),
                       {
                         column: selectedColumn,
                         _rowy_ref: {},
                         value: query[i]?.value,
                         onChange: (value: any) => {
-                          const updateQuery = [...query]
-                          const updateAtIdx = { ...updateQuery[i], value: value }
-                          updateQuery[i] = updateAtIdx
+                          const updateQuery = [...query];
+                          const updateAtIdx = {
+                            ...updateQuery[i],
+                            value: value,
+                          };
+                          updateQuery[i] = updateAtIdx;
                           setQuery(updateQuery);
                         },
                         disabled,
@@ -182,30 +208,36 @@ export default function FilterInputs(this: any, {
                 </Suspense>
               </ErrorBoundary>
             )}
-            </Grid>
-            <Grid item xs={1}>
-              <IconButton sx={{mt: 3}} onClick={() => handleDeleteIconPressed(i)} aria-label="delete filter">
+          </Grid>
+          {numFilters > 1 && (
+            <Grid item>
+              <IconButton
+                sx={{ mt: 3 }}
+                onClick={() => handleDeleteIconPressed(i)}
+                aria-label="delete filter"
+              >
                 <ClearIcon />
               </IconButton>
-          </Grid>
-        </Grid>)
+            </Grid>
+          )}
+        </Grid>
+      );
     }
-    return rows
+    return rows;
   }
 
   return (
     <Stack spacing={2}>
       {getFiltersInputs()}
-      <Button onClick={handleAddFilter} variant="contained" endIcon={<AddIcon />} sx={{ color: (theme) =>
-                theme.palette.mode === "dark"
-                  ? theme.palette.primary.light
-                  : theme.palette.primary.dark,
-              backgroundColor: (theme) =>
-                alpha(
-                  theme.palette.primary.main,
-                  theme.palette.action.selectedOpacity
-                ),
-              borderColor: "primary.main"}}>
+      <Button
+        onClick={handleAddFilter}
+        variant="contained"
+        endIcon={<AddIcon />}
+        color="primary"
+        sx={{
+          borderColor: "primary.main",
+        }}
+      >
         Add another filter
       </Button>
       <div />
