@@ -13,7 +13,6 @@ import {
   InputLabel,
   Button,
   IconButton,
-  alpha,
 } from "@mui/material";
 
 import AddIcon from "@mui/icons-material/Add";
@@ -26,7 +25,6 @@ import { InlineErrorFallback } from "@src/components/ErrorFallback";
 
 import type { useFilterInputs } from "./useFilterInputs";
 import { getFieldType, getFieldProp } from "@src/components/fields";
-import { FormatLetterCaseUpper } from "mdi-material-ui";
 
 export interface IFilterInputsProps extends ReturnType<typeof useFilterInputs> {
   disabled?: boolean;
@@ -156,7 +154,6 @@ export default function FilterInputs(
                 };
                 updateQuery[i] = updateAtIdx;
                 setQuery(updateQuery);
-                console.log(updateQuery); // Testing Purpose Only
               }}
               SelectProps={{ displayEmpty: true }}
               sx={{ "& .MuiSelect-select": { display: "flex" } }}
