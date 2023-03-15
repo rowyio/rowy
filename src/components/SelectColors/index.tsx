@@ -161,7 +161,7 @@ const ColorSelect: FC<IColorSelect> = ({ handleChange, initialValue }) => {
             sx={{ borderRadius: 100 }}
             fullWidth
             startIcon={<FormatColorResetIcon />}
-            onClick={() => setColor(paletteToMui(palettes["gray"]))}
+            onClick={() => onChange(paletteToMui(palettes["gray"]))}
           >
             Reset
           </Button>
