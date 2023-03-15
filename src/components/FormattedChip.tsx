@@ -10,7 +10,8 @@ const paletteColor = {
   no: paletteToMui(palette.aRed),
 } as const;
 
-// TODO: Create a more generalised solution for this
+// Switched to a more generalized solution - adding backwards compatibility to maintain [Yes, No, Maybe] colors even if no color is selected
+// Modified by @devsgnr
 export default function FormattedChip(props: ChipProps) {
   const defaultColor = paletteToMui(palette.aGray);
   const { mode } = useTheme().palette;
