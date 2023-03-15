@@ -108,16 +108,16 @@ export default function useUploadFileFromURL() {
   const showProgress = useCallback(
     (totalJobs: number) => {
       snackbarProgressId.current = enqueueSnackbar(
-        `Uploading ${Number(
+        `Uploading files form ${Number(
           totalJobs
-        ).toLocaleString()} files/images. This might take a while.`,
+        ).toLocaleString()} cells. This might take a while.`,
         {
           persist: true,
           action: (
             <SnackbarProgress
               stateRef={snackbarProgressRef}
               target={totalJobs}
-              label=" uploaded"
+              label=" completed"
             />
           ),
         }

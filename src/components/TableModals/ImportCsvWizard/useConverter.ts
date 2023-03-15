@@ -21,8 +21,17 @@ export default function useConverter() {
 
   const referenceConverter = (value: string): Reference | null => {
     if (!value) return null;
-    if (value.split("/").length % 2 !== 0) return null;
-    return doc(firebaseDb, value);
+    if (value.charAt(value.length - 1) === "/") {
+      value = value.slice(0, -1);
+    }
+    if (value.split("/").length % 2 === 0) {
+      try {
+        return doc(firebaseDb, value);
+      } catch (e) {
+        console.log("error", e);
+      }
+    }
+    return null;
   };
 
   const imageOrFileConverter = (urls: any): RowyFile[] => {
@@ -52,7 +61,6 @@ export default function useConverter() {
   const geoPointConverter = (value: any) => {
     if (!value) return null;
     if (typeof value === "string") {
-      console.log("value", value);
       let latitude, longitude;
       // covered cases:
       // [3.2, 32.3]
