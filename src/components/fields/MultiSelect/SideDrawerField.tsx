@@ -7,6 +7,8 @@ import FormattedChip from "@src/components/FormattedChip";
 
 import { fieldSx } from "@src/components/SideDrawer/utils";
 import { sanitiseValue } from "./utils";
+import { getColors } from "@src/components/fields/SingleSelect/Settings";
+import palette, { paletteToMui } from "@src/theme/palette";
 
 export default function MultiSelect({
   column,
@@ -15,8 +17,9 @@ export default function MultiSelect({
   onSubmit,
   disabled,
 }: ISideDrawerFieldProps) {
+  const defaultColor = paletteToMui(palette.aGray);
   const config = column.config ?? {};
-  const colors = column.config?.colors ?? {};
+  const colors = column.config?.colors ?? [];
   const { mode } = useTheme().palette;
 
   const handleDelete = (index: number) => () => {
@@ -79,8 +82,7 @@ export default function MultiSelect({
                     onDelete={disabled ? undefined : handleDelete(i)}
                     sx={{
                       backgroundColor:
-                        colors[item.toLowerCase()] &&
-                        colors[item.toLowerCase()][mode],
+                        getColors(colors, item)[mode] || defaultColor[mode],
                     }}
                   />
                 </Grid>

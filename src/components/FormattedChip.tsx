@@ -16,6 +16,7 @@ export default function FormattedChip(props: ChipProps) {
   const defaultColor = paletteToMui(palette.aGray);
   const { mode } = useTheme().palette;
   const fallback = { backgroundColor: defaultColor[mode] };
+  const { sx, ...newProps } = props;
 
   const label =
     typeof props.label === "string" ? props.label.toLowerCase() : "";
@@ -24,7 +25,6 @@ export default function FormattedChip(props: ChipProps) {
   return (
     <Chip
       size="small"
-      label={props.label}
       sx={
         inVariant && isEqual(props.sx, fallback)
           ? {
@@ -33,6 +33,7 @@ export default function FormattedChip(props: ChipProps) {
             }
           : props.sx
       }
+      {...newProps}
     />
   );
 }
