@@ -7,7 +7,6 @@ import { ChevronDown } from "@src/assets/icons";
 import { sanitiseValue } from "./utils";
 import ChipList from "@src/components/Table/TableCell/ChipList";
 import FormattedChip from "@src/components/FormattedChip";
-import palette, { paletteToMui } from "@src/theme/palette";
 import {
   getColors,
   IColors,
@@ -21,7 +20,6 @@ export default function MultiSelect({
   rowHeight,
   column,
 }: IDisplayCellProps) {
-  const defaultColor = paletteToMui(palette.aGray);
   const colors: IColors[] = column?.config?.colors ?? [];
   const { mode } = useTheme().palette;
 
@@ -43,8 +41,7 @@ export default function MultiSelect({
                 <FormattedChip
                   label={item}
                   sx={{
-                    backgroundColor:
-                      getColors(colors, item)[mode] || defaultColor[mode],
+                    backgroundColor: getColors(colors, item)[mode],
                   }}
                 />
               </Grid>

@@ -41,7 +41,10 @@ export interface IColors extends SelectColorThemeOptions {
   name: string;
 }
 
-export const getColors = (list: IColors[], option: string) => {
+export const getColors = (
+  list: IColors[],
+  option: string
+): SelectColorThemeOptions => {
   const defaultColor = paletteToMui(palette.aGray);
   const key = option.toLocaleLowerCase().replace(" ", "_").trim();
   const color = list.find((opt: IColors) => opt.name === key);

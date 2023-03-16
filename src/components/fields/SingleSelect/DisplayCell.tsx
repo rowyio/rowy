@@ -5,7 +5,6 @@ import { ChevronDown } from "@src/assets/icons";
 import { useTheme } from "@mui/material";
 
 import { sanitiseValue } from "./utils";
-import palette, { paletteToMui } from "@src/theme/palette";
 import ChipList from "@src/components/Table/TableCell/ChipList";
 import { getColors, IColors } from "./Settings";
 
@@ -17,7 +16,6 @@ export default function SingleSelect({
   column,
   rowHeight,
 }: IDisplayCellProps) {
-  const defaultColor = paletteToMui(palette.aGray);
   const colors: IColors[] = column?.config?.colors ?? [];
   const { mode } = useTheme().palette;
 
@@ -35,9 +33,7 @@ export default function SingleSelect({
             size="small"
             label={sanitiseValue(value)}
             sx={{
-              backgroundColor: sanitiseValue(value)
-                ? getColors(colors, value)[mode]
-                : defaultColor[mode],
+              backgroundColor: getColors(colors, value)[mode],
             }}
           />
         )}
