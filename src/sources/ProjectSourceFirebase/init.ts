@@ -9,18 +9,26 @@ import {
 import { getStorage, connectStorageEmulator } from "firebase/storage";
 import { getFunctions } from "firebase/functions";
 
-export const envConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_PROJECT_WEB_API_KEY,
-  authDomain: `${process.env.REACT_APP_FIREBASE_PROJECT_ID}.firebaseapp.com`,
-  databaseURL: `https://${process.env.REACT_APP_FIREBASE_PROJECT_ID}.firebaseio.com`,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: `${process.env.REACT_APP_FIREBASE_PROJECT_ID}.appspot.com`,
-};
-
 // Connect emulators based on env vars
 const envConnectEmulators =
   process.env.NODE_ENV === "test" ||
   process.env.REACT_APP_FIREBASE_EMULATORS === "true";
+
+export const envConfig = envConnectEmulators
+  ? {
+      apiKey: "rowy-os-testing",
+      authDomain: `rowy-os-testing.firebaseapp.com`,
+      databaseURL: `rowy-os-testing.firebaseio.com`,
+      projectId: "rowy-os-testing",
+      storageBucket: `rowy-os-testing.appspot.com`,
+    }
+  : {
+      apiKey: process.env.REACT_APP_FIREBASE_PROJECT_WEB_API_KEY,
+      authDomain: `${process.env.REACT_APP_FIREBASE_PROJECT_ID}.firebaseapp.com`,
+      databaseURL: `https://${process.env.REACT_APP_FIREBASE_PROJECT_ID}.firebaseio.com`,
+      projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+      storageBucket: `${process.env.REACT_APP_FIREBASE_PROJECT_ID}.appspot.com`,
+    };
 
 /**
  * Store Firebase config here so it can be set programmatically.

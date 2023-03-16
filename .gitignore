@@ -30,5 +30,10 @@ firebase-debug.log*
 .eslintcache
 .npm
 
+.vscode
+
 .vercel
 typedoc/
+/test-results/
+/playwright-report/
+/playwright/.cache/

@@ -1,5 +1,4 @@
 {
-  "extends": "./tsconfig.extend.json",
   "compilerOptions": {
     "target": "es2021",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -22,8 +21,7 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
-    "jsx": "react-jsx",
-    "baseUrl": "src"
+    "baseUrl": "./"
   },
-  "include": ["src", "test"]
+  "include": ["test"]
 }
