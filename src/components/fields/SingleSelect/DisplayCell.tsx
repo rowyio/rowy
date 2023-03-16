@@ -35,8 +35,9 @@ export default function SingleSelect({
             size="small"
             label={sanitiseValue(value)}
             sx={{
-              backgroundColor:
-                (value && getColors(colors, value)[mode]) || defaultColor[mode],
+              backgroundColor: sanitiseValue(value)
+                ? getColors(colors, value)[mode]
+                : defaultColor[mode],
             }}
           />
         )}
