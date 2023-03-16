@@ -288,7 +288,7 @@ export default function Filters() {
                     }
                     onClick={() => {
                       setUserFilters(overrideTableFilters ? null : []);
-                      userFilterInputs.resetQueries();
+                      userFilterInputs.resetQuery();
                     }}
                   >
                     Clear
@@ -306,7 +306,7 @@ export default function Filters() {
                     color="primary"
                     variant="contained"
                     onClick={() => {
-                      setUserFilters(userFilterInputs.queries as TableFilter[]);
+                      setUserFilters([userFilterInputs.query as TableFilter]);
                       handleClose();
                     }}
                   >
@@ -357,7 +357,7 @@ export default function Filters() {
                     disabled={tableFilterInputs.query.key === ""}
                     onClick={() => {
                       setTableFilters([]);
-                      tableFilterInputs.resetQueries();
+                      tableFilterInputs.resetQuery();
                     }}
                   >
                     Clear
@@ -370,9 +370,7 @@ export default function Filters() {
                     color="primary"
                     variant="contained"
                     onClick={() => {
-                      setTableFilters(
-                        tableFilterInputs.queries as TableFilter[]
-                      );
+                      setTableFilters([tableFilterInputs.query as TableFilter]);
                       handleClose();
                     }}
                   >
@@ -428,7 +426,7 @@ export default function Filters() {
                   }
                   onClick={() => {
                     setUserFilters(overrideTableFilters ? null : []);
-                    userFilterInputs.resetQueries();
+                    userFilterInputs.resetQuery();
                   }}
                 >
                   Clear
@@ -445,7 +443,7 @@ export default function Filters() {
                   color="primary"
                   variant="contained"
                   onClick={() => {
-                    setUserFilters(userFilterInputs.queries as TableFilter[]);
+                    setUserFilters([userFilterInputs.query as TableFilter]);
                     handleClose();
                   }}
                 >
@@ -471,7 +469,7 @@ export default function Filters() {
                 disabled={userFilterInputs.query.key === ""}
                 onClick={() => {
                   setUserFilters([]);
-                  userFilterInputs.resetQueries();
+                  userFilterInputs.resetQuery();
                 }}
               >
                 Clear
@@ -484,7 +482,7 @@ export default function Filters() {
                 color="primary"
                 variant="contained"
                 onClick={() => {
-                  setUserFilters(userFilterInputs.queries as TableFilter[]);
+                  setUserFilters([userFilterInputs.query as TableFilter]);
                   handleClose();
                 }}
               >

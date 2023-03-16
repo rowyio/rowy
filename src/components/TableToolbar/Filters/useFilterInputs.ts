@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { find } from "lodash-es";
 
 import { getFieldType, getFieldProp } from "@src/components/fields";
@@ -46,10 +46,6 @@ export const useFilterInputs = (
 
   const resetQueries = () => setQueries([INITIAL_QUERY]);
 
-  // useEffect(() => {
-  //   console.log(queries);
-  // }, [queries]);
-
   // When the user sets a new column, automatically set the operator and value
   const handleChangeColumn = (value: string | null) => {
     if (value === "_rowy_ref.id") {
@@ -66,7 +62,6 @@ export const useFilterInputs = (
         operator: filter.operators[0].value,
         value: filter.defaultValue ?? "",
       });
-      setQueries((current) => [...current, query]);
     } else {
       setQuery(INITIAL_QUERY);
     }

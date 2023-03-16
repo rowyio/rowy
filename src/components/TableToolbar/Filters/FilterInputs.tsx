@@ -78,119 +78,98 @@ export default function FilterInputs({
     }
   }
 
-  const [localControlQueries, setLocalControlQueries] = useState<
-    typeof queries
-  >(queries || [INITIAL_QUERY]);
-
-  const addFilter = (queryItem: typeof query) => {
-    setLocalControlQueries((current) => [...current, queryItem]);
-    console.log(localControlQueries);
-  };
-
-  const setLocalQueryOperator = (queryObj: typeof query) => {
-    const nextLocalControl = localControlQueries.map((q) => {
-      if (q.key !== queryObj.key) return q;
-      else {
-        return {
-          ...q,
-          operator: queryObj.operator,
-        };
-      }
-    });
-    setLocalControlQueries(nextLocalControl);
-  };
-
   interface IFilterControl {
     singleQuery: typeof query;
   }
 
-  const FilterControl = ({ singleQuery }: IFilterControl) => (
-    <Grid container spacing={2} sx={{ mb: 3 }}>
-      <Grid item xs={4}>
-        <ColumnSelect
-          multiple={false}
-          label="Column"
-          options={filterColumns}
-          value={singleQuery.key}
-          onChange={handleChangeColumn}
-          disabled={disabled}
-        />
-      </Grid>
+  const FilterControl = ({ singleQuery }: IFilterControl) => {
+    return (
+      <Grid container spacing={2} sx={{ mb: 3 }}>
+        <Grid item xs={4}>
+          <ColumnSelect
+            multiple={false}
+            label="Column"
+            options={filterColumns}
+            value={singleQuery.key}
+            onChange={handleChangeColumn}
+            disabled={disabled}
+          />
+        </Grid>
 
-      <Grid item xs={4}>
-        <TextField
-          label="Operator"
-          select
-          variant="filled"
-          fullWidth
-          value={singleQuery.operator}
-          disabled={
-            disabled ||
-            !singleQuery.key ||
-            availableFilters?.operators?.length === 0
-          }
-          onChange={(e) => {
-            setQuery((query) => ({
-              ...query,
-              operator: e.target.value as string,
-            }));
-          }}
-          SelectProps={{ displayEmpty: true }}
-          sx={{ "& .MuiSelect-select": { display: "flex" } }}
-        >
-          <MenuItem disabled value="" style={{ display: "none" }}>
-            Select operator
-          </MenuItem>
-          {renderedOperatorItems}
-        </TextField>
-      </Grid>
+        <Grid item xs={4}>
+          <TextField
+            label="Operator"
+            select
+            variant="filled"
+            fullWidth
+            value={singleQuery.operator}
+            disabled={
+              disabled ||
+              !singleQuery.key ||
+              availableFilters?.operators?.length === 0
+            }
+            onChange={(e) => {
+              setQuery((query) => ({
+                ...query,
+                operator: e.target.value as string,
+              }));
+            }}
+            SelectProps={{ displayEmpty: true }}
+            sx={{ "& .MuiSelect-select": { display: "flex" } }}
+          >
+            <MenuItem disabled value="" style={{ display: "none" }}>
+              Select operator
+            </MenuItem>
+            {renderedOperatorItems}
+          </TextField>
+        </Grid>
 
-      <Grid item xs={4} key={singleQuery.key + singleQuery.operator}>
-        {singleQuery.key && singleQuery.operator && (
-          <ErrorBoundary FallbackComponent={InlineErrorFallback}>
-            <InputLabel
-              variant="filled"
-              id={`filters-label-${singleQuery.key}`}
-              htmlFor={`sidedrawer-field-${singleQuery.key}`}
-            >
-              Value
-            </InputLabel>
+        <Grid item xs={4} key={singleQuery.key + singleQuery.operator}>
+          {singleQuery.key && singleQuery.operator && (
+            <ErrorBoundary FallbackComponent={InlineErrorFallback}>
+              <InputLabel
+                variant="filled"
+                id={`filters-label-${singleQuery.key}`}
+                htmlFor={`sidedrawer-field-${singleQuery.key}`}
+              >
+                Value
+              </InputLabel>
 
-            <Suspense fallback={<FieldSkeleton />}>
-              {columnType &&
-                createElement(
-                  singleQuery.key === "_rowy_ref.id"
-                    ? IdFilterInput
-                    : getFieldProp("filter.customInput" as any, columnType) ||
-                        getFieldProp("SideDrawerField", columnType),
-                  {
-                    column: selectedColumn,
-                    _rowy_ref: {},
-                    value: singleQuery.value,
-                    onChange: (value: any) => {
-                      setQuery((query) => ({ ...query, value }));
-                    },
-                    disabled,
-                    operator: singleQuery.operator,
-                  }
-                )}
-            </Suspense>
-          </ErrorBoundary>
-        )}
+              <Suspense fallback={<FieldSkeleton />}>
+                {columnType &&
+                  createElement(
+                    singleQuery.key === "_rowy_ref.id"
+                      ? IdFilterInput
+                      : getFieldProp("filter.customInput" as any, columnType) ||
+                          getFieldProp("SideDrawerField", columnType),
+                    {
+                      column: selectedColumn,
+                      _rowy_ref: {},
+                      value: singleQuery.value,
+                      onChange: (value: any) => {
+                        setQuery((query) => ({ ...query, value }));
+                      },
+                      disabled,
+                      operator: singleQuery.operator,
+                    }
+                  )}
+              </Suspense>
+            </ErrorBoundary>
+          )}
+        </Grid>
       </Grid>
-    </Grid>
-  );
+    );
+  };
 
   return (
     <Stack spacing={1} mb={2}>
+      <FilterControl singleQuery={query} />
       <Stack>
-        {localControlQueries.map((optQuery, index) => (
+        {queries.map((optQuery, index) => (
           <FilterControl key={index + optQuery.key} singleQuery={optQuery} />
         ))}
       </Stack>
-      <Button onClick={() => addFilter({ key: "", operator: "", value: "" })}>
-        Add another filter
-      </Button>
+      <Button>Add another filter</Button>
     </Stack>
   );
 }
