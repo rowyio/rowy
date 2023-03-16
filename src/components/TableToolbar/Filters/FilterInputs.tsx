@@ -1,4 +1,4 @@
-import { Suspense, createElement } from "react";
+import React, { Suspense, createElement, useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 import {
@@ -10,6 +10,8 @@ import {
   Typography,
   TextField,
   InputLabel,
+  Stack,
+  Button,
 } from "@mui/material";
 
 import ColumnSelect from "@src/components/Table/ColumnSelect";
@@ -17,7 +19,7 @@ import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 import IdFilterInput from "./IdFilterInput";
 import { InlineErrorFallback } from "@src/components/ErrorFallback";
 
-import type { useFilterInputs } from "./useFilterInputs";
+import { INITIAL_QUERY, useFilterInputs } from "./useFilterInputs";
 import { getFieldType, getFieldProp } from "@src/components/fields";
 
 export interface IFilterInputsProps extends ReturnType<typeof useFilterInputs> {
@@ -31,6 +33,8 @@ export default function FilterInputs({
   availableFilters,
   query,
   setQuery,
+  queries,
+  setQueries,
   disabled,
 }: IFilterInputsProps) {
   const columnType = selectedColumn ? getFieldType(selectedColumn) : null;
@@ -74,14 +78,40 @@ export default function FilterInputs({
     }
   }
 
-  return (
+  const [localControlQueries, setLocalControlQueries] = useState<
+    typeof queries
+  >(queries || [INITIAL_QUERY]);
+
+  const addFilter = (queryItem: typeof query) => {
+    setLocalControlQueries((current) => [...current, queryItem]);
+    console.log(localControlQueries);
+  };
+
+  const setLocalQueryOperator = (queryObj: typeof query) => {
+    const nextLocalControl = localControlQueries.map((q) => {
+      if (q.key !== queryObj.key) return q;
+      else {
+        return {
+          ...q,
+          operator: queryObj.operator,
+        };
+      }
+    });
+    setLocalControlQueries(nextLocalControl);
+  };
+
+  interface IFilterControl {
+    singleQuery: typeof query;
+  }
+
+  const FilterControl = ({ singleQuery }: IFilterControl) => (
     <Grid container spacing={2} sx={{ mb: 3 }}>
       <Grid item xs={4}>
         <ColumnSelect
           multiple={false}
           label="Column"
           options={filterColumns}
-          value={query.key}
+          value={singleQuery.key}
           onChange={handleChangeColumn}
           disabled={disabled}
         />
@@ -93,9 +123,11 @@ export default function FilterInputs({
           select
           variant="filled"
           fullWidth
-          value={query.operator}
+          value={singleQuery.operator}
           disabled={
-            disabled || !query.key || availableFilters?.operators?.length === 0
+            disabled ||
+            !singleQuery.key ||
+            availableFilters?.operators?.length === 0
           }
           onChange={(e) => {
             setQuery((query) => ({
@@ -113,13 +145,13 @@ export default function FilterInputs({
         </TextField>
       </Grid>
 
-      <Grid item xs={4} key={query.key + query.operator}>
-        {query.key && query.operator && (
+      <Grid item xs={4} key={singleQuery.key + singleQuery.operator}>
+        {singleQuery.key && singleQuery.operator && (
           <ErrorBoundary FallbackComponent={InlineErrorFallback}>
             <InputLabel
               variant="filled"
-              id={`filters-label-${query.key}`}
-              htmlFor={`sidedrawer-field-${query.key}`}
+              id={`filters-label-${singleQuery.key}`}
+              htmlFor={`sidedrawer-field-${singleQuery.key}`}
             >
               Value
             </InputLabel>
@@ -127,19 +159,19 @@ export default function FilterInputs({
             <Suspense fallback={<FieldSkeleton />}>
               {columnType &&
                 createElement(
-                  query.key === "_rowy_ref.id"
+                  singleQuery.key === "_rowy_ref.id"
                     ? IdFilterInput
                     : getFieldProp("filter.customInput" as any, columnType) ||
                         getFieldProp("SideDrawerField", columnType),
                   {
                     column: selectedColumn,
                     _rowy_ref: {},
-                    value: query.value,
+                    value: singleQuery.value,
                     onChange: (value: any) => {
                       setQuery((query) => ({ ...query, value }));
                     },
                     disabled,
-                    operator: query.operator,
+                    operator: singleQuery.operator,
                   }
                 )}
             </Suspense>
@@ -147,5 +179,18 @@ export default function FilterInputs({
         )}
       </Grid>
     </Grid>
+  );
+
+  return (
+    <Stack spacing={1} mb={2}>
+      <Stack>
+        {localControlQueries.map((optQuery, index) => (
+          <FilterControl key={index + optQuery.key} singleQuery={optQuery} />
+        ))}
+      </Stack>
+      <Button onClick={() => addFilter({ key: "", operator: "", value: "" })}>
+        Add another filter
+      </Button>
+    </Stack>
   );
 }

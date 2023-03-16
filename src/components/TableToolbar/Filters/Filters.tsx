@@ -65,8 +65,10 @@ export default function Filters() {
 
   const tableFilterInputs = useFilterInputs(tableColumnsOrdered);
   const setTableQuery = tableFilterInputs.setQuery;
+  const setTableQueries = tableFilterInputs.setQueries; //Testing out new feature
   const userFilterInputs = useFilterInputs(tableColumnsOrdered, defaultQuery);
   const setUserQuery = userFilterInputs.setQuery;
+  const setUserQueries = userFilterInputs.setQueries; //Testing out new feature
   const { availableFilters } = userFilterInputs;
 
   // Get table filters & user filters from config documents
@@ -98,6 +100,13 @@ export default function Filters() {
     );
     setCanOverrideCheckbox(tableFiltersOverridable);
 
+    // Testing out new features
+    setTableQueries(
+      Array.isArray(tableFilters) ? tableFilters : [INITIAL_QUERY]
+    );
+    setUserQueries(Array.isArray(userFilters) ? userFilters : [INITIAL_QUERY]);
+    // end of test feature
+
     let filtersToApply: TableFilter[] = [];
 
     // Allow override table-level filters with their own
@@ -126,6 +135,8 @@ export default function Filters() {
     setUserQuery,
     userFilters,
     userRoles,
+    setTableQueries,
+    setUserQueries,
   ]);
 
   // Helper booleans for local table filter state
@@ -172,6 +183,7 @@ export default function Filters() {
     logEvent(analytics, FilterType.yourFilter);
     if (updateUserSettings && filters)
       updateUserSettings({ tables: { [`${tableId}`]: { filters } } });
+    console.log({ tables: { [`${tableId}`]: { filters } } });
   };
 
   return (
@@ -276,7 +288,7 @@ export default function Filters() {
                     }
                     onClick={() => {
                       setUserFilters(overrideTableFilters ? null : []);
-                      userFilterInputs.resetQuery();
+                      userFilterInputs.resetQueries();
                     }}
                   >
                     Clear
@@ -294,7 +306,7 @@ export default function Filters() {
                     color="primary"
                     variant="contained"
                     onClick={() => {
-                      setUserFilters([userFilterInputs.query as TableFilter]);
+                      setUserFilters(userFilterInputs.queries as TableFilter[]);
                       handleClose();
                     }}
                   >
@@ -345,7 +357,7 @@ export default function Filters() {
                     disabled={tableFilterInputs.query.key === ""}
                     onClick={() => {
                       setTableFilters([]);
-                      tableFilterInputs.resetQuery();
+                      tableFilterInputs.resetQueries();
                     }}
                   >
                     Clear
@@ -358,7 +370,9 @@ export default function Filters() {
                     color="primary"
                     variant="contained"
                     onClick={() => {
-                      setTableFilters([tableFilterInputs.query as TableFilter]);
+                      setTableFilters(
+                        tableFilterInputs.queries as TableFilter[]
+                      );
                       handleClose();
                     }}
                   >
@@ -414,7 +428,7 @@ export default function Filters() {
                   }
                   onClick={() => {
                     setUserFilters(overrideTableFilters ? null : []);
-                    userFilterInputs.resetQuery();
+                    userFilterInputs.resetQueries();
                   }}
                 >
                   Clear
@@ -431,7 +445,7 @@ export default function Filters() {
                   color="primary"
                   variant="contained"
                   onClick={() => {
-                    setUserFilters([userFilterInputs.query as TableFilter]);
+                    setUserFilters(userFilterInputs.queries as TableFilter[]);
                     handleClose();
                   }}
                 >
@@ -457,7 +471,7 @@ export default function Filters() {
                 disabled={userFilterInputs.query.key === ""}
                 onClick={() => {
                   setUserFilters([]);
-                  userFilterInputs.resetQuery();
+                  userFilterInputs.resetQueries();
                 }}
               >
                 Clear
@@ -470,7 +484,7 @@ export default function Filters() {
                 color="primary"
                 variant="contained"
                 onClick={() => {
-                  setUserFilters([userFilterInputs.query as TableFilter]);
+                  setUserFilters(userFilterInputs.queries as TableFilter[]);
                   handleClose();
                 }}
               >
