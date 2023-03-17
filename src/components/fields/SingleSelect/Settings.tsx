@@ -48,7 +48,7 @@ export const getColors = (
   const defaultColor = paletteToMui(palette.aGray);
   const key = option.toLocaleLowerCase().replace(" ", "_").trim();
   const color = list.find((opt: IColors) => opt.name === key);
-
+  // Null check in return
   return color || defaultColor;
 };
 
