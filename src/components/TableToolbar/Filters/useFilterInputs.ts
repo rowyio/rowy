@@ -65,6 +65,8 @@ export const useFilterInputs = (
     } else {
       setQuery(INITIAL_QUERY);
     }
+
+    return query;
   };
 
   // Get the column config

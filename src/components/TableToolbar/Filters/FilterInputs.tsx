@@ -82,16 +82,32 @@ export default function FilterInputs({
     singleQuery: typeof query;
   }
 
-  const FilterControl = ({ singleQuery }: IFilterControl) => {
+  const FilterControlFactory = () => {
+    type ControllerType = typeof FilterControl;
+
+    const [controllers, setControllers] = useState<Array<ControllerType>>([
+      FilterControl,
+    ]);
+
+    const addNewFilter = () => {
+      setControllers((current) => [...current, FilterControl]);
+    };
+
+    return { controllers, addNewFilter };
+  };
+
+  const FilterControl = ({ singleQuery, ...rest }: IFilterControl) => {
+    const [localQuery, setLocalQuery] = useState<typeof query>(singleQuery);
+
     return (
-      <Grid container spacing={2} sx={{ mb: 3 }}>
+      <Grid container spacing={2} sx={{ mb: 3 }} {...rest}>
         <Grid item xs={4}>
           <ColumnSelect
             multiple={false}
             label="Column"
             options={filterColumns}
-            value={singleQuery.key}
-            onChange={handleChangeColumn}
+            value={localQuery.key}
+            onChange={(value: any) => console.log(value as string)}
             disabled={disabled}
           />
         </Grid>
@@ -102,14 +118,14 @@ export default function FilterInputs({
             select
             variant="filled"
             fullWidth
-            value={singleQuery.operator}
+            value={localQuery.operator}
             disabled={
               disabled ||
-              !singleQuery.key ||
+              !localQuery.key ||
               availableFilters?.operators?.length === 0
             }
             onChange={(e) => {
-              setQuery((query) => ({
+              setLocalQuery((query) => ({
                 ...query,
                 operator: e.target.value as string,
               }));
@@ -124,13 +140,13 @@ export default function FilterInputs({
           </TextField>
         </Grid>
 
-        <Grid item xs={4} key={singleQuery.key + singleQuery.operator}>
-          {singleQuery.key && singleQuery.operator && (
+        <Grid item xs={4} key={localQuery.key + localQuery.operator}>
+          {localQuery.key && localQuery.operator && (
             <ErrorBoundary FallbackComponent={InlineErrorFallback}>
               <InputLabel
                 variant="filled"
-                id={`filters-label-${singleQuery.key}`}
-                htmlFor={`sidedrawer-field-${singleQuery.key}`}
+                id={`filters-label-${localQuery.key}`}
+                htmlFor={`sidedrawer-field-${localQuery.key}`}
               >
                 Value
               </InputLabel>
@@ -138,19 +154,19 @@ export default function FilterInputs({
               <Suspense fallback={<FieldSkeleton />}>
                 {columnType &&
                   createElement(
-                    singleQuery.key === "_rowy_ref.id"
+                    localQuery.key === "_rowy_ref.id"
                       ? IdFilterInput
                       : getFieldProp("filter.customInput" as any, columnType) ||
                           getFieldProp("SideDrawerField", columnType),
                     {
                       column: selectedColumn,
                       _rowy_ref: {},
-                      value: singleQuery.value,
+                      value: localQuery.value,
                       onChange: (value: any) => {
-                        setQuery((query) => ({ ...query, value }));
+                        setLocalQuery((query) => ({ ...query, value }));
                       },
                       disabled,
-                      operator: singleQuery.operator,
+                      operator: localQuery.operator,
                     }
                   )}
               </Suspense>
@@ -161,15 +177,19 @@ export default function FilterInputs({
     );
   };
 
+  const factory = FilterControlFactory();
+
   return (
     <Stack spacing={1} mb={2}>
-      <FilterControl singleQuery={query} />
       <Stack>
-        {queries.map((optQuery, index) => (
-          <FilterControl key={index + optQuery.key} singleQuery={optQuery} />
-        ))}
+        {factory.controllers.map((Cntrllr, index) =>
+          createElement(Cntrllr, {
+            singleQuery: INITIAL_QUERY,
+            ...{ key: index },
+          })
+        )}
       </Stack>
-      <Button>Add another filter</Button>
+      <Button onClick={() => factory.addNewFilter()}>Add another filter</Button>
     </Stack>
   );
 }
