@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createElement } from "react";
 import { useAtom } from "jotai";
 import useMemoValue from "use-memo-value";
 import { isEmpty, isDate } from "lodash-es";
@@ -18,7 +18,7 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
 import FiltersPopover from "./FiltersPopover";
-import FilterInputs from "./FilterInputs";
+import FilterInputs, { FiltersContainer } from "./FilterInputs";
 
 import {
   projectScope,
@@ -186,6 +186,24 @@ export default function Filters() {
     console.log({ tables: { [`${tableId}`]: { filters } } });
   };
 
+  // Filter Control Factory
+  const FilterControlFactory = () => {
+    type QueryType = typeof INITIAL_QUERY;
+
+    const [controllers, setControllers] = useState<Array<QueryType>>(
+      userFilterInputs.queries
+    );
+
+    const addNewFilter = () => {
+      setControllers((current) => [...current, INITIAL_QUERY]);
+    };
+
+    return { controllers, addNewFilter };
+  };
+
+  const userFilterFactory = FilterControlFactory();
+  const tableFilterFactory = FilterControlFactory();
+
   return (
     <FiltersPopover
       appliedFilters={appliedFilters}
@@ -257,7 +275,24 @@ export default function Filters() {
               <Divider style={{ marginTop: -1 }} />
 
               <TabPanel value="user" className="content">
-                <FilterInputs {...userFilterInputs} />
+                <FiltersContainer
+                  addControl={() => userFilterFactory.addNewFilter()}
+                >
+                  {userFilterFactory.controllers.map((filterObject, index) =>
+                    createElement(FilterInputs, {
+                      key: index,
+                      ...{
+                        ...userFilterInputs,
+                        query: filterObject,
+                        queries: userFilterFactory.controllers,
+                        onLocalChange: (filter: TableFilter) =>
+                          console.log(filter),
+                      },
+                    })
+                  )}
+                </FiltersContainer>
+
+                {/* <FilterInputs {...userFilterInputs} /> */}
 
                 {hasTableFilters && (
                   <FormControlLabel
@@ -284,11 +319,11 @@ export default function Filters() {
                     disabled={
                       !overrideTableFilters &&
                       !tableFiltersOverridden &&
-                      userFilterInputs.query.key === ""
+                      userFilterInputs.queries.length > 0
                     }
                     onClick={() => {
                       setUserFilters(overrideTableFilters ? null : []);
-                      userFilterInputs.resetQuery();
+                      userFilterInputs.resetQueries();
                     }}
                   >
                     Clear
@@ -306,7 +341,7 @@ export default function Filters() {
                     color="primary"
                     variant="contained"
                     onClick={() => {
-                      setUserFilters([userFilterInputs.query as TableFilter]);
+                      setUserFilters(userFilterInputs.queries as TableFilter[]);
                       handleClose();
                     }}
                   >
@@ -316,7 +351,10 @@ export default function Filters() {
               </TabPanel>
 
               <TabPanel value="table" className="content">
-                <FilterInputs {...tableFilterInputs} />
+                <FilterInputs
+                  onLocalChange={() => null}
+                  {...tableFilterInputs}
+                />
 
                 <FormControlLabel
                   control={
@@ -386,7 +424,11 @@ export default function Filters() {
         if (hasTableFilters && !tableFiltersOverridable) {
           return (
             <div className="content">
-              <FilterInputs {...tableFilterInputs} disabled />
+              <FilterInputs
+                onLocalChange={() => null}
+                {...tableFilterInputs}
+                disabled
+              />
 
               <Alert severity="info" style={{ width: "auto" }}>
                 An ADMIN user has set the filter for this table
@@ -399,7 +441,7 @@ export default function Filters() {
         if (hasTableFilters && tableFiltersOverridable) {
           return (
             <div className="content">
-              <FilterInputs {...userFilterInputs} />
+              <FilterInputs onLocalChange={() => null} {...userFilterInputs} />
 
               <FormControlLabel
                 control={
@@ -457,7 +499,7 @@ export default function Filters() {
         // Non-ADMIN, no table filters
         return (
           <div className="content">
-            <FilterInputs {...userFilterInputs} />
+            <FilterInputs onLocalChange={() => null} {...userFilterInputs} />
 
             <Stack
               direction="row"

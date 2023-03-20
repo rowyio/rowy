@@ -1,4 +1,4 @@
-import React, { Suspense, createElement, useEffect, useState } from "react";
+import React, { Suspense, createElement } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 import {
@@ -12,31 +12,43 @@ import {
   InputLabel,
   Stack,
   Button,
+  IconButton,
+  Box,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import ColumnSelect from "@src/components/Table/ColumnSelect";
 import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 import IdFilterInput from "./IdFilterInput";
 import { InlineErrorFallback } from "@src/components/ErrorFallback";
 
-import { INITIAL_QUERY, useFilterInputs } from "./useFilterInputs";
+import { useFilterInputs } from "./useFilterInputs";
 import { getFieldType, getFieldProp } from "@src/components/fields";
+import { tableColumnsOrderedAtom } from "@src/atoms/tableScope/table";
+import { tableScope } from "@src/atoms/tableScope";
+import { useAtom } from "jotai";
+import { TableFilter } from "@src/types/table";
 
 export interface IFilterInputsProps extends ReturnType<typeof useFilterInputs> {
   disabled?: boolean;
+  onLocalChange: (filter: TableFilter) => void;
 }
 
 export default function FilterInputs({
-  filterColumns,
-  selectedColumn,
-  handleChangeColumn,
-  availableFilters,
-  query,
-  setQuery,
-  queries,
-  setQueries,
   disabled,
-}: IFilterInputsProps) {
+  onLocalChange,
+}: Pick<IFilterInputsProps, "disabled" | "onLocalChange">) {
+  const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
+  const {
+    filterColumns,
+    selectedColumn,
+    handleChangeColumn,
+    availableFilters,
+    query,
+    setQuery,
+    queries,
+  }: ReturnType<typeof useFilterInputs> = useFilterInputs(tableColumnsOrdered);
+
   const columnType = selectedColumn ? getFieldType(selectedColumn) : null;
 
   const operators = availableFilters?.operators ?? [];
@@ -78,118 +90,106 @@ export default function FilterInputs({
     }
   }
 
-  interface IFilterControl {
-    singleQuery: typeof query;
-  }
-
-  const FilterControlFactory = () => {
-    type ControllerType = typeof FilterControl;
-
-    const [controllers, setControllers] = useState<Array<ControllerType>>([
-      FilterControl,
-    ]);
-
-    const addNewFilter = () => {
-      setControllers((current) => [...current, FilterControl]);
-    };
-
-    return { controllers, addNewFilter };
-  };
-
-  const FilterControl = ({ singleQuery, ...rest }: IFilterControl) => {
-    const [localQuery, setLocalQuery] = useState<typeof query>(singleQuery);
-
-    return (
-      <Grid container spacing={2} sx={{ mb: 3 }} {...rest}>
-        <Grid item xs={4}>
-          <ColumnSelect
-            multiple={false}
-            label="Column"
-            options={filterColumns}
-            value={localQuery.key}
-            onChange={(value: any) => console.log(value as string)}
-            disabled={disabled}
-          />
-        </Grid>
-
-        <Grid item xs={4}>
-          <TextField
-            label="Operator"
-            select
-            variant="filled"
-            fullWidth
-            value={localQuery.operator}
-            disabled={
-              disabled ||
-              !localQuery.key ||
-              availableFilters?.operators?.length === 0
-            }
-            onChange={(e) => {
-              setLocalQuery((query) => ({
-                ...query,
-                operator: e.target.value as string,
-              }));
-            }}
-            SelectProps={{ displayEmpty: true }}
-            sx={{ "& .MuiSelect-select": { display: "flex" } }}
-          >
-            <MenuItem disabled value="" style={{ display: "none" }}>
-              Select operator
-            </MenuItem>
-            {renderedOperatorItems}
-          </TextField>
-        </Grid>
-
-        <Grid item xs={4} key={localQuery.key + localQuery.operator}>
-          {localQuery.key && localQuery.operator && (
-            <ErrorBoundary FallbackComponent={InlineErrorFallback}>
-              <InputLabel
-                variant="filled"
-                id={`filters-label-${localQuery.key}`}
-                htmlFor={`sidedrawer-field-${localQuery.key}`}
-              >
-                Value
-              </InputLabel>
-
-              <Suspense fallback={<FieldSkeleton />}>
-                {columnType &&
-                  createElement(
-                    localQuery.key === "_rowy_ref.id"
-                      ? IdFilterInput
-                      : getFieldProp("filter.customInput" as any, columnType) ||
-                          getFieldProp("SideDrawerField", columnType),
-                    {
-                      column: selectedColumn,
-                      _rowy_ref: {},
-                      value: localQuery.value,
-                      onChange: (value: any) => {
-                        setLocalQuery((query) => ({ ...query, value }));
-                      },
-                      disabled,
-                      operator: localQuery.operator,
-                    }
-                  )}
-              </Suspense>
-            </ErrorBoundary>
-          )}
-        </Grid>
-      </Grid>
-    );
-  };
-
-  const factory = FilterControlFactory();
-
   return (
-    <Stack spacing={1} mb={2}>
-      <Stack>
-        {factory.controllers.map((Cntrllr, index) =>
-          createElement(Cntrllr, {
-            singleQuery: INITIAL_QUERY,
-            ...{ key: index },
-          })
+    <Grid container spacing={2} sx={{ mb: 3 }}>
+      <Grid item xs={4}>
+        <ColumnSelect
+          multiple={false}
+          label="Column"
+          options={filterColumns}
+          value={query.key}
+          onChange={(value: any) => {
+            handleChangeColumn(value as string);
+            onLocalChange(query as TableFilter);
+          }}
+          disabled={disabled}
+        />
+      </Grid>
+
+      <Grid item xs={4}>
+        <TextField
+          label="Operator"
+          select
+          variant="filled"
+          fullWidth
+          value={query.operator}
+          disabled={
+            disabled || !query.key || availableFilters?.operators?.length === 0
+          }
+          onChange={(e) => {
+            setQuery((query) => ({
+              ...query,
+              operator: e.target.value as string,
+            }));
+            onLocalChange(query as TableFilter);
+          }}
+          SelectProps={{ displayEmpty: true }}
+          sx={{ "& .MuiSelect-select": { display: "flex" } }}
+        >
+          <MenuItem disabled value="" style={{ display: "none" }}>
+            Select operator
+          </MenuItem>
+          {renderedOperatorItems}
+        </TextField>
+      </Grid>
+
+      <Grid item xs={4} key={query.key + query.operator}>
+        {query.key && query.operator && (
+          <ErrorBoundary FallbackComponent={InlineErrorFallback}>
+            <InputLabel
+              variant="filled"
+              id={`filters-label-${query.key}`}
+              htmlFor={`sidedrawer-field-${query.key}`}
+            >
+              Value
+            </InputLabel>
+
+            <Suspense fallback={<FieldSkeleton />}>
+              {columnType &&
+                createElement(
+                  query.key === "_rowy_ref.id"
+                    ? IdFilterInput
+                    : getFieldProp("filter.customInput" as any, columnType) ||
+                        getFieldProp("SideDrawerField", columnType),
+                  {
+                    column: selectedColumn,
+                    _rowy_ref: {},
+                    value: query.value,
+                    onChange: (value: any) => {
+                      setQuery((query) => ({ ...query, value }));
+                      onLocalChange(query as TableFilter);
+                    },
+                    disabled,
+                    operator: query.operator,
+                  }
+                )}
+            </Suspense>
+          </ErrorBoundary>
         )}
-      </Stack>
-      <Button onClick={() => factory.addNewFilter()}>Add another filter</Button>
-    </Stack>
+      </Grid>
+      <Grid item xs={2}>
+        {queries.length > 1 && (
+          <IconButton>
+            <DeleteIcon />
+          </IconButton>
+        )}
+      </Grid>
+    </Grid>
   );
 }
+
+interface IFilterContainer {
+  children: React.ReactElement[];
+  addControl: () => void;
+}
+
+const FiltersContainer = ({ children, addControl }: IFilterContainer) => {
+  return (
+    <Stack spacing={1} mb={2}>
+      <Box>{children}</Box>
+      <Button onClick={() => addControl()}>Add another filter</Button>
+    </Stack>
+  );
+};
+
+export { FiltersContainer };
