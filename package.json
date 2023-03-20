@@ -169,6 +169,7 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/react-router-hash-link": "^2.4.5",
     "@types/seedrandom": "^3.0.2",
+    "@types/websocket": "^1.0.5",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
     "craco-alias": "^3.0.1",
@@ -188,7 +189,8 @@
     "raw-loader": "^4.0.2",
     "source-map-explorer": "^2.5.2",
     "ts-jest": "^28.0.2",
-    "typedoc": "^0.23.21"
+    "typedoc": "^0.23.21",
+    "websocket": "^1.0.34"
   },
   "resolutions": {
     "@types/react": "^18"

@@ -37,3 +37,7 @@ typedoc/
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+
+# test:e2e
+.generated_tests
