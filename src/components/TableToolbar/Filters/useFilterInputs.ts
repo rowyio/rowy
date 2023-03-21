@@ -47,7 +47,7 @@ export const useFilterInputs = (
   const resetQueries = () => setQueries([INITIAL_QUERY]);
 
   // When the user sets a new column, automatically set the operator and value
-  const handleChangeColumn = (value: string | null) => {
+  const handleChangeColumn = async (value: string | null) => {
     if (value === "_rowy_ref.id") {
       setQuery({ key: "_rowy_ref.id", operator: "id-equal", value: "" });
       return;

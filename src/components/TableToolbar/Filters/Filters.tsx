@@ -46,6 +46,11 @@ const shouldDisableApplyButton = (value: any) =>
   typeof value !== "boolean" &&
   typeof value !== "number";
 
+const disableApplyButton = (filters: TableFilter[]) => {
+  let disable = filters.filter((filter) => filter.value === "").length > 0;
+  return disable;
+};
+
 enum FilterType {
   yourFilter = "local_filter",
   tableFilter = "table_filter",
@@ -190,15 +195,54 @@ export default function Filters() {
   const FilterControlFactory = () => {
     type QueryType = typeof INITIAL_QUERY;
 
-    const [controllers, setControllers] = useState<Array<QueryType>>(
-      userFilterInputs.queries
-    );
+    // Hold all the
+    const [controllers, setControllers] = useState<Array<QueryType>>([
+      INITIAL_QUERY,
+    ]);
 
+    // adds new filter object to the controllers state
     const addNewFilter = () => {
       setControllers((current) => [...current, INITIAL_QUERY]);
     };
 
-    return { controllers, addNewFilter };
+    // modifies the existing filter object with key == opt.key
+    const modifyFilters = (opt: TableFilter) => {
+      const newFilters = controllers.map((filter) => {
+        if (filter.key === opt.key) {
+          return {
+            ...filter,
+            ...opt,
+          };
+        } else {
+          return filter;
+        }
+      });
+      setControllers(newFilters as TableFilter[]);
+      userFilterInputs.setQueries(newFilters as TableFilter[]);
+      console.log(newFilters as TableFilter[]);
+    };
+
+    // Adds to the newly add filter with a key of "" (sets the initial values)
+    const setInit = (opt: TableFilter) => {
+      const newFilters = controllers.map((filter) => {
+        if (filter.key === "") {
+          return opt;
+        } else {
+          return filter;
+        }
+      });
+      setControllers(newFilters as TableFilter[]);
+      userFilterInputs.setQueries(newFilters as TableFilter[]);
+      console.log(newFilters as TableFilter[]);
+    };
+
+    return {
+      controllers,
+      setControllers,
+      addNewFilter,
+      setInit,
+      modifyFilters,
+    };
   };
 
   const userFilterFactory = FilterControlFactory();
@@ -284,9 +328,13 @@ export default function Filters() {
                       ...{
                         ...userFilterInputs,
                         query: filterObject,
-                        queries: userFilterFactory.controllers,
-                        onLocalChange: (filter: TableFilter) =>
-                          console.log(filter),
+                        filtersLength: userFilterFactory.controllers.length,
+                        onLocalChange: (filter: TableFilter) => {
+                          userFilterFactory.modifyFilters(filter);
+                        },
+                        setInitial: (filter: TableFilter) => {
+                          userFilterFactory.setInit(filter);
+                        },
                       },
                     })
                   )}
@@ -324,6 +372,7 @@ export default function Filters() {
                     onClick={() => {
                       setUserFilters(overrideTableFilters ? null : []);
                       userFilterInputs.resetQueries();
+                      userFilterFactory.setControllers([INITIAL_QUERY]);
                     }}
                   >
                     Clear
@@ -336,7 +385,9 @@ export default function Filters() {
                   <Button
                     disabled={
                       (!overrideTableFilters && hasTableFilters) ||
-                      shouldDisableApplyButton(userFilterInputs.query.value)
+                      disableApplyButton(
+                        userFilterInputs.queries as TableFilter[]
+                      )
                     }
                     color="primary"
                     variant="contained"
@@ -353,7 +404,8 @@ export default function Filters() {
               <TabPanel value="table" className="content">
                 <FilterInputs
                   onLocalChange={() => null}
-                  {...tableFilterInputs}
+                  setInitial={() => null}
+                  // {...tableFilterInputs}
                 />
 
                 <FormControlLabel
@@ -426,7 +478,8 @@ export default function Filters() {
             <div className="content">
               <FilterInputs
                 onLocalChange={() => null}
-                {...tableFilterInputs}
+                setInitial={() => null}
+                // {...tableFilterInputs}
                 disabled
               />
 
@@ -441,7 +494,11 @@ export default function Filters() {
         if (hasTableFilters && tableFiltersOverridable) {
           return (
             <div className="content">
-              <FilterInputs onLocalChange={() => null} {...userFilterInputs} />
+              <FilterInputs
+                onLocalChange={() => null}
+                setInitial={() => null}
+                // {...userFilterInputs}
+              />
 
               <FormControlLabel
                 control={
@@ -499,7 +556,11 @@ export default function Filters() {
         // Non-ADMIN, no table filters
         return (
           <div className="content">
-            <FilterInputs onLocalChange={() => null} {...userFilterInputs} />
+            <FilterInputs
+              onLocalChange={() => null}
+              setInitial={() => null}
+              // {...userFilterInputs}
+            />
 
             <Stack
               direction="row"

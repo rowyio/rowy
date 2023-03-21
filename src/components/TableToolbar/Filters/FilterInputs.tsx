@@ -15,7 +15,7 @@ import {
   IconButton,
   Box,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import CloseIcon from "@mui/icons-material/Close";
 
 import ColumnSelect from "@src/components/Table/ColumnSelect";
 import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
@@ -29,15 +29,19 @@ import { tableScope } from "@src/atoms/tableScope";
 import { useAtom } from "jotai";
 import { TableFilter } from "@src/types/table";
 
-export interface IFilterInputsProps extends ReturnType<typeof useFilterInputs> {
+export interface IFilterInputsProps {
   disabled?: boolean;
   onLocalChange: (filter: TableFilter) => void;
+  setInitial: (filter: TableFilter) => void;
+  filtersLength?: number;
 }
 
 export default function FilterInputs({
   disabled,
   onLocalChange,
-}: Pick<IFilterInputsProps, "disabled" | "onLocalChange">) {
+  setInitial,
+  filtersLength,
+}: IFilterInputsProps) {
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
   const {
     filterColumns,
@@ -46,7 +50,6 @@ export default function FilterInputs({
     availableFilters,
     query,
     setQuery,
-    queries,
   }: ReturnType<typeof useFilterInputs> = useFilterInputs(tableColumnsOrdered);
 
   const columnType = selectedColumn ? getFieldType(selectedColumn) : null;
@@ -99,8 +102,13 @@ export default function FilterInputs({
           options={filterColumns}
           value={query.key}
           onChange={(value: any) => {
-            handleChangeColumn(value as string);
-            onLocalChange(query as TableFilter);
+            handleChangeColumn(value as string).then(() => {
+              setInitial({
+                ...query,
+                key: value as string,
+                operator: availableFilters?.operators[0].value,
+              } as TableFilter);
+            });
           }}
           disabled={disabled}
         />
@@ -167,10 +175,10 @@ export default function FilterInputs({
           </ErrorBoundary>
         )}
       </Grid>
-      <Grid item xs={2}>
-        {queries.length > 1 && (
+      <Grid item xs={1}>
+        {filtersLength && filtersLength > 1 && (
           <IconButton>
-            <DeleteIcon />
+            <CloseIcon />
           </IconButton>
         )}
       </Grid>
