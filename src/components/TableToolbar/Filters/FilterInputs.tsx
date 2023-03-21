@@ -94,7 +94,14 @@ export default function FilterInputs({
   }
 
   return (
-    <Grid container spacing={2} sx={{ mb: 3 }}>
+    <Grid
+      container
+      spacing={2}
+      sx={{ mb: 3 }}
+      columns={14}
+      justifyContent="space-between"
+      alignItems="flex-end"
+    >
       <Grid item xs={4}>
         <ColumnSelect
           multiple={false}
@@ -175,7 +182,7 @@ export default function FilterInputs({
           </ErrorBoundary>
         )}
       </Grid>
-      <Grid item xs={1}>
+      <Grid item xs="auto">
         {filtersLength && filtersLength > 1 && (
           <IconButton>
             <CloseIcon />
