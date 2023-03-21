@@ -33,14 +33,16 @@ export interface IFilterInputsProps {
   disabled?: boolean;
   onLocalChange: (filter: TableFilter) => void;
   setInitial: (filter: TableFilter) => void;
+  onDelete: (key: string) => void;
   filtersLength?: number;
 }
 
 export default function FilterInputs({
   disabled,
+  filtersLength,
   onLocalChange,
   setInitial,
-  filtersLength,
+  onDelete,
 }: IFilterInputsProps) {
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
   const {
@@ -99,10 +101,12 @@ export default function FilterInputs({
       spacing={2}
       sx={{ mb: 3 }}
       columns={14}
+      display="grid"
+      gridTemplateColumns="1fr 1fr 1fr auto"
       justifyContent="space-between"
       alignItems="flex-end"
     >
-      <Grid item xs={4}>
+      <Grid item>
         <ColumnSelect
           multiple={false}
           label="Column"
@@ -121,7 +125,7 @@ export default function FilterInputs({
         />
       </Grid>
 
-      <Grid item xs={4}>
+      <Grid item>
         <TextField
           label="Operator"
           select
@@ -148,7 +152,7 @@ export default function FilterInputs({
         </TextField>
       </Grid>
 
-      <Grid item xs={4} key={query.key + query.operator}>
+      <Grid item key={query.key + query.operator}>
         {query.key && query.operator && (
           <ErrorBoundary FallbackComponent={InlineErrorFallback}>
             <InputLabel
@@ -182,9 +186,9 @@ export default function FilterInputs({
           </ErrorBoundary>
         )}
       </Grid>
-      <Grid item xs="auto">
+      <Grid item>
         {filtersLength && filtersLength > 1 && (
-          <IconButton>
+          <IconButton onClick={() => onDelete(query.key)}>
             <CloseIcon />
           </IconButton>
         )}

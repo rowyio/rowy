@@ -218,7 +218,6 @@ export default function Filters() {
         }
       });
       setControllers(newFilters as TableFilter[]);
-      userFilterInputs.setQueries(newFilters as TableFilter[]);
       console.log(newFilters as TableFilter[]);
     };
 
@@ -232,8 +231,12 @@ export default function Filters() {
         }
       });
       setControllers(newFilters as TableFilter[]);
-      userFilterInputs.setQueries(newFilters as TableFilter[]);
       console.log(newFilters as TableFilter[]);
+    };
+
+    // delete filter by check if key is equal to filter.key
+    const deleteFilter = (key: string) => {
+      setControllers(controllers.filter((filter) => filter.key !== key));
     };
 
     return {
@@ -242,6 +245,7 @@ export default function Filters() {
       addNewFilter,
       setInit,
       modifyFilters,
+      deleteFilter,
     };
   };
 
@@ -326,15 +330,14 @@ export default function Filters() {
                     createElement(FilterInputs, {
                       key: index,
                       ...{
-                        ...userFilterInputs,
                         query: filterObject,
                         filtersLength: userFilterFactory.controllers.length,
-                        onLocalChange: (filter: TableFilter) => {
-                          userFilterFactory.modifyFilters(filter);
-                        },
-                        setInitial: (filter: TableFilter) => {
-                          userFilterFactory.setInit(filter);
-                        },
+                        onLocalChange: (filter: TableFilter) =>
+                          userFilterFactory.modifyFilters(filter),
+                        setInitial: (filter: TableFilter) =>
+                          userFilterFactory.setInit(filter),
+                        onDelete: (key: string) =>
+                          userFilterFactory.deleteFilter(key),
                       },
                     })
                   )}
@@ -405,6 +408,7 @@ export default function Filters() {
                 <FilterInputs
                   onLocalChange={() => null}
                   setInitial={() => null}
+                  onDelete={() => null}
                   // {...tableFilterInputs}
                 />
 
@@ -479,6 +483,7 @@ export default function Filters() {
               <FilterInputs
                 onLocalChange={() => null}
                 setInitial={() => null}
+                onDelete={() => null}
                 // {...tableFilterInputs}
                 disabled
               />
@@ -497,6 +502,7 @@ export default function Filters() {
               <FilterInputs
                 onLocalChange={() => null}
                 setInitial={() => null}
+                onDelete={() => null}
                 // {...userFilterInputs}
               />
 
@@ -559,6 +565,7 @@ export default function Filters() {
             <FilterInputs
               onLocalChange={() => null}
               setInitial={() => null}
+              onDelete={() => null}
               // {...userFilterInputs}
             />
 
