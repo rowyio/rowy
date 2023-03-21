@@ -47,7 +47,7 @@ const shouldDisableApplyButton = (value: any) =>
   typeof value !== "number";
 
 const disableApplyButton = (filters: TableFilter[]) => {
-  let disable = filters.filter((filter) => filter.value === "").length > 0;
+  let disable = !isEmpty(filters.filter((filter) => filter.value === ""));
   return disable;
 };
 
@@ -185,10 +185,10 @@ export default function Filters() {
   // Save user filters to user document
   // null overrides table filters
   const setUserFilters = (filters: TableFilter[] | null) => {
+    console.log({ tables: { [`${tableId}`]: { filters } } });
     logEvent(analytics, FilterType.yourFilter);
     if (updateUserSettings && filters)
       updateUserSettings({ tables: { [`${tableId}`]: { filters } } });
-    console.log({ tables: { [`${tableId}`]: { filters } } });
   };
 
   // Filter Control Factory
@@ -370,11 +370,12 @@ export default function Filters() {
                     disabled={
                       !overrideTableFilters &&
                       !tableFiltersOverridden &&
-                      userFilterInputs.queries.length > 0
+                      disableApplyButton(
+                        userFilterFactory.controllers as TableFilter[]
+                      )
                     }
                     onClick={() => {
                       setUserFilters(overrideTableFilters ? null : []);
-                      userFilterInputs.resetQueries();
                       userFilterFactory.setControllers([INITIAL_QUERY]);
                     }}
                   >
@@ -395,7 +396,9 @@ export default function Filters() {
                     color="primary"
                     variant="contained"
                     onClick={() => {
-                      setUserFilters(userFilterInputs.queries as TableFilter[]);
+                      setUserFilters(
+                        userFilterFactory.controllers as TableFilter[]
+                      );
                       handleClose();
                     }}
                   >
