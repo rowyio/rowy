@@ -140,7 +140,10 @@ export default function FilterInputs({
               ...query,
               operator: e.target.value as string,
             }));
-            onLocalChange(query as TableFilter);
+            onLocalChange({
+              ...query,
+              operator: e.target.value as string,
+            } as TableFilter);
           }}
           SelectProps={{ displayEmpty: true }}
           sx={{ "& .MuiSelect-select": { display: "flex" } }}
@@ -176,7 +179,7 @@ export default function FilterInputs({
                     value: query.value,
                     onChange: (value: any) => {
                       setQuery((query) => ({ ...query, value }));
-                      onLocalChange(query as TableFilter);
+                      onLocalChange({ ...query, value } as TableFilter);
                     },
                     disabled,
                     operator: query.operator,

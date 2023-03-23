@@ -192,13 +192,13 @@ export default function Filters() {
   };
 
   // Filter Control Factory
-  const FilterControlFactory = () => {
+  const FilterControlFactory = (init: TableFilter[] | null) => {
     type QueryType = typeof INITIAL_QUERY;
 
     // Hold all the
-    const [controllers, setControllers] = useState<Array<QueryType>>([
-      INITIAL_QUERY,
-    ]);
+    const [controllers, setControllers] = useState<Array<QueryType>>(
+      init || [INITIAL_QUERY]
+    );
 
     // adds new filter object to the controllers state
     const addNewFilter = () => {
@@ -249,8 +249,12 @@ export default function Filters() {
     };
   };
 
-  const userFilterFactory = FilterControlFactory();
-  const tableFilterFactory = FilterControlFactory();
+  const userFilterFactory = FilterControlFactory(
+    userSettings?.tables?.filters as TableFilter[]
+  );
+  const tableFilterFactory = FilterControlFactory(
+    tableSchema.filters as TableFilter[]
+  );
 
   return (
     <FiltersPopover
