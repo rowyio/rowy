@@ -1,12 +1,14 @@
 import { ISideDrawerFieldProps } from "@src/components/fields/types";
 
-import { Grid, Button, Tooltip } from "@mui/material";
+import { Grid, Button, Tooltip, useTheme } from "@mui/material";
 import WarningIcon from "@mui/icons-material/WarningAmber";
 import MultiSelectComponent from "@rowy/multiselect";
 import FormattedChip from "@src/components/FormattedChip";
 
 import { fieldSx } from "@src/components/SideDrawer/utils";
 import { sanitiseValue } from "./utils";
+import { getColors } from "@src/components/fields/SingleSelect/Settings";
+import palette, { paletteToMui } from "@src/theme/palette";
 
 export default function MultiSelect({
   column,
@@ -15,7 +17,10 @@ export default function MultiSelect({
   onSubmit,
   disabled,
 }: ISideDrawerFieldProps) {
+  const defaultColor = paletteToMui(palette.aGray);
   const config = column.config ?? {};
+  const colors = column.config?.colors ?? [];
+  const { mode } = useTheme().palette;
 
   const handleDelete = (index: number) => () => {
     const newValues = [...value];
@@ -75,6 +80,10 @@ export default function MultiSelect({
                   <FormattedChip
                     label={item}
                     onDelete={disabled ? undefined : handleDelete(i)}
+                    sx={{
+                      backgroundColor:
+                        getColors(colors, item)[mode] || defaultColor[mode],
+                    }}
                   />
                 </Grid>
               )
