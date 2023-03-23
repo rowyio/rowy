@@ -332,12 +332,15 @@ export default function Filters() {
                       ...{
                         query: filterObject,
                         filtersLength: userFilterFactory.controllers.length,
-                        onLocalChange: (filter: TableFilter) =>
-                          userFilterFactory.modifyFilters(filter),
-                        setInitial: (filter: TableFilter) =>
-                          userFilterFactory.setInit(filter),
-                        onDelete: (key: string) =>
-                          userFilterFactory.deleteFilter(key),
+                        onLocalChange: (filter: TableFilter) => {
+                          userFilterFactory.modifyFilters(filter);
+                        },
+                        setInitial: (filter: TableFilter) => {
+                          userFilterFactory.setInit(filter);
+                        },
+                        onDelete: (key: string) => {
+                          userFilterFactory.deleteFilter(key);
+                        },
                       },
                     })
                   )}
