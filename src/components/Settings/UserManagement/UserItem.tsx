@@ -46,15 +46,18 @@ export default function UserItem({
 
   const [value, setValue] = useState(Array.isArray(rolesProp) ? rolesProp : []);
   const allRoles = new Set(["ADMIN", ...(projectRoles ?? []), ...value]);
+  const hasRowyRun = !!projectSettings.rowyRunUrl;
 
   const handleSave = async () => {
+    if (!hasRowyRun) {
+      openRowyRunModal({ feature: "User Management" });
+      return;
+    }
     try {
       if (!user) throw new Error("User is not defined");
       if (JSON.stringify(value) === JSON.stringify(rolesProp)) return;
-
       const loadingSnackbarId = enqueueSnackbar("Setting roles…");
-
-      const res = await rowyRun?.({
+      const res = await rowyRun({
         route: runRoutes.setUserRoles,
         body: { email: user!.email, roles: value },
       });
@@ -91,7 +94,7 @@ export default function UserItem({
   );
 
   const handleDelete = async () => {
-    if (!projectSettings.rowyRunUrl) {
+    if (!hasRowyRun) {
       openRowyRunModal({ feature: "User Management" });
       return;
     }
