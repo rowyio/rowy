@@ -47,7 +47,7 @@ const shouldDisableApplyButton = (value: any) =>
   typeof value !== "number";
 
 const disableApplyButton = (filters: TableFilter[]) => {
-  let disable = !isEmpty(filters.filter((filter) => filter.value === ""));
+  let disable = !isEmpty(filters.filter((filter) => filter.value));
   return disable;
 };
 
@@ -197,8 +197,10 @@ export default function Filters() {
 
     // Hold all the
     const [controllers, setControllers] = useState<Array<QueryType>>(
-      init || [INITIAL_QUERY]
+      !isEmpty(init) ? (init as TableFilter[]) : [INITIAL_QUERY]
     );
+
+    console.log(controllers);
 
     // adds new filter object to the controllers state
     const addNewFilter = () => {
@@ -206,9 +208,9 @@ export default function Filters() {
     };
 
     // modifies the existing filter object with key == opt.key
-    const modifyFilters = (opt: TableFilter) => {
+    const modifyFilters = (key: string, opt: TableFilter) => {
       const newFilters = controllers.map((filter) => {
-        if (filter.key === opt.key) {
+        if (filter.key === key) {
           return {
             ...filter,
             ...opt,
@@ -218,7 +220,6 @@ export default function Filters() {
         }
       });
       setControllers(newFilters as TableFilter[]);
-      console.log(newFilters as TableFilter[]);
     };
 
     // Adds to the newly add filter with a key of "" (sets the initial values)
@@ -231,12 +232,15 @@ export default function Filters() {
         }
       });
       setControllers(newFilters as TableFilter[]);
-      console.log(newFilters as TableFilter[]);
     };
 
     // delete filter by check if key is equal to filter.key
     const deleteFilter = (key: string) => {
       setControllers(controllers.filter((filter) => filter.key !== key));
+    };
+
+    const resetFilters = () => {
+      setControllers([INITIAL_QUERY]);
     };
 
     return {
@@ -246,15 +250,13 @@ export default function Filters() {
       setInit,
       modifyFilters,
       deleteFilter,
+      resetFilters,
     };
   };
+  // End of Factory Function
 
-  const userFilterFactory = FilterControlFactory(
-    userSettings?.tables?.filters as TableFilter[]
-  );
-  const tableFilterFactory = FilterControlFactory(
-    tableSchema.filters as TableFilter[]
-  );
+  const userFilterFactory = FilterControlFactory(appliedFilters);
+  const tableFilterFactory = FilterControlFactory(appliedFilters);
 
   return (
     <FiltersPopover
@@ -263,7 +265,12 @@ export default function Filters() {
       hasTableFilters={hasTableFilters}
       tableFiltersOverridden={tableFiltersOverridden}
       availableFilters={availableFilters}
-      setUserFilters={setUserFilters}
+      setUserFilters={(filters) => {
+        setUserFilters(filters);
+        userFilterFactory.setControllers(
+          filters.length === 1 ? [INITIAL_QUERY] : filters
+        );
+      }}
     >
       {({ handleClose }) => {
         // ADMIN
@@ -334,10 +341,13 @@ export default function Filters() {
                     createElement(FilterInputs, {
                       key: index,
                       ...{
-                        query: filterObject,
+                        queryObj: filterObject as TableFilter,
                         filtersLength: userFilterFactory.controllers.length,
                         onLocalChange: (filter: TableFilter) => {
-                          userFilterFactory.modifyFilters(filter);
+                          userFilterFactory.modifyFilters(
+                            filterObject.key,
+                            filter
+                          );
                         },
                         setInitial: (filter: TableFilter) => {
                           userFilterFactory.setInit(filter);
@@ -383,7 +393,7 @@ export default function Filters() {
                     }
                     onClick={() => {
                       setUserFilters(overrideTableFilters ? null : []);
-                      userFilterFactory.setControllers([INITIAL_QUERY]);
+                      userFilterFactory.resetFilters();
                     }}
                   >
                     Clear
@@ -394,12 +404,7 @@ export default function Filters() {
                   </Button>
 
                   <Button
-                    disabled={
-                      (!overrideTableFilters && hasTableFilters) ||
-                      disableApplyButton(
-                        userFilterInputs.queries as TableFilter[]
-                      )
-                    }
+                    disabled={!overrideTableFilters && hasTableFilters}
                     color="primary"
                     variant="contained"
                     onClick={() => {
@@ -416,6 +421,7 @@ export default function Filters() {
 
               <TabPanel value="table" className="content">
                 <FilterInputs
+                  queryObj={{} as any}
                   onLocalChange={() => null}
                   setInitial={() => null}
                   onDelete={() => null}
@@ -491,6 +497,7 @@ export default function Filters() {
           return (
             <div className="content">
               <FilterInputs
+                queryObj={{} as any}
                 onLocalChange={() => null}
                 setInitial={() => null}
                 onDelete={() => null}
@@ -510,6 +517,7 @@ export default function Filters() {
           return (
             <div className="content">
               <FilterInputs
+                queryObj={{} as any}
                 onLocalChange={() => null}
                 setInitial={() => null}
                 onDelete={() => null}
@@ -573,6 +581,7 @@ export default function Filters() {
         return (
           <div className="content">
             <FilterInputs
+              queryObj={{} as any}
               onLocalChange={() => null}
               setInitial={() => null}
               onDelete={() => null}

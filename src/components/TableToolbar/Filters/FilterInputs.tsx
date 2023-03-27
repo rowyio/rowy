@@ -1,4 +1,4 @@
-import React, { Suspense, createElement } from "react";
+import React, { Suspense, createElement, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 import {
@@ -35,11 +35,13 @@ export interface IFilterInputsProps {
   setInitial: (filter: TableFilter) => void;
   onDelete: (key: string) => void;
   filtersLength?: number;
+  queryObj: TableFilter;
 }
 
 export default function FilterInputs({
   disabled,
   filtersLength,
+  queryObj,
   onLocalChange,
   setInitial,
   onDelete,
@@ -53,6 +55,10 @@ export default function FilterInputs({
     query,
     setQuery,
   }: ReturnType<typeof useFilterInputs> = useFilterInputs(tableColumnsOrdered);
+
+  useEffect(() => {
+    setQuery(queryObj);
+  }, [queryObj, setQuery]);
 
   const columnType = selectedColumn ? getFieldType(selectedColumn) : null;
 

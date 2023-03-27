@@ -98,7 +98,10 @@ export default function FiltersPopover({
               onDelete={
                 hasTableFilters && !tableFiltersOverridden
                   ? undefined
-                  : () => setUserFilters([])
+                  : () =>
+                      setUserFilters(
+                        appliedFilters.filter((opt) => opt.key !== filter.key)
+                      )
               }
               sx={{
                 borderRadius: 1,
