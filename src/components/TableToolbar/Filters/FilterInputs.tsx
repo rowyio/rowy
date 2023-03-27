@@ -110,7 +110,7 @@ export default function FilterInputs({
       display="grid"
       gridTemplateColumns="1fr 1fr 1fr auto"
       justifyContent="space-between"
-      alignItems="flex-end"
+      alignItems="flex-start"
     >
       <Grid item>
         <ColumnSelect
@@ -195,7 +195,7 @@ export default function FilterInputs({
           </ErrorBoundary>
         )}
       </Grid>
-      <Grid item>
+      <Grid item mt={2.5}>
         {filtersLength && filtersLength > 1 && (
           <IconButton onClick={() => onDelete(query.key)}>
             <CloseIcon />

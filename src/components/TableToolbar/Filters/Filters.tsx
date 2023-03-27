@@ -47,7 +47,15 @@ const shouldDisableApplyButton = (value: any) =>
   typeof value !== "number";
 
 const disableApplyButton = (filters: TableFilter[]) => {
-  let disable = !isEmpty(filters.filter((filter) => filter.value));
+  let disable = isEmpty(
+    filters.map((filter) => {
+      if (filter.value === null) {
+        return filter;
+      } else {
+        return;
+      }
+    })
+  );
   return disable;
 };
 
@@ -192,20 +200,20 @@ export default function Filters() {
   };
 
   // Filter Control Factory
-  const FilterControlFactory = (init: TableFilter[] | null) => {
+  const FilterControlFactory = () => {
     type QueryType = typeof INITIAL_QUERY;
 
     // Hold all the
     const [controllers, setControllers] = useState<Array<QueryType>>(
-      !isEmpty(init) ? (init as TableFilter[]) : [INITIAL_QUERY]
+      [INITIAL_QUERY] ?? appliedFilters
     );
-
-    console.log(controllers);
 
     // adds new filter object to the controllers state
     const addNewFilter = () => {
       setControllers((current) => [...current, INITIAL_QUERY]);
     };
+
+    console.log(controllers);
 
     // modifies the existing filter object with key == opt.key
     const modifyFilters = (key: string, opt: TableFilter) => {
@@ -255,8 +263,8 @@ export default function Filters() {
   };
   // End of Factory Function
 
-  const userFilterFactory = FilterControlFactory(appliedFilters);
-  const tableFilterFactory = FilterControlFactory(appliedFilters);
+  const userFilterFactory = FilterControlFactory();
+  const tableFilterFactory = FilterControlFactory();
 
   return (
     <FiltersPopover
@@ -265,10 +273,10 @@ export default function Filters() {
       hasTableFilters={hasTableFilters}
       tableFiltersOverridden={tableFiltersOverridden}
       availableFilters={availableFilters}
-      setUserFilters={(filters) => {
+      setUserFilters={(filters: TableFilter[]) => {
         setUserFilters(filters);
         userFilterFactory.setControllers(
-          filters.length === 1 ? [INITIAL_QUERY] : filters
+          filters ?? [...filters, INITIAL_QUERY]
         );
       }}
     >
@@ -360,8 +368,6 @@ export default function Filters() {
                   )}
                 </FiltersContainer>
 
-                {/* <FilterInputs {...userFilterInputs} /> */}
-
                 {hasTableFilters && (
                   <FormControlLabel
                     control={
@@ -385,8 +391,7 @@ export default function Filters() {
                 >
                   <Button
                     disabled={
-                      !overrideTableFilters &&
-                      !tableFiltersOverridden &&
+                      (!overrideTableFilters && !tableFiltersOverridden) ||
                       disableApplyButton(
                         userFilterFactory.controllers as TableFilter[]
                       )
