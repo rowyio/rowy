@@ -1,12 +1,20 @@
 import { TableSettings } from "@src/types/table";
 import { generateId } from "@src/utils/table";
-import { typeform, basic, sendgrid, webform, stripe } from "./Schemas";
+import {
+  typeform,
+  basic,
+  sendgrid,
+  webform,
+  stripe,
+  firebaseAuth,
+} from "./Schemas";
 
 export const webhookTypes = [
   "basic",
   "typeform",
   "sendgrid",
   "webform",
+  "firebaseAuth",
   //"shopify",
   //"twitter",
   "stripe",
@@ -35,6 +43,18 @@ export const parserExtraLibs = [
         send: (v:any)=>void;
         sendStatus: (status:number)=>void
       };
+      user: {
+        uid: string;
+        email: string;
+        email_verified: boolean;
+        exp: number;
+        iat: number;
+        iss: string;
+        aud: string;
+        auth_time: number;
+        phone_number: string;
+        picture: string;
+      } | undefined;
       logging: RowyLogging;
       auth:firebaseauth.BaseAuth;
       storage:firebasestorage.Storage;
@@ -71,6 +91,7 @@ export type WebhookType = typeof webhookTypes[number];
 export const webhookNames: Record<WebhookType, string> = {
   sendgrid: "SendGrid",
   typeform: "Typeform",
+  firebaseAuth: "Firebase Auth",
   //github:"GitHub",
   // shopify: "Shopify",
   // twitter: "Twitter",
@@ -110,6 +131,7 @@ export const webhookSchemas = {
   sendgrid,
   webform,
   stripe,
+  firebaseAuth,
 };
 
 export function emptyWebhookObject(

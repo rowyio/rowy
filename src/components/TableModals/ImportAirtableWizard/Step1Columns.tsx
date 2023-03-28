@@ -57,7 +57,6 @@ export default function Step1Columns({
     config.pairs.map((pair) => pair.fieldKey)
   );
 
-
   const fieldKeys = Object.keys(airtableData.records[0].fields);
 
   // When a field is selected to be imported
@@ -128,8 +127,8 @@ export default function Step1Columns({
 
   const handleSelectAll = () => {
     if (selectedFields.length !== fieldKeys.length) {
-      setSelectedFields(fieldKeys)
-      fieldKeys.forEach(field => {
+      setSelectedFields(fieldKeys);
+      fieldKeys.forEach((field) => {
         // Try to match each field to a column in the table
         const match =
           find(tableColumns, (column) =>
@@ -158,14 +157,12 @@ export default function Step1Columns({
           ];
         }
         updateConfig(columnConfig);
-      })
+      });
     } else {
-      setSelectedFields([])
-      setConfig((config) => ({ ...config, newColumns: [], pairs: [] }))
+      setSelectedFields([]);
+      setConfig((config) => ({ ...config, newColumns: [], pairs: [] }));
     }
-
   };
-
 
   // When a field is mapped to a new column
   const handleChange = (fieldKey: string) => (value: string) => {
@@ -236,7 +233,11 @@ export default function Step1Columns({
                 color="default"
               />
             }
-            label={selectedFields.length == fieldKeys.length ? "Clear all" : "Select all"}
+            label={
+              selectedFields.length == fieldKeys.length
+                ? "Clear all"
+                : "Select all"
+            }
             sx={{
               height: 42,
               mr: 0,
@@ -251,8 +252,8 @@ export default function Step1Columns({
             find(config.pairs, { fieldKey: field })?.columnKey ?? null;
           const matchingColumn = columnKey
             ? tableSchema.columns?.[columnKey] ??
-            find(config.newColumns, { key: columnKey }) ??
-            null
+              find(config.newColumns, { key: columnKey }) ??
+              null
             : null;
           const isNewColumn = !!find(config.newColumns, { key: columnKey });
           return (
