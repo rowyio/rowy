@@ -91,7 +91,7 @@ export default function ImportData({ render, PopoverProps }: IImportDataProps) {
             variant="fullWidth"
           >
             <Tab
-              label="CSV/TSV"
+              label="CSV/TSV/JSON"
               value="csv"
               onClick={() => (importMethodRef.current = ImportMethod.csv)}
             />

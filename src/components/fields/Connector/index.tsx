@@ -34,6 +34,7 @@ export const config: IFieldConfig = {
   }),
   SideDrawerField,
   requireConfiguration: true,
+  requireCloudFunction: true,
   settings: Settings,
 };
 export default config;

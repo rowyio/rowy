@@ -48,7 +48,7 @@ export const tablesAtom = atom<TableSettings[]>((get) => {
   return sortBy(tables, "name")
     .filter((table) =>
       userRoles.includes("ADMIN") || Array.isArray(table.roles)
-        ? table.roles.some((role) => userRoles.includes(role))
+        ? table.roles?.some((role) => userRoles.includes(role))
         : false
     )
     .map((table) => ({
@@ -105,7 +105,7 @@ export const deleteTableAtom = atom<
 
 /** Stores a function to get a table’s schema doc (without listener) */
 export const getTableSchemaAtom = atom<
-  ((id: string) => Promise<TableSchema>) | undefined
+  ((id: string, withSubtables?: boolean) => Promise<TableSchema>) | undefined
 >(undefined);
 
 /** Roles used in the project based on table settings */

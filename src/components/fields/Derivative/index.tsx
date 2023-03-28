@@ -21,5 +21,6 @@ export const config: IFieldConfig = {
   settings: Settings,
   settingsValidator,
   requireConfiguration: true,
+  requireCloudFunction: true,
 };
 export default config;

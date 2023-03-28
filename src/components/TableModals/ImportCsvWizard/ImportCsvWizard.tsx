@@ -80,7 +80,7 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
       const newColumns = uniqBy(
         [...prev.newColumns, ...(value.newColumns ?? [])],
         "key"
-      ).filter((col) => pairs.some((pair) => pair.columnKey === col.key));
+      ).filter((col) => pairs?.some((pair) => pair.columnKey === col.key));
 
       return { ...prev, pairs, newColumns };
     });

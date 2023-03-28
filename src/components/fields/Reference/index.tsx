@@ -6,6 +6,7 @@ import { Reference } from "@src/assets/icons";
 import DisplayCell from "./DisplayCell";
 import EditorCell from "./EditorCell";
 import { filterOperators } from "@src/components/fields/ShortText/Filter";
+import { valueFormatter } from "./filters";
 
 const SideDrawerField = lazy(
   () =>
@@ -27,6 +28,6 @@ export const config: IFieldConfig = {
     disablePadding: true,
   }),
   SideDrawerField,
-  filter: { operators: filterOperators },
+  filter: { operators: filterOperators, valueFormatter: valueFormatter },
 };
 export default config;

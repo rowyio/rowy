@@ -48,7 +48,7 @@ export default function AddWebhookButton({
         }}
         {...props}
       >
-        Add webhook…
+        Add Webhook…
       </Button>
 
       <Menu
