@@ -126,7 +126,7 @@ export default function useUploadFileFromURL() {
     [enqueueSnackbar]
   );
 
-  const runBatchUpload = useCallback(async () => {
+  const runBatchedUpload = useCallback(async () => {
     if (!snackbarProgressId.current) {
       showProgress(jobs.current.length);
     }
@@ -145,7 +145,7 @@ export default function useUploadFileFromURL() {
     await batchUpload(currentJobs);
 
     if (jobs.current.length > 0) {
-      await runBatchUpload();
+      await runBatchedUpload();
     }
 
     if (snackbarProgressId.current) {
@@ -157,10 +157,12 @@ export default function useUploadFileFromURL() {
     jobs.current.push(job);
   }, []);
 
+  const hasUploadJobs = () => jobs.current.length > 0;
   return {
     addTask,
-    runBatchUpload,
+    runBatchedUpload,
     askPermission,
+    hasUploadJobs,
   };
 }
 

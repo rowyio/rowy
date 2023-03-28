@@ -37,7 +37,6 @@ import {
 import { ColumnConfig } from "@src/types/table";
 import { getFieldProp } from "@src/components/fields";
 import { analytics, logEvent } from "@src/analytics";
-import { FieldType } from "@src/constants/fields";
 import { generateId } from "@src/utils/table";
 import { isValidDocId } from "./utils";
 import useUploadFileFromURL from "./useUploadFileFromURL";
@@ -49,8 +48,6 @@ export type CsvConfig = {
   documentId: "auto" | "column";
   documentIdCsvKey: string | null;
 };
-
-const needsUploadTypes = [FieldType.image, FieldType.file];
 
 export interface IStepProps {
   csvData: NonNullable<ImportCsvData>;
@@ -71,8 +68,8 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down("sm"));
   const snackbarProgressRef = useRef<ISnackbarProgressRef>();
-  const { addTask, runBatchUpload, askPermission } = useUploadFileFromURL();
-  const { needsConverter, getConverter } = useConverter();
+  const { addTask, runBatchedUpload } = useUploadFileFromURL();
+  const { needsUploadTypes, needsConverter, getConverter } = useConverter();
 
   const columns = useMemoValue(tableSchema.columns ?? {}, isEqual);
 
@@ -147,7 +144,7 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
       if (needsConverter(column.type)) {
         requiredConverts[index] = getConverter(column.type);
         // console.log({ needsUploadTypes }, column.type);
-        if (needsUploadTypes.includes(column.type)) {
+        if (needsUploadTypes(column.type)) {
           requiredUploads[column.fieldName + ""] = true;
         }
       }
@@ -158,6 +155,7 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
     config.pairs,
     getConverter,
     needsConverter,
+    needsUploadTypes,
     tableSchema.columns,
   ]);
 
@@ -266,8 +264,8 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
         `Imported ${Number(validRows.length).toLocaleString()} rows`,
         { variant: "success" }
       );
-      if (Object.keys(requiredUploads).length && (await askPermission())) {
-        await runBatchUpload();
+      if (Object.keys(requiredUploads).length > 0) {
+        await runBatchedUpload();
       }
     } catch (e) {
       enqueueSnackbar((e as Error).message, { variant: "error" });

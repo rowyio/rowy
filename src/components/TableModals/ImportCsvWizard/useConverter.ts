@@ -16,6 +16,9 @@ const needsConverter = (type: FieldType) =>
     FieldType.geoPoint,
   ].includes(type);
 
+const needsUploadTypes = (type: FieldType) =>
+  [FieldType.image, FieldType.file].includes(type);
+
 export default function useConverter() {
   const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
 
@@ -35,27 +38,59 @@ export default function useConverter() {
   };
 
   const imageOrFileConverter = (urls: any): RowyFile[] => {
-    if (!urls) return [];
-    if (Array.isArray(urls)) return urls;
-    if (typeof urls === "string") {
-      return urls
-        .split(",")
-        .map((url) => {
-          url = url.trim();
-          if (url !== "") {
-            return {
-              downloadURL: url,
-              name: url.split("/").pop() || "",
-              lastModifiedTS: +new Date(),
-              type: "",
-            };
-          }
+    try {
+      if (!urls) return [];
+      if (Array.isArray(urls)) {
+        return urls
+          .map((url) => {
+            if (typeof url === "string") {
+              url = url.trim();
+              if (url !== "") {
+                return {
+                  downloadURL: url,
+                  name: url.split("/").pop() || "",
+                  lastModifiedTS: +new Date(),
+                  type: "",
+                };
+              }
+            } else if (url && typeof url === "object" && url.downloadURL) {
+              return url;
+            } else {
+              if (url.url) {
+                return {
+                  downloadURL: url.url,
+                  name: url.filename || url.url.split("/").pop() || "",
+                  lastModifiedTS: +new Date(),
+                  type: "",
+                };
+              }
+            }
+            return null;
+          })
+          .filter((val) => val !== null) as RowyFile[];
+      }
+      if (typeof urls === "string") {
+        return urls
+          .split(",")
+          .map((url) => {
+            url = url.trim();
+            if (url !== "") {
+              return {
+                downloadURL: url,
+                name: url.split("/").pop() || "",
+                lastModifiedTS: +new Date(),
+                type: "",
+              };
+            }
 
-          return null;
-        })
-        .filter((val) => val !== null) as RowyFile[];
+            return null;
+          })
+          .filter((val) => val !== null) as RowyFile[];
+      }
+      return [];
+    } catch (e) {
+      return [];
     }
-    return [];
   };
 
   const geoPointConverter = (value: any) => {
@@ -120,5 +155,6 @@ export default function useConverter() {
     imageOrFileConverter,
     getConverter,
     checkAndConvert,
+    needsUploadTypes,
   };
 }
