@@ -21,7 +21,6 @@ import {
   projectIdAtom,
   userRolesAtom,
   altPressAtom,
-  tableAddRowIdTypeAtom,
   confirmDialogAtom,
 } from "@src/atoms/projectScope";
 import {
@@ -45,7 +44,6 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
   const [projectId] = useAtom(projectIdAtom, projectScope);
   const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [altPress] = useAtom(altPressAtom, projectScope);
-  const [addRowIdType] = useAtom(tableAddRowIdTypeAtom, projectScope);
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
@@ -58,6 +56,8 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
     tableFiltersPopoverAtom,
     tableScope
   );
+
+  const addRowIdType = tableSchema.idType || "decrement";
 
   if (!tableSchema.columns || !selectedCell) return null;
 

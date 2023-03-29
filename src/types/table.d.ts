@@ -95,9 +95,12 @@ export type TableSettings = {
   readOnly?: boolean;
 };
 
+export type TableIdType = "decrement" | "random" | "custom";
+
 /** Table schema document loaded when table or table settings dialog is open */
 export type TableSchema = {
   columns?: Record<string, ColumnConfig>;
+  idType?: TableIdType;
   rowHeight?: number;
   filters?: TableFilter[];
   filtersOverridable?: boolean;
