@@ -78,7 +78,7 @@ export default function ColumnConfigModal({
     ) {
       setShowRebuildPrompt(true);
     }
-    const updatedConfig = set({ ...newConfig }, key, update);
+    const updatedConfig = set(newConfig, key, update); // Modified by @devsgnr, spread operator `{...newConfig}` instead of just `newConfig` was preventing multiple calls from running properly
     setNewConfig(updatedConfig);
     validateSettings();
   };

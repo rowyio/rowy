@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState, useEffect, useCallback } from "react";
-import useStateRef from "react-usestateref";
+// import useStateRef from "react-usestateref"; // testing with useStateWithRef
 import { useAtom, useSetAtom } from "jotai";
 import { useThrottledCallback } from "use-debounce";
 import {
@@ -41,6 +41,7 @@ import { useMenuAction } from "./useMenuAction";
 import { useSaveColumnSizing } from "./useSaveColumnSizing";
 import useHotKeys from "./useHotKey";
 import type { TableRow, ColumnConfig } from "@src/types/table";
+import useStateWithRef from "./useStateWithRef"; // testing with useStateWithRef
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
@@ -110,7 +111,9 @@ export default function Table({
   // so the state can re-render `TableBody`, preventing virtualization
   // not detecting scroll if the container element was initially `null`
   const [containerEl, setContainerEl, containerRef] =
-    useStateRef<HTMLDivElement | null>(null);
+    // useStateRef<HTMLDivElement | null>(null); // <-- older approach with useStateRef
+    useStateWithRef<HTMLDivElement | null>(null); // <-- newer approach with custom hook
+
   const gridRef = useRef<HTMLDivElement>(null);
 
   // Get column defs from table schema
@@ -255,7 +258,10 @@ export default function Table({
 
   return (
     <div
-      ref={(el) => setContainerEl(el)}
+      ref={(el) => {
+        if (!el) return;
+        setContainerEl(el);
+      }}
       onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
       style={{ overflow: "auto", width: "100%", height: "100%" }}
     >

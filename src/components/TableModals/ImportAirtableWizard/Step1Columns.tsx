@@ -234,7 +234,9 @@ export default function Step1Columns({
               />
             }
             label={
+
               selectedFields.length === fieldKeys.length
+
                 ? "Clear all"
                 : "Select all"
             }

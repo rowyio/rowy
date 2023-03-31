@@ -103,13 +103,19 @@ export default function TableToolbar() {
           <ImportData />
         </Suspense>
       )}
-      <Suspense fallback={<ButtonSkeleton />}>
-        <TableToolbarButton
-          title="Export/Download"
-          onClick={() => openTableModal("export")}
-          icon={<ExportIcon />}
-        />
-      </Suspense>
+      {(!projectSettings.exporterRoles ||
+        projectSettings.exporterRoles.length === 0 ||
+        userRoles.some((role) =>
+          projectSettings.exporterRoles?.includes(role)
+        )) && (
+        <Suspense fallback={<ButtonSkeleton />}>
+          <TableToolbarButton
+            title="Export/Download"
+            onClick={() => openTableModal("export")}
+            icon={<ExportIcon />}
+          />
+        </Suspense>
+      )}
       {userRoles.includes("ADMIN") && (
         <>
           <div /> {/* Spacer */}
