@@ -25,17 +25,5 @@ export const config: IFieldConfig = {
     popoverProps: { PaperProps: { sx: { p: 1, pt: 0 } } },
   }),
   SideDrawerField,
-  csvImportParser: (value: string) => {
-    try {
-      const { latitude, longitude } = JSON.parse(value);
-      if (latitude && longitude) {
-        return new GeoPoint(latitude, longitude);
-      }
-      throw new Error();
-    } catch (e) {
-      console.error("Invalid GeoPoint value");
-      return null;
-    }
-  },
 };
 export default config;

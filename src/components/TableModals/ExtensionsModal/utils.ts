@@ -132,8 +132,8 @@ const extensionBodyTemplate = {
   return({
     fieldsToSync: [],    // a list of string of column names
     row: row,    // object of data to sync, usually the row itself
-    index: "",    // algolia index to sync to
-    objectID: ref.id,    // algolia object ID, ref.id is one possible choice
+    index: "",    // meili search index to sync to
+    objectID: ref.id,    // meili search object ID, ref.id is one possible choice
   })
   // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,
@@ -144,8 +144,8 @@ const extensionBodyTemplate = {
   return ({
     fieldsToSync: [],    // a list of string of column names
     row: row,    // object of data to sync, usually the row itself
-    index: "",    // algolia index to sync to
-    objectID: ref.id,    // algolia object ID, ref.id is one possible choice
+    index: "",    // bigquery dataset to sync to
+    objectID: ref.id,    // bigquery object ID, ref.id is one possible choice
   })
   // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,

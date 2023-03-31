@@ -10,7 +10,6 @@ import MenuIcon from "@mui/icons-material/MoreHoriz";
 import {
   projectScope,
   userRolesAtom,
-  tableAddRowIdTypeAtom,
   altPressAtom,
   confirmDialogAtom,
 } from "@src/atoms/projectScope";
@@ -20,6 +19,7 @@ import {
   addRowAtom,
   deleteRowAtom,
   contextMenuTargetAtom,
+  tableSchemaAtom,
 } from "@src/atoms/tableScope";
 
 export const FinalColumn = memo(function FinalColumn({
@@ -27,16 +27,19 @@ export const FinalColumn = memo(function FinalColumn({
   focusInsideCell,
 }: IRenderedTableCellProps) {
   const [userRoles] = useAtom(userRolesAtom, projectScope);
-  const [addRowIdType] = useAtom(tableAddRowIdTypeAtom, projectScope);
-  const confirm = useSetAtom(confirmDialogAtom, projectScope);
-
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
+  const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const addRow = useSetAtom(addRowAtom, tableScope);
   const deleteRow = useSetAtom(deleteRowAtom, tableScope);
   const setContextMenuTarget = useSetAtom(contextMenuTargetAtom, tableScope);
 
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const [altPress] = useAtom(altPressAtom, projectScope);
+
+  const addRowIdType = tableSchema.idType || "decrement";
+
   const handleDelete = () => deleteRow(row.original._rowy_ref.path);
+
   const handleDuplicate = () => {
     addRow({
       row: row.original,
