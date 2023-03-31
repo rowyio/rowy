@@ -28,6 +28,8 @@ import { fieldParser } from "@src/components/TableModals/ImportAirtableWizard/ut
 import Step1Columns from "./Step1Columns";
 import Step2NewColumns from "./Step2NewColumns";
 import Step3Preview from "./Step3Preview";
+import useConverter from "@src/components/TableModals/ImportCsvWizard/useConverter";
+import useUploadFileFromURL from "@src/components/TableModals/ImportCsvWizard/useUploadFileFromURL";
 
 export type AirtableConfig = {
   pairs: { fieldKey: string; columnKey: string }[];
@@ -65,6 +67,8 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
     newColumns: [],
     documentId: "recordId",
   });
+  const { needsUploadTypes, getConverter } = useConverter();
+  const { addTask, runBatchedUpload, hasUploadJobs } = useUploadFileFromURL();
 
   const updateConfig: IStepProps["updateConfig"] = useCallback((value) => {
     setConfig((prev) => {
@@ -99,10 +103,24 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
         const matchingColumn =
           columns[pair.columnKey] ??
           find(config.newColumns, { key: pair.columnKey });
-        const parser = fieldParser(matchingColumn.type);
+        const parser =
+          getConverter(matchingColumn.type) || fieldParser(matchingColumn.type);
         const value = parser
           ? parser(record.fields[pair.fieldKey])
           : record.fields[pair.fieldKey];
+
+        if (needsUploadTypes(matchingColumn.type)) {
+          if (value && value.length > 0) {
+            addTask({
+              docRef: {
+                path: `${tableSettings.collection}/${record.id}`,
+                id: record.id,
+              },
+              fieldName: pair.columnKey,
+              files: value,
+            });
+          }
+        }
         return config.documentId === "recordId"
           ? { ...a, [pair.columnKey]: value, _rowy_ref: { id: record.id } }
           : { ...a, [pair.columnKey]: value };
@@ -196,6 +214,10 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
         `Imported ${Number(countRef.current).toLocaleString()} rows`,
         { variant: "success" }
       );
+
+      if (hasUploadJobs()) {
+        await runBatchedUpload();
+      }
     } catch (e) {
       enqueueSnackbar((e as Error).message, { variant: "error" });
     } finally {

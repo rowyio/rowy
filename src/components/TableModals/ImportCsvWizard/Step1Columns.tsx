@@ -233,7 +233,7 @@ export default function Step1Columns({
               />
             }
             label={
-              selectedFields.length == csvData.columns.length
+              selectedFields.length === csvData.columns.length
                 ? "Clear all"
                 : "Select all"
             }
