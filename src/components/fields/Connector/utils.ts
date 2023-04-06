@@ -12,7 +12,7 @@ export const replacer = (data: any) => (m: string, key: string) => {
 };
 
 export const baseFunction = `// Import any NPM package needed
-import lodash from "lodash";
+// import _ from "lodash";
 
 const connector: Connector = async ({ query, row, user, logging }) => {
   logging.log("connector started");
