@@ -108,7 +108,7 @@ export default function PopupContents({
           onChange={(e) => setQuery(e.target.value)}
           fullWidth
           variant="filled"
-          label="Search items"
+          // label="Search items"
           hiddenLabel
           placeholder="Search items"
           InputProps={{
