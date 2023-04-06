@@ -64,4 +64,6 @@ const action: Action = async ({ row, ref, db, storage, auth, actionParams, user,
   }
   */
 };
+
+export default action;
 `;
