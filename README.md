@@ -13,12 +13,12 @@ Low-code for Firebase and Google Cloud.
 
 <div align="center">
 
-[![Discord](https://img.shields.io/discord/853498675484819476?color=%234200FF&label=Chat%20with%20us&logo=discord&logoColor=%23FFFFFF&style=for-the-badge)](https://discord.gg/fjBugmvzZP)
+[![Rowy Discord](https://dcbadge.vercel.app/api/server/fjBugmvzZP)](https://discord.gg/fjBugmvzZP)
 
 <p align="center">
     <a href="http://www.rowy.io"><b>Website</b></a> •
     <a href="http://docs.rowy.io"><b>Documentation</b></a> •
-    <a href="https://discord.gg/fjBugmvzZP"><b>Discord</b></a> • 
+    <a href="https://discord.gg/fjBugmvzZP"><b>Chat with us</b></a> • 
     <a href="https://twitter.com/rowyio"><b>Twitter</b></a>
 </p>
 
@@ -27,11 +27,11 @@ Low-code for Firebase and Google Cloud.
 
 </div>
 
-## Live Demo
+## Live Demo 🛝
 
-💥 Check out the [live demo](https://demo.rowy.io/) of Rowy 💥
+💥 Explore Rowy on [live demo playground](https://demo.rowy.io/) 💥
 
-## Features
+## Features ✨
 
 <!-- <table>
     <tr>
@@ -39,7 +39,7 @@ Low-code for Firebase and Google Cloud.
       <a href="#">Database</a>
     </th>
     <th>
-      <a href="#">Code</a>
+      <a href="#">Automation</a>
     </th>
     </tr>
     <tr>
