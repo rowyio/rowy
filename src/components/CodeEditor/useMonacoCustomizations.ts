@@ -19,8 +19,7 @@ import firebaseStorageDefs from "!!raw-loader!./firebaseStorage.d.ts";
 import utilsDefs from "!!raw-loader!./utils.d.ts";
 import rowyUtilsDefs from "!!raw-loader!./rowy.d.ts";
 import extensionsDefs from "!!raw-loader!./extensions.d.ts";
-import { runRoutes } from "@src/constants/runRoutes";
-import { rowyRunAtom, projectScope } from "@src/atoms/projectScope";
+import { projectScope, secretNamesAtom } from "@src/atoms/projectScope";
 import { getFieldProp } from "@src/components/fields";
 
 export interface IUseMonacoCustomizationsProps {
@@ -53,8 +52,8 @@ export default function useMonacoCustomizations({
   const theme = useTheme();
   const monaco = useMonaco();
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
-  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
+  const [secretNames] = useAtom(secretNamesAtom, projectScope);
 
   useEffect(() => {
     return () => {
@@ -206,26 +205,6 @@ export default function useMonacoCustomizations({
     //}
   };
 
-  const setSecrets = async () => {
-    // set secret options
-    try {
-      const listSecrets = await rowyRun({
-        route: runRoutes.listSecrets,
-      });
-      const secretsDef = `type SecretNames = ${listSecrets
-        .map((secret: string) => `"${secret}"`)
-        .join(" | ")}
-        enum secrets {
-          ${listSecrets
-            .map((secret: string) => `${secret} = "${secret}"`)
-            .join("\n")}
-        }
-        `;
-      monaco?.languages.typescript.javascriptDefaults.addExtraLib(secretsDef);
-    } catch (error) {
-      console.error("Could not set secret definitions: ", error);
-    }
-  };
   //TODO: types
   const setBaseDefinitions = () => {
     const rowDefinition =
@@ -275,13 +254,23 @@ export default function useMonacoCustomizations({
     } catch (error) {
       console.error("Could not set basic", error);
     }
-    // set available secrets from secretManager
-    try {
-      setSecrets();
-    } catch (error) {
-      console.error("Could not set secrets: ", error);
-    }
   }, [monaco, tableColumnsOrdered]);
+
+  useEffect(() => {
+    if (!monaco) return;
+    if (secretNames.loading) return;
+    if (!secretNames.secretNames) return;
+    const secretsDef = `type SecretNames = ${secretNames.secretNames
+      .map((secret: string) => `"${secret}"`)
+      .join(" | ")}
+        enum secrets {
+          ${secretNames.secretNames
+            .map((secret: string) => `${secret} = "${secret}"`)
+            .join("\n")}
+        }
+       `;
+    monaco?.languages.typescript.javascriptDefaults.addExtraLib(secretsDef);
+  }, [monaco, secretNames]);
 
   let boxSx: SystemStyleObject<Theme> = {
     minWidth: 400,
