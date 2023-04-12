@@ -41,6 +41,7 @@ import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
 import { DRAWER_COLLAPSED_WIDTH } from "@src/components/SideDrawer";
 import { formatSubTableName } from "@src/utils/table";
+import { TableToolsType } from "@src/types/table";
 
 // prettier-ignore
 const BuildLogsSnack = lazy(() => import("@src/components/TableModals/CloudLogsModal/BuildLogs/BuildLogsSnack" /* webpackChunkName: "TableModals-BuildLogsSnack" */));
@@ -53,6 +54,10 @@ export interface ITablePageProps {
   disableModals?: boolean;
   /** Disable side drawer */
   disableSideDrawer?: boolean;
+  /* Array table is not a collection */
+  tableNotACollection?: boolean;
+
+  disabledTools?: TableToolsType;
 }
 
 /**
@@ -71,6 +76,8 @@ export interface ITablePageProps {
 export default function TablePage({
   disableModals,
   disableSideDrawer,
+  tableNotACollection,
+  disabledTools,
 }: ITablePageProps) {
   const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [userSettings] = useAtom(userSettingsAtom, projectScope);
@@ -127,7 +134,7 @@ export default function TablePage({
     <ActionParamsProvider>
       <ErrorBoundary FallbackComponent={InlineErrorFallback}>
         <Suspense fallback={<TableToolbarSkeleton />}>
-          <TableToolbar />
+          <TableToolbar disabledTools={disabledTools} />
         </Suspense>
       </ErrorBoundary>
 

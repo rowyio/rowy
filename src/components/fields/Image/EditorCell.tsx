@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { IEditorCellProps } from "@src/components/fields/types";
-import { useAtom, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { assignIn } from "lodash-es";
 
 import { alpha, Box, Stack, Grid, IconButton, ButtonBase } from "@mui/material";
@@ -11,8 +11,6 @@ import Thumbnail from "@src/components/Thumbnail";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
-import { tableSchemaAtom, tableScope } from "@src/atoms/tableScope";
-import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
 import { FileValue } from "@src/types/table";
 import useFileUpload from "@src/components/fields/File/useFileUpload";
 import { IMAGE_MIME_TYPES } from "./index";
@@ -25,14 +23,20 @@ export default function Image_({
   _rowy_ref,
   tabIndex,
   rowHeight,
+  row: { _rowy_arrayTableData },
 }: IEditorCellProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
 
   const { loading, progress, handleDelete, localFiles, dropzoneState } =
-    useFileUpload(_rowy_ref, column.key, {
-      multiple: true,
-      accept: IMAGE_MIME_TYPES,
-    });
+    useFileUpload(
+      _rowy_ref,
+      column.key,
+      {
+        multiple: true,
+        accept: IMAGE_MIME_TYPES,
+      },
+      _rowy_arrayTableData
+    );
 
   const localImages = useMemo(
     () =>

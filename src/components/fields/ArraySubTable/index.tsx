@@ -2,25 +2,25 @@ import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
-import { SubTable as SubTableIcon } from "@src/assets/icons";
+import { ArraySubTable as ArraySubTableIcon } from "@src/assets/icons/ArraySubTable";
 import DisplayCell from "./DisplayCell";
 
 const SideDrawerField = lazy(
   () =>
     import(
-      "./SideDrawerField" /* webpackChunkName: "SideDrawerField-SubTable" */
+      "./SideDrawerField" /* webpackChunkName: "SideDrawerField-ArraySubTable" */
     )
 );
 const Settings = lazy(
-  () => import("./Settings" /* webpackChunkName: "Settings-Subtable" */)
+  () => import("./Settings" /* webpackChunkName: "Settings-ArraySubtable" */)
 );
 export const config: IFieldConfig = {
-  type: FieldType.subTable,
-  name: "Sub-Table",
+  type: FieldType.arraySubTable,
+  name: "Array-Sub-Table",
   group: "Connection",
   dataType: "undefined",
   initialValue: null,
-  icon: <SubTableIcon />,
+  icon: <ArraySubTableIcon />,
   settings: Settings,
   description:
     "Connects to a sub-table in the current row. Also displays number of rows inside the sub-table. Max sub-table depth: 100.",

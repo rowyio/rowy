@@ -31,7 +31,8 @@ export type UpdateDocFunction<T = TableRow> = (
 export type UpdateCollectionDocFunction<T = TableRow> = (
   path: string,
   update: Partial<T>,
-  deleteFields?: string[]
+  deleteFields?: string[],
+  options?: ArrayTableRowData
 ) => Promise<void>;
 
 /**
@@ -39,7 +40,10 @@ export type UpdateCollectionDocFunction<T = TableRow> = (
  * @param path - The full path to the doc
  * @returns Promise
  */
-export type DeleteCollectionDocFunction = (path: string) => Promise<void>;
+export type DeleteCollectionDocFunction = (
+  path: string,
+  options?: ArrayTableRowData
+) => Promise<void>;
 
 export type BulkWriteOperation<T> =
   | { type: "delete"; path: string }
@@ -71,6 +75,8 @@ export type TableSettings = {
   /** Roles that can see this table in the UI and navigate. Firestore Rules need to be set to give access to the data */
   roles: string[];
 
+  isNotACollection?: boolean;
+  subTableKey?: string | undefined;
   section: string;
   description?: string;
   details?: string;
@@ -187,6 +193,15 @@ export type TableFilter = {
   value: any;
 };
 
+export const TableTools = [
+  "import",
+  "export",
+  "webhooks",
+  "extensions",
+  "cloud_logs",
+] as const;
+export type TableToolsType = typeof Tools[number];
+
 export type TableSort = {
   key: string;
   direction: Parameters<typeof orderBy>[1];
@@ -197,10 +212,20 @@ export type TableRowRef = {
   path: string;
 } & Partial<DocumentReference>;
 
+type ArrayTableOperations = {
+  addRow?: "top" | "bottom";
+  base?: TableRow;
+};
+export type ArrayTableRowData = {
+  index: number;
+  parentField?: string;
+  operation?: ArrayTableOperations;
+};
 export type TableRow = DocumentData & {
   _rowy_ref: TableRowRef;
   _rowy_missingRequiredFields?: string[];
   _rowy_outOfOrder?: boolean;
+  _rowy_arrayTableData?: ArrayTableRowData;
 };
 
 export type FileValue = {
