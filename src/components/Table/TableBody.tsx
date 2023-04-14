@@ -83,7 +83,7 @@ export const TableBody = memo(function TableBody({
 
         return (
           <StyledRow
-            key={row.id}
+            key={row.id + row.original._rowy_ref.arrayTableData?.index}
             role="row"
             aria-rowindex={row.index + 2}
             style={{
