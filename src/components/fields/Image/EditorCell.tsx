@@ -23,20 +23,14 @@ export default function Image_({
   _rowy_ref,
   tabIndex,
   rowHeight,
-  row: { _rowy_arrayTableData },
 }: IEditorCellProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
 
   const { loading, progress, handleDelete, localFiles, dropzoneState } =
-    useFileUpload(
-      _rowy_ref,
-      column.key,
-      {
-        multiple: true,
-        accept: IMAGE_MIME_TYPES,
-      },
-      _rowy_arrayTableData
-    );
+    useFileUpload(_rowy_ref, column.key, {
+      multiple: true,
+      accept: IMAGE_MIME_TYPES,
+    });
 
   const localImages = useMemo(
     () =>

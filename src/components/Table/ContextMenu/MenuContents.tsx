@@ -69,7 +69,7 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
     selectedCell?.arrayIndex === undefined
       ? ["_rowy_ref.path", selectedCell.path]
       : // if the table is an array table, we need to use the array index to find the row
-        ["_rowy_arrayTableData.index", selectedCell.arrayIndex]
+        ["_rowy_ref.arrayTableData.index", selectedCell.arrayIndex]
   );
 
   if (!row) return null;
@@ -78,11 +78,11 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
 
   const handleDuplicate = () => {
     const _duplicate = () => {
-      if (row._rowy_arrayTableData !== undefined) {
+      if (row._rowy_ref.arrayTableData !== undefined) {
         if (!updateRowDb) return;
 
         return updateRowDb("", {}, undefined, {
-          index: row._rowy_arrayTableData.index,
+          index: row._rowy_ref.arrayTableData.index,
           operation: {
             addRow: "bottom",
             base: row,
@@ -95,7 +95,7 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
       });
     };
 
-    if (altPress || row._rowy_arrayTableData !== undefined) {
+    if (altPress || row._rowy_ref.arrayTableData !== undefined) {
       _duplicate();
     } else {
       confirm({
@@ -118,10 +118,10 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
     const _delete = () =>
       deleteRow({
         path: row._rowy_ref.path,
-        options: row._rowy_arrayTableData,
+        options: row._rowy_ref.arrayTableData,
       });
 
-    if (altPress || row._rowy_arrayTableData !== undefined) {
+    if (altPress || row._rowy_ref.arrayTableData !== undefined) {
       _delete();
     } else {
       confirm({

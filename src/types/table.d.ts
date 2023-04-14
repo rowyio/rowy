@@ -207,25 +207,27 @@ export type TableSort = {
   direction: Parameters<typeof orderBy>[1];
 };
 
+export type ArrayTableRowData = {
+  index: number;
+  parentField?: string;
+  operation?: ArrayTableOperations;
+};
+
 export type TableRowRef = {
   id: string;
   path: string;
+  arrayTableData?: ArrayTableRowData;
 } & Partial<DocumentReference>;
 
 type ArrayTableOperations = {
   addRow?: "top" | "bottom";
   base?: TableRow;
 };
-export type ArrayTableRowData = {
-  index: number;
-  parentField?: string;
-  operation?: ArrayTableOperations;
-};
+
 export type TableRow = DocumentData & {
   _rowy_ref: TableRowRef;
   _rowy_missingRequiredFields?: string[];
   _rowy_outOfOrder?: boolean;
-  _rowy_arrayTableData?: ArrayTableRowData;
 };
 
 export type FileValue = {

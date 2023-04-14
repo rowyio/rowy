@@ -142,7 +142,7 @@ export function useMenuAction(
       selectedCell.arrayIndex === undefined
         ? ["_rowy_ref.path", selectedCell.path]
         : // if the table is an array table, we need to use the array index to find the row
-          ["_rowy_arrayTableData.index", selectedCell.arrayIndex]
+          ["_rowy_ref.arrayTableData.index", selectedCell.arrayIndex]
     );
     setCellValue(get(selectedRow, selectedCol.fieldName));
   }, [selectedCell, tableSchema, tableRows]);

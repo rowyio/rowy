@@ -105,7 +105,7 @@ export const TableBody = memo(function TableBody({
                 selectedCell?.columnKey === cell.column.id &&
                 // if the table is an array sub table, we need to check the array index as well
                 selectedCell?.arrayIndex ===
-                  row.original._rowy_arrayTableData?.index;
+                  row.original._rowy_ref.arrayTableData?.index;
 
               const fieldTypeGroup = getFieldProp(
                 "group",

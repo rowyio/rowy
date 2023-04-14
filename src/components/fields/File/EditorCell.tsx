@@ -21,17 +21,11 @@ export default function File_({
   _rowy_ref,
   tabIndex,
   rowHeight,
-  row: { _rowy_arrayTableData },
 }: IEditorCellProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
 
   const { loading, progress, handleDelete, localFiles, dropzoneState } =
-    useFileUpload(
-      _rowy_ref,
-      column.key,
-      { multiple: true },
-      _rowy_arrayTableData
-    );
+    useFileUpload(_rowy_ref, column.key, { multiple: true });
 
   const { isDragActive, getRootProps, getInputProps } = dropzoneState;
   const dropzoneProps = getRootProps();

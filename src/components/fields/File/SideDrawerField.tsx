@@ -25,16 +25,10 @@ export default function File_({
   _rowy_ref,
   value,
   disabled,
-  _rowy_arrayTableData,
 }: ISideDrawerFieldProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const { loading, progress, handleDelete, localFiles, dropzoneState } =
-    useFileUpload(
-      _rowy_ref,
-      column.key,
-      { multiple: true },
-      _rowy_arrayTableData
-    );
+    useFileUpload(_rowy_ref, column.key, { multiple: true });
 
   const { isDragActive, getRootProps, getInputProps } = dropzoneState;
 

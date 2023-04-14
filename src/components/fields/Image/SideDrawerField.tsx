@@ -84,7 +84,6 @@ export default function Image_({
   _rowy_ref,
   value,
   disabled,
-  _rowy_arrayTableData,
 }: ISideDrawerFieldProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
 
@@ -95,15 +94,10 @@ export default function Image_({
     uploaderState,
     localFiles,
     dropzoneState,
-  } = useFileUpload(
-    _rowy_ref,
-    column.key,
-    {
-      multiple: true,
-      accept: IMAGE_MIME_TYPES,
-    },
-    _rowy_arrayTableData
-  );
+  } = useFileUpload(_rowy_ref, column.key, {
+    multiple: true,
+    accept: IMAGE_MIME_TYPES,
+  });
 
   const localImages = useMemo(
     () =>

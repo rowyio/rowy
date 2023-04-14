@@ -43,9 +43,9 @@ export const FinalColumn = memo(function FinalColumn({
     const _delete = () =>
       deleteRow({
         path: row.original._rowy_ref.path,
-        options: row.original._rowy_arrayTableData,
+        options: row.original._rowy_ref.arrayTableData,
       });
-    if (altPress || row.original._rowy_arrayTableData !== undefined) {
+    if (altPress || row.original._rowy_ref.arrayTableData !== undefined) {
       _delete();
     } else {
       confirm({
@@ -68,11 +68,11 @@ export const FinalColumn = memo(function FinalColumn({
 
   const handleDuplicate = () => {
     const _duplicate = () => {
-      if (row.original._rowy_arrayTableData !== undefined) {
+      if (row.original._rowy_ref.arrayTableData !== undefined) {
         if (!updateRowDb) return;
 
         return updateRowDb("", {}, undefined, {
-          index: row.original._rowy_arrayTableData.index,
+          index: row.original._rowy_ref.arrayTableData.index,
           operation: {
             addRow: "bottom",
             base: row.original,
@@ -84,7 +84,7 @@ export const FinalColumn = memo(function FinalColumn({
         setId: addRowIdType === "custom" ? "decrement" : addRowIdType,
       });
     };
-    if (altPress || row.original._rowy_arrayTableData !== undefined) {
+    if (altPress || row.original._rowy_ref.arrayTableData !== undefined) {
       _duplicate();
     } else {
       confirm({

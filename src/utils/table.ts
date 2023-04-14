@@ -51,7 +51,6 @@ export const omitRowyFields = <T = Record<string, any>>(row: T) => {
   delete shallowClonedRow["_rowy_outOfOrder"];
   delete shallowClonedRow["_rowy_missingRequiredFields"];
   delete shallowClonedRow["_rowy_new"];
-  delete shallowClonedRow["_rowy_arrayTableData"];
 
   return shallowClonedRow as T;
 };

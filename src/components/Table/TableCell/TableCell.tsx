@@ -123,7 +123,7 @@ export const TableCell = memo(function TableCell({
     focusInsideCell,
     setFocusInsideCell: (focusInside: boolean) =>
       setSelectedCell({
-        arrayIndex: row.original._rowy_arrayTableData?.index,
+        arrayIndex: row.original._rowy_ref.arrayTableData?.index,
         path: row.original._rowy_ref.path,
         columnKey: cell.column.id,
         focusInside,
@@ -167,7 +167,7 @@ export const TableCell = memo(function TableCell({
       }}
       onClick={(e) => {
         setSelectedCell({
-          arrayIndex: row.original._rowy_arrayTableData?.index,
+          arrayIndex: row.original._rowy_ref.arrayTableData?.index,
           path: row.original._rowy_ref.path,
           columnKey: cell.column.id,
           focusInside: false,
@@ -176,7 +176,7 @@ export const TableCell = memo(function TableCell({
       }}
       onDoubleClick={(e) => {
         setSelectedCell({
-          arrayIndex: row.original._rowy_arrayTableData?.index,
+          arrayIndex: row.original._rowy_ref.arrayTableData?.index,
           path: row.original._rowy_ref.path,
           columnKey: cell.column.id,
           focusInside: true,
@@ -186,7 +186,7 @@ export const TableCell = memo(function TableCell({
       onContextMenu={(e) => {
         e.preventDefault();
         setSelectedCell({
-          arrayIndex: row.original._rowy_arrayTableData?.index,
+          arrayIndex: row.original._rowy_ref.arrayTableData?.index,
           path: row.original._rowy_ref.path,
           columnKey: cell.column.id,
           focusInside: false,

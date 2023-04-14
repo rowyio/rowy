@@ -130,7 +130,7 @@ export function useKeyboardNavigation({
         columnKey: leafColumns[newColIndex].id! || leafColumns[0].id!,
         arrayIndex:
           newRowIndex > -1
-            ? tableRows[newRowIndex]._rowy_arrayTableData?.index
+            ? tableRows[newRowIndex]._rowy_ref.arrayTableData?.index
             : undefined,
 
         // When selected cell changes, exit current cell

@@ -35,7 +35,7 @@ export default function SideDrawer() {
     cell?.arrayIndex === undefined
       ? ["_rowy_ref.path", cell?.path]
       : // if the table is an array table, we need to use the array index to find the row
-        ["_rowy_arrayTableData.index", cell?.arrayIndex]
+        ["_rowy_ref.arrayTableData.index", cell?.arrayIndex]
   );
 
   const selectedCellRowIndex = findIndex(
@@ -43,7 +43,7 @@ export default function SideDrawer() {
     cell?.arrayIndex === undefined
       ? ["_rowy_ref.path", cell?.path]
       : // if the table is an array table, we need to use the array index to find the row
-        ["_rowy_arrayTableData.index", cell?.arrayIndex]
+        ["_rowy_ref.arrayTableData.index", cell?.arrayIndex]
   );
 
   const handleNavigate = (direction: "up" | "down") => () => {
@@ -55,8 +55,9 @@ export default function SideDrawer() {
 
     setCell((cell) => ({
       columnKey: cell!.columnKey,
-      path: newPath,
+      path: cell?.arrayIndex !== undefined ? cell.path : newPath,
       focusInside: false,
+      arrayIndex: cell?.arrayIndex !== undefined ? rowIndex : undefined,
     }));
   };
 

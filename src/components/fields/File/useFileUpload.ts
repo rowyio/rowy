@@ -5,17 +5,12 @@ import { DropzoneOptions, useDropzone } from "react-dropzone";
 
 import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import useUploader from "@src/hooks/useFirebaseStorageUploader";
-import type {
-  ArrayTableRowData,
-  FileValue,
-  TableRowRef,
-} from "@src/types/table";
+import type { FileValue, TableRowRef } from "@src/types/table";
 
 export default function useFileUpload(
   docRef: TableRowRef,
   fieldName: string,
-  dropzoneOptions: DropzoneOptions = {},
-  arrayTableData?: ArrayTableRowData
+  dropzoneOptions: DropzoneOptions = {}
 ) {
   const updateField = useSetAtom(updateFieldAtom, tableScope);
   const { uploaderState, upload, deleteUpload } = useUploader();
@@ -52,8 +47,8 @@ export default function useFileUpload(
     async (files: File[]) => {
       const { uploads, failures } = await upload({
         docRef,
-        fieldName: arrayTableData
-          ? `${arrayTableData?.parentField}/${fieldName}`
+        fieldName: docRef.arrayTableData
+          ? `${docRef.arrayTableData?.parentField}/${fieldName}`
           : fieldName,
         files,
       });
@@ -62,11 +57,11 @@ export default function useFileUpload(
         fieldName,
         value: uploads,
         useArrayUnion: true,
-        arrayTableData,
+        arrayTableData: docRef.arrayTableData,
       });
       return { uploads, failures };
     },
-    [arrayTableData, docRef, fieldName, updateField, upload]
+    [docRef, fieldName, updateField, upload]
   );
 
   const handleDelete = useCallback(
@@ -77,11 +72,11 @@ export default function useFileUpload(
         value: [file],
         useArrayRemove: true,
         disableCheckEquality: true,
-        arrayTableData,
+        arrayTableData: docRef.arrayTableData,
       });
       deleteUpload(file);
     },
-    [arrayTableData, deleteUpload, docRef.path, fieldName, updateField]
+    [deleteUpload, docRef.arrayTableData, docRef.path, fieldName, updateField]
   );
 
   return {

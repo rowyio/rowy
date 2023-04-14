@@ -111,10 +111,13 @@ export function useFirestoreDocAsCollectionWithAtom<T = TableRow>(
             const pseudoRow = pseudoDoc.map((row: any, i: number) => {
               return {
                 ...row,
-                _rowy_ref: docSnapshot.ref,
-                _rowy_arrayTableData: {
-                  index: i,
-                  parentField: fieldName,
+                _rowy_ref: {
+                  path: docSnapshot.ref.path,
+                  id: docSnapshot.ref.id,
+                  arrayTableData: {
+                    index: i,
+                    parentField: fieldName,
+                  },
                 },
               };
             });
@@ -188,7 +191,7 @@ export function useFirestoreDocAsCollectionWithAtom<T = TableRow>(
             temp.splice(options.index, 1);
             for (let i = options.index; i < temp.length; i++) {
               // @ts-ignore
-              temp[i]._rowy_arrayTableData.index = i;
+              temp[i]._rowy_ref.arrayTableData.index = i;
             }
             return sortRows(temp, sorts);
           });
@@ -263,10 +266,10 @@ export function useFirestoreDocAsCollectionWithAtom<T = TableRow>(
                   _rowy_ref: {
                     id: doc(firebaseDb, path).id,
                     path: doc(firebaseDb, path).path,
-                  },
-                  _rowy_arrayTableData: {
-                    index: i,
-                    parentField: fieldName,
+                    arrayTableData: {
+                      index: i,
+                      parentField: fieldName,
+                    },
                   },
                 } as T);
 
@@ -279,8 +282,12 @@ export function useFirestoreDocAsCollectionWithAtom<T = TableRow>(
                   const modifiedPrevData = temp.map((row: any, i: number) => {
                     return {
                       ...row,
-                      _rowy_arrayTableData: {
-                        index: i + 1,
+                      _rowy_ref: {
+                        ...row._rowy_ref,
+                        arrayTableData: {
+                          index: i + 1,
+                          parentField: fieldName,
+                        },
                       },
                     };
                   });
@@ -353,5 +360,5 @@ function sortRows<T = TableRow>(
 }
 
 function unsortRows<T = TableRow>(rows: T[]): T[] {
-  return orderBy(rows, ["_rowy_arrayTableData.index"], ["asc"]);
+  return orderBy(rows, ["_rowy_ref.arrayTableData.index"], ["asc"]);
 }

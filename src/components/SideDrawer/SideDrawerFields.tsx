@@ -130,7 +130,6 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
           onDirty={onDirty}
           onSubmit={onSubmit}
           isDirty={dirtyField === field.key}
-          _rowy_arrayTableData={row._rowy_arrayTableData}
         />
       ))}
 
@@ -139,12 +138,12 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
         fieldName="_rowy_ref.path"
         label="Document path"
         debugText={
-          row._rowy_arrayTableData
+          row._rowy_ref.arrayTableData
             ? row._rowy_ref.path +
               " → " +
-              row._rowy_arrayTableData.parentField +
+              row._rowy_ref.arrayTableData.parentField +
               "[" +
-              row._rowy_arrayTableData.index +
+              row._rowy_ref.arrayTableData.index +
               "]"
             : row._rowy_ref.path
         }

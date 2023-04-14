@@ -5,7 +5,7 @@ import { isEqual, isEmpty } from "lodash-es";
 import FieldWrapper from "./FieldWrapper";
 import { IFieldConfig } from "@src/components/fields/types";
 import { getFieldProp } from "@src/components/fields";
-import { ArrayTableRowData, ColumnConfig, TableRowRef } from "@src/types/table";
+import { ColumnConfig, TableRowRef } from "@src/types/table";
 
 export interface IMemoizedFieldProps {
   field: ColumnConfig;
@@ -13,7 +13,6 @@ export interface IMemoizedFieldProps {
   hidden: boolean;
   value: any;
   _rowy_ref: TableRowRef;
-  _rowy_arrayTableData?: ArrayTableRowData;
   isDirty: boolean;
   onDirty: (fieldName: string) => void;
   onSubmit: (fieldName: string, value: any) => void;
@@ -26,7 +25,6 @@ export const MemoizedField = memo(
     hidden,
     value,
     _rowy_ref,
-    _rowy_arrayTableData,
     isDirty,
     onDirty,
     onSubmit,
@@ -80,7 +78,6 @@ export const MemoizedField = memo(
           },
           onSubmit: handleSubmit,
           disabled,
-          _rowy_arrayTableData,
         })}
       </FieldWrapper>
     );

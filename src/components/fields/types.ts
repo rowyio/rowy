@@ -6,7 +6,6 @@ import type {
   TableRow,
   TableRowRef,
   TableFilter,
-  ArrayTableRowData,
 } from "@src/types/table";
 import type { SelectedCell } from "@src/atoms/tableScope";
 import type { IContextMenuItem } from "@src/components/Table/ContextMenu/ContextMenuItem";
@@ -82,8 +81,6 @@ export interface ISideDrawerFieldProps<T = any> {
   column: ColumnConfig;
   /** The row’s _rowy_ref object */
   _rowy_ref: TableRowRef;
-  /** The array table row’s data */
-  _rowy_arrayTableData?: ArrayTableRowData;
   /** The field’s local value – synced with db when field is not dirty */
   value: T;
   /** Call when the user has input but changes have not been saved */
