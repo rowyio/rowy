@@ -8,7 +8,7 @@ import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import { TableRowRef } from "@src/types/table";
 import SnackbarProgress from "@src/components/SnackbarProgress";
 
-const MAX_CONCURRENT_TASKS = 10;
+const MAX_CONCURRENT_TASKS = 1000;
 
 type UploadParamTypes = {
   docRef: TableRowRef;
