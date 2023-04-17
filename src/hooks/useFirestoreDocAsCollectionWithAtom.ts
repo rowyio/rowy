@@ -260,9 +260,9 @@ export function useFirestoreDocAsCollectionWithAtom<T = TableRow>(
             const addNewRow = (addTo: "top" | "bottom", base?: TableRow) => {
               let temp: T[] = [];
 
-              const newRow = (i: number) =>
-                ({
-                  ...base,
+              const newRow = (i: number) => {
+                return {
+                  ...(base ?? update),
                   _rowy_ref: {
                     id: doc(firebaseDb, path).id,
                     path: doc(firebaseDb, path).path,
@@ -271,8 +271,8 @@ export function useFirestoreDocAsCollectionWithAtom<T = TableRow>(
                       parentField: fieldName,
                     },
                   },
-                } as T);
-
+                } as T;
+              };
               setDataAtom((prevData) => {
                 temp = unsortRows(prevData);
 

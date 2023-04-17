@@ -28,6 +28,7 @@ import {
   tableSortsAtom,
   addRowAtom,
   _updateRowDbAtom,
+  tableColumnsOrderedAtom,
 } from "@src/atoms/tableScope";
 
 export default function AddRow() {
@@ -215,10 +216,22 @@ export function AddRowArraySubTable() {
 
   const anchorEl = useRef<HTMLDivElement>(null);
   const [addRowAt, setAddNewRowAt] = useState<"top" | "bottom">("bottom");
+  const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
+
   if (!updateRowDb) return null;
 
   const handleClick = () => {
-    updateRowDb("", {}, undefined, {
+    const initialValues: Record<string, any> = {};
+
+    // Set initial values based on default values
+    for (const column of tableColumnsOrdered) {
+      if (column.config?.defaultValue?.type === "static")
+        initialValues[column.key] = column.config.defaultValue.value!;
+      else if (column.config?.defaultValue?.type === "null")
+        initialValues[column.key] = null;
+    }
+
+    updateRowDb("", initialValues, undefined, {
       index: 0,
       operation: {
         addRow: addRowAt,
