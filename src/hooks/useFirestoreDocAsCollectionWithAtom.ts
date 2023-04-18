@@ -10,8 +10,8 @@ import {
   refEqual,
   onSnapshot,
   FirestoreError,
-  setDoc,
   DocumentReference,
+  runTransaction,
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
@@ -24,7 +24,8 @@ import {
   UpdateCollectionDocFunction,
 } from "@src/types/table";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
-import { omitRowyFields } from "@src/utils/table";
+
+type UpdateFunction<T> = (rows: T[]) => T[];
 
 /** Options for {@link useFirestoreDocWithAtom} */
 interface IUseFirestoreDocWithAtomOptions<T> {
@@ -71,7 +72,16 @@ export function useFirestoreDocAsCollectionWithAtom<T = TableRow>(
 
   const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
   const setDataAtom = useSetAtom(dataAtom, dataScope);
-
+  const { addRow, deleteRow, deleteField, updateTable } = useAlterArrayTable<T>(
+    {
+      firebaseDb,
+      dataAtom,
+      dataScope,
+      sorts,
+      path,
+      fieldName,
+    }
+  );
   const handleError = useErrorHandler();
   const { enqueueSnackbar } = useSnackbar();
   const setUpdateDocAtom = useSetAtom(
@@ -160,15 +170,23 @@ export function useFirestoreDocAsCollectionWithAtom<T = TableRow>(
   ]);
 
   const setRows = useCallback(
-    (rows: T[]) => {
-      rows = rows.map((row: any, i: number) => omitRowyFields(row));
+    (updateFunction: UpdateFunction<T>) => {
       if (!fieldName) return;
+
       try {
-        return setDoc(
-          doc(firebaseDb, path),
-          { [fieldName]: rows },
-          { merge: true }
-        );
+        return runTransaction(firebaseDb, async (transaction) => {
+          const docRef = doc(firebaseDb, path);
+          const docSnap = await transaction.get(docRef);
+          const rows = docSnap.data()?.[fieldName] || [];
+
+          const updatedRows = updateFunction(rows);
+
+          return await transaction.set(
+            docRef,
+            { [fieldName]: updatedRows },
+            { merge: true }
+          );
+        });
       } catch (error) {
         enqueueSnackbar(`Error updating array table`, {
           variant: "error",
@@ -183,25 +201,14 @@ export function useFirestoreDocAsCollectionWithAtom<T = TableRow>(
     if (deleteDocAtom) {
       setDeleteRowAtom(() => (_: string, options?: ArrayTableRowData) => {
         if (!options) return;
-
-        const deleteRow = () => {
-          let temp: T[] = [];
-          setDataAtom((prevData) => {
-            temp = unsortRows<T>(prevData);
-            temp.splice(options.index, 1);
-            for (let i = options.index; i < temp.length; i++) {
-              // @ts-ignore
-              temp[i]._rowy_ref.arrayTableData.index = i;
-            }
-            return sortRows(temp, sorts);
-          });
-          return setRows(temp);
-        };
-        deleteRow();
+        const updateFunction = deleteRow(options.index);
+        return setRows(updateFunction);
       });
     }
   }, [
     deleteDocAtom,
+    deleteRow,
+    fieldName,
     firebaseDb,
     path,
     setDataAtom,
@@ -215,7 +222,7 @@ export function useFirestoreDocAsCollectionWithAtom<T = TableRow>(
       setUpdateDocAtom(
         () =>
           (
-            path_: string,
+            _: string,
             update: T,
             deleteFields?: string[],
             options?: ArrayTableRowData
@@ -223,80 +230,18 @@ export function useFirestoreDocAsCollectionWithAtom<T = TableRow>(
             if (options === undefined) return;
 
             const deleteRowFields = () => {
-              let temp: T[] = [];
-              setDataAtom((prevData) => {
-                temp = unsortRows(prevData);
-
-                if (deleteFields === undefined) return prevData;
-
-                temp[options.index] = {
-                  ...temp[options.index],
-                  ...deleteFields?.reduce(
-                    (acc, field) => ({ ...acc, [field]: undefined }),
-                    {}
-                  ),
-                };
-
-                return sortRows(temp, sorts);
-              });
-
-              return setRows(temp);
+              const updateFunction = deleteField(options.index, deleteFields);
+              return setRows(updateFunction);
             };
 
             const updateRowValues = () => {
-              let temp: T[] = [];
-              setDataAtom((prevData) => {
-                temp = unsortRows(prevData);
-
-                temp[options.index] = {
-                  ...temp[options.index],
-                  ...update,
-                };
-                return sortRows(temp, sorts);
-              });
-              return setRows(temp);
+              const updateFunction = updateTable(options.index, update);
+              return setRows(updateFunction);
             };
 
-            const addNewRow = (addTo: "top" | "bottom", base?: TableRow) => {
-              let temp: T[] = [];
-
-              const newRow = (i: number) => {
-                return {
-                  ...(base ?? update),
-                  _rowy_ref: {
-                    id: doc(firebaseDb, path).id,
-                    path: doc(firebaseDb, path).path,
-                    arrayTableData: {
-                      index: i,
-                      parentField: fieldName,
-                    },
-                  },
-                } as T;
-              };
-              setDataAtom((prevData) => {
-                temp = unsortRows(prevData);
-
-                if (addTo === "bottom") {
-                  temp.push(newRow(prevData.length));
-                } else {
-                  const modifiedPrevData = temp.map((row: any, i: number) => {
-                    return {
-                      ...row,
-                      _rowy_ref: {
-                        ...row._rowy_ref,
-                        arrayTableData: {
-                          index: i + 1,
-                          parentField: fieldName,
-                        },
-                      },
-                    };
-                  });
-                  temp = [newRow(0), ...modifiedPrevData];
-                }
-                return sortRows(temp, sorts);
-              });
-
-              return setRows(temp);
+            const addNewRow = (addTo: "top" | "bottom", base?: T) => {
+              const updateFunction = addRow(addTo, base ?? update);
+              return setRows(updateFunction);
             };
 
             if (Array.isArray(deleteFields) && deleteFields.length > 0) {
@@ -304,7 +249,7 @@ export function useFirestoreDocAsCollectionWithAtom<T = TableRow>(
             } else if (options.operation?.addRow) {
               return addNewRow(
                 options.operation.addRow,
-                options?.operation.base
+                options?.operation.base as T
               );
             } else {
               return updateRowValues();
@@ -313,6 +258,8 @@ export function useFirestoreDocAsCollectionWithAtom<T = TableRow>(
       );
     }
   }, [
+    addRow,
+    deleteField,
     fieldName,
     firebaseDb,
     path,
@@ -321,10 +268,168 @@ export function useFirestoreDocAsCollectionWithAtom<T = TableRow>(
     setUpdateDocAtom,
     sorts,
     updateDocAtom,
+    updateTable,
   ]);
 }
 
 export default useFirestoreDocAsCollectionWithAtom;
+
+function useAlterArrayTable<T>({
+  firebaseDb,
+  dataAtom,
+  dataScope,
+  sorts,
+  path,
+  fieldName,
+}: {
+  firebaseDb: Firestore;
+  dataAtom: PrimitiveAtom<T[]>;
+  dataScope: Parameters<typeof useAtom>[1] | undefined;
+  sorts: TableSort[] | undefined;
+  path: string;
+  fieldName: string;
+}) {
+  const setData = useSetAtom(dataAtom, dataScope);
+
+  const add = useCallback(
+    (addTo: "top" | "bottom", base?: T): UpdateFunction<T> => {
+      const newRow = (i: number, noMeta?: boolean) => {
+        const meta = noMeta
+          ? {}
+          : {
+              _rowy_ref: {
+                id: doc(firebaseDb, path).id,
+                path: doc(firebaseDb, path).path,
+                arrayTableData: {
+                  index: i,
+                  parentField: fieldName,
+                },
+              },
+            };
+        return {
+          ...(base ?? {}),
+          ...meta,
+        } as T;
+      };
+
+      setData((prevData) => {
+        prevData = unsortRows(prevData);
+
+        if (addTo === "bottom") {
+          prevData.push(newRow(prevData.length));
+        } else {
+          const modifiedPrevData = prevData.map((row: any, i: number) => {
+            return {
+              ...row,
+              _rowy_ref: {
+                ...row._rowy_ref,
+                arrayTableData: {
+                  index: i + 1,
+                  parentField: fieldName,
+                },
+              },
+            };
+          });
+          prevData = [newRow(0), ...modifiedPrevData];
+        }
+        return sortRows(prevData, sorts);
+      });
+
+      return (rows) => {
+        if (addTo === "bottom") {
+          rows.push(newRow(rows.length, true));
+        } else {
+          rows = [newRow(0, true), ...rows];
+        }
+        return rows;
+      };
+    },
+    [fieldName, firebaseDb, path, setData, sorts]
+  );
+
+  const _delete = useCallback(
+    (index: number): UpdateFunction<T> => {
+      setData((prevData) => {
+        prevData = unsortRows<T>(prevData);
+        prevData.splice(index, 1);
+        for (let i = index; i < prevData.length; i++) {
+          // @ts-ignore
+          prevData[i]._rowy_ref.arrayTableData.index = i;
+        }
+        return sortRows(prevData, sorts);
+      });
+      return (rows) => {
+        rows.splice(index, 1);
+        return [...rows];
+      };
+    },
+    [setData, sorts]
+  );
+
+  const deleteField = useCallback(
+    (index: number, deleteFields?: string[]): UpdateFunction<T> => {
+      setData((prevData) => {
+        prevData = unsortRows(prevData);
+
+        if (deleteFields === undefined) return prevData;
+
+        prevData[index] = {
+          ...prevData[index],
+          ...deleteFields?.reduce(
+            (acc, field) => ({ ...acc, [field]: undefined }),
+            {}
+          ),
+        };
+
+        return sortRows(prevData, sorts);
+      });
+      return (rows) => {
+        if (deleteFields === undefined) return rows;
+
+        rows[index] = {
+          ...rows[index],
+          ...deleteFields?.reduce(
+            (acc, field) => ({ ...acc, [field]: undefined }),
+            {}
+          ),
+        };
+
+        return rows;
+      };
+    },
+    [setData, sorts]
+  );
+
+  const update = useCallback(
+    (index: number, update: Partial<T>): UpdateFunction<T> => {
+      setData((prevData) => {
+        prevData = unsortRows(prevData);
+        prevData[index] = {
+          ...prevData[index],
+          ...update,
+        };
+
+        return sortRows(prevData, sorts);
+      });
+
+      return (rows) => {
+        rows[index] = {
+          ...rows[index],
+          ...update,
+        };
+        return rows;
+      };
+    },
+    [setData, sorts]
+  );
+
+  return {
+    addRow: add,
+    deleteRow: _delete,
+    deleteField: deleteField,
+    updateTable: update,
+  };
+}
 
 /**
  * Create the Firestore document reference.

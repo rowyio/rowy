@@ -48,7 +48,7 @@ export default function useFileUpload(
       const { uploads, failures } = await upload({
         docRef,
         fieldName: docRef.arrayTableData
-          ? `${docRef.arrayTableData?.parentField}/${fieldName}`
+          ? `${docRef.arrayTableData?.parentField}/${docRef.arrayTableData?.index}/${fieldName}`
           : fieldName,
         files,
       });
