@@ -92,7 +92,7 @@ export function useMenuAction(
       try {
         text = await navigator.clipboard.readText();
       } catch (e) {
-        enqueueSnackbar(`Read clilboard permission denied.`, {
+        enqueueSnackbar(`Read clipboard permission denied.`, {
           variant: "error",
         });
         return;
