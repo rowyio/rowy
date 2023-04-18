@@ -369,7 +369,13 @@ export const updateFieldAtom = atom(
     const tableRows = get(tableRowsAtom);
     const tableRowsLocal = get(tableRowsLocalAtom);
 
-    const row = find(tableRows, ["_rowy_ref.path", path]);
+    const row = find(
+      tableRows,
+      arrayTableData?.index !== undefined
+        ? ["_rowy_ref.arrayTableData.index", arrayTableData?.index]
+        : ["_rowy_ref.path", path]
+    );
+
     if (!row) throw new Error("Could not find row");
     const isLocalRow = Boolean(find(tableRowsLocal, ["_rowy_ref.path", path]));
 
