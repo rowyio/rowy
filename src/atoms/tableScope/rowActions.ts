@@ -242,10 +242,15 @@ export interface IBulkAddRowsOptions {
   rows: Partial<TableRow[]>;
   collection: string;
   onBatchCommit?: Parameters<BulkWriteFunction>[1];
+  type?: "add";
 }
 export const bulkAddRowsAtom = atom(
   null,
-  async (get, _, { rows, collection, onBatchCommit }: IBulkAddRowsOptions) => {
+  async (
+    get,
+    _,
+    { rows, collection, onBatchCommit, type }: IBulkAddRowsOptions
+  ) => {
     const bulkWriteDb = get(_bulkWriteDbAtom);
     if (!bulkWriteDb) throw new Error("Cannot write to database");
     const tableSettings = get(tableSettingsAtom);
@@ -277,7 +282,11 @@ export const bulkAddRowsAtom = atom(
 
     // Assign a random ID to each row
     const operations = rows.map((row) => ({
-      type: row?._rowy_ref?.id ? ("update" as "update") : ("add" as "add"),
+      type: type
+        ? type
+        : row?._rowy_ref?.id
+        ? ("update" as "update")
+        : ("add" as "add"),
       path: `${collection}/${row?._rowy_ref?.id ?? generateId()}`,
       data: { ...initialValues, ...omitRowyFields(row) },
     }));

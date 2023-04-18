@@ -65,8 +65,10 @@ const WIKI_PATHS = {
   webhooks: "/webhooks",
 
   importAirtable: "/import-export-data/import-airtable",
-  importAirtableApiKey: "/import-export-data/import-airtable#api-key",
-  importAirtableTableUrl: "/import-export-data/import-airtable#table-url",
+  importAirtableApiKey:
+    "/import-export-data/import-airtable#retrieving-the-airtable-api-key",
+  importAirtableTableUrl:
+    "/import-export-data/import-airtable#obtaining-the-airtable-table-url",
   cloudLogs: "/cloud-logs",
 };
 export const WIKI_LINKS = mapValues(

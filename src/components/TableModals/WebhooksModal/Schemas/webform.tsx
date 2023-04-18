@@ -1,10 +1,7 @@
 import { Typography, Link, TextField } from "@mui/material";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import { TableSettings } from "@src/types/table";
-import {
-  IWebhook,
-  ISecret,
-} from "@src/components/TableModals/WebhooksModal/utils";
+import { IWebhook } from "@src/components/TableModals/WebhooksModal/utils";
 
 export const webhook = {
   name: "Web Form",
@@ -51,11 +48,7 @@ export const webhook = {
   // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,
   },
-  auth: (
-    webhookObject: IWebhook,
-    setWebhookObject: (w: IWebhook) => void,
-    secrets: ISecret
-  ) => {
+  Auth: (webhookObject: IWebhook, setWebhookObject: (w: IWebhook) => void) => {
     return (
       <>
         <Typography gutterBottom>

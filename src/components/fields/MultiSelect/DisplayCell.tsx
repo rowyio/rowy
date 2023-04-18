@@ -1,12 +1,16 @@
 import { IDisplayCellProps } from "@src/components/fields/types";
 
-import { ButtonBase, Grid, Tooltip } from "@mui/material";
+import { ButtonBase, Grid, Tooltip, useTheme } from "@mui/material";
 import WarningIcon from "@mui/icons-material/WarningAmber";
 import { ChevronDown } from "@src/assets/icons";
 
 import { sanitiseValue } from "./utils";
 import ChipList from "@src/components/Table/TableCell/ChipList";
 import FormattedChip from "@src/components/FormattedChip";
+import {
+  getColors,
+  IColors,
+} from "@src/components/fields/SingleSelect/Settings";
 
 export default function MultiSelect({
   value,
@@ -14,7 +18,11 @@ export default function MultiSelect({
   disabled,
   tabIndex,
   rowHeight,
+  column,
 }: IDisplayCellProps) {
+  const colors: IColors[] = column?.config?.colors ?? [];
+  const { mode } = useTheme().palette;
+
   const rendered =
     typeof value === "string" && value !== "" ? (
       <div style={{ flexGrow: 1, paddingLeft: "var(--cell-padding)" }}>
@@ -30,7 +38,12 @@ export default function MultiSelect({
           (item) =>
             typeof item === "string" && (
               <Grid item key={item}>
-                <FormattedChip label={item} />
+                <FormattedChip
+                  label={item}
+                  sx={{
+                    backgroundColor: getColors(colors, item)[mode],
+                  }}
+                />
               </Grid>
             )
         )}

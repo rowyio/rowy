@@ -32,6 +32,7 @@ export type ProjectSettings = Partial<{
     builder: string;
     terminal: string;
   }>;
+  exporterRoles?: string[];
 }>;
 
 /** User info and settings */

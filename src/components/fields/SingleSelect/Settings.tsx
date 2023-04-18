@@ -14,6 +14,9 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/AddCircle";
 import RemoveIcon from "@mui/icons-material/CancelRounded";
+import ColorSelect, {
+  SelectColorThemeOptions,
+} from "@src/components/SelectColors";
 
 import {
   DragDropContext,
@@ -23,6 +26,7 @@ import {
   NotDraggingStyle,
 } from "react-beautiful-dnd";
 import DragIndicatorOutlinedIcon from "@mui/icons-material/DragIndicatorOutlined";
+import palette, { paletteToMui } from "@src/theme/palette";
 
 const getItemStyle = (
   isDragging: boolean,
@@ -33,10 +37,29 @@ const getItemStyle = (
   ...draggableStyle,
 });
 
+export interface IColors extends SelectColorThemeOptions {
+  name: string;
+}
+
+export const getColors = (
+  list: IColors[],
+  option: string
+): SelectColorThemeOptions => {
+  const defaultColor = paletteToMui(palette.aGray);
+  const key = option.toLocaleLowerCase().replace(" ", "_").trim();
+  const color = list.find((opt: IColors) => opt.name === key);
+  // Null check in return
+  return color || defaultColor;
+};
+
 export default function Settings({ onChange, config }: ISettingsProps) {
   const listEndRef: any = useRef(null);
   const options = config.options ?? [];
   const [newOption, setNewOption] = useState("");
+
+  /* State for holding Chip Colors for Select and MultiSelect */
+  let colors = config.colors ?? [];
+
   const handleAdd = () => {
     if (newOption.trim() !== "") {
       if (options.includes(newOption)) {
@@ -47,6 +70,38 @@ export default function Settings({ onChange, config }: ISettingsProps) {
         listEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
       }
     }
+  };
+
+  const handleChipColorChange = (
+    type: "save" | "delete",
+    key: string,
+    color?: SelectColorThemeOptions
+  ) => {
+    const _key = key.toLocaleLowerCase().replace(" ", "_").trim();
+    const exists = colors.findIndex((option: IColors) => option.name === _key);
+
+    // If saving Check if object with the `color.name` is equal to `_key` and replace value at the index of `exists`
+    // Else save new value with `_key` as `color.name`
+    if (type === "save") {
+      if (exists !== -1) {
+        colors[exists] = { name: _key, ...{ ...color } };
+        onChange("colors")(colors);
+      } else {
+        onChange("colors")([...colors, { name: _key, ...{ ...color } }]);
+      }
+    }
+    // If deleting Filter out object that has `color.name` equals to `_key`
+    if (type === "delete") {
+      const updatedColors = colors.filter(
+        (option: IColors) => option.name !== _key
+      );
+      onChange("colors")(updatedColors);
+    }
+  };
+
+  const handleItemDelete = (option: string) => {
+    onChange("options")(options.filter((o: string) => o !== option));
+    handleChipColorChange("delete", option);
   };
 
   const handleOnDragEnd = (result: any) => {
@@ -92,6 +147,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                             {...provided.dragHandleProps}
                             item
                             sx={{ display: "flex" }}
+                            alignItems="center"
                           >
                             <DragIndicatorOutlinedIcon
                               color="disabled"
@@ -101,16 +157,26 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                                 },
                               ]}
                             />
-                            <Typography>{option}</Typography>
+                            <Grid
+                              container
+                              direction="row"
+                              alignItems="center"
+                              gap={2}
+                            >
+                              <ColorSelect
+                                key={option}
+                                initialValue={getColors(colors, option)}
+                                handleChange={(color) =>
+                                  handleChipColorChange("save", option, color)
+                                }
+                              />
+                              <Typography>{option}</Typography>
+                            </Grid>
                           </Grid>
                           <Grid item>
                             <IconButton
                               aria-label="Remove"
-                              onClick={() =>
-                                onChange("options")(
-                                  options.filter((o: string) => o !== option)
-                                )
-                              }
+                              onClick={() => handleItemDelete(option)}
                             >
                               {<RemoveIcon />}
                             </IconButton>

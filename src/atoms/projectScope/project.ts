@@ -133,3 +133,16 @@ export const FunctionsIndexAtom = atom<FunctionSettings[]>([]);
 export const updateFunctionAtom = atom<
   UpdateCollectionDocFunction<FunctionSettings> | undefined
 >(undefined);
+
+export interface ISecretNames {
+  loading: boolean;
+  secretNames: null | string[];
+}
+
+export const secretNamesAtom = atom<ISecretNames>({
+  loading: true,
+  secretNames: null,
+});
+export const updateSecretNamesAtom = atom<
+  ((clearSecretNames?: boolean) => Promise<void>) | undefined
+>(undefined);
