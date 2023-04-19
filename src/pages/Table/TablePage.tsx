@@ -54,9 +54,7 @@ export interface ITablePageProps {
   disableModals?: boolean;
   /** Disable side drawer */
   disableSideDrawer?: boolean;
-  /* Array table is not a collection */
-  tableNotACollection?: boolean;
-
+  /** list of table tools to be disabled */
   disabledTools?: TableToolsType;
 }
 
@@ -76,7 +74,6 @@ export interface ITablePageProps {
 export default function TablePage({
   disableModals,
   disableSideDrawer,
-  tableNotACollection,
   disabledTools,
 }: ITablePageProps) {
   const [userRoles] = useAtom(userRolesAtom, projectScope);

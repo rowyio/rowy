@@ -75,7 +75,7 @@ export type TableSettings = {
   /** Roles that can see this table in the UI and navigate. Firestore Rules need to be set to give access to the data */
   roles: string[];
 
-  isNotACollection?: boolean;
+  isCollection?: boolean;
   subTableKey?: string | undefined;
   section: string;
   description?: string;

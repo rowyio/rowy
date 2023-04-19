@@ -95,10 +95,14 @@ export default function TableToolbar({
         },
       }}
     >
-      {tableSettings.isNotACollection ? <AddRowArraySubTable /> : <AddRow />}
+      {tableSettings.isCollection === false ? (
+        <AddRowArraySubTable />
+      ) : (
+        <AddRow />
+      )}
       <div /> {/* Spacer */}
       <HiddenFields />
-      {tableSettings.isNotACollection ? (
+      {tableSettings.isCollection === false ? (
         <Button
           variant="outlined"
           color="primary"

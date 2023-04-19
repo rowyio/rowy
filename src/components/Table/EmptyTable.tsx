@@ -34,7 +34,7 @@ export default function EmptyTable() {
       : false;
   let contents = <></>;
 
-  if (!tableSettings.isNotACollection && hasData) {
+  if (tableSettings.isCollection !== false && hasData) {
     contents = (
       <>
         <div>
@@ -72,7 +72,7 @@ export default function EmptyTable() {
             Get started
           </Typography>
           <Typography>
-            {tableSettings.isNotACollection === true
+            {tableSettings.isCollection === false
               ? "There is no data in this Array Sub Table:"
               : "There is no data in the Firestore collection:"}
             <br />
@@ -84,7 +84,7 @@ export default function EmptyTable() {
           </Typography>
         </div>
         <Grid container spacing={1}>
-          {!tableSettings.isNotACollection && (
+          {tableSettings.isCollection !== false && (
             <>
               <Grid item xs>
                 <Typography paragraph>

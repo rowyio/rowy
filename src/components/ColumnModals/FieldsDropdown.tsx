@@ -44,7 +44,7 @@ export default function FieldsDropdown({
     const requireCloudFunctionSetup =
       fieldConfig.requireCloudFunction && !projectSettings.rowyRunUrl;
     const requireCollectionTable =
-      tableSettings.isNotACollection === true &&
+      tableSettings.isCollection === false &&
       fieldConfig.requireCollectionTable === true;
     return {
       label: fieldConfig.name,

@@ -74,7 +74,7 @@ export default function ProvidedArraySubTablePage() {
     collection: subTableCollection,
     id: subTableId,
     subTableKey,
-    isNotACollection: true,
+    isCollection: false,
     tableType: "primaryCollection" as "primaryCollection",
     name: sourceColumn?.name || subTableKey || "",
   };
@@ -139,7 +139,6 @@ export default function ProvidedArraySubTablePage() {
             <DebugAtoms scope={tableScope} />
             <ArraySubTableSourceFirestore />
             <TablePage
-              tableNotACollection={true}
               disabledTools={[
                 "import",
                 "export",
