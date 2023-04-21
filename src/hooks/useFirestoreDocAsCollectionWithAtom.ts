@@ -24,6 +24,7 @@ import {
   UpdateCollectionDocFunction,
 } from "@src/types/table";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
+import { omitRowyFields } from "@src/utils/table";
 
 type UpdateFunction<T> = (rows: T[]) => T[];
 
@@ -293,22 +294,28 @@ function useAlterArrayTable<T>({
 
   const add = useCallback(
     (addTo: "top" | "bottom", base?: T): UpdateFunction<T> => {
-      const newRow = (i: number, noMeta?: boolean) => {
-        const meta = noMeta
-          ? {}
-          : {
-              _rowy_ref: {
-                id: doc(firebaseDb, path).id,
-                path: doc(firebaseDb, path).path,
-                arrayTableData: {
-                  index: i,
-                  parentField: fieldName,
-                },
-              },
-            };
+      if (base) {
+        base = omitRowyFields(base);
+      }
+      const newRow = (i: number, meta: boolean) => {
+        const _meta = {
+          _rowy_ref: {
+            id: doc(firebaseDb, path).id,
+            path: doc(firebaseDb, path).path,
+            arrayTableData: {
+              index: i,
+              parentField: fieldName,
+            },
+          },
+        };
+        if (meta === true) {
+          return {
+            ...(base ?? {}),
+            ..._meta,
+          } as T;
+        }
         return {
           ...(base ?? {}),
-          ...meta,
         } as T;
       };
 
@@ -316,7 +323,7 @@ function useAlterArrayTable<T>({
         prevData = unsortRows(prevData);
 
         if (addTo === "bottom") {
-          prevData.push(newRow(prevData.length));
+          prevData.push(newRow(prevData.length, true));
         } else {
           const modifiedPrevData = prevData.map((row: any, i: number) => {
             return {
@@ -330,16 +337,17 @@ function useAlterArrayTable<T>({
               },
             };
           });
-          prevData = [newRow(0), ...modifiedPrevData];
+          prevData = [newRow(0, true), ...modifiedPrevData];
         }
         return sortRows(prevData, sorts);
       });
 
       return (rows) => {
         if (addTo === "bottom") {
-          rows.push(newRow(rows.length, true));
+          console.log("bottom", newRow(rows.length, false));
+          rows.push(newRow(rows.length, false));
         } else {
-          rows = [newRow(0, true), ...rows];
+          rows = [newRow(0, false), ...rows];
         }
         return rows;
       };
