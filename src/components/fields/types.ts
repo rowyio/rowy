@@ -20,6 +20,7 @@ export interface IFieldConfig {
   initializable?: boolean;
   requireConfiguration?: boolean;
   requireCloudFunction?: boolean;
+  requireCollectionTable?: boolean;
   initialValue: any;
   icon?: React.ReactNode;
   description?: string;
@@ -80,7 +81,6 @@ export interface ISideDrawerFieldProps<T = any> {
   column: ColumnConfig;
   /** The row’s _rowy_ref object */
   _rowy_ref: TableRowRef;
-
   /** The field’s local value – synced with db when field is not dirty */
   value: T;
   /** Call when the user has input but changes have not been saved */

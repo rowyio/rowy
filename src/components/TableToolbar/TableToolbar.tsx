@@ -1,17 +1,19 @@
 import { lazy, Suspense } from "react";
 import { useAtom, useSetAtom } from "jotai";
 
-import { Stack } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import WebhookIcon from "@mui/icons-material/Webhook";
 import {
   Export as ExportIcon,
   Extension as ExtensionIcon,
   CloudLogs as CloudLogsIcon,
+  Import as ImportIcon,
 } from "@src/assets/icons";
+
 import TableToolbarButton from "./TableToolbarButton";
 import { ButtonSkeleton } from "./TableToolbarSkeleton";
 
-import AddRow from "./AddRow";
+import AddRow, { AddRowArraySubTable } from "./AddRow";
 import LoadedRowsStatus from "./LoadedRowsStatus";
 import TableSettings from "./TableSettings";
 import HiddenFields from "./HiddenFields";
@@ -32,6 +34,8 @@ import {
   tableModalAtom,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
+import { TableToolsType } from "@src/types/table";
+import FilterIcon from "@mui/icons-material/FilterList";
 
 // prettier-ignore
 const Filters = lazy(() => import("./Filters" /* webpackChunkName: "Filters" */));
@@ -43,7 +47,11 @@ const ReExecute = lazy(() => import("./ReExecute" /* webpackChunkName: "ReExecut
 
 export const TABLE_TOOLBAR_HEIGHT = 44;
 
-export default function TableToolbar() {
+export default function TableToolbar({
+  disabledTools,
+}: {
+  disabledTools?: TableToolsType[];
+}) {
   const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
   const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [compatibleRowyRunVersion] = useAtom(
@@ -54,7 +62,6 @@ export default function TableToolbar() {
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const openTableModal = useSetAtom(tableModalAtom, tableScope);
-
   const hasDerivatives =
     Object.values(tableSchema.columns ?? {}).filter(
       (column) => column.type === FieldType.derivative
@@ -64,6 +71,7 @@ export default function TableToolbar() {
     tableSchema.compiledExtension &&
     tableSchema.compiledExtension.replace(/\W/g, "")?.length > 0;
 
+  disabledTools = disabledTools ?? [];
   return (
     <Stack
       direction="row"
@@ -87,35 +95,61 @@ export default function TableToolbar() {
         },
       }}
     >
-      <AddRow />
+      {tableSettings.isCollection === false ? (
+        <AddRowArraySubTable />
+      ) : (
+        <AddRow />
+      )}
       <div /> {/* Spacer */}
       <HiddenFields />
-      <Suspense fallback={<ButtonSkeleton />}>
-        <Filters />
-      </Suspense>
+      {tableSettings.isCollection === false ? (
+        <Button
+          variant="outlined"
+          color="primary"
+          startIcon={<FilterIcon />}
+          disabled={true}
+        >
+          Filter
+        </Button>
+      ) : (
+        <Suspense fallback={<ButtonSkeleton />}>
+          <Filters />
+        </Suspense>
+      )}
       <div /> {/* Spacer */}
       <LoadedRowsStatus />
       <div style={{ flexGrow: 1, minWidth: 64 }} />
       <RowHeight />
       <div /> {/* Spacer */}
-      {tableSettings.tableType !== "collectionGroup" && (
-        <Suspense fallback={<ButtonSkeleton />}>
-          <ImportData />
-        </Suspense>
+      {disabledTools.includes("import") ? (
+        <TableToolbarButton
+          title="Import data"
+          icon={<ImportIcon />}
+          disabled={true}
+        />
+      ) : (
+        tableSettings.tableType !== "collectionGroup" && (
+          <Suspense fallback={<ButtonSkeleton />}>
+            <ImportData />
+          </Suspense>
+        )
       )}
+
       {(!projectSettings.exporterRoles ||
         projectSettings.exporterRoles.length === 0 ||
         userRoles.some((role) =>
           projectSettings.exporterRoles?.includes(role)
         )) && (
-        <Suspense fallback={<ButtonSkeleton />}>
-          <TableToolbarButton
-            title="Export/Download"
-            onClick={() => openTableModal("export")}
-            icon={<ExportIcon />}
-          />
+          <Suspense fallback={<ButtonSkeleton />}>
+            <TableToolbarButton
+              title="Export/Download"
+              onClick={() => openTableModal("export")}
+              icon={<ExportIcon />}
+              disabled={disabledTools.includes("export")}
+            />
         </Suspense>
       )}
+      
       {userRoles.includes("ADMIN") && (
         <>
           <div /> {/* Spacer */}
@@ -129,6 +163,7 @@ export default function TableToolbar() {
               }
             }}
             icon={<WebhookIcon />}
+            disabled={disabledTools.includes("webhooks")}
           />
           <TableToolbarButton
             title="Extensions"
@@ -137,6 +172,7 @@ export default function TableToolbar() {
               else openRowyRunModal({ feature: "Extensions" });
             }}
             icon={<ExtensionIcon />}
+            disabled={disabledTools.includes("extensions")}
           />
           <TableToolbarButton
             title="Cloud logs"
@@ -145,6 +181,7 @@ export default function TableToolbar() {
               if (projectSettings.rowyRunUrl) openTableModal("cloudLogs");
               else openRowyRunModal({ feature: "Cloud logs" });
             }}
+            disabled={disabledTools.includes("cloud_logs")}
           />
           {(hasDerivatives || hasExtensions) && (
             <Suspense fallback={<ButtonSkeleton />}>

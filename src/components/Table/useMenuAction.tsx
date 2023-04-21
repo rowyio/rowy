@@ -25,6 +25,8 @@ const SUPPORTED_TYPES = new Set([
   FieldType.richText,
   FieldType.url,
   FieldType.json,
+  FieldType.singleSelect,
+  FieldType.multiSelect,
 ]);
 
 export function useMenuAction(
@@ -71,6 +73,9 @@ export function useMenuAction(
           fieldName: selectedCol.fieldName,
           value: undefined,
           deleteField: true,
+          arrayTableData: {
+            index: selectedCell.arrayIndex ?? 0,
+          },
         });
     } catch (error) {
       enqueueSnackbar(`Failed to cut: ${error}`, { variant: "error" });
@@ -92,7 +97,7 @@ export function useMenuAction(
       try {
         text = await navigator.clipboard.readText();
       } catch (e) {
-        enqueueSnackbar(`Read clilboard permission denied.`, {
+        enqueueSnackbar(`Read clipboard permission denied.`, {
           variant: "error",
         });
         return;
@@ -115,6 +120,9 @@ export function useMenuAction(
         path: selectedCell.path,
         fieldName: selectedCol.fieldName,
         value: parsed,
+        arrayTableData: {
+          index: selectedCell.arrayIndex ?? 0,
+        },
       });
     } catch (error) {
       enqueueSnackbar(
@@ -130,26 +138,41 @@ export function useMenuAction(
     const selectedCol = tableSchema.columns?.[selectedCell.columnKey];
     if (!selectedCol) return setCellValue("");
     setSelectedCol(selectedCol);
-    const selectedRow = find(tableRows, ["_rowy_ref.path", selectedCell.path]);
+
+    const selectedRow = find(
+      tableRows,
+      selectedCell.arrayIndex === undefined
+        ? ["_rowy_ref.path", selectedCell.path]
+        : // if the table is an array table, we need to use the array index to find the row
+          ["_rowy_ref.arrayTableData.index", selectedCell.arrayIndex]
+    );
     setCellValue(get(selectedRow, selectedCol.fieldName));
   }, [selectedCell, tableSchema, tableRows]);
 
   const checkEnabled = useCallback(
     (func: Function) => {
+      if (!selectedCol) {
+        return function () {
+          enqueueSnackbar(`No selected cell`, {
+            variant: "error",
+          });
+        };
+      }
+      const fieldType = getFieldType(selectedCol);
       return function () {
-        if (SUPPORTED_TYPES.has(selectedCol?.type)) {
+        if (SUPPORTED_TYPES.has(fieldType)) {
           return func();
         } else {
           enqueueSnackbar(
-            `${selectedCol?.type} field cannot be copied using keyboard shortcut`,
+            `${fieldType} field cannot be copied using keyboard shortcut`,
             {
-              variant: "info",
+              variant: "error",
             }
           );
         }
       };
     },
-    [selectedCol]
+    [enqueueSnackbar, selectedCol?.type]
   );
 
   return {

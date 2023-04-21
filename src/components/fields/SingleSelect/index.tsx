@@ -21,7 +21,7 @@ export const config: IFieldConfig = {
   type: FieldType.singleSelect,
   name: "Single Select",
   group: "Select",
-  dataType: "string | null",
+  dataType: "string",
   initialValue: null,
   initializable: true,
   icon: <SingleSelectIcon />,

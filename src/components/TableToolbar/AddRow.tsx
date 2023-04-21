@@ -23,6 +23,8 @@ import {
   tableFiltersAtom,
   tableSortsAtom,
   addRowAtom,
+  _updateRowDbAtom,
+  tableColumnsOrderedAtom,
   tableSchemaAtom,
   updateTableSchemaAtom,
 } from "@src/atoms/tableScope";
@@ -211,6 +213,103 @@ export default function AddRow() {
           SubmitButtonProps={{ children: "Add row" }}
         />
       )}
+    </>
+  );
+}
+
+export function AddRowArraySubTable() {
+  const [updateRowDb] = useAtom(_updateRowDbAtom, tableScope);
+  const [open, setOpen] = useState(false);
+
+  const anchorEl = useRef<HTMLDivElement>(null);
+  const [addRowAt, setAddNewRowAt] = useState<"top" | "bottom">("bottom");
+  const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
+
+  if (!updateRowDb) return null;
+
+  const handleClick = () => {
+    const initialValues: Record<string, any> = {};
+
+    // Set initial values based on default values
+    for (const column of tableColumnsOrdered) {
+      if (column.config?.defaultValue?.type === "static")
+        initialValues[column.key] = column.config.defaultValue.value!;
+      else if (column.config?.defaultValue?.type === "null")
+        initialValues[column.key] = null;
+    }
+
+    updateRowDb("", initialValues, undefined, {
+      index: 0,
+      operation: {
+        addRow: addRowAt,
+      },
+    });
+  };
+  return (
+    <>
+      <ButtonGroup
+        variant="contained"
+        color="primary"
+        aria-label="Split button"
+        ref={anchorEl}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleClick}
+          startIcon={addRowAt === "top" ? <AddRowTopIcon /> : <AddRowIcon />}
+        >
+          Add row to {addRowAt}
+        </Button>
+
+        <Button
+          variant="contained"
+          color="primary"
+          aria-label="Select row add position"
+          aria-haspopup="menu"
+          style={{ padding: 0 }}
+          onClick={() => setOpen(true)}
+          id="add-row-menu-button"
+          aria-controls={open ? "add-row-menu" : undefined}
+          aria-expanded={open ? "true" : "false"}
+        >
+          <ArrowDropDownIcon />
+        </Button>
+      </ButtonGroup>
+
+      <Select
+        id="add-row-menu"
+        open={open}
+        onClose={() => setOpen(false)}
+        label="Row add position"
+        style={{ display: "none" }}
+        value={addRowAt}
+        onChange={(e) => setAddNewRowAt(e.target.value as typeof addRowAt)}
+        MenuProps={{
+          anchorEl: anchorEl.current,
+          MenuListProps: { "aria-labelledby": "add-row-menu-button" },
+          anchorOrigin: { horizontal: "left", vertical: "bottom" },
+          transformOrigin: { horizontal: "left", vertical: "top" },
+        }}
+      >
+        <MenuItem value="top">
+          <ListItemText
+            primary="To top"
+            secondary="Adds a new row to the top of this table"
+            secondaryTypographyProps={{ variant: "caption" }}
+          />
+        </MenuItem>
+        <MenuItem value="bottom">
+          <ListItemText
+            primary="To bottom"
+            secondary={"Adds a new row to the bottom of this table"}
+            secondaryTypographyProps={{
+              variant: "caption",
+              whiteSpace: "pre-line",
+            }}
+          />
+        </MenuItem>
+      </Select>
     </>
   );
 }

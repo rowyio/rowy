@@ -1,10 +1,7 @@
 import { Typography } from "@mui/material";
 import WarningIcon from "@mui/icons-material/WarningAmber";
 import { TableSettings } from "@src/types/table";
-import {
-  IWebhook,
-  ISecret,
-} from "@src/components/TableModals/WebhooksModal/utils";
+import { IWebhook } from "@src/components/TableModals/WebhooksModal/utils";
 
 const requestType = [
   "declare type WebHookRequest {",
@@ -101,11 +98,7 @@ export const webhookBasic = {
   // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,
   },
-  auth: (
-    webhookObject: IWebhook,
-    setWebhookObject: (w: IWebhook) => void,
-    secrets: ISecret
-  ) => {
+  Auth: (webhookObject: IWebhook, setWebhookObject: (w: IWebhook) => void) => {
     return (
       <Typography color="text.disabled">
         <WarningIcon aria-label="Warning" style={{ verticalAlign: "bottom" }} />

@@ -12,16 +12,21 @@ export interface ITableNameProps extends IShortTextComponentProps {
 
 export default function TableName({ watchedField, ...props }: ITableNameProps) {
   const {
-    field: { onChange },
+    field: { onChange, value },
     useFormMethods: { control },
     disabled,
   } = props;
 
   const watchedValue = useWatch({ control, name: watchedField } as any);
   useEffect(() => {
-    if (!disabled && typeof watchedValue === "string" && !!watchedValue)
-      onChange(startCase(watchedValue));
-  }, [watchedValue, disabled]);
+    if (!disabled) {
+      if (typeof value === "string" && value.trim() !== "") {
+        onChange(value);
+      } else if (typeof watchedValue === "string" && !!watchedValue) {
+        onChange(startCase(watchedValue));
+      }
+    }
+  }, [watchedValue, disabled, onChange, value]);
 
   return <ShortTextComponent {...props} />;
 }
