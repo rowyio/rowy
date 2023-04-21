@@ -62,7 +62,20 @@ function convertJSONToCSV(rawData: string): string | false {
     return false;
   }
   const fields = extractFields(rawDataJSONified);
-  const opts = { fields };
+  const opts = {
+    fields,
+    transforms: [
+      (value: any) => {
+        // if the value is an array, join it with a comma
+        for (let key in value) {
+          if (Array.isArray(value[key])) {
+            value[key] = value[key].join(",");
+          }
+        }
+        return value;
+      },
+    ],
+  };
 
   try {
     const csv = parseJSON(rawDataJSONified, opts);
@@ -119,20 +132,6 @@ export default function ImportFromFile() {
     };
   }, [setImportCsv]);
 
-  const parseFile = useCallback((rawData: string) => {
-    if (importTypeRef.current === "json") {
-      if (!hasProperJsonStructure(rawData)) {
-        return setError("Invalid Structure! It must be an Array");
-      }
-      const converted = convertJSONToCSV(rawData);
-      if (!converted) {
-        return setError("No columns detected");
-      }
-      rawData = converted;
-    }
-    parseCsv(rawData);
-  }, []);
-
   const parseCsv = useCallback(
     (csvString: string) =>
       parse(csvString, { delimiter: [",", "\t"] }, (err, rows) => {
@@ -149,7 +148,7 @@ export default function ImportFromFile() {
                 {}
               )
             );
-            console.log(mappedRows);
+            // console.log(mappedRows);
             setImportCsv({
               importType: importTypeRef.current,
               csvData: { columns, rows: mappedRows },
@@ -159,6 +158,23 @@ export default function ImportFromFile() {
         }
       }),
     [setImportCsv]
+  );
+
+  const parseFile = useCallback(
+    (rawData: string) => {
+      if (importTypeRef.current === "json") {
+        if (!hasProperJsonStructure(rawData)) {
+          return setError("Invalid Structure! It must be an Array");
+        }
+        const converted = convertJSONToCSV(rawData);
+        if (!converted) {
+          return setError("No columns detected");
+        }
+        rawData = converted;
+      }
+      parseCsv(rawData);
+    },
+    [parseCsv]
   );
 
   const onDrop = useCallback(

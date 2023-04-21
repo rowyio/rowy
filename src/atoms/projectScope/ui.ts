@@ -147,10 +147,6 @@ export const tableSettingsDialogSchemaAtom = atom(async (get) => {
 /** Open the Get Started checklist from anywhere */
 export const getStartedChecklistAtom = atom(false);
 
-/** Persist the state of the add row ID type */
-export const tableAddRowIdTypeAtom = atomWithStorage<
-  "decrement" | "random" | "custom"
->("__ROWY__ADD_ROW_ID_TYPE", "decrement");
 /** Persist when the user dismissed the row out of order warning */
 export const tableOutOfOrderDismissedAtom = atomWithStorage(
   "__ROWY__OUT_OF_ORDER_TOOLTIP_DISMISSED",

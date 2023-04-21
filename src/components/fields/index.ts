@@ -32,6 +32,7 @@ import ConnectTable from "./ConnectTable";
 import ConnectService from "./ConnectService";
 import Json from "./Json";
 import Code from "./Code";
+import Array from "./Array";
 import Action from "./Action";
 import Derivative from "./Derivative";
 import Formula from "./Formula";
@@ -84,6 +85,7 @@ export const FIELDS: IFieldConfig[] = [
   Json,
   Code,
   Markdown,
+  Array,
   /** CLOUD FUNCTION */
   Action,
   Derivative,

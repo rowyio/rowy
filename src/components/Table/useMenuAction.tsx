@@ -25,6 +25,8 @@ const SUPPORTED_TYPES = new Set([
   FieldType.richText,
   FieldType.url,
   FieldType.json,
+  FieldType.singleSelect,
+  FieldType.multiSelect,
 ]);
 
 export function useMenuAction(
@@ -95,7 +97,7 @@ export function useMenuAction(
       try {
         text = await navigator.clipboard.readText();
       } catch (e) {
-        enqueueSnackbar(`Read clilboard permission denied.`, {
+        enqueueSnackbar(`Read clipboard permission denied.`, {
           variant: "error",
         });
         return;
@@ -149,14 +151,22 @@ export function useMenuAction(
 
   const checkEnabled = useCallback(
     (func: Function) => {
+      if (!selectedCol) {
+        return function () {
+          enqueueSnackbar(`No selected cell`, {
+            variant: "error",
+          });
+        };
+      }
+      const fieldType = getFieldType(selectedCol);
       return function () {
-        if (SUPPORTED_TYPES.has(selectedCol?.type)) {
+        if (SUPPORTED_TYPES.has(fieldType)) {
           return func();
         } else {
           enqueueSnackbar(
-            `${selectedCol?.type} field cannot be copied using keyboard shortcut`,
+            `${fieldType} field cannot be copied using keyboard shortcut`,
             {
-              variant: "info",
+              variant: "error",
             }
           );
         }

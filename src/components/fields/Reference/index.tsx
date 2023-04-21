@@ -29,5 +29,6 @@ export const config: IFieldConfig = {
   }),
   SideDrawerField,
   filter: { operators: filterOperators, valueFormatter: valueFormatter },
+  csvExportFormatter: (value: any) => value?.path,
 };
 export default config;

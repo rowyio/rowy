@@ -34,10 +34,14 @@ export const config: IFieldConfig = {
   SideDrawerField,
   filter: { operators: filterOperators, valueFormatter },
   settings: Settings,
-  csvImportParser: (value, config) =>
-    parse(value, config?.format ?? DATE_FORMAT, new Date()),
-  csvExportFormatter: (value: any, config?: any) =>
-    format(value.toDate(), config?.format ?? DATE_FORMAT),
+  csvImportParser: (value, config) => parse(value, DATE_FORMAT, new Date()),
+  csvExportFormatter: (value: any, config?: any) => {
+    if (typeof value === "number") {
+      return format(new Date(value), DATE_FORMAT);
+    } else {
+      return format(value.toDate(), DATE_FORMAT);
+    }
+  },
 };
 export default config;
 

@@ -1,7 +1,7 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
-import { parseJSON, format } from "date-fns";
+import { format } from "date-fns";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 
 import DateTimeIcon from "@mui/icons-material/AccessTime";
@@ -46,9 +46,14 @@ export const config: IFieldConfig = {
     customInput: FilterCustomInput,
   },
   settings: Settings,
-  csvImportParser: (value) => parseJSON(value).getTime(),
-  csvExportFormatter: (value: any, config?: any) =>
-    format(value.toDate(), config?.format ?? DATE_TIME_FORMAT),
+  csvImportParser: (value) => new Date(value),
+  csvExportFormatter: (value: any, config?: any) => {
+    if (typeof value === "number") {
+      return format(new Date(value), DATE_TIME_FORMAT);
+    } else {
+      return format(value.toDate(), DATE_TIME_FORMAT);
+    }
+  },
 };
 export default config;
 

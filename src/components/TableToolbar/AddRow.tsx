@@ -16,11 +16,7 @@ import {
   ChevronDown as ArrowDropDownIcon,
 } from "@src/assets/icons";
 
-import {
-  projectScope,
-  userRolesAtom,
-  tableAddRowIdTypeAtom,
-} from "@src/atoms/projectScope";
+import { projectScope, userRolesAtom } from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -29,21 +25,32 @@ import {
   addRowAtom,
   _updateRowDbAtom,
   tableColumnsOrderedAtom,
+  tableSchemaAtom,
+  updateTableSchemaAtom,
 } from "@src/atoms/tableScope";
+import { TableIdType } from "@src/types/table";
 
 export default function AddRow() {
   const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
+  const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableFilters] = useAtom(tableFiltersAtom, tableScope);
   const [tableSorts] = useAtom(tableSortsAtom, tableScope);
+  const [updateTableSchema] = useAtom(updateTableSchemaAtom, tableScope);
   const addRow = useSetAtom(addRowAtom, tableScope);
-  const [idType, setIdType] = useAtom(tableAddRowIdTypeAtom, projectScope);
-
   const anchorEl = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [openIdModal, setOpenIdModal] = useState(false);
 
+  const idType = tableSchema.idType || "decrement";
   const forceRandomId = tableFilters.length > 0 || tableSorts.length > 0;
+
+  const handleSetIdType = async (idType: TableIdType) => {
+    // TODO(han): refactor atom - error handler
+    await updateTableSchema!({
+      idType,
+    });
+  };
 
   const handleClick = () => {
     if (idType === "random" || (forceRandomId && idType === "decrement")) {
@@ -120,7 +127,7 @@ export default function AddRow() {
         label="Row add position"
         style={{ display: "none" }}
         value={forceRandomId && idType === "decrement" ? "random" : idType}
-        onChange={(e) => setIdType(e.target.value as typeof idType)}
+        onChange={(e) => handleSetIdType(e.target.value as typeof idType)}
         MenuProps={{
           anchorEl: anchorEl.current,
           MenuListProps: { "aria-labelledby": "add-row-menu-button" },

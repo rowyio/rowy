@@ -43,6 +43,7 @@ export default function ColorPickerInput({
   const [localValue, setLocalValue] = useState(value);
   const [width, setRef] = useResponsiveWidth();
   const theme = useTheme();
+  const isDark = theme.palette.mode === "dark" ? true : false;
 
   return (
     <Box
@@ -61,6 +62,9 @@ export default function ColorPickerInput({
               boxSizing: "unset",
             },
           },
+          ".rcp-dark": {
+            "--rcp-background": "transparent",
+          },
         },
       ]}
     >
@@ -70,6 +74,7 @@ export default function ColorPickerInput({
         color={localValue}
         onChange={(color) => setLocalValue(color)}
         onChangeComplete={onChangeComplete}
+        dark={isDark}
       />
     </Box>
   );

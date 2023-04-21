@@ -64,6 +64,7 @@ import {
 } from "@src/utils/table";
 import { runRoutes } from "@src/constants/runRoutes";
 import { useSnackLogContext } from "@src/contexts/SnackLogContext";
+import useSaveTableSorts from "@src/components/Table/ColumnHeader/useSaveTableSorts";
 
 export interface IMenuModalProps {
   name: string;
@@ -115,6 +116,8 @@ export default function ColumnMenu({
 
   const [altPress] = useAtom(altPressAtom, projectScope);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  const triggerSaveTableSorts = useSaveTableSorts(canEditColumns);
 
   if (!columnMenu) return null;
   const { column, anchorEl } = columnMenu;
@@ -189,6 +192,9 @@ export default function ColumnMenu({
         setTableSorts(
           isSorted && !isAsc ? [] : [{ key: sortKey, direction: "desc" }]
         );
+        if (!isSorted || isAsc) {
+          triggerSaveTableSorts([{ key: sortKey, direction: "desc" }]);
+        }
         handleClose();
       },
       active: isSorted && !isAsc,
@@ -203,6 +209,9 @@ export default function ColumnMenu({
         setTableSorts(
           isSorted && isAsc ? [] : [{ key: sortKey, direction: "asc" }]
         );
+        if (!isSorted || !isAsc) {
+          triggerSaveTableSorts([{ key: sortKey, direction: "asc" }]);
+        }
         handleClose();
       },
       active: isSorted && isAsc,

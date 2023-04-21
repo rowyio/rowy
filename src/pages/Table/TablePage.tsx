@@ -33,6 +33,7 @@ import {
   tableSchemaAtom,
   columnModalAtom,
   tableModalAtom,
+  tableSortsAtom,
 } from "@src/atoms/tableScope";
 import useBeforeUnload from "@src/hooks/useBeforeUnload";
 import ActionParamsProvider from "@src/components/fields/Action/FormDialog/Provider";

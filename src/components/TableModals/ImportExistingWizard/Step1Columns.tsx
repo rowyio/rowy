@@ -117,7 +117,11 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
                   color="default"
                 />
               }
-              label={selectedFields.length == allFields.length ? "Clear all" : "Select all"}
+              label={
+                selectedFields.length === allFields.length
+                  ? "Clear all"
+                  : "Select all"
+              }
               sx={{
                 height: 42,
                 mr: 0,

@@ -113,7 +113,12 @@ export default function AuthLayout({
         }
       >
         {title && (
-          <Typography component="h1" variant="h4" align="center" sx={{ mt: -1 }}>
+          <Typography
+            component="h1"
+            variant="h4"
+            align="center"
+            sx={{ mt: -1 }}
+          >
             {title}
           </Typography>
         )}

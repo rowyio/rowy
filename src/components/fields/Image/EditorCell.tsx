@@ -16,6 +16,15 @@ import useFileUpload from "@src/components/fields/File/useFileUpload";
 import { IMAGE_MIME_TYPES } from "./index";
 import { imgSx, thumbnailSx, deleteImgHoverSx } from "./DisplayCell";
 
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+  ResponderProvided,
+} from "react-beautiful-dnd";
+
 export default function Image_({
   column,
   value,
@@ -26,11 +35,17 @@ export default function Image_({
 }: IEditorCellProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
 
-  const { loading, progress, handleDelete, localFiles, dropzoneState } =
-    useFileUpload(_rowy_ref, column.key, {
-      multiple: true,
-      accept: IMAGE_MIME_TYPES,
-    });
+  const {
+    loading,
+    progress,
+    handleDelete,
+    localFiles,
+    dropzoneState,
+    handleUpdate,
+  } = useFileUpload(_rowy_ref, column.key, {
+    multiple: true,
+    accept: IMAGE_MIME_TYPES,
+  });
 
   const localImages = useMemo(
     () =>
@@ -42,6 +57,28 @@ export default function Image_({
 
   const { getRootProps, getInputProps, isDragActive } = dropzoneState;
   const dropzoneProps = getRootProps();
+
+  const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
+    const { destination, source } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    const newValue = Array.from(value);
+
+    newValue.splice(source.index, 1);
+    newValue.splice(destination.index, 0, value[source.index]);
+
+    handleUpdate([...newValue]);
+  };
 
   let thumbnailSize = "100x100";
   if (rowHeight > 50) thumbnailSize = "200x200";
@@ -82,62 +119,102 @@ export default function Image_({
           marginLeft: "0 !important",
         }}
       >
-        <Grid container spacing={0.5} wrap="nowrap">
-          {Array.isArray(value) &&
-            value.map((file: FileValue, i) => (
-              <Grid item key={file.downloadURL}>
-                <ButtonBase
-                  aria-label="Delete…"
-                  sx={imgSx(rowHeight)}
-                  className="img"
-                  onClick={() => {
-                    confirm({
-                      title: "Delete image?",
-                      body: "This image cannot be recovered after",
-                      confirm: "Delete",
-                      confirmColor: "error",
-                      handleConfirm: () => handleDelete(file),
-                    });
-                  }}
-                  disabled={disabled}
-                  tabIndex={tabIndex}
-                >
-                  <Thumbnail
-                    imageUrl={file.downloadURL}
-                    size={thumbnailSize}
-                    objectFit="contain"
-                    sx={thumbnailSx}
-                  />
-                  <Grid
-                    container
-                    justifyContent="center"
-                    alignItems="center"
-                    sx={deleteImgHoverSx}
-                  >
-                    <DeleteIcon color="error" />
-                  </Grid>
-                </ButtonBase>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="image-droppable" direction="horizontal">
+            {(provided) => (
+              <Grid
+                container
+                spacing={0.5}
+                wrap="nowrap"
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {Array.isArray(value) &&
+                  value.map((file: FileValue, i) => (
+                    <Draggable
+                      key={file.downloadURL}
+                      draggableId={file.downloadURL}
+                      index={i}
+                    >
+                      {(provided) => (
+                        <Grid
+                          item
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            ...provided.draggableProps.style,
+                          }}
+                        >
+                          {value.length > 1 && (
+                            <div
+                              {...provided.dragHandleProps}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <DragIndicatorIcon />
+                            </div>
+                          )}
+                          <ButtonBase
+                            aria-label="Delete…"
+                            sx={imgSx(rowHeight)}
+                            className="img"
+                            onClick={() => {
+                              confirm({
+                                title: "Delete image?",
+                                body: "This image cannot be recovered after",
+                                confirm: "Delete",
+                                confirmColor: "error",
+                                handleConfirm: () => handleDelete(file),
+                              });
+                            }}
+                            disabled={disabled}
+                            tabIndex={tabIndex}
+                          >
+                            <Thumbnail
+                              imageUrl={file.downloadURL}
+                              size={thumbnailSize}
+                              objectFit="contain"
+                              sx={thumbnailSx}
+                            />
+                            <Grid
+                              container
+                              justifyContent="center"
+                              alignItems="center"
+                              sx={deleteImgHoverSx}
+                            >
+                              <DeleteIcon color="error" />
+                            </Grid>
+                          </ButtonBase>
+                        </Grid>
+                      )}
+                    </Draggable>
+                  ))}
+                {localImages &&
+                  localImages.map((image) => (
+                    <Grid item>
+                      <Box
+                        sx={[
+                          imgSx(rowHeight),
+                          {
+                            boxShadow: (theme) =>
+                              `0 0 0 1px ${theme.palette.divider} inset`,
+                          },
+                        ]}
+                        style={{
+                          backgroundImage: `url("${image.localURL}")`,
+                        }}
+                      />
+                    </Grid>
+                  ))}
+                {provided.placeholder}
               </Grid>
-            ))}
-
-          {localImages &&
-            localImages.map((image) => (
-              <Grid item>
-                <Box
-                  sx={[
-                    imgSx(rowHeight),
-                    {
-                      boxShadow: (theme) =>
-                        `0 0 0 1px ${theme.palette.divider} inset`,
-                    },
-                  ]}
-                  style={{
-                    backgroundImage: `url("${image.localURL}")`,
-                  }}
-                />
-              </Grid>
-            ))}
-        </Grid>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
 
       {!loading ? (

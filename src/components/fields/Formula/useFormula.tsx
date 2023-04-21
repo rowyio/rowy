@@ -2,17 +2,23 @@ import { useEffect, useMemo, useState } from "react";
 import { pick, zipObject } from "lodash-es";
 import { useAtom } from "jotai";
 
-import { TableRow } from "@src/types/table";
+import { TableRow, TableRowRef } from "@src/types/table";
 import { tableColumnsOrderedAtom, tableScope } from "@src/atoms/tableScope";
 
-import { listenerFieldTypes, useDeepCompareMemoize } from "./util";
+import {
+  listenerFieldTypes,
+  serializeRef,
+  useDeepCompareMemoize,
+} from "./util";
 
 export const useFormula = ({
   row,
+  ref,
   listenerFields,
   formulaFn,
 }: {
   row: TableRow;
+  ref: TableRowRef;
   listenerFields: string[];
   formulaFn: string;
 }) => {
@@ -58,10 +64,13 @@ export const useFormula = ({
       setLoading(false);
     };
 
-    worker.postMessage({
-      formulaFn,
-      row: availableFields,
-    });
+    worker.postMessage(
+      JSON.stringify({
+        formulaFn,
+        row: availableFields,
+        ref: serializeRef(ref.path),
+      })
+    );
 
     return () => {
       worker.terminate();
