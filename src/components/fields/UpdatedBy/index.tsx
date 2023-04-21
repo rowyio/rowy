@@ -29,5 +29,6 @@ export const config: IFieldConfig = {
   TableCell: withRenderTableCell(DisplayCell, null),
   SideDrawerField,
   settings: Settings,
+  requireCollectionTable: true,
 };
 export default config;

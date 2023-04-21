@@ -34,7 +34,7 @@ export default function EmptyTable() {
       : false;
   let contents = <></>;
 
-  if (hasData) {
+  if (tableSettings.isCollection !== false && hasData) {
     contents = (
       <>
         <div>
@@ -72,47 +72,56 @@ export default function EmptyTable() {
             Get started
           </Typography>
           <Typography>
-            There is no data in the Firestore collection:
+            {tableSettings.isCollection === false
+              ? "There is no data in this Array Sub Table:"
+              : "There is no data in the Firestore collection:"}
             <br />
-            <code>{tableSettings.collection}</code>
+            <code>
+              {tableSettings.collection}
+              {tableSettings.subTableKey?.length &&
+                `.${tableSettings.subTableKey}`}
+            </code>
           </Typography>
         </div>
-
         <Grid container spacing={1}>
-          <Grid item xs>
-            <Typography paragraph>
-              You can import data from an external source:
-            </Typography>
+          {tableSettings.isCollection !== false && (
+            <>
+              <Grid item xs>
+                <Typography paragraph>
+                  You can import data from an external source:
+                </Typography>
 
-            <ImportData
-              render={(onClick) => (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<ImportIcon />}
-                  onClick={onClick}
-                >
-                  Import data
-                </Button>
-              )}
-              PopoverProps={{
-                anchorOrigin: {
-                  vertical: "bottom",
-                  horizontal: "center",
-                },
-                transformOrigin: {
-                  vertical: "top",
-                  horizontal: "center",
-                },
-              }}
-            />
-          </Grid>
+                <ImportData
+                  render={(onClick) => (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      startIcon={<ImportIcon />}
+                      onClick={onClick}
+                    >
+                      Import data
+                    </Button>
+                  )}
+                  PopoverProps={{
+                    anchorOrigin: {
+                      vertical: "bottom",
+                      horizontal: "center",
+                    },
+                    transformOrigin: {
+                      vertical: "top",
+                      horizontal: "center",
+                    },
+                  }}
+                />
+              </Grid>
 
-          <Grid item>
-            <Divider orientation="vertical">
-              <Typography variant="overline">or</Typography>
-            </Divider>
-          </Grid>
+              <Grid item>
+                <Divider orientation="vertical">
+                  <Typography variant="overline">or</Typography>
+                </Divider>
+              </Grid>
+            </>
+          )}
 
           <Grid item xs>
             <Typography paragraph>

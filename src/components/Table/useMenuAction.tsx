@@ -73,6 +73,9 @@ export function useMenuAction(
           fieldName: selectedCol.fieldName,
           value: undefined,
           deleteField: true,
+          arrayTableData: {
+            index: selectedCell.arrayIndex ?? 0,
+          },
         });
     } catch (error) {
       enqueueSnackbar(`Failed to cut: ${error}`, { variant: "error" });
@@ -117,6 +120,9 @@ export function useMenuAction(
         path: selectedCell.path,
         fieldName: selectedCol.fieldName,
         value: parsed,
+        arrayTableData: {
+          index: selectedCell.arrayIndex ?? 0,
+        },
       });
     } catch (error) {
       enqueueSnackbar(
@@ -132,7 +138,14 @@ export function useMenuAction(
     const selectedCol = tableSchema.columns?.[selectedCell.columnKey];
     if (!selectedCol) return setCellValue("");
     setSelectedCol(selectedCol);
-    const selectedRow = find(tableRows, ["_rowy_ref.path", selectedCell.path]);
+
+    const selectedRow = find(
+      tableRows,
+      selectedCell.arrayIndex === undefined
+        ? ["_rowy_ref.path", selectedCell.path]
+        : // if the table is an array table, we need to use the array index to find the row
+          ["_rowy_ref.arrayTableData.index", selectedCell.arrayIndex]
+    );
     setCellValue(get(selectedRow, selectedCol.fieldName));
   }, [selectedCell, tableSchema, tableRows]);
 
@@ -159,7 +172,7 @@ export function useMenuAction(
         }
       };
     },
-    [selectedCol]
+    [enqueueSnackbar, selectedCol?.type]
   );
 
   return {
