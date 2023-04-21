@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Editor, { EditorProps } from "@monaco-editor/react";
+import Editor, { EditorProps, Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor/esm/vs/editor/editor.api";
 
 import { useTheme, Box, BoxProps, AppBar, Toolbar } from "@mui/material";
@@ -72,6 +72,36 @@ export default function CodeEditor({
     onValidate?.(markers);
   };
 
+  const validate = (monaco: Monaco, model: editor.ITextModel) => {
+    const markers = [];
+    for (let i = 1; i < model.getLineCount() + 1; i++) {
+      const range = {
+        startLineNumber: i,
+        startColumn: 1,
+        endLineNumber: i,
+        endColumn: model.getLineLength(i) + 1,
+      };
+      const line = model.getValueInRange(range);
+      for (const keyword of ["console.log", "console.warn", "console.error"]) {
+        const consoleLogIndex = line.indexOf(keyword);
+        if (consoleLogIndex >= 0) {
+          markers.push({
+            message: `Replace with ${keyword.replace(
+              "console",
+              "logging"
+            )}: Rowy Cloud Logging provides a better experience to view logs. Simply replace 'console' with 'logging'. \n\nhttps://docs.rowy.io/cloud-logs`,
+            severity: monaco.MarkerSeverity.Warning,
+            startLineNumber: range.startLineNumber,
+            endLineNumber: range.endLineNumber,
+            startColumn: consoleLogIndex + 1,
+            endColumn: consoleLogIndex + keyword.length + 1,
+          });
+        }
+      }
+    }
+    monaco.editor.setModelMarkers(model, "owner", markers);
+  };
+
   return (
     <TrapFocus open={fullScreen}>
       <Box
@@ -94,6 +124,12 @@ export default function CodeEditor({
           beforeMount={(monaco) => {
             monaco.editor.defineTheme("github-light", githubLightTheme as any);
             monaco.editor.defineTheme("github-dark", githubDarkTheme as any);
+            monaco.editor.onDidCreateModel((model) => {
+              validate(monaco, model);
+              model.onDidChangeContent(() => {
+                validate(monaco, model);
+              });
+            });
           }}
           onMount={(editor) => {
             if (onFocus) editor.onDidFocusEditorWidget(onFocus);

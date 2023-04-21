@@ -35,18 +35,20 @@ export enum FieldType {
   json = "JSON",
   code = "CODE",
   markdown = "MARKDOWN",
+  array = "ARRAY",
   // CLOUD FUNCTION
   action = "ACTION",
   derivative = "DERIVATIVE",
   aggregate = "AGGREGATE",
   status = "STATUS",
+  // CLIENT FUNCTION
+  formula = "FORMULA",
   // AUDIT
   createdBy = "CREATED_BY",
   updatedBy = "UPDATED_BY",
   createdAt = "CREATED_AT",
   updatedAt = "UPDATED_AT",
   // METADATA
-
   user = "USER",
   id = "ID",
   last = "LAST",

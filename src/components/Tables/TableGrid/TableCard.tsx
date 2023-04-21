@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   Card,
@@ -25,6 +25,7 @@ export default function TableCard({
   link,
   actions,
 }: ITableCardProps) {
+  const navigate = useNavigate();
   return (
     <Card style={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <CardActionArea component={Link} to={link}>
@@ -46,7 +47,11 @@ export default function TableCard({
               backgroundColor: "action.input",
               borderRadius: 1,
               overflow: "hidden",
+              "&:hover": {
+                cursor: "pointer",
+              },
             }}
+            onClick={() => navigate(link)}
           >
             <Box
               sx={{

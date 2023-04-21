@@ -164,7 +164,7 @@ export const tableRowsDbAtom = atom<TableRow[]>([]);
 
 /** Combine tableRowsLocal and tableRowsDb */
 export const tableRowsAtom = atom<TableRow[]>((get) => {
-  const rowsDb = [...get(tableRowsDbAtom)];
+  const rowsDb = get(tableRowsDbAtom);
   const rowsLocal = get(tableRowsLocalAtom);
 
   // Optimization: create Map of rowsDb by path to index for faster lookup
@@ -178,15 +178,17 @@ export const tableRowsAtom = atom<TableRow[]>((get) => {
     if (rowsDbMap.has(row._rowy_ref.path)) {
       const index = rowsDbMap.get(row._rowy_ref.path)!;
       const merged = updateRowData({ ...rowsDb[index] }, row);
-      rowsDb.splice(index, 1);
+      rowsDbMap.delete(row._rowy_ref.path);
       return merged;
     }
-
     return row;
   });
 
   // Merge the two arrays
-  return [...rowsLocalToMerge, ...rowsDb];
+  return [
+    ...rowsLocalToMerge,
+    ...rowsDb.filter((row) => rowsDbMap.has(row._rowy_ref.path)),
+  ];
 });
 
 /** Store next page state for infinite scroll */

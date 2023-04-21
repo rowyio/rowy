@@ -4,7 +4,7 @@ import { get } from "lodash-es";
 import { useAtom, useSetAtom } from "jotai";
 import { httpsCallable } from "firebase/functions";
 
-import { Fab, FabProps } from "@mui/material";
+import { Button, Fab, FabProps, Link } from "@mui/material";
 import RunIcon from "@mui/icons-material/PlayArrow";
 import RedoIcon from "@mui/icons-material/Refresh";
 import UndoIcon from "@mui/icons-material/Undo";
@@ -118,11 +118,32 @@ export default function ActionFab({
       } else {
         result = await handleCallableAction(data);
       }
-      const { message, success } = result ?? {};
+      const { message, success, link } = result ?? {};
       enqueueSnackbar(
         typeof message === "string" ? message : JSON.stringify(message),
         {
           variant: success ? "success" : "error",
+          action: link ? (
+            typeof link === "string" ? (
+              <Button
+                variant="outlined"
+                href={link}
+                component={Link}
+                target="_blank"
+              >
+                Link
+              </Button>
+            ) : (
+              <Button
+                href={link.url}
+                component={Link}
+                variant="outlined"
+                target="_blank"
+              >
+                {link.label}
+              </Button>
+            )
+          ) : undefined,
         }
       );
     } catch (e) {

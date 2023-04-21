@@ -65,16 +65,28 @@ export default function Settings({
     : config.derivativeFn
     ? config.derivativeFn
     : config?.script
-    ? `const derivative:Derivative = async ({row,ref,db,storage,auth})=>{
-    ${config.script.replace(/utilFns.getSecret/g, "rowy.secrets.get")}
-  }`
-    : `const derivative:Derivative = async ({row,ref,db,storage,auth})=>{
-    // Write your derivative code here
-    // for example:
-    // const sum = row.a + row.b;
-    // return sum;
-    // checkout the documentation for more info: https://docs.rowy.io/field-types/derivative
-  }`;
+    ? `const derivative:Derivative = async ({row,ref,db,storage,auth,logging})=>{
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("derivative started")
+  
+  // Import any NPM package needed
+  // const lodash = require('lodash');
+  
+  ${config.script.replace(/utilFns.getSecret/g, "rowy.secrets.get")}
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+}`
+    : `const derivative:Derivative = async ({row,ref,db,storage,auth,logging})=>{
+  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  logging.log("derivative started")
+  
+  // Import any NPM package needed
+  // const lodash = require('lodash');
+  
+  // Example:
+  // const sum = row.a + row.b;
+  // return sum;
+  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+}`;
 
   return (
     <>

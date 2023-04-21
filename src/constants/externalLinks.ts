@@ -52,6 +52,8 @@ const WIKI_PATHS = {
   fieldTypesAction: "/field-types/action",
   fieldTypesAdd: "/field-types/add",
 
+  fieldTypesFormula: "/field-types/formula",
+
   rowyRun: "/rowy-run",
 
   extensions: "/extensions",
@@ -65,6 +67,7 @@ const WIKI_PATHS = {
   importAirtable: "/import-export-data/import-airtable",
   importAirtableApiKey: "/import-export-data/import-airtable#api-key",
   importAirtableTableUrl: "/import-export-data/import-airtable#table-url",
+  cloudLogs: "/cloud-logs",
 };
 export const WIKI_LINKS = mapValues(
   WIKI_PATHS,

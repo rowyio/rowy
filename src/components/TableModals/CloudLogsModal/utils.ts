@@ -12,21 +12,72 @@ export const cloudLogFetcher = (
   // https://cloud.google.com/logging/docs/view/logging-query-language
   let logQuery: string[] = [];
 
+  if (["extension", "webhook", "column"].includes(cloudLogFilters.type)) {
+    // mandatory filter to remove unwanted gcp diagnostic logs
+    logQuery.push(
+      ["backend-scripts", "backend-function", "hooks"]
+        .map((loggingSource) => {
+          return `jsonPayload.loggingSource = "${loggingSource}"`;
+        })
+        .join(encodeURIComponent(" OR "))
+    );
+  }
+
   switch (cloudLogFilters.type) {
+    case "extension":
+      logQuery.push(`logName = "projects/${projectId}/logs/rowy-logging"`);
+      logQuery.push(`jsonPayload.tablePath : "${tablePath}"`);
+      if (cloudLogFilters?.extension?.length) {
+        logQuery.push(
+          cloudLogFilters.extension
+            .map((extensionName) => {
+              return `jsonPayload.extensionName = "${extensionName}"`;
+            })
+            .join(encodeURIComponent(" OR "))
+        );
+      } else {
+        logQuery.push(`jsonPayload.functionType = "extension"`);
+      }
+      break;
+
     case "webhook":
-      logQuery.push(
-        `logName = "projects/${projectId}/logs/rowy-webhook-events"`
-      );
-      logQuery.push(`jsonPayload.url : "${tablePath}"`);
-      if (
-        Array.isArray(cloudLogFilters.webhook) &&
-        cloudLogFilters.webhook.length > 0
-      )
+      logQuery.push(`jsonPayload.tablePath : "${tablePath}"`);
+      if (cloudLogFilters?.webhook?.length) {
         logQuery.push(
           cloudLogFilters.webhook
             .map((id) => `jsonPayload.url : "${id}"`)
             .join(encodeURIComponent(" OR "))
         );
+      } else {
+        logQuery.push(`jsonPayload.functionType = "hooks"`);
+      }
+      break;
+
+    case "column":
+      logQuery.push(`jsonPayload.tablePath : "${tablePath}"`);
+      if (cloudLogFilters?.column?.length) {
+        logQuery.push(
+          cloudLogFilters.column
+            .map((column) => {
+              return `jsonPayload.fieldName = "${column}"`;
+            })
+            .join(encodeURIComponent(" OR "))
+        );
+      } else {
+        logQuery.push(
+          [
+            "connector",
+            "derivative-script",
+            "action",
+            "derivative-function",
+            "defaultValue",
+          ]
+            .map((functionType) => {
+              return `jsonPayload.functionType = "${functionType}"`;
+            })
+            .join(encodeURIComponent(" OR "))
+        );
+      }
       break;
 
     case "audit":
