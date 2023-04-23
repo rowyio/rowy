@@ -81,6 +81,8 @@ export interface ISideDrawerFieldProps<T = any> {
   /** The row’s _rowy_ref object */
   _rowy_ref: TableRowRef;
 
+  row: TableRow;
+
   /** The field’s local value – synced with db when field is not dirty */
   value: T;
   /** Call when the user has input but changes have not been saved */

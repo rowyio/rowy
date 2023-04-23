@@ -4,6 +4,12 @@ import withRenderTableCell from "@src/components/Table/TableCell/withRenderTable
 import DisplayCell from "./DisplayCell";
 
 import Settings, { settingsValidator } from "./Settings";
+import { lazy } from "react";
+
+const SideDrawerField = lazy(
+  () =>
+    import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Number" */)
+);
 
 export const config: IFieldConfig = {
   type: FieldType.formula,
@@ -16,7 +22,7 @@ export const config: IFieldConfig = {
   TableCell: withRenderTableCell(DisplayCell as any, null, undefined, {
     usesRowData: true,
   }),
-  SideDrawerField: () => null as any,
+  SideDrawerField,
   settings: Settings,
   settingsValidator: settingsValidator,
   requireConfiguration: true,

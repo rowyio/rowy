@@ -24,6 +24,7 @@ import {
 } from "@src/atoms/tableScope";
 import { formatSubTableName } from "@src/utils/table";
 import { TableRow } from "@src/types/table";
+import { FieldType } from "@src/components/fields/types";
 
 export interface ISideDrawerFieldsProps {
   row: TableRow;
@@ -112,7 +113,8 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
           key={field.key ?? i}
           field={field}
           disabled={Boolean(
-            field.editable === false ||
+            field.type === FieldType.formula ||
+              field.editable === false ||
               (tableSettings.readOnly && !userRoles.includes("ADMIN"))
           )}
           hidden={userDocHiddenFields.includes(field.key)}
@@ -121,6 +123,7 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
           onDirty={onDirty}
           onSubmit={onSubmit}
           isDirty={dirtyField === field.key}
+          row={row}
         />
       ))}
 
