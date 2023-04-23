@@ -99,6 +99,17 @@ export const MemoizedField = memo(
     // Re-render if column config changes
     if (!isEqual(prev.field, next.field)) return false;
 
+    if (prev.field.type === FieldType.formula) {
+      const listenerFields = prev.field.config?.listenerFields || [];
+      if (
+        listenerFields.some(
+          (field: string) => !isEqual(prev.row[field], next.row[field])
+        )
+      ) {
+        return false;
+      }
+    }
+
     // If dirty, don’t re-render. This has the effect of the field only
     // being re-rendered if it’s not dirty.
     if (prev.isDirty || next.isDirty) return true;
