@@ -22,8 +22,7 @@ export const config: IFieldConfig = {
   initialValue: null,
   icon: <ArraySubTableIcon />,
   settings: Settings,
-  description:
-    "Connects to a sub-table in the current row. Also displays number of rows inside the sub-table. Max sub-table depth: 100.",
+  description: "Connects to a array-table in the current row.",
   TableCell: withRenderTableCell(DisplayCell, null, "focus", {
     usesRowData: true,
     disablePadding: true,
