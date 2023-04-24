@@ -1,5 +1,4 @@
 import { lazy } from "react";
-import { GeoPoint } from "firebase/firestore";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
@@ -15,7 +14,7 @@ const SideDrawerField = lazy(
 
 export const config: IFieldConfig = {
   type: FieldType.geoPoint,
-  name: "GeoPoint (Alpha)",
+  name: "GeoPoint",
   group: "Numeric",
   dataType: "{latitude:number; longitude:number}",
   initialValue: {},
