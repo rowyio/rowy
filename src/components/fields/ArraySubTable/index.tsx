@@ -12,17 +12,17 @@ const SideDrawerField = lazy(
     )
 );
 const Settings = lazy(
-  () => import("./Settings" /* webpackChunkName: "Settings-ArraySubtable" */)
+  () => import("./Settings" /* webpackChunkName: "Settings-ArraySubTable" */)
 );
 export const config: IFieldConfig = {
   type: FieldType.arraySubTable,
-  name: "Array-Sub-Table",
+  name: "Array SubTable (Alpha)",
   group: "Connection",
   dataType: "undefined",
   initialValue: null,
   icon: <ArraySubTableIcon />,
   settings: Settings,
-  description: "Connects to a array-table in the current row.",
+  description: "A sub-table representing an array of objects in the row",
   TableCell: withRenderTableCell(DisplayCell, null, "focus", {
     usesRowData: true,
     disablePadding: true,
