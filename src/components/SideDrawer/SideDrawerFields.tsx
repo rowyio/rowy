@@ -116,24 +116,22 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
     <Stack spacing={3}>
       <SaveState state={saveState} />
 
-      {fields.map((field, i) => {
-        return (
-          <MemoizedField
-            key={field.key + i}
-            field={field}
-            disabled={Boolean(
-              field.editable === false ||
-                (tableSettings.readOnly && !userRoles.includes("ADMIN"))
-            )}
-            hidden={userDocHiddenFields.includes(field.key)}
-            _rowy_ref={row._rowy_ref}
-            value={row[field.fieldName] || undefined}
-            onDirty={onDirty}
-            onSubmit={onSubmit}
-            isDirty={dirtyField === field.key}
-          />
-        );
-      })}
+      {fields.map((field, i) => (
+        <MemoizedField
+          key={field.key ?? i}
+          field={field}
+          disabled={Boolean(
+            field.editable === false ||
+              (tableSettings.readOnly && !userRoles.includes("ADMIN"))
+          )}
+          hidden={userDocHiddenFields.includes(field.key)}
+          _rowy_ref={row._rowy_ref}
+          value={get(row, field.fieldName)}
+          onDirty={onDirty}
+          onSubmit={onSubmit}
+          isDirty={dirtyField === field.key}
+        />
+      ))}
 
       <FieldWrapper
         type="debug"
