@@ -72,7 +72,7 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
           value,
           deleteField: undefined,
           arrayTableData: {
-            index: selectedCell.arrayIndex ?? 0,
+            index: selectedCell.arrayIndex,
           },
         });
 
@@ -92,6 +92,7 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
   const fields = showHiddenFields
     ? tableColumnsOrdered
     : tableColumnsOrdered.filter((f) => !userDocHiddenFields.includes(f.key));
+  console.log({ row, fields });
 
   // Scroll to selected column
   const selectedColumnKey = selectedCell?.columnKey;
@@ -116,22 +117,32 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
     <Stack spacing={3}>
       <SaveState state={saveState} />
 
-      {fields.map((field, i) => (
-        <MemoizedField
-          key={field.key ?? i}
-          field={field}
-          disabled={Boolean(
-            field.editable === false ||
-              (tableSettings.readOnly && !userRoles.includes("ADMIN"))
-          )}
-          hidden={userDocHiddenFields.includes(field.key)}
-          _rowy_ref={row._rowy_ref}
-          value={get(row, field.fieldName)}
-          onDirty={onDirty}
-          onSubmit={onSubmit}
-          isDirty={dirtyField === field.key}
-        />
-      ))}
+      {fields.map((field, i) => {
+        // console.log({
+        //   field,
+        //   r: row._rowy_ref,
+        // });
+        //   u: get(row, field.fieldName),
+        //   p: row[field.fieldName],
+        //   k: field.key,
+        // });
+        return (
+          <MemoizedField
+            key={field.key + i}
+            field={field}
+            disabled={Boolean(
+              field.editable === false ||
+                (tableSettings.readOnly && !userRoles.includes("ADMIN"))
+            )}
+            hidden={userDocHiddenFields.includes(field.key)}
+            _rowy_ref={row._rowy_ref}
+            value={row[field.fieldName] || undefined}
+            onDirty={onDirty}
+            onSubmit={onSubmit}
+            isDirty={dirtyField === field.key}
+          />
+        );
+      })}
 
       <FieldWrapper
         type="debug"

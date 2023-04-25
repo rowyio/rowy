@@ -74,7 +74,7 @@ export function useMenuAction(
           value: undefined,
           deleteField: true,
           arrayTableData: {
-            index: selectedCell.arrayIndex ?? 0,
+            index: selectedCell.arrayIndex,
           },
         });
     } catch (error) {
@@ -121,7 +121,7 @@ export function useMenuAction(
         fieldName: selectedCol.fieldName,
         value: parsed,
         arrayTableData: {
-          index: selectedCell.arrayIndex ?? 0,
+          index: selectedCell.arrayIndex,
         },
       });
     } catch (error) {
