@@ -201,7 +201,7 @@ export function useFirestoreDocAsCollectionWithAtom<T = TableRow>(
   useEffect(() => {
     if (deleteDocAtom) {
       setDeleteRowAtom(() => (_: string, options?: ArrayTableRowData) => {
-        if (!options) return;
+        if (!options || !options.index) return;
         const updateFunction = deleteRow(options.index);
         return setRows(updateFunction);
       });
@@ -231,11 +231,15 @@ export function useFirestoreDocAsCollectionWithAtom<T = TableRow>(
             if (options === undefined) return;
 
             const deleteRowFields = () => {
+              if (options.index === undefined) return;
+
               const updateFunction = deleteField(options.index, deleteFields);
               return setRows(updateFunction);
             };
 
             const updateRowValues = () => {
+              if (options.index === undefined) return;
+
               const updateFunction = updateTable(options.index, update);
               return setRows(updateFunction);
             };
