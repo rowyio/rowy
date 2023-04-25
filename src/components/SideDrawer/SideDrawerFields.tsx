@@ -92,7 +92,6 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
   const fields = showHiddenFields
     ? tableColumnsOrdered
     : tableColumnsOrdered.filter((f) => !userDocHiddenFields.includes(f.key));
-  console.log({ row, fields });
 
   // Scroll to selected column
   const selectedColumnKey = selectedCell?.columnKey;
@@ -118,14 +117,6 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
       <SaveState state={saveState} />
 
       {fields.map((field, i) => {
-        // console.log({
-        //   field,
-        //   r: row._rowy_ref,
-        // });
-        //   u: get(row, field.fieldName),
-        //   p: row[field.fieldName],
-        //   k: field.key,
-        // });
         return (
           <MemoizedField
             key={field.key + i}
