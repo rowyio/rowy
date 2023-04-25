@@ -43,19 +43,9 @@ export const MemoizedField = memo(
       onSubmit(field.fieldName, localValueRef.current);
     }, [field.fieldName, localValueRef, onSubmit]);
 
-    // Derivative/aggregate field support
-    let type = field.type;
-    if (
-      field.config &&
-      field.config.renderFieldType &&
-      field.type !== FieldType.formula
-    ) {
-      type = field.config.renderFieldType;
-    }
-
     const fieldComponent: IFieldConfig["SideDrawerField"] = getFieldProp(
       "SideDrawerField",
-      type
+      field.type
     );
 
     // Should not reach this state

@@ -1,10 +1,14 @@
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
-import { ISideDrawerFieldProps } from "@src/components/fields/types";
+import {
+  IFieldConfig,
+  ISideDrawerFieldProps,
+} from "@src/components/fields/types";
 
-import { TextField } from "@mui/material";
-import { getFieldId } from "@src/components/SideDrawer/utils";
 import { useFormula } from "./useFormula";
 import { defaultFn } from "./util";
+import { getFieldProp } from "@src/components/fields";
+import { createElement } from "react";
+import { isEmpty } from "lodash-es";
 
 export default function Formula({
   column,
@@ -12,6 +16,7 @@ export default function Formula({
   onSubmit,
   disabled,
   _rowy_ref,
+  onDirty,
   row,
 }: ISideDrawerFieldProps) {
   const { result, error, loading } = useFormula({
@@ -20,6 +25,22 @@ export default function Formula({
     listenerFields: column.config?.listenerFields || [],
     formulaFn: column.config?.formulaFn || defaultFn,
   });
+
+  let type = column.type;
+  if (column.config && column.config.renderFieldType) {
+    type = column.config.renderFieldType;
+  }
+
+  const fieldComponent: IFieldConfig["SideDrawerField"] = getFieldProp(
+    "SideDrawerField",
+    type
+  );
+
+  // Should not reach this state
+  if (isEmpty(fieldComponent)) {
+    console.error("Could not find SideDrawerField component", column);
+    return null;
+  }
 
   if (error) {
     return <>Error: {error.message}</>;
@@ -30,18 +51,17 @@ export default function Formula({
   }
 
   return (
-    <TextField
-      variant="filled"
-      fullWidth
-      margin="none"
-      onChange={(e) => onChange(Number(e.target.value))}
-      onBlur={onSubmit}
-      value={result || ""}
-      id={getFieldId(column.key)}
-      label=""
-      hiddenLabel
-      disabled={disabled}
-      type="number"
-    />
+    <>
+      {createElement(fieldComponent, {
+        column,
+        _rowy_ref,
+        value: result,
+        onDirty,
+        onChange,
+        onSubmit,
+        disabled,
+        row,
+      })}
+    </>
   );
 }
