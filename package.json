@@ -90,7 +90,9 @@
     "env": "node createDotEnv",
     "target": "firebase target:apply hosting rowy",
     "deploy": "firebase deploy --only hosting",
-    "typedoc": "typedoc --options typedoc.json"
+    "typedoc": "typedoc --options typedoc.json",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "engines": {
     "node": ">=16"
@@ -129,7 +131,17 @@
       ],
       "tsdoc/syntax": "warn",
       "local-rules/no-jotai-use-atom-without-scope": "error"
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "**/*.stories.*"
+        ],
+        "rules": {
+          "import/no-anonymous-default-export": "off"
+        }
+      }
+    ]
   },
   "browserslist": {
     "production": [
@@ -148,6 +160,16 @@
   },
   "devDependencies": {
     "@craco/craco": "^6.4.3",
+    "@storybook/addon-essentials": "^7.0.7",
+    "@storybook/addon-interactions": "^7.0.7",
+    "@storybook/addon-links": "^7.0.7",
+    "@storybook/blocks": "^7.0.7",
+    "@storybook/manager-api": "^7.0.7",
+    "@storybook/preset-create-react-app": "^7.0.7",
+    "@storybook/react": "^7.0.7",
+    "@storybook/react-webpack5": "^7.0.7",
+    "@storybook/testing-library": "^0.0.14-next.2",
+    "@storybook/theming": "^7.0.7",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^14.0.4",
@@ -167,6 +189,7 @@
     "@types/seedrandom": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
+    "babel-plugin-named-exports-order": "^0.0.2",
     "craco-alias": "^3.0.1",
     "craco-swc": "^0.5.1",
     "cross-env": "^7.0.3",
@@ -180,10 +203,14 @@
     "lint-staged": ">=12.3.7",
     "monaco-editor": "^0.33.0",
     "prettier": "^2.6.2",
+    "prop-types": "^15.8.1",
     "raw-loader": "^4.0.2",
     "source-map-explorer": "^2.5.2",
+    "storybook": "^7.0.7",
     "ts-jest": "^28.0.2",
-    "typedoc": "^0.23.21"
+    "tsconfig-paths-webpack-plugin": "^4.0.1",
+    "typedoc": "^0.23.21",
+    "webpack": "^5.80.0"
   },
   "resolutions": {
     "@types/react": "^18"
