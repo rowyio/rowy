@@ -212,7 +212,7 @@ export type TableSort = {
 };
 
 export type ArrayTableRowData = {
-  index: number;
+  index?: number;
   parentField?: string;
   operation?: ArrayTableOperations;
 };

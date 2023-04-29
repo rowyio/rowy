@@ -72,7 +72,7 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
           value,
           deleteField: undefined,
           arrayTableData: {
-            index: selectedCell.arrayIndex ?? 0,
+            index: selectedCell.arrayIndex,
           },
         });
 
