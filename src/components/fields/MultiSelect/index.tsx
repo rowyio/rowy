@@ -5,6 +5,7 @@ import withRenderTableCell from "@src/components/Table/TableCell/withRenderTable
 import { MultiSelect as MultiSelectIcon } from "@src/assets/icons";
 import DisplayCell from "./DisplayCell";
 import { filterOperators } from "./Filter";
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
 
 const EditorCell = lazy(
   () => import("./EditorCell" /* webpackChunkName: "EditorCell-MultiSelect" */)
@@ -48,5 +49,6 @@ export const config: IFieldConfig = {
   filter: {
     operators: filterOperators,
   },
+  contextMenuActions: BasicContextMenuActions,
 };
 export default config;

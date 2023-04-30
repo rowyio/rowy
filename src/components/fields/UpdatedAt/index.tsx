@@ -4,6 +4,7 @@ import withRenderTableCell from "@src/components/Table/TableCell/withRenderTable
 
 import { UpdatedAt as UpdatedAtIcon } from "@src/assets/icons";
 import DisplayCell from "./DisplayCell";
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
 
 const SideDrawerField = lazy(
   () =>
@@ -29,5 +30,6 @@ export const config: IFieldConfig = {
   SideDrawerField,
   settings: Settings,
   requireCollectionTable: true,
+  contextMenuActions: BasicContextMenuActions,
 };
 export default config;
