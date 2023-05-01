@@ -130,6 +130,7 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
           onDirty={onDirty}
           onSubmit={onSubmit}
           isDirty={dirtyField === field.key}
+          row={row}
         />
       ))}
 

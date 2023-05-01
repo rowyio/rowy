@@ -92,6 +92,8 @@ export interface ISideDrawerFieldProps<T = any> {
 
   /** Field locked. Do NOT check `column.locked` */
   disabled: boolean;
+
+  row: TableRow
 }
 
 export interface ISettingsProps {
