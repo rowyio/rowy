@@ -354,7 +354,9 @@ export const updateFieldAtom = atom(
 
     const row = find(tableRows, ["_rowy_ref.path", path]);
     if (!row) throw new Error("Could not find row");
-    const isLocalRow = Boolean(find(tableRowsLocal, ["_rowy_ref.path", path]));
+    const isLocalRow =
+      fieldName.startsWith("_rowy_formulaValue_") ||
+      Boolean(find(tableRowsLocal, ["_rowy_ref.path", path]));
 
     const update: Partial<TableRow> = {};
 
@@ -422,6 +424,14 @@ export const updateFieldAtom = atom(
         row: localUpdate,
         deleteFields: deleteField ? [fieldName] : [],
       });
+
+      // TODO(han): Formula field persistence
+      // const config = find(tableColumnsOrdered, (c) => {
+      //  const [, key] = fieldName.split("_rowy_formulaValue_");
+      //  return c.key === key;
+      // });
+      // if(!config.persist) return;
+      if (fieldName.startsWith("_rowy_formulaValue")) return;
 
       // If it has no missingRequiredFields, also write to db
       // And write entire row to handle the case where it doesn’t exist in db yet
