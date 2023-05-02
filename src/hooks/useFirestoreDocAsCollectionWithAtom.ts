@@ -348,7 +348,6 @@ function useAlterArrayTable<T>({
 
       return (rows) => {
         if (addTo === "bottom") {
-          console.log("bottom", newRow(rows.length, false));
           rows.push(newRow(rows.length, false));
         } else {
           rows = [newRow(0, false), ...rows];
