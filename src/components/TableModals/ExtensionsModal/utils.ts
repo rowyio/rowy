@@ -62,7 +62,7 @@ export const triggerTypes: ExtensionTrigger[] = ["create", "update", "delete"];
 
 const extensionBodyTemplate = {
   task: `const extensionBody: TaskBody = async({row, db, change, ref, logging}) => {
-  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+ 
   logging.log("extensionBody started")
   
   // Import any NPM package needed
@@ -90,10 +90,10 @@ const extensionBodyTemplate = {
       else console.error(result)
     })
   */
-  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
 }`,
   docSync: `const extensionBody: DocSyncBody = async({row, db, change, ref, logging}) => {
-  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+ 
   logging.log("extensionBody started")
   
   return ({
@@ -101,20 +101,20 @@ const extensionBodyTemplate = {
     row: row,    // object of data to sync, usually the row itself
     targetPath: "",  // fill in the path here
   })
-  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
 }`,
   historySnapshot: `const extensionBody: HistorySnapshotBody = async({row, db, change, ref, logging}) => {
-  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+ 
   logging.log("extensionBody started")
   
   return ({
     trackedFields: [],    // a list of string of column names
     collectionId: "historySnapshots",    // optionally change the sub-collection id of where the history snapshots are stored
   })
-  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
 }`,
   algoliaIndex: `const extensionBody: AlgoliaIndexBody = async({row, db, change, ref, logging}) => {
-  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+ 
   logging.log("extensionBody started")
   
   return ({
@@ -123,34 +123,34 @@ const extensionBodyTemplate = {
     index: "",    // algolia index to sync to
     objectID: ref.id,    // algolia object ID, ref.id is one possible choice
   })
-  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
 }`,
   meiliIndex: `const extensionBody: MeiliIndexBody = async({row, db, change, ref, logging}) => {
-  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+ 
   logging.log("extensionBody started")
   
   return({
     fieldsToSync: [],    // a list of string of column names
     row: row,    // object of data to sync, usually the row itself
-    index: "",    // algolia index to sync to
-    objectID: ref.id,    // algolia object ID, ref.id is one possible choice
+    index: "",    // meili search index to sync to
+    objectID: ref.id,    // meili search object ID, ref.id is one possible choice
   })
-  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
 }`,
   bigqueryIndex: `const extensionBody: BigqueryIndexBody = async({row, db, change, ref, logging}) => {
-  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+ 
   logging.log("extensionBody started")
   
   return ({
     fieldsToSync: [],    // a list of string of column names
     row: row,    // object of data to sync, usually the row itself
-    index: "",    // algolia index to sync to
-    objectID: ref.id,    // algolia object ID, ref.id is one possible choice
+    index: "",    // bigquery dataset to sync to
+    objectID: ref.id,    // bigquery object ID, ref.id is one possible choice
   })
-  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
 }`,
   slackMessage: `const extensionBody: SlackMessageBody = async({row, db, change, ref, logging}) => {
-  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+ 
   logging.log("extensionBody started")
   
   // Import any NPM package needed
@@ -162,10 +162,10 @@ const extensionBodyTemplate = {
     text: "",    // the text parameter to pass in to slack api
     attachments: [],    // the attachments parameter to pass in to slack api
   })
-  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
 }`,
   sendgridEmail: `const extensionBody: SendgridEmailBody = async({row, db, change, ref, logging}) => {
-  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+ 
   logging.log("extensionBody started")
   
   // Import any NPM package needed
@@ -187,10 +187,10 @@ const extensionBodyTemplate = {
       // add any other custom args you want to pass to sendgrid events here
     },
   })
-  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
 }`,
   apiCall: `const extensionBody: ApiCallBody = async({row, db, change, ref, logging}) => {
-  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+ 
   logging.log("extensionBody started")
   
   // Import any NPM package needed
@@ -202,10 +202,10 @@ const extensionBodyTemplate = {
     method: "",
     callback: ()=>{},
   })
-  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
 }`,
   twilioMessage: `const extensionBody: TwilioMessageBody = async({row, db, change, ref, logging}) => {
-  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+ 
   logging.log("extensionBody started")
   
   // Import any NPM package needed
@@ -218,10 +218,10 @@ const extensionBodyTemplate = {
     to: "", // recipient phone number - eg: row.<fieldname>
     body: "Hi there!" // message text
   })
-  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
 }`,
   pushNotification: `const extensionBody: PushNotificationBody = async({row, db, change, ref, logging}) => {
-  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+ 
   logging.log("extensionBody started")
   
   // Import any NPM package needed
@@ -259,7 +259,7 @@ const extensionBodyTemplate = {
     // topic: topicName, // add topic send to subscribers
     // token: FCMtoken // add FCM token to send to specific user
   }]
-  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
 }`,
 };
 
@@ -276,11 +276,11 @@ export function emptyExtensionObject(
     requiredFields: [],
     trackedFields: [],
     conditions: `const condition: Condition = async({row, change, logging}) => {
-  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+ 
   logging.log("condition started")
   
   return true;
-  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
+  
 }`,
     lastEditor: user,
   };

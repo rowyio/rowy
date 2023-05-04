@@ -494,7 +494,11 @@ describe("deleteRow", () => {
     } = renderHook(() => useSetAtom(deleteRowAtom, tableScope));
     expect(deleteRow).toBeDefined();
 
-    await act(() => deleteRow(TEST_COLLECTION + "/row2"));
+    await act(() =>
+      deleteRow({
+        path: TEST_COLLECTION + "/row2",
+      })
+    );
 
     const {
       result: { current: tableRows },
@@ -510,7 +514,11 @@ describe("deleteRow", () => {
     } = renderHook(() => useSetAtom(deleteRowAtom, tableScope));
     expect(deleteRow).toBeDefined();
 
-    await act(() => deleteRow(TEST_COLLECTION + "/rowLocal2"));
+    await act(() =>
+      deleteRow({
+        path: TEST_COLLECTION + "/rowLocal2",
+      })
+    );
 
     const {
       result: { current: tableRows },
@@ -527,9 +535,9 @@ describe("deleteRow", () => {
     expect(deleteRow).toBeDefined();
 
     await act(() =>
-      deleteRow(
-        ["row1", "row2", "row8"].map((id) => TEST_COLLECTION + "/" + id)
-      )
+      deleteRow({
+        path: ["row1", "row2", "row8"].map((id) => TEST_COLLECTION + "/" + id),
+      })
     );
 
     const {
@@ -548,7 +556,11 @@ describe("deleteRow", () => {
     } = renderHook(() => useSetAtom(deleteRowAtom, tableScope));
     expect(deleteRow).toBeDefined();
 
-    await act(() => deleteRow(generatedRows.map((row) => row._rowy_ref.path)));
+    await act(() =>
+      deleteRow({
+        path: generatedRows.map((row) => row._rowy_ref.path),
+      })
+    );
 
     const {
       result: { current: tableRows },
@@ -563,7 +575,11 @@ describe("deleteRow", () => {
     } = renderHook(() => useSetAtom(deleteRowAtom, tableScope));
     expect(deleteRow).toBeDefined();
 
-    await act(() => deleteRow("nonExistent"));
+    await act(() =>
+      deleteRow({
+        path: "nonExistent",
+      })
+    );
 
     const {
       result: { current: tableRows },
@@ -578,7 +594,11 @@ describe("deleteRow", () => {
     } = renderHook(() => useSetAtom(deleteRowAtom, tableScope));
     expect(deleteRow).toBeDefined();
 
-    await act(() => deleteRow("nonExistent"));
+    await act(() =>
+      deleteRow({
+        path: "nonExistent",
+      })
+    );
 
     const {
       result: { current: tableRows },

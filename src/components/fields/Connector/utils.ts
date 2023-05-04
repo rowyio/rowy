@@ -11,16 +11,19 @@ export const replacer = (data: any) => (m: string, key: string) => {
   return get(data, objKey, defaultValue);
 };
 
-export const baseFunction = `const connectorFn: Connector = async ({query, row, user, logging}) => {
-  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
-  logging.log("connectorFn started")
-  
-  // Import any NPM package needed
-  // const lodash = require('lodash');
-  
-  return [];
-  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
-};`;
+export const baseFunction = `// Import any NPM package needed
+// import _ from "lodash";
+
+const connector: Connector = async ({ query, row, user, logging }) => {
+  logging.log("connector started");
+  // return [
+  //   { id: "a", name: "Apple" },
+  //   { id: "b", name: "Banana" },
+  // ];
+};
+
+export default connector;
+`;
 
 export const getLabel = (config: any, row: TableRow) => {
   if (!config.labelFormatter) {
