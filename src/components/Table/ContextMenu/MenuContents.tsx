@@ -141,6 +141,34 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
       });
     }
   };
+
+  const handleClearValue = () => {
+    const clearValue = () => {
+      updateField({
+        path: selectedCell.path,
+        fieldName: selectedColumn.fieldName,
+        arrayTableData: {
+          index: selectedCell.arrayIndex,
+        },
+        value: null,
+        deleteField: true,
+      });
+      onClose();
+    };
+
+    if (altPress || row._rowy_ref.arrayTableData !== undefined) {
+      clearValue();
+    } else {
+      confirm({
+        title: "Clear cell value?",
+        body: "The cell’s value cannot be recovered after",
+        confirm: "Delete",
+        confirmColor: "error",
+        handleConfirm: clearValue,
+      });
+    }
+  };
+
   const rowActions: IContextMenuItem[] = [
     {
       label: "Copy ID",
@@ -214,13 +242,7 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
     // Cell actions
     // TODO: Add copy and paste here
     const cellValue = row?.[selectedCell.columnKey];
-    const handleClearValue = () =>
-      updateField({
-        path: selectedCell.path,
-        fieldName: selectedColumn.fieldName,
-        value: null,
-        deleteField: true,
-      });
+
     const columnFilters = getFieldProp(
       "filter",
       selectedColumn?.type === FieldType.derivative
@@ -247,18 +269,7 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
           !row ||
           cellValue === undefined ||
           getFieldProp("group", selectedColumn?.type) === "Auditing",
-        onClick: altPress
-          ? handleClearValue
-          : () => {
-              confirm({
-                title: "Clear cell value?",
-                body: "The cell’s value cannot be recovered after",
-                confirm: "Delete",
-                confirmColor: "error",
-                handleConfirm: handleClearValue,
-              });
-              onClose();
-            },
+        onClick: handleClearValue,
       },
       {
         label: "Filter value",
