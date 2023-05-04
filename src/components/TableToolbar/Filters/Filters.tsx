@@ -205,7 +205,7 @@ export default function Filters() {
 
     // Hold all the
     const [controllers, setControllers] = useState<Array<QueryType>>(
-      [INITIAL_QUERY] ?? appliedFilters
+      appliedFilters.length === 0 ? [INITIAL_QUERY] : appliedFilters
     );
 
     // adds new filter object to the controllers state
