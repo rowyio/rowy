@@ -182,13 +182,27 @@ export const TableCell = memo(function TableCell({
       }}
       onContextMenu={(e) => {
         e.preventDefault();
-        setSelectedCell({
-          path: row.original._rowy_ref.path,
-          columnKey: cell.column.id,
-          focusInside: false,
+
+        let isEditorCell = false;
+
+        setSelectedCell((prev) => {
+          isEditorCell = prev?.focusInside === true;
+          return {
+            path: row.original._rowy_ref.path,
+            columnKey: cell.column.id,
+            focusInside: false,
+            // focusInside: !!!prev
+            //   ? false
+            //   : prev?.columnKey === cell.column.id &&
+            //     prev.path === row.original._rowy_ref.path
+            //   ? prev?.focusInside
+            //   : false,
+          };
         });
         (e.target as HTMLDivElement).focus();
-        setContextMenuTarget(e.target as HTMLElement);
+        if (!isEditorCell) {
+          setContextMenuTarget(e.target as HTMLElement);
+        }
       }}
     >
       {renderedValidationTooltip}
