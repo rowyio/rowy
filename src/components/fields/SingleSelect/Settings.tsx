@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/AddCircle";
 import RemoveIcon from "@mui/icons-material/CancelRounded";
+import CheckIcon from "@mui/icons-material/CheckCircleRounded";
 import ColorSelect, {
   SelectColorThemeOptions,
 } from "@src/components/SelectColors";
@@ -56,6 +57,10 @@ export default function Settings({ onChange, config }: ISettingsProps) {
   const listEndRef: any = useRef(null);
   const options = config.options ?? [];
   const [newOption, setNewOption] = useState("");
+  const [editOption, setEditOption] = useState({
+    oldOption: "",
+    newOption: "",
+  });
 
   /* State for holding Chip Colors for Select and MultiSelect */
   let colors = config.colors ?? [];
@@ -72,10 +77,41 @@ export default function Settings({ onChange, config }: ISettingsProps) {
     }
   };
 
+  const handleEdit = () => {
+    const { oldOption, newOption: _newOption } = editOption;
+    const newOption = _newOption.trim();
+    if (oldOption === newOption) {
+      setEditOption({
+        oldOption: "",
+        newOption: "",
+      });
+      return;
+    }
+
+    if (newOption !== "") {
+      if (options.includes(newOption)) {
+        window.alert(`"${newOption}" is already an option`);
+      } else {
+        const newOptions = options.map((option: string) =>
+          option === oldOption ? newOption : option
+        );
+        onChange("options")(newOptions);
+
+        handleChipColorChange("update", oldOption, undefined, newOption);
+
+        setEditOption({
+          oldOption: "",
+          newOption: "",
+        });
+      }
+    }
+  };
+
   const handleChipColorChange = (
-    type: "save" | "delete",
+    type: "save" | "delete" | "update",
     key: string,
-    color?: SelectColorThemeOptions
+    color?: SelectColorThemeOptions,
+    newKey?: string
   ) => {
     const _key = key.toLocaleLowerCase().replace(" ", "_").trim();
     const exists = colors.findIndex((option: IColors) => option.name === _key);
@@ -94,6 +130,14 @@ export default function Settings({ onChange, config }: ISettingsProps) {
     if (type === "delete") {
       const updatedColors = colors.filter(
         (option: IColors) => option.name !== _key
+      );
+      onChange("colors")(updatedColors);
+    }
+
+    if (type === "update" && newKey) {
+      const _newKey = newKey.toLocaleLowerCase().replace(" ", "_").trim();
+      const updatedColors = colors.map((option: IColors) =>
+        option.name === _key ? { ...option, name: _newKey } : option
       );
       onChange("colors")(updatedColors);
     }
@@ -146,7 +190,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                           <Grid
                             {...provided.dragHandleProps}
                             item
-                            sx={{ display: "flex" }}
+                            sx={{ display: "flex", flexGrow: 1 }}
                             alignItems="center"
                           >
                             <DragIndicatorOutlinedIcon
@@ -162,6 +206,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                               direction="row"
                               alignItems="center"
                               gap={2}
+                              sx={{ flexGrow: 1 }}
                             >
                               <ColorSelect
                                 key={option}
@@ -170,7 +215,48 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                                   handleChipColorChange("save", option, color)
                                 }
                               />
-                              <Typography>{option}</Typography>
+
+                              {editOption.oldOption === option ? (
+                                <Grid
+                                  sx={{ display: "flex", flexGrow: 1 }}
+                                  alignItems="center"
+                                >
+                                  <TextField
+                                    onChange={(e) =>
+                                      setEditOption({
+                                        oldOption: option,
+                                        newOption: e.target.value,
+                                      })
+                                    }
+                                    value={editOption.newOption}
+                                    sx={{ flexGrow: 1 }}
+                                    autoFocus
+                                    onKeyPress={(e) => {
+                                      if (e.key === "Enter") {
+                                        handleEdit();
+                                      }
+                                    }}
+                                  />
+                                  <IconButton
+                                    aria-label="Save"
+                                    onClick={() => handleEdit()}
+                                  >
+                                    {<CheckIcon />}
+                                  </IconButton>
+                                </Grid>
+                              ) : (
+                                <Typography
+                                  onClick={() => {
+                                    setEditOption({
+                                      oldOption: option,
+                                      newOption: option,
+                                    });
+                                  }}
+                                  sx={{ "&:hover": { cursor: "pointer" } }}
+                                >
+                                  {option}
+                                </Typography>
+                              )}
                             </Grid>
                           </Grid>
                           <Grid item>
