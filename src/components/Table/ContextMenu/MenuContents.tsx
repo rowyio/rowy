@@ -22,6 +22,7 @@ import {
   userRolesAtom,
   altPressAtom,
   confirmDialogAtom,
+  updateUserSettingsAtom,
 } from "@src/atoms/projectScope";
 import {
   tableScope,
@@ -34,6 +35,7 @@ import {
   updateFieldAtom,
   tableFiltersPopoverAtom,
   _updateRowDbAtom,
+  tableIdAtom,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 
@@ -58,6 +60,8 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
     tableFiltersPopoverAtom,
     tableScope
   );
+  const [updateUserSettings] = useAtom(updateUserSettingsAtom, projectScope);
+  const [tableId] = useAtom(tableIdAtom, tableScope);
 
   const addRowIdType = tableSchema.idType || "decrement";
 
@@ -259,6 +263,20 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
       });
       onClose();
     };
+    const handleFilterBy = () => {
+      const filters = [
+        {
+          key: selectedColumn.fieldName,
+          operator: columnFilters!.operators[0]?.value || "==",
+          value: cellValue,
+        },
+      ];
+
+      if (updateUserSettings) {
+        updateUserSettings({ tables: { [`${tableId}`]: { filters } } });
+      }
+      onClose();
+    };
     const cellActions = [
       {
         label: altPress ? "Clear value" : "Clear value…",
@@ -276,6 +294,12 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
         icon: <FilterIcon />,
         disabled: !columnFilters || cellValue === undefined,
         onClick: handleFilterValue,
+      },
+      {
+        label: "Filter by",
+        icon: <FilterIcon />,
+        disabled: !columnFilters || cellValue === undefined,
+        onClick: handleFilterBy,
       },
     ];
     actionGroups.push(cellActions);
