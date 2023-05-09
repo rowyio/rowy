@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2021",
+    "module": "CommonJS",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -9,7 +9,6 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -21,7 +20,13 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
-    "baseUrl": "./"
+    "baseUrl": ".",
+    "paths": {
+      "@e2e/*": ["./*"]
+    }
   },
-  "include": ["test"]
+  "include": ["config", "tests", "mocks", "utils"],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  }
 }

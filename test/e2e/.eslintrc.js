@@ -1,7 +1,7 @@
 module.exports = {
   rules: {
     "testing-library/prefer-screen-queries": "off",
-    "no-relative-import-paths/no-relative-import-paths": "off",
+    // "no-relative-import-paths/no-relative-import-paths": "off",
   },
   env: {
     jest: true,

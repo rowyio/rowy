@@ -8,28 +8,19 @@ import {
 } from "firebase/firestore";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
 import { getFunctions } from "firebase/functions";
+import {
+  REACT_APP_FIREBASE_EMULATORS,
+  REACT_APP_FIREBASE_PROJECT_ID,
+  REACT_APP_FIREBASE_PROJECT_WEB_API_KEY,
+} from "@src/constants/env";
 
-// Connect emulators based on env vars
-const envConnectEmulators =
-  process.env.NODE_ENV === "test" ||
-  process.env.REACT_APP_FIREBASE_EMULATORS === "true";
-
-export const envConfig = envConnectEmulators
-  ? {
-      apiKey: "rowy-os-testing",
-      authDomain: `rowy-os-testing.firebaseapp.com`,
-      databaseURL: `rowy-os-testing.firebaseio.com`,
-      projectId: "rowy-os-testing",
-      storageBucket: `rowy-os-testing.appspot.com`,
-    }
-  : {
-      apiKey: process.env.REACT_APP_FIREBASE_PROJECT_WEB_API_KEY,
-      authDomain: `${process.env.REACT_APP_FIREBASE_PROJECT_ID}.firebaseapp.com`,
-      databaseURL: `https://${process.env.REACT_APP_FIREBASE_PROJECT_ID}.firebaseio.com`,
-      projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-      storageBucket: `${process.env.REACT_APP_FIREBASE_PROJECT_ID}.appspot.com`,
-    };
-
+export const envConfig = {
+  apiKey: REACT_APP_FIREBASE_PROJECT_WEB_API_KEY,
+  authDomain: `${REACT_APP_FIREBASE_PROJECT_ID}.firebaseapp.com`,
+  databaseURL: `https://${REACT_APP_FIREBASE_PROJECT_ID}.firebaseio.com`,
+  projectId: REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: `${REACT_APP_FIREBASE_PROJECT_ID}.appspot.com`,
+};
 /**
  * Store Firebase config here so it can be set programmatically.
  * This lets us switch between Firebase projects.
@@ -49,11 +40,16 @@ export const firebaseAppAtom = atom((get) => {
  */
 export const firebaseAuthAtom = atom((get) => {
   const auth = getAuth(get(firebaseAppAtom));
-  if (envConnectEmulators && !(window as any).firebaseAuthEmulatorStarted) {
+  if (
+    REACT_APP_FIREBASE_EMULATORS &&
+    !(window as any).firebaseAuthEmulatorStarted
+  ) {
     connectAuthEmulator(auth, "http://localhost:9099", {
       disableWarnings: true,
     });
     (window as any).firebaseAuthEmulatorStarted = true;
+  } else {
+    (window as any).firebaseAuthStarted = true;
   }
   return auth;
 });
@@ -67,9 +63,13 @@ export const firebaseDbAtom = atom((get) => {
     ignoreUndefinedProperties: true,
   });
   if (!(window as any).firebaseDbStarted) {
-    if (envConnectEmulators) connectFirestoreEmulator(db, "localhost", 9299);
-    else enableMultiTabIndexedDbPersistence(db);
-    (window as any).firebaseDbStarted = true;
+    if (REACT_APP_FIREBASE_EMULATORS) {
+      connectFirestoreEmulator(db, "localhost", 9299);
+      (window as any).firebaseDbEmulatorsStarted = true;
+    } else {
+      enableMultiTabIndexedDbPersistence(db);
+      (window as any).firebaseDbStarted = true;
+    }
   }
   return db;
 });
@@ -81,8 +81,12 @@ export const firebaseDbAtom = atom((get) => {
 export const firebaseStorageAtom = atom((get) => {
   const storage = getStorage(get(firebaseAppAtom));
   if (!(window as any).firebaseStorageEmulatorStarted) {
-    if (envConnectEmulators) connectStorageEmulator(storage, "localhost", 9199);
-    (window as any).firebaseStorageEmulatorStarted = true;
+    if (REACT_APP_FIREBASE_EMULATORS) {
+      connectStorageEmulator(storage, "localhost", 9199);
+      (window as any).firebaseStorageEmulatorStarted = true;
+    } else {
+      (window as any).firebaseStorageStarted = true;
+    }
   }
   return storage;
 });

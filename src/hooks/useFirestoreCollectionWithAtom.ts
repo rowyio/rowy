@@ -39,6 +39,7 @@ import {
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { COLLECTION_PAGE_SIZE } from "@src/config/db";
 import { getDateRange, getTimeRange } from "@src/utils/date";
+import { DevTools } from "@src/utils/DevTools";
 
 /** Options for {@link useFirestoreCollectionWithAtom} */
 interface IUseFirestoreCollectionWithAtomOptions<T> {
@@ -188,6 +189,11 @@ export function useFirestoreCollectionWithAtom<
             ...doc.data(),
             _rowy_ref: doc.ref,
           }));
+          DevTools.recordEvent({
+            type: "READ_COLLECTION",
+            path,
+            data: snapshot.docs.map((doc) => doc.data()),
+          } as any);
           setDataAtom(docs);
           // If the snapshot doesn’t fill the page, it’s the last page
           if (docs.length < memoizedQuery.limit) setIsLastPage(true);
@@ -231,6 +237,7 @@ export function useFirestoreCollectionWithAtom<
     };
   }, [
     firebaseDb,
+    path,
     memoizedQuery,
     disableSuspense,
     setDataAtom,
@@ -255,7 +262,7 @@ export function useFirestoreCollectionWithAtom<
     // set the atom’s value to a function that updates a doc in the collection
     if (updateDocAtom) {
       setUpdateDocAtom(
-        () => (path: string, update: T, deleteFields?: string[]) => {
+        () => async (path: string, update: T, deleteFields?: string[]) => {
           const updateToDb = { ...update };
 
           if (Array.isArray(deleteFields)) {
@@ -264,7 +271,12 @@ export function useFirestoreCollectionWithAtom<
             }
           }
 
-          return setDoc(doc(firebaseDb, path), updateToDb, { merge: true });
+          await setDoc(doc(firebaseDb, path), updateToDb, { merge: true });
+          DevTools.recordEvent({
+            type: "UPDATE_DOC",
+            path,
+            data: { updateToDb },
+          } as any);
         }
       );
     }
@@ -272,9 +284,10 @@ export function useFirestoreCollectionWithAtom<
     // If `deleteDocAtom` was passed,
     // set the atom’s value to a function that deletes a doc in the collection
     if (deleteDocAtom) {
-      setDeleteDocAtom(
-        () => (path: string) => deleteDoc(doc(firebaseDb, path))
-      );
+      setDeleteDocAtom(() => async (path: string) => {
+        await deleteDoc(doc(firebaseDb, path));
+        DevTools.recordEvent({ type: "DELETE_DOC", path });
+      });
     }
 
     return () => {

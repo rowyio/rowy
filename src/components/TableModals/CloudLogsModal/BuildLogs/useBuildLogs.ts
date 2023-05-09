@@ -14,6 +14,7 @@ import {
 import { projectScope } from "@src/atoms/projectScope";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { tableScope, tableSchemaAtom } from "@src/atoms/tableScope";
+import { DevTools } from "@src/utils/DevTools";
 
 export default function useBuildLogs() {
   const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
@@ -21,10 +22,11 @@ export default function useBuildLogs() {
   const functionConfigPath = tableSchema.functionConfigPath;
 
   const [logs, setLogs] = useState<DocumentData[]>([]);
+  const path = `${functionConfigPath}/buildLogs`;
   const logsQuery = useMemoValue(
     functionConfigPath
       ? query(
-          collection(firebaseDb, `${functionConfigPath}/buildLogs`),
+          collection(firebaseDb, path),
           orderBy("startTimeStamp", "desc"),
           limit(15)
         )
@@ -36,11 +38,13 @@ export default function useBuildLogs() {
     if (!logsQuery) return;
 
     const unsubscribe = onSnapshot(logsQuery, (snapshot) => {
-      setLogs(snapshot.docs.map((doc) => doc.data()));
+      const logs = snapshot.docs.map((doc) => doc.data());
+      DevTools.recordEvent({ type: "READ_COLLECTION", path, data: logs });
+      setLogs(logs);
     });
 
-    return unsubscribe;
-  }, [logsQuery]);
+    return () => unsubscribe();
+  }, [path, logsQuery]);
 
   const latestLog = logs[0];
   const latestStatus = latestLog?.status as string;

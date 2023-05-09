@@ -19,6 +19,7 @@ import { useErrorHandler } from "react-error-boundary";
 import { projectScope } from "@src/atoms/projectScope";
 import { UpdateDocFunction, TableRow } from "@src/types/table";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
+import { DevTools } from "@src/utils/DevTools";
 
 /** Options for {@link useFirestoreDocWithAtom} */
 interface IUseFirestoreDocWithAtomOptions<T> {
@@ -91,6 +92,12 @@ export function useFirestoreDocWithAtom<T = TableRow>(
       { includeMetadataChanges: true },
       (docSnapshot) => {
         try {
+          const docData = docSnapshot.data() as T;
+          DevTools.recordEvent({
+            type: "READ_DOC",
+            path: memoizedDocRef.path,
+            data: docData,
+          } as any);
           // If doc doesn’t exist, set data atom to default value
           // But don’t create a new document in db, since this has previously
           // caused documents to be reset, and the bug is hard to reproduce.
@@ -100,7 +107,7 @@ export function useFirestoreDocWithAtom<T = TableRow>(
             setDataAtom({ ...createIfNonExistent, _rowy_ref: docSnapshot.ref });
           } else {
             setDataAtom({
-              ...(docSnapshot.data() as T),
+              ...docData,
               _rowy_ref: docSnapshot.ref,
             });
           }

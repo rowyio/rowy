@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAtom } from "jotai";
 import { useSnackbar } from "notistack";
 import { signInWithCustomToken } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 import { TextField, Button } from "@mui/material";
 
@@ -16,6 +17,7 @@ export default function JwtAuthPage() {
 
   const [jwt, setJWT] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleAuth = async () => {
     setLoading(true);
@@ -23,7 +25,7 @@ export default function JwtAuthPage() {
     try {
       await signInWithCustomToken(firebaseAuth, jwt);
       enqueueSnackbar("Success", { variant: "success" });
-      window.location.assign("/");
+      navigate("/");
     } catch (e: any) {
       enqueueSnackbar(e.message, { variant: "error" });
     } finally {
