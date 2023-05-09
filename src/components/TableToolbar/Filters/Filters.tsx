@@ -39,6 +39,7 @@ import {
 import { useFilterInputs, INITIAL_QUERY } from "./useFilterInputs";
 import { analytics, logEvent } from "@src/analytics";
 import type { TableFilter } from "@src/types/table";
+import { useSearchParams } from "react-router-dom";
 
 const shouldDisableApplyButton = (value: any) =>
   isEmpty(value) &&
@@ -62,12 +63,12 @@ export default function Filters() {
   const [, setTableSorts] = useAtom(tableSortsAtom, tableScope);
   const [updateTableSchema] = useAtom(updateTableSchemaAtom, tableScope);
   const [{ defaultQuery }] = useAtom(tableFiltersPopoverAtom, tableScope);
-
   const tableFilterInputs = useFilterInputs(tableColumnsOrdered);
   const setTableQuery = tableFilterInputs.setQuery;
   const userFilterInputs = useFilterInputs(tableColumnsOrdered, defaultQuery);
   const setUserQuery = userFilterInputs.setQuery;
   const { availableFilters } = userFilterInputs;
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // Get table filters & user filters from config documents
   const tableFilters = useMemoValue(
@@ -82,7 +83,32 @@ export default function Filters() {
   const hasTableFilters =
     Array.isArray(tableFilters) && tableFilters.length > 0;
   const hasUserFilters = Array.isArray(userFilters) && userFilters.length > 0;
-
+  useEffect(() => {
+    console.log("Initialcallll", hasUserFilters, searchParams.get("filter"));
+    let isFiltered = searchParams.get("filter");
+    if (isFiltered) updateUserFilter(isFiltered);
+  }, []);
+  function updateUserFilter(str: string) {
+    let { operators = [], operands = [] } = separateOperands(str);
+    if (!operators.length) return;
+    // filtersToApply=[{key:"sId",operator:">=",value:12}]
+    //  if(operators.length){
+    //   let appliedFilter: TableFilter[] = [];
+    //   appliedFilter=[{key:operands[0],operator:operators[0],value:operands[1]}]
+    //  }
+  }
+  function findOperators(str: string) {
+    const operators = [">=", "<=", ">", "<", "==", "!=", "="];
+    const regex = new RegExp(operators.map((op) => `\\${op}`).join("|"), "g");
+    return str.match(regex) || [];
+  }
+  function separateOperands(str: string) {
+    const operators = findOperators(str);
+    const operands = str.split(
+      new RegExp(operators.map((op) => `\\${op}`).join("|"), "g")
+    );
+    return { operators, operands };
+  }
   // Set the local table filter
   useEffect(() => {
     // Set local state for UI
@@ -110,6 +136,8 @@ export default function Filters() {
       filtersToApply = userFilters;
     }
     if (filtersToApply.length) updatePageURL(filtersToApply);
+    console.log("fskdjflksdjf", filtersToApply);
+    // filtersToApply=[{key:"sId",operator:">=",value:12}]
     setLocalFilters(filtersToApply);
     // Reset order so we don’t have to make a new index
     if (filtersToApply.length) {
@@ -183,7 +211,6 @@ export default function Filters() {
       window.location.pathname +
       queryParams;
     window.history.pushState({ path: newUrl }, "", newUrl);
-    console.log("updatePageUrll", filters, newUrl);
   }
   return (
     <FiltersPopover
