@@ -67,7 +67,7 @@ export default function Step1Columns({
   const handleSelectAll = () => {
     if (selectedFields.length !== csvData.columns.length) {
       setSelectedFields(csvData.columns);
-      csvData.columns.forEach(field => {
+      csvData.columns.forEach((field) => {
         // Try to match each field to a column in the table
         const match =
           find(tableColumns, (column) =>
@@ -89,10 +89,10 @@ export default function Step1Columns({
           ];
         }
         updateConfig(columnConfig);
-      })
+      });
     } else {
-      setSelectedFields([])
-      setConfig((config) => ({ ...config, newColumns: [], pairs: [] }))
+      setSelectedFields([]);
+      setConfig((config) => ({ ...config, newColumns: [], pairs: [] }));
     }
   };
 
@@ -232,7 +232,11 @@ export default function Step1Columns({
                 color="default"
               />
             }
-            label={selectedFields.length == csvData.columns.length ? "Clear all" : "Select all"}
+            label={
+              selectedFields.length === csvData.columns.length
+                ? "Clear all"
+                : "Select all"
+            }
             sx={{
               height: 42,
               mr: 0,
@@ -247,8 +251,8 @@ export default function Step1Columns({
             find(config.pairs, { csvKey: field })?.columnKey ?? null;
           const matchingColumn = columnKey
             ? tableSchema.columns?.[columnKey] ??
-            find(config.newColumns, { key: columnKey }) ??
-            null
+              find(config.newColumns, { key: columnKey }) ??
+              null
             : null;
           const isNewColumn = !!find(config.newColumns, { key: columnKey });
 

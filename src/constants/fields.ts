@@ -28,6 +28,7 @@ export enum FieldType {
   // CONNECTION
   connector = "CONNECTOR",
   subTable = "SUB_TABLE",
+  arraySubTable = "ARRAY_SUB_TABLE",
   reference = "REFERENCE",
   connectTable = "DOCUMENT_SELECT",
   connectService = "SERVICE_SELECT",

@@ -66,6 +66,7 @@ export default function EditorCellController({
         fieldName: props.column.fieldName,
         value: localValueRef.current,
         deleteField: localValueRef.current === undefined,
+        arrayTableData: props.row?._rowy_ref.arrayTableData,
       });
     } catch (e) {
       enqueueSnackbar((e as Error).message, { variant: "error" });

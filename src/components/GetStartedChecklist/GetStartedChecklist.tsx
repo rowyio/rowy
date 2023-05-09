@@ -80,6 +80,9 @@ export default function GetStartedChecklist({
             marginRight: `max(env(safe-area-inset-right), 8px)`,
             width: 360,
           },
+          ".MuiStepLabel-iconContainer.Mui-active svg": {
+            transform: "rotate(0deg) !important",
+          },
         },
       ]}
     >

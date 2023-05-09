@@ -11,7 +11,7 @@ import DragIndicatorOutlinedIcon from "@mui/icons-material/DragIndicatorOutlined
 import DeleteIcon from "@mui/icons-material/DeleteOutline";
 
 import { FieldType, ISideDrawerFieldProps } from "@src/components/fields/types";
-import { TableRowRef } from "@src/types/table";
+import { TableRow, TableRowRef } from "@src/types/table";
 
 import AddButton from "./AddButton";
 import { getPseudoColumn } from "./utils";
@@ -29,6 +29,7 @@ function ArrayFieldInput({
   onRemove,
   onSubmit,
   id,
+  row,
 }: {
   index: number;
   onRemove: (index: number) => void;
@@ -37,6 +38,7 @@ function ArrayFieldInput({
   onSubmit: () => void;
   _rowy_ref: TableRowRef;
   id: string;
+  row: TableRow;
 }) {
   const typeDetected = detectType(value);
 
@@ -80,6 +82,7 @@ function ArrayFieldInput({
               column={getPseudoColumn(typeDetected, index, value)}
               value={value}
               _rowy_ref={_rowy_ref}
+              row={row}
             />
           </Stack>
           <Box
@@ -174,6 +177,7 @@ export default function ArraySideDrawerField({
                     onRemove={handleRemove}
                     index={index}
                     onSubmit={onSubmit}
+                    row={props.row}
                   />
                 ))}
                 {provided.placeholder}
