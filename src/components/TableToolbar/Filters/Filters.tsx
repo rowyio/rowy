@@ -109,7 +109,7 @@ export default function Filters() {
     } else if (hasUserFilters) {
       filtersToApply = userFilters;
     }
-
+    if (filtersToApply.length) updatePageURL(filtersToApply);
     setLocalFilters(filtersToApply);
     // Reset order so we don’t have to make a new index
     if (filtersToApply.length) {
@@ -173,7 +173,18 @@ export default function Filters() {
     if (updateUserSettings && filters)
       updateUserSettings({ tables: { [`${tableId}`]: { filters } } });
   };
-
+  function updatePageURL(filters: TableFilter[]) {
+    const [filter] = filters;
+    const queryParams = `?filter=${filter.key}${filter.operator}${filter.value}`;
+    const newUrl =
+      window.location.protocol +
+      "//" +
+      window.location.host +
+      window.location.pathname +
+      queryParams;
+    window.history.pushState({ path: newUrl }, "", newUrl);
+    console.log("updatePageUrll", filters, newUrl);
+  }
   return (
     <FiltersPopover
       appliedFilters={appliedFilters}
