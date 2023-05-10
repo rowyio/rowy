@@ -3,10 +3,6 @@ import EditorCellTextField from "@src/components/Table/TableCell/EditorCellTextF
 
 export default function Number_(props: IEditorCellProps<number>) {
   return (
-    <EditorCellTextField
-      {...(props as any)}
-      InputProps={{ type: "number" }}
-      onChange={(v) => props.onChange(Number(v))}
-    />
+    <EditorCellTextField {...(props as any)} InputProps={{ type: "number" }} />
   );
 }
