@@ -1,10 +1,10 @@
 import { lazy } from "react";
-import { GeoPoint } from "firebase/firestore";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import GeoPointIcon from "@mui/icons-material/PinDropOutlined";
 import DisplayCell from "./DisplayCell";
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
 
 const SideDrawerField = lazy(
   () =>
@@ -15,7 +15,7 @@ const SideDrawerField = lazy(
 
 export const config: IFieldConfig = {
   type: FieldType.geoPoint,
-  name: "GeoPoint (Alpha)",
+  name: "GeoPoint",
   group: "Numeric",
   dataType: "{latitude:number; longitude:number}",
   initialValue: {},
@@ -25,5 +25,6 @@ export const config: IFieldConfig = {
     popoverProps: { PaperProps: { sx: { p: 1, pt: 0 } } },
   }),
   SideDrawerField,
+  contextMenuActions: BasicContextMenuActions,
 };
 export default config;

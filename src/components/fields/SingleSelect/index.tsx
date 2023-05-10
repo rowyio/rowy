@@ -6,6 +6,7 @@ import { SingleSelect as SingleSelectIcon } from "@src/assets/icons";
 import DisplayCell from "./DisplayCell";
 import EditorCell from "./EditorCell";
 import { filterOperators } from "@src/components/fields/ShortText/Filter";
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
 
 const SideDrawerField = lazy(
   () =>
@@ -21,7 +22,7 @@ export const config: IFieldConfig = {
   type: FieldType.singleSelect,
   name: "Single Select",
   group: "Select",
-  dataType: "string | null",
+  dataType: "string",
   initialValue: null,
   initializable: true,
   icon: <SingleSelectIcon />,
@@ -35,5 +36,6 @@ export const config: IFieldConfig = {
   settings: Settings,
   filter: { operators: filterOperators },
   requireConfiguration: true,
+  contextMenuActions: BasicContextMenuActions,
 };
 export default config;

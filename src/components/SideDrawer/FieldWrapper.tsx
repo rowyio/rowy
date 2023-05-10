@@ -35,6 +35,7 @@ export interface IFieldWrapperProps {
   fieldName?: string;
   label?: React.ReactNode;
   debugText?: React.ReactNode;
+  debugValue?: React.ReactNode;
   disabled?: boolean;
   hidden?: boolean;
   index?: number;
@@ -46,6 +47,7 @@ export default function FieldWrapper({
   fieldName,
   label,
   debugText,
+  debugValue,
   disabled,
   hidden,
   index,
@@ -100,7 +102,7 @@ export default function FieldWrapper({
       <ErrorBoundary FallbackComponent={InlineErrorFallback}>
         <Suspense fallback={<FieldSkeleton />}>
           {children ??
-            (!debugText && (
+            (!debugValue && (
               <Typography
                 variant="body2"
                 color="text.secondary"
@@ -112,7 +114,7 @@ export default function FieldWrapper({
         </Suspense>
       </ErrorBoundary>
 
-      {debugText && (
+      {debugValue && (
         <Stack direction="row" alignItems="center">
           <Typography
             variant="body2"
@@ -131,7 +133,7 @@ export default function FieldWrapper({
           </Typography>
           <IconButton
             onClick={() => {
-              copyToClipboard(debugText as string);
+              copyToClipboard(debugValue as string);
               enqueueSnackbar("Copied!");
             }}
           >
@@ -139,7 +141,7 @@ export default function FieldWrapper({
           </IconButton>
           <IconButton
             href={`https://console.firebase.google.com/project/${projectId}/firestore/data/~2F${(
-              debugText as string
+              debugValue as string
             ).replace(/\//g, "~2F")}`}
             target="_blank"
             rel="noopener"

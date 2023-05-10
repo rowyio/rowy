@@ -17,10 +17,11 @@ Read the documentation on setting up your local development environment
 Read how to submit a pull request [here](https://docs.rowy.io/contributing).
 
 To get familiar with the project,
-[good first issues](https://github.com/rowyio/rowy/projects/3) is a good place
+[good first issues](https://github.com/rowyio/rowy/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) is a good place
 to start.
 
 ## Working on existing issues
+
 
 Before you get started working on an
 [issue](https://github.com/rowyio/rowy/issues), please make sure to share that
@@ -38,6 +39,7 @@ assigned to you, then we will assume you have stopped working on it and we will
 unassign it from you - so that we can give a chance to others in the community
 to work on it.
 
+
 ## File a feature request
 
 If you have some interesting idea that will be a good addition to Rowy, then
@@ -46,7 +48,7 @@ create a new issue using
 to share your idea. If you are working on this to contribute to the project,
 then let others in the community and project maintainers know by posting on
 #contributions channel in Rowy's
-[Discord](https://discord.com/invite/fjBugmvzZP). This allows others in the
+[Discord](https://rowy.io/discord). This allows others in the
 community and the maintainers a chance to provide feedback and guidance before
 you spend time working on it.
 

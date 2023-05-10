@@ -5,6 +5,8 @@ import withRenderTableCell from "@src/components/Table/TableCell/withRenderTable
 import CheckboxIcon from "@mui/icons-material/ToggleOnOutlined";
 import DisplayCell from "./DisplayCell";
 
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
+
 const EditorCell = lazy(
   () => import("./EditorCell" /* webpackChunkName: "EditorCell-Checkbox" */)
 );
@@ -42,5 +44,6 @@ export const config: IFieldConfig = {
     defaultValue: false,
   },
   SideDrawerField,
+  contextMenuActions: BasicContextMenuActions,
 };
 export default config;

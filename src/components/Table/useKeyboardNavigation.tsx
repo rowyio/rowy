@@ -128,6 +128,11 @@ export function useKeyboardNavigation({
             ? tableRows[newRowIndex]._rowy_ref.path
             : "_rowy_header",
         columnKey: leafColumns[newColIndex].id! || leafColumns[0].id!,
+        arrayIndex:
+          newRowIndex > -1
+            ? tableRows[newRowIndex]._rowy_ref.arrayTableData?.index
+            : undefined,
+
         // When selected cell changes, exit current cell
         focusInside: false,
       };

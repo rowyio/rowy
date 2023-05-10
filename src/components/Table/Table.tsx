@@ -211,8 +211,6 @@ export default function Table({
       if (result.destination?.index === undefined || !result.draggableId)
         return;
 
-      console.log(result.draggableId, result.destination.index);
-
       updateColumn({
         key: result.draggableId,
         index: result.destination.index,

@@ -33,6 +33,7 @@ import {
   deleteRowAtom,
   updateFieldAtom,
   tableFiltersPopoverAtom,
+  _updateRowDbAtom,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 
@@ -52,6 +53,7 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
   const addRow = useSetAtom(addRowAtom, tableScope);
   const deleteRow = useSetAtom(deleteRowAtom, tableScope);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
+  const [updateRowDb] = useAtom(_updateRowDbAtom, tableScope);
   const openTableFiltersPopover = useSetAtom(
     tableFiltersPopoverAtom,
     tableScope
@@ -62,19 +64,111 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
   if (!tableSchema.columns || !selectedCell) return null;
 
   const selectedColumn = tableSchema.columns[selectedCell.columnKey];
-  const row = find(tableRows, ["_rowy_ref.path", selectedCell.path]);
+  const row = find(
+    tableRows,
+    selectedCell?.arrayIndex === undefined
+      ? ["_rowy_ref.path", selectedCell.path]
+      : // if the table is an array table, we need to use the array index to find the row
+        ["_rowy_ref.arrayTableData.index", selectedCell.arrayIndex]
+  );
 
   if (!row) return null;
 
   const actionGroups: IContextMenuItem[][] = [];
 
   const handleDuplicate = () => {
-    addRow({
-      row,
-      setId: addRowIdType === "custom" ? "decrement" : addRowIdType,
-    });
+    const _duplicate = () => {
+      if (row._rowy_ref.arrayTableData !== undefined) {
+        if (!updateRowDb) return;
+
+        return updateRowDb("", {}, undefined, {
+          index: row._rowy_ref.arrayTableData.index,
+          operation: {
+            addRow: "bottom",
+            base: row,
+          },
+        });
+      }
+      return addRow({
+        row: row,
+        setId: addRowIdType === "custom" ? "decrement" : addRowIdType,
+      });
+    };
+
+    if (altPress || row._rowy_ref.arrayTableData !== undefined) {
+      _duplicate();
+    } else {
+      confirm({
+        title: "Duplicate row?",
+        body: (
+          <>
+            Row path:
+            <br />
+            <code style={{ userSelect: "all", wordBreak: "break-all" }}>
+              {row._rowy_ref.path}
+            </code>
+          </>
+        ),
+        confirm: "Duplicate",
+        handleConfirm: _duplicate,
+      });
+    }
   };
-  const handleDelete = () => deleteRow(row._rowy_ref.path);
+  const handleDelete = () => {
+    const _delete = () =>
+      deleteRow({
+        path: row._rowy_ref.path,
+        options: row._rowy_ref.arrayTableData,
+      });
+
+    if (altPress || row._rowy_ref.arrayTableData !== undefined) {
+      _delete();
+    } else {
+      confirm({
+        title: "Delete row?",
+        body: (
+          <>
+            Row path:
+            <br />
+            <code style={{ userSelect: "all", wordBreak: "break-all" }}>
+              {row._rowy_ref.path}
+            </code>
+          </>
+        ),
+        confirm: "Delete",
+        confirmColor: "error",
+        handleConfirm: _delete,
+      });
+    }
+  };
+
+  const handleClearValue = () => {
+    const clearValue = () => {
+      updateField({
+        path: selectedCell.path,
+        fieldName: selectedColumn.fieldName,
+        arrayTableData: {
+          index: selectedCell.arrayIndex,
+        },
+        value: null,
+        deleteField: true,
+      });
+      onClose();
+    };
+
+    if (altPress || row._rowy_ref.arrayTableData !== undefined) {
+      clearValue();
+    } else {
+      confirm({
+        title: "Clear cell value?",
+        body: "The cell’s value cannot be recovered after",
+        confirm: "Delete",
+        confirmColor: "error",
+        handleConfirm: clearValue,
+      });
+    }
+  };
+
   const rowActions: IContextMenuItem[] = [
     {
       label: "Copy ID",
@@ -112,51 +206,14 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
       disabled:
         tableSettings.tableType === "collectionGroup" ||
         (!userRoles.includes("ADMIN") && tableSettings.readOnly),
-      onClick: altPress
-        ? handleDuplicate
-        : () => {
-            confirm({
-              title: "Duplicate row?",
-              body: (
-                <>
-                  Row path:
-                  <br />
-                  <code style={{ userSelect: "all", wordBreak: "break-all" }}>
-                    {row._rowy_ref.path}
-                  </code>
-                </>
-              ),
-              confirm: "Duplicate",
-              handleConfirm: handleDuplicate,
-            });
-            onClose();
-          },
+      onClick: handleDuplicate,
     },
     {
       label: altPress ? "Delete" : "Delete…",
       color: "error",
       icon: <DeleteIcon />,
       disabled: !userRoles.includes("ADMIN") && tableSettings.readOnly,
-      onClick: altPress
-        ? handleDelete
-        : () => {
-            confirm({
-              title: "Delete row?",
-              body: (
-                <>
-                  Row path:
-                  <br />
-                  <code style={{ userSelect: "all", wordBreak: "break-all" }}>
-                    {row._rowy_ref.path}
-                  </code>
-                </>
-              ),
-              confirm: "Delete",
-              confirmColor: "error",
-              handleConfirm: handleDelete,
-            });
-            onClose();
-          },
+      onClick: handleDelete,
     },
   ];
 
@@ -185,13 +242,7 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
     // Cell actions
     // TODO: Add copy and paste here
     const cellValue = row?.[selectedCell.columnKey];
-    const handleClearValue = () =>
-      updateField({
-        path: selectedCell.path,
-        fieldName: selectedColumn.fieldName,
-        value: null,
-        deleteField: true,
-      });
+
     const columnFilters = getFieldProp(
       "filter",
       selectedColumn?.type === FieldType.derivative
@@ -218,18 +269,7 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
           !row ||
           cellValue === undefined ||
           getFieldProp("group", selectedColumn?.type) === "Auditing",
-        onClick: altPress
-          ? handleClearValue
-          : () => {
-              confirm({
-                title: "Clear cell value?",
-                body: "The cell’s value cannot be recovered after",
-                confirm: "Delete",
-                confirmColor: "error",
-                handleConfirm: handleClearValue,
-              });
-              onClose();
-            },
+        onClick: handleClearValue,
       },
       {
         label: "Filter value",

@@ -23,6 +23,7 @@ import useKeyPressWithAtom from "@src/hooks/useKeyPressWithAtom";
 
 import TableGroupRedirectPage from "./pages/TableGroupRedirectPage";
 import SignOutPage from "@src/pages/Auth/SignOutPage";
+import ProvidedArraySubTablePage from "./pages/Table/ProvidedArraySubTablePage";
 
 // prettier-ignore
 const AuthPage = lazy(() => import("@src/pages/Auth/AuthPage" /* webpackChunkName: "AuthPage" */));
@@ -130,6 +131,27 @@ export default function App() {
                         }
                       >
                         <ProvidedSubTablePage />
+                      </Suspense>
+                    }
+                  />
+                </Route>
+                <Route path={ROUTES.arraySubTable}>
+                  <Route index element={<NotFound />} />
+                  <Route
+                    path=":docPath/:subTableKey"
+                    element={
+                      <Suspense
+                        fallback={
+                          <Backdrop
+                            key="sub-table-modal-backdrop"
+                            open
+                            sx={{ zIndex: "modal" }}
+                          >
+                            <Loading />
+                          </Backdrop>
+                        }
+                      >
+                        <ProvidedArraySubTablePage />
                       </Suspense>
                     }
                   />

@@ -67,7 +67,7 @@ export const fieldParser = (fieldType: FieldType) => {
     case FieldType.dateTime:
       return (v: string) => {
         const date = parseISO(v);
-        return isValidDate(date) ? date.getTime() : null;
+        return isValidDate(date) ? new Date(date) : null;
       };
     default:
       return (v: any) => v;

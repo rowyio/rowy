@@ -7,6 +7,7 @@ import { DATE_TIME_FORMAT } from "@src/constants/dates";
 import DateTimeIcon from "@mui/icons-material/AccessTime";
 import DisplayCell from "./DisplayCell";
 import { filterOperators, valueFormatter } from "./filters";
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
 
 const EditorCell = lazy(
   () => import("./EditorCell" /* webpackChunkName: "EditorCell-DateTime" */)
@@ -54,6 +55,7 @@ export const config: IFieldConfig = {
       return format(value.toDate(), DATE_TIME_FORMAT);
     }
   },
+  contextMenuActions: BasicContextMenuActions,
 };
 export default config;
 
