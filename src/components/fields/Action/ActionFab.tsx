@@ -204,6 +204,7 @@ export default function ActionFab({
       }
       size="small"
       sx={{
+        zIndex: 1,
         "&:not(.MuiFab-primary):not(.MuiFab-secondary):not(.Mui-disabled)": {
           bgcolor: (theme) =>
             theme.palette.mode === "dark"
