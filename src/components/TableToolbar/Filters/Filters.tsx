@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import { useAtom } from "jotai";
 import useMemoValue from "use-memo-value";
@@ -67,8 +68,12 @@ export default function Filters() {
   const setTableQuery = tableFilterInputs.setQuery;
   const userFilterInputs = useFilterInputs(tableColumnsOrdered, defaultQuery);
   const setUserQuery = userFilterInputs.setQuery;
-  const { availableFilters } = userFilterInputs;
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { availableFilters, filterColumns } = userFilterInputs;
+  const [searchParams] = useSearchParams();
+  useEffect(() => {
+    let isFiltered = searchParams.get("filter");
+    if (isFiltered) updateUserFilter(isFiltered);
+  }, [searchParams]);
 
   // Get table filters & user filters from config documents
   const tableFilters = useMemoValue(
@@ -83,26 +88,51 @@ export default function Filters() {
   const hasTableFilters =
     Array.isArray(tableFilters) && tableFilters.length > 0;
   const hasUserFilters = Array.isArray(userFilters) && userFilters.length > 0;
-  useEffect(() => {
-    console.log("Initialcallll", hasUserFilters, searchParams.get("filter"));
-    let isFiltered = searchParams.get("filter");
-    if (isFiltered) updateUserFilter(isFiltered);
-  }, []);
   function updateUserFilter(str: string) {
-    let { operators = [], operands = [] } = separateOperands(str);
+    let { operators, operands = [] } = separateOperands(str);
     if (!operators.length) return;
-    // filtersToApply=[{key:"sId",operator:">=",value:12}]
-    //  if(operators.length){
-    //   let appliedFilter: TableFilter[] = [];
-    //   appliedFilter=[{key:operands[0],operator:operators[0],value:operands[1]}]
-    //  }
+    if (operators.length) {
+      let appliedFilter: TableFilter[] = [];
+      appliedFilter = [
+        {
+          key: operands[0],
+          operator: operators[0],
+          value: Number(operands[1]),
+        },
+      ];
+      let isValidFilter = checkFilterValidation(appliedFilter[0]);
+      if (isValidFilter) {
+        setOverrideTableFilters(true);
+        setUserFilters(appliedFilter);
+      } else {
+        setUserFilters([]);
+        userFilterInputs.resetQuery();
+      }
+    }
+  }
+  function checkFilterValidation(filter: TableFilter): boolean {
+    let isFilterableColumn = filterColumns?.filter(
+      (item) =>
+        item.key === filter.key ||
+        item.label === filter.key ||
+        item.type === filter.key
+    );
+    if (!isFilterableColumn?.length) return false;
+    filter.key = isFilterableColumn?.[0]?.value;
+    filter.operator = filter.operator === "-is-" ? "id-equal" : filter.operator;
+    filter.value =
+      filter.operator === "id-equal" ? filter.value.toString() : filter.value;
+    return true;
   }
   function findOperators(str: string) {
-    const operators = [">=", "<=", ">", "<", "==", "!=", "="];
+    const operators = [">=", "<=", ">", "<", "==", "!=", "=", "-is-"];
     const regex = new RegExp(operators.map((op) => `\\${op}`).join("|"), "g");
     return str.match(regex) || [];
   }
-  function separateOperands(str: string) {
+  function separateOperands(str: string): {
+    operators: any[];
+    operands: string[];
+  } {
     const operators = findOperators(str);
     const operands = str.split(
       new RegExp(operators.map((op) => `\\${op}`).join("|"), "g")
@@ -135,9 +165,7 @@ export default function Filters() {
     } else if (hasUserFilters) {
       filtersToApply = userFilters;
     }
-    if (filtersToApply.length) updatePageURL(filtersToApply);
-    console.log("fskdjflksdjf", filtersToApply);
-    // filtersToApply=[{key:"sId",operator:">=",value:12}]
+    updatePageURL(filtersToApply);
     setLocalFilters(filtersToApply);
     // Reset order so we don’t have to make a new index
     if (filtersToApply.length) {
@@ -148,7 +176,6 @@ export default function Filters() {
     hasUserFilters,
     setLocalFilters,
     setTableSorts,
-    setTableQuery,
     tableFilters,
     tableFiltersOverridable,
     setUserQuery,
@@ -202,15 +229,25 @@ export default function Filters() {
       updateUserSettings({ tables: { [`${tableId}`]: { filters } } });
   };
   function updatePageURL(filters: TableFilter[]) {
-    const [filter] = filters;
-    const queryParams = `?filter=${filter.key}${filter.operator}${filter.value}`;
-    const newUrl =
+    let newUrl =
       window.location.protocol +
       "//" +
       window.location.host +
-      window.location.pathname +
-      queryParams;
-    window.history.pushState({ path: newUrl }, "", newUrl);
+      window.location.pathname;
+    if (!filters.length) {
+      window.history.pushState({ path: newUrl }, "", newUrl);
+    } else {
+      const [filter] = filters;
+      const fieldName = filter.key === "_rowy_ref.id" ? "ID" : filter.key;
+      const operator =
+        filter.operator === "id-equal" ? "-is-" : filter.operator;
+      const formattedValue = availableFilters?.valueFormatter
+        ? availableFilters.valueFormatter(filter.value, filter.operator)
+        : filter.value.toString();
+      const queryParams = `?filter=${fieldName}${operator}${formattedValue}`;
+      newUrl = newUrl + queryParams;
+      window.history.pushState({ path: newUrl }, "", newUrl);
+    }
   }
   return (
     <FiltersPopover
