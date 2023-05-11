@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useAtom } from "jotai";
 import useMemoValue from "use-memo-value";
 import { isEmpty, isDate } from "lodash-es";
+import { useSearchParams } from "react-router-dom";
 
 import {
   Tab,
@@ -20,6 +21,7 @@ import TabPanel from "@mui/lab/TabPanel";
 
 import FiltersPopover from "./FiltersPopover";
 import FilterInputs from "./FilterInputs";
+import { changePageUrl, separateOperands } from "./utils";
 
 import {
   projectScope,
@@ -40,7 +42,6 @@ import {
 import { useFilterInputs, INITIAL_QUERY } from "./useFilterInputs";
 import { analytics, logEvent } from "@src/analytics";
 import type { TableFilter } from "@src/types/table";
-import { useSearchParams } from "react-router-dom";
 
 const shouldDisableApplyButton = (value: any) =>
   isEmpty(value) &&
@@ -124,21 +125,7 @@ export default function Filters() {
       filter.operator === "id-equal" ? filter.value.toString() : filter.value;
     return true;
   }
-  function findOperators(str: string) {
-    const operators = [">=", "<=", ">", "<", "==", "!=", "=", "-is-"];
-    const regex = new RegExp(operators.map((op) => `\\${op}`).join("|"), "g");
-    return str.match(regex) || [];
-  }
-  function separateOperands(str: string): {
-    operators: any[];
-    operands: string[];
-  } {
-    const operators = findOperators(str);
-    const operands = str.split(
-      new RegExp(operators.map((op) => `\\${op}`).join("|"), "g")
-    );
-    return { operators, operands };
-  }
+
   // Set the local table filter
   useEffect(() => {
     // Set local state for UI
@@ -229,13 +216,8 @@ export default function Filters() {
       updateUserSettings({ tables: { [`${tableId}`]: { filters } } });
   };
   function updatePageURL(filters: TableFilter[]) {
-    let newUrl =
-      window.location.protocol +
-      "//" +
-      window.location.host +
-      window.location.pathname;
     if (!filters.length) {
-      window.history.pushState({ path: newUrl }, "", newUrl);
+      changePageUrl();
     } else {
       const [filter] = filters;
       const fieldName = filter.key === "_rowy_ref.id" ? "ID" : filter.key;
@@ -245,8 +227,7 @@ export default function Filters() {
         ? availableFilters.valueFormatter(filter.value, filter.operator)
         : filter.value.toString();
       const queryParams = `?filter=${fieldName}${operator}${formattedValue}`;
-      newUrl = newUrl + queryParams;
-      window.history.pushState({ path: newUrl }, "", newUrl);
+      changePageUrl(queryParams);
     }
   }
   return (
