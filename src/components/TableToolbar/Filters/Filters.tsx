@@ -4,6 +4,7 @@ import { useAtom } from "jotai";
 import useMemoValue from "use-memo-value";
 import { isEmpty, isDate } from "lodash-es";
 import { useSearchParams } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 import {
   Tab,
@@ -71,6 +72,7 @@ export default function Filters() {
   const setUserQuery = userFilterInputs.setQuery;
   const { availableFilters, filterColumns } = userFilterInputs;
   const [searchParams] = useSearchParams();
+  const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
     let isFiltered = searchParams.get("filter");
     if (isFiltered) updateUserFilter(isFiltered);
@@ -106,7 +108,9 @@ export default function Filters() {
         setOverrideTableFilters(true);
         setUserFilters(appliedFilter);
       } else {
+        enqueueSnackbar("Oops, Invalid filter!!!", { variant: "error" });
         setUserFilters([]);
+        setOverrideTableFilters(false);
         userFilterInputs.resetQuery();
       }
     }
