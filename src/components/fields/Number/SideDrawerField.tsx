@@ -9,13 +9,20 @@ export default function Number_({
   onChange,
   onSubmit,
   disabled,
-}: ISideDrawerFieldProps) {
+}: ISideDrawerFieldProps<number | string>) {
   return (
     <TextField
       variant="filled"
       fullWidth
       margin="none"
-      onChange={(e) => onChange(Number(e.target.value))}
+      onChange={(e) => {
+        // Safari/Firefox gives us an empty string for invalid inputs, which includes inputs like "12." on the way to
+        // typing "12.34". Number would cast these to 0 and replace the user's input to 0 whilst they're mid-way through
+        // typing. We want to avoid that.
+        const parsedValue =
+          e.target.value === "" ? e.target.value : Number(e.target.value);
+        onChange(parsedValue);
+      }}
       onBlur={onSubmit}
       value={value}
       id={getFieldId(column.key)}

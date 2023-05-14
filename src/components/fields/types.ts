@@ -86,7 +86,7 @@ export interface ISideDrawerFieldProps<T = any> {
   /** Call when the user has input but changes have not been saved */
   onDirty: (dirty?: boolean) => void;
   /** Update the local value. Also calls onDirty */
-  onChange: (T: any) => void;
+  onChange: (value: T) => void;
   /** Call when user input is ready to be saved (e.g. onBlur) */
   onSubmit: () => void;
 
