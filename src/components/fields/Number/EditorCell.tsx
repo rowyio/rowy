@@ -13,6 +13,11 @@ export default function Number_(props: IEditorCellProps<number | string>) {
         const parsedValue = v === "" ? v : Number(v);
         props.onChange(parsedValue);
       }}
+      onBlur={() => {
+        // Cast to number when the user has finished editing
+        props.onChange(Number(props.value));
+        props.onDirty();
+      }}
     />
   );
 }

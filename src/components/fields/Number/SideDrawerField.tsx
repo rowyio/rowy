@@ -23,7 +23,11 @@ export default function Number_({
           e.target.value === "" ? e.target.value : Number(e.target.value);
         onChange(parsedValue);
       }}
-      onBlur={onSubmit}
+      onBlur={() => {
+        // Cast to number when the user has finished editing
+        onChange(Number(value));
+        onSubmit();
+      }}
       value={value}
       id={getFieldId(column.key)}
       label=""
