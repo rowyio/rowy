@@ -4,6 +4,7 @@ import { spreadSx } from "@src/utils/ui";
 
 export interface IEditorCellTextFieldProps extends IEditorCellProps<string> {
   InputProps?: Partial<InputBaseProps>;
+  onBlur?: () => void;
 }
 
 export default function EditorCellTextField({
@@ -11,6 +12,7 @@ export default function EditorCellTextField({
   value,
   onDirty,
   onChange,
+  onBlur,
   setFocusInsideCell,
   InputProps = {},
 }: IEditorCellTextFieldProps) {
@@ -19,7 +21,12 @@ export default function EditorCellTextField({
   return (
     <InputBase
       value={value}
-      onBlur={() => onDirty()}
+      onBlur={() => {
+        if (onBlur) {
+          onBlur();
+        }
+        onDirty();
+      }}
       onChange={(e) => onChange(e.target.value)}
       fullWidth
       autoFocus
@@ -42,6 +49,11 @@ export default function EditorCellTextField({
           setTimeout(() => setFocusInsideCell(false));
         }
         if (e.key === "Enter" && !e.shiftKey) {
+          // Trigger an onBlur in case we have any final mutations
+          if (onBlur) {
+            onBlur();
+          }
+
           // Removes focus from inside cell, triggering save on unmount
           setFocusInsideCell(false);
         }
