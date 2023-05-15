@@ -3,7 +3,7 @@ import useStateRef from "react-usestateref";
 import { isEqual, isEmpty } from "lodash-es";
 
 import FieldWrapper from "./FieldWrapper";
-import { IFieldConfig } from "@src/components/fields/types";
+import { FieldType, IFieldConfig } from "@src/components/fields/types";
 import { getFieldProp } from "@src/components/fields";
 import { ColumnConfig, TableRowRef } from "@src/types/table";
 import { TableRow } from "@src/types/table";
@@ -44,6 +44,9 @@ export const MemoizedField = memo(
     }, [field.fieldName, localValueRef, onSubmit]);
 
     let type = field.type;
+    if (field.type !== FieldType.formula && field.config?.renderFieldType) {
+      type = field.config.renderFieldType;
+    }
 
     const fieldComponent: IFieldConfig["SideDrawerField"] = getFieldProp(
       "SideDrawerField",
