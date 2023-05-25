@@ -236,10 +236,11 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                                         handleEdit();
                                       }
                                     }}
+                                    onBlur={handleEdit}
                                   />
                                   <IconButton
                                     aria-label="Save"
-                                    onClick={() => handleEdit()}
+                                    onClick={handleEdit}
                                   >
                                     {<CheckIcon />}
                                   </IconButton>
@@ -247,6 +248,10 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                               ) : (
                                 <Typography
                                   onClick={() => {
+                                    // While editing a field, if the user clicks on some other field
+                                    // This makes sure that the previous edit is saved
+                                    handleEdit();
+
                                     setEditOption({
                                       oldOption: option,
                                       newOption: option,
