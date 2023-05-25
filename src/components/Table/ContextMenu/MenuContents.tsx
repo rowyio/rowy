@@ -275,16 +275,6 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
         ? selectedColumn.config?.renderFieldType
         : selectedColumn?.type
     );
-    const handleFilterValue = () => {
-      openTableFiltersPopover({
-        defaultQuery: {
-          key: selectedColumn.fieldName,
-          operator: columnFilters!.operators[0]?.value || "==",
-          value: cellValue,
-        },
-      });
-      onClose();
-    };
     const handleFilterBy = () => {
       const filters = [
         {
@@ -310,12 +300,6 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
           cellValue === undefined ||
           getFieldProp("group", selectedColumn?.type) === "Auditing",
         onClick: handleClearValue,
-      },
-      {
-        label: "Filter value",
-        icon: <FilterIcon />,
-        disabled: !columnFilters || cellValue === undefined,
-        onClick: handleFilterValue,
       },
       {
         label: "Filter by",
