@@ -38,6 +38,7 @@ import {
   tableIdAtom,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
+import { TableRow } from "@src/types/table";
 
 interface IMenuContentsProps {
   onClose: () => void;
@@ -245,7 +246,28 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
 
     // Cell actions
     // TODO: Add copy and paste here
-    const cellValue = row?.[selectedCell.columnKey];
+
+    const selectedColumnKey = selectedCell.columnKey;
+    const selectedColumnKeySplit = selectedColumnKey.split(".");
+
+    const getNestedFieldValue = (object: TableRow, keys: string[]) => {
+      let value = object;
+
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+
+        if (value && typeof value === "object" && key in value) {
+          value = value[key];
+        } else {
+          // Handle cases where the key does not exist in the nested structure
+          return undefined;
+        }
+      }
+
+      return value;
+    };
+
+    const cellValue = getNestedFieldValue(row, selectedColumnKeySplit);
 
     const columnFilters = getFieldProp(
       "filter",
