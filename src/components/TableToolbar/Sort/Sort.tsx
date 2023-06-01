@@ -57,17 +57,16 @@ export default function Sort() {
               options={sortColumns}
               value={tableSorts[0].key}
               onChange={(value: string | null) => {
-                if (value) {
-                  setTableSorts([
-                    { key: value, direction: tableSorts[0].direction },
-                  ]);
-
-                  triggerSaveTableSorts([
-                    { key: value, direction: tableSorts[0].direction },
-                  ]);
-                } else {
-                  setTableSorts([]);
-                }
+                setTableSorts(
+                  value === null
+                    ? []
+                    : [{ key: value, direction: tableSorts[0].direction }]
+                );
+                triggerSaveTableSorts(
+                  value === null
+                    ? []
+                    : [{ key: value, direction: tableSorts[0].direction }]
+                );
               }}
             />
           </Grid>
@@ -111,7 +110,10 @@ export default function Sort() {
           <Grid item xs={1} alignSelf="flex-end">
             <IconButton
               size="small"
-              onClick={() => setTableSorts([])}
+              onClick={() => {
+                setTableSorts([]);
+                triggerSaveTableSorts([]);
+              }}
               sx={{
                 "&:hover, &:focus": {
                   color: "error.main",
