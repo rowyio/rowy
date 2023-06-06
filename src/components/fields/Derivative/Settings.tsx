@@ -19,8 +19,7 @@ import { FieldType } from "@src/constants/fields";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 import { getFieldProp } from "@src/components/fields";
-/* eslint-disable import/no-webpack-loader-syntax */
-import derivativeDefs from "!!raw-loader!./derivative.d.ts";
+import derivativeDefs from "./derivative.d.ts?raw";
 
 const CodeEditor = lazy(
   () =>

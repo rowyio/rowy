@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAtom } from "jotai";
-import { parse as json2csv } from "json2csv";
+import { Parser } from "@json2csv/plainjs";
 import { saveAs } from "file-saver";
 import { useSnackbar } from "notistack";
 import { getDocs } from "firebase/firestore";
@@ -150,10 +150,10 @@ export default function Export({
         const csvData = docs.map((doc: any) =>
           columns.reduce(selectedColumnsCsvReducer(doc), {})
         );
-        const csv = json2csv(
-          csvData,
+        const parser = new Parser(
           exportType === "tsv" ? { delimiter: "\t" } : undefined
         );
+        const csv = parser.parse(csvData);
         const csvBlob = new Blob([csv], {
           type: `text/${exportType};charset=utf-8`,
         });
