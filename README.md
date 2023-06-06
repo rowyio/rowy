@@ -55,6 +55,7 @@ Low-code for Firebase and Google Cloud.
     </td>
     </tr>
 </table> -->
+
 https://user-images.githubusercontent.com/307298/157185793-f67511cd-7b7b-4229-9589-d7defbf7a63f.mp4
 
 <!-- <img width="85%" src="https://firebasestorage.googleapis.com/v0/b/rowyio.appspot.com/o/publicDemo%2FRowy%20Website%20Video%20GIF%20Small.gif?alt=media&token=3f699a8f-c1f2-4046-8ed5-e4ff66947cd8" />
@@ -98,8 +99,10 @@ https://user-images.githubusercontent.com/307298/157185793-f67511cd-7b7b-4229-95
 
 ## Quick guided install
 
-Set up Rowy on your Google Cloud Platform project with this easy deploy button. Your
-data and cloud functions stay on your own Firestore/GCP and is managed via a cloud run instance that operates exclusively on your GCP project. So we do do not access or store any of your data on Rowy.
+Set up Rowy on your Google Cloud Platform project with this easy deploy button.
+Your data and cloud functions stay on your own Firestore/GCP and is managed via
+a cloud run instance that operates exclusively on your GCP project. So we do do
+not access or store any of your data on Rowy.
 
 [<img width="200" alt="Guided quick start button" src="https://user-images.githubusercontent.com/307298/185548050-e9208fb6-fe53-4c84-bbfa-53c08e03c15f.png">](https://rowy.app/)
 
@@ -112,12 +115,17 @@ You can find the full documentation with how-to guides and templates
 
 ## Manual Install
 
-We recommend the [quick guided install](https://github.com/rowyio/rowy#quick-guided-install) option above. Manual install option is only recommended if you want to develop and contribute to the project. Follow this [guide](https://docs.rowy.io/setup/install#option-2-manual-install) for manual setup.
+We recommend the
+[quick guided install](https://github.com/rowyio/rowy#quick-guided-install)
+option above. Manual install option is only recommended if you want to develop
+and contribute to the project. Follow this
+[guide](https://docs.rowy.io/setup/install#option-2-manual-install) for manual
+setup.
 
 ## Roadmap
 
-[View our roadmap](https://roadmap.rowy.io/) on Rowy - Upvote,
-downvote, share your thoughts!
+[View our roadmap](https://roadmap.rowy.io/) on Rowy - Upvote, downvote, share
+your thoughts!
 
 If you'd like to propose a feature, submit an issue
 [here](https://github.com/rowyio/rowy/issues/new?assignees=&labels=&template=feature_request.md&title=).

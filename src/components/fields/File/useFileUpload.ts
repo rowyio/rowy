@@ -47,7 +47,9 @@ export default function useFileUpload(
     async (files: File[]) => {
       const { uploads, failures } = await upload({
         docRef,
-        fieldName,
+        fieldName: docRef.arrayTableData
+          ? `${docRef.arrayTableData?.parentField}/${docRef.arrayTableData?.index}/${fieldName}`
+          : fieldName,
         files,
       });
       updateField({
@@ -55,6 +57,7 @@ export default function useFileUpload(
         fieldName,
         value: uploads,
         useArrayUnion: true,
+        arrayTableData: docRef.arrayTableData,
       });
       return { uploads, failures };
     },
@@ -69,10 +72,11 @@ export default function useFileUpload(
         value: [file],
         useArrayRemove: true,
         disableCheckEquality: true,
+        arrayTableData: docRef.arrayTableData,
       });
       deleteUpload(file);
     },
-    [deleteUpload, docRef, fieldName, updateField]
+    [deleteUpload, docRef.arrayTableData, docRef.path, fieldName, updateField]
   );
 
   // Drag and Drop

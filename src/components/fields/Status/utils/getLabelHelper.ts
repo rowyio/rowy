@@ -63,7 +63,9 @@ export default function getLabel(value: any, conditions: any) {
   let _label: any = undefined;
   const isBoolean = Boolean(typeof value === "boolean");
   const notBoolean = Boolean(typeof value !== "boolean");
-  const isNullOrUndefined = Boolean(!value && notBoolean);
+  const isNullOrUndefined = Boolean(
+    (value === null || value === undefined) && notBoolean
+  );
   const isNumeric = Boolean(typeof value === "number");
 
   if (isNullOrUndefined) _label = getFalseyLabelFrom(conditions, value);

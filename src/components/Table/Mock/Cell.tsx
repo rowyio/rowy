@@ -7,6 +7,7 @@ import EmptyState from "@src/components/EmptyState";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
+import useConverter from "@src/components/TableModals/ImportCsvWizard/useConverter";
 
 export interface ICellProps
   extends Partial<
@@ -25,12 +26,14 @@ export interface ICellProps
 export default function Cell({
   field,
   type,
-  value,
+  value: value_,
   name,
   rowHeight = DEFAULT_ROW_HEIGHT,
   ...props
 }: ICellProps) {
   const tableCell = type ? getFieldProp("TableCell", type) : null;
+  const { checkAndConvert } = useConverter();
+  const value = checkAndConvert(value_, type);
 
   return (
     <StyledTable>

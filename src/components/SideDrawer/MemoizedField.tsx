@@ -3,9 +3,10 @@ import useStateRef from "react-usestateref";
 import { isEqual, isEmpty } from "lodash-es";
 
 import FieldWrapper from "./FieldWrapper";
-import { IFieldConfig } from "@src/components/fields/types";
+import { FieldType, IFieldConfig } from "@src/components/fields/types";
 import { getFieldProp } from "@src/components/fields";
 import { ColumnConfig, TableRowRef } from "@src/types/table";
+import { TableRow } from "@src/types/table";
 
 export interface IMemoizedFieldProps {
   field: ColumnConfig;
@@ -16,6 +17,7 @@ export interface IMemoizedFieldProps {
   isDirty: boolean;
   onDirty: (fieldName: string) => void;
   onSubmit: (fieldName: string, value: any) => void;
+  row: TableRow;
 }
 
 export const MemoizedField = memo(
@@ -28,6 +30,7 @@ export const MemoizedField = memo(
     isDirty,
     onDirty,
     onSubmit,
+    row,
     ...props
   }: IMemoizedFieldProps) {
     const [localValue, setLocalValue, localValueRef] = useStateRef(value);
@@ -40,9 +43,8 @@ export const MemoizedField = memo(
       onSubmit(field.fieldName, localValueRef.current);
     }, [field.fieldName, localValueRef, onSubmit]);
 
-    // Derivative/aggregate field support
     let type = field.type;
-    if (field.config && field.config.renderFieldType) {
+    if (field.type !== FieldType.formula && field.config?.renderFieldType) {
       type = field.config.renderFieldType;
     }
 
@@ -78,6 +80,7 @@ export const MemoizedField = memo(
           },
           onSubmit: handleSubmit,
           disabled,
+          row,
         })}
       </FieldWrapper>
     );

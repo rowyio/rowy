@@ -127,14 +127,11 @@ const useFirebaseStorageUploader = () => {
                     <Paper elevation={0} sx={{ borderRadius: 1 }}>
                       <Button
                         color="primary"
-                        href={
-                          WIKI_LINKS.setupRoles +
-                          "#write-firebase-storage-security-rules"
-                        }
+                        href={WIKI_LINKS.faqsAccess + "#unable-to-upload-files"}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        Fix
+                        Learn More
                         <InlineOpenInNewIcon />
                       </Button>
                     </Paper>

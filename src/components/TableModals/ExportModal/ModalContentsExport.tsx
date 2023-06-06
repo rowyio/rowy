@@ -33,6 +33,27 @@ const selectedColumnsJsonReducer =
   (doc: TableRow) =>
   (accumulator: Record<string, any>, currentColumn: ColumnConfig) => {
     const value = get(doc, currentColumn.key);
+
+    if (
+      currentColumn.type === FieldType.file ||
+      currentColumn.type === FieldType.image
+    ) {
+      return {
+        ...accumulator,
+        [currentColumn.key]: value
+          ? value
+              .map((item: { downloadURL: string }) => item.downloadURL)
+              .join()
+          : "",
+      };
+    }
+
+    if (currentColumn.type === FieldType.reference) {
+      return {
+        ...accumulator,
+        [currentColumn.key]: value ? value.path : "",
+      };
+    }
     return {
       ...accumulator,
       [currentColumn.key]: value,

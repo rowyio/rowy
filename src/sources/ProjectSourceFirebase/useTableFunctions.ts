@@ -22,6 +22,10 @@ import {
   AdditionalTableSettings,
   MinimumTableSettings,
   currentUserAtom,
+  updateSecretNamesAtom,
+  projectIdAtom,
+  rowyRunAtom,
+  secretNamesAtom,
 } from "@src/atoms/projectScope";
 import { firebaseDbAtom } from "./init";
 
@@ -34,10 +38,15 @@ import { rowyUser } from "@src/utils/table";
 import { TableSettings, TableSchema, SubTablesSchema } from "@src/types/table";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
+import { runRoutes } from "@src/constants/runRoutes";
 
 export function useTableFunctions() {
   const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
   const [currentUser] = useAtom(currentUserAtom, projectScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
+  const [secretNames, setSecretNames] = useAtom(secretNamesAtom, projectScope);
+  const [updateSecretNames] = useAtom(updateSecretNamesAtom, projectScope);
 
   // Create a function to get the latest tables from project settings,
   // so we don’t create new functions when tables change
@@ -330,4 +339,36 @@ export function useTableFunctions() {
       return tableSchema as TableSchema;
     });
   }, [firebaseDb, readTables, setGetTableSchema]);
+
+  // Set the deleteTable function
+  const setUpdateSecretNames = useSetAtom(updateSecretNamesAtom, projectScope);
+  useEffect(() => {
+    if (!projectId || !rowyRun || !secretNamesAtom) return;
+    setUpdateSecretNames(() => async (clearSecretNames?: boolean) => {
+      setSecretNames({
+        loading: true,
+        secretNames: clearSecretNames ? null : secretNames.secretNames,
+      });
+      rowyRun({
+        route: runRoutes.listSecrets,
+      })
+        .then((secrets: string[]) => {
+          setSecretNames({
+            loading: false,
+            secretNames: secrets,
+          });
+        })
+        .catch((e) => {
+          setSecretNames({
+            loading: false,
+            secretNames: clearSecretNames ? null : secretNames.secretNames,
+          });
+        });
+    });
+  }, [projectId, rowyRun, setUpdateSecretNames]);
+  useEffect(() => {
+    if (updateSecretNames) {
+      updateSecretNames(true);
+    }
+  }, [updateSecretNames]);
 }

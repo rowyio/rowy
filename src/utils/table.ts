@@ -52,6 +52,12 @@ export const omitRowyFields = <T = Record<string, any>>(row: T) => {
   delete shallowClonedRow["_rowy_missingRequiredFields"];
   delete shallowClonedRow["_rowy_new"];
 
+  Object.keys(shallowClonedRow).forEach((key) => {
+    if (key.startsWith("_rowy_formulaValue_")) {
+      delete shallowClonedRow[key];
+    }
+  });
+
   return shallowClonedRow as T;
 };
 
