@@ -8,10 +8,10 @@ const main = (
 ) => {
   return fs.writeFileSync(
     ".env",
-    `REACT_APP_FIREBASE_PROJECT_ID = ${projectID}
-REACT_APP_FIREBASE_PROJECT_WEB_API_KEY = ${firebaseWebApiKey}
-REACT_APP_ALGOLIA_APP_ID = ${algoliaAppId}
-REACT_APP_ALGOLIA_SEARCH_API_KEY = ${algoliaSearhApiKey}`
+    `VITE_APP_FIREBASE_PROJECT_ID = ${projectID}
+VITE_APP_FIREBASE_PROJECT_WEB_API_KEY = ${firebaseWebApiKey}
+VITE_APP_ALGOLIA_APP_ID = ${algoliaAppId}
+VITE_APP_ALGOLIA_SEARCH_API_KEY = ${algoliaSearhApiKey}`
   );
 };
 

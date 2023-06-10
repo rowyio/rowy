@@ -42,8 +42,7 @@ import {
 import { tableScope, tableColumnsOrderedAtom } from "@src/atoms/tableScope";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 
-/* eslint-disable import/no-webpack-loader-syntax */
-import actionDefs from "!!raw-loader!./action.d.ts";
+import actionDefs from "./action.d.ts?raw";
 import { RUN_ACTION_TEMPLATE, UNDO_ACTION_TEMPLATE } from "./templates";
 import { ROUTES } from "@src/constants/routes";
 import { ISettingsProps } from "@src/components/fields/types";

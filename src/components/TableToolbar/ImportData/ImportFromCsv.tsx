@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { parse } from "csv-parse/browser/esm";
-import { parse as parseJSON } from "json2csv";
+import { Parser, ParserOptions } from "@json2csv/plainjs";
 import { useDropzone } from "react-dropzone";
 import { useDebouncedCallback } from "use-debounce";
 import { useSnackbar } from "notistack";
@@ -78,7 +78,8 @@ function convertJSONToCSV(rawData: string): string | false {
   };
 
   try {
-    const csv = parseJSON(rawDataJSONified, opts);
+    const parser = new Parser(opts as ParserOptions);
+    const csv = parser.parse(rawDataJSONified);
     return csv;
   } catch (err) {
     return false;

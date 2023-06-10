@@ -11,14 +11,14 @@ import "tinymce/themes/silver";
 import "tinymce/icons/default";
 // Editor styles
 /* eslint import/no-webpack-loader-syntax: off */
-import skinCss from "!!raw-loader!tinymce/skins/ui/oxide/skin.min.css";
-import skinDarkCss from "!!raw-loader!tinymce/skins/ui/oxide-dark/skin.min.css";
+import skinCss from "tinymce/skins/ui/oxide/skin.min.css?inline";
+import skinDarkCss from "tinymce/skins/ui/oxide-dark/skin.min.css?inline";
 // Content styles, including inline UI like fake cursors
 /* eslint import/no-webpack-loader-syntax: off */
-import contentCss from "!!raw-loader!tinymce/skins/content/default/content.min.css";
-import contentUiCss from "!!raw-loader!tinymce/skins/ui/oxide/content.min.css";
-import contentCssDark from "!!raw-loader!tinymce/skins/content/dark/content.min.css";
-import contentUiCssDark from "!!raw-loader!tinymce/skins/ui/oxide-dark/content.min.css";
+import contentCss from "tinymce/skins/content/default/content.min.css?inline";
+import contentUiCss from "tinymce/skins/ui/oxide/content.min.css?inline";
+import contentCssDark from "tinymce/skins/content/dark/content.min.css?inline";
+import contentUiCssDark from "tinymce/skins/ui/oxide-dark/content.min.css?inline";
 
 // Plugins
 import "tinymce/plugins/autoresize";
