@@ -6,8 +6,8 @@ on:
     # paths:
     # - "website/**"
 env:
-  REACT_APP_FIREBASE_PROJECT_ID: rowyio
-  REACT_APP_FIREBASE_PROJECT_WEB_API_KEY:
+  VITE_APP_FIREBASE_PROJECT_ID: rowyio
+  VITE_APP_FIREBASE_PROJECT_WEB_API_KEY:
     "${{ secrets.FIREBASE_WEB_API_KEY_TRYROWY }}"
   CI: ""
 jobs:

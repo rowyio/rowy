@@ -12,13 +12,12 @@ import type { languages } from "monaco-editor/esm/vs/editor/editor.api";
 import { useTheme } from "@mui/material";
 import type { SystemStyleObject, Theme } from "@mui/system";
 
-/* eslint-disable import/no-webpack-loader-syntax */
-import firestoreDefs from "!!raw-loader!./firestore.d.ts";
-import firebaseAuthDefs from "!!raw-loader!./firebaseAuth.d.ts";
-import firebaseStorageDefs from "!!raw-loader!./firebaseStorage.d.ts";
-import utilsDefs from "!!raw-loader!./utils.d.ts";
-import rowyUtilsDefs from "!!raw-loader!./rowy.d.ts";
-import extensionsDefs from "!!raw-loader!./extensions.d.ts";
+import firestoreDefs from "./firestore.d.ts?raw";
+import firebaseAuthDefs from "./firebaseAuth.d.ts?raw";
+import firebaseStorageDefs from "./firebaseStorage.d.ts?raw";
+import utilsDefs from "./utils.d.ts?raw";
+import rowyUtilsDefs from "./rowy.d.ts?raw";
+import extensionsDefs from "./extensions.d.ts?raw";
 import { projectScope, secretNamesAtom } from "@src/atoms/projectScope";
 import { getFieldProp } from "@src/components/fields";
 

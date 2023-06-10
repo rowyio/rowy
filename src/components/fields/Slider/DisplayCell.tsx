@@ -1,18 +1,22 @@
 import { IDisplayCellProps } from "@src/components/fields/types";
 
-import { Grid, Box } from "@mui/material";
+import { Grid, Box, useTheme } from "@mui/material";
 
 import { resultColorsScale } from "@src/utils/color";
 
 export default function Slider({ column, value }: IDisplayCellProps) {
+  const theme = useTheme();
+
   const {
     max,
     min,
     unit,
+    colors,
   }: {
     max: number;
     min: number;
     unit?: string;
+    colors: any;
   } = {
     max: 10,
     min: 0,
@@ -24,6 +28,7 @@ export default function Slider({ column, value }: IDisplayCellProps) {
       ? 0
       : ((value - min) / (max - min)) * 100;
 
+  const percentage = progress / 100;
   return (
     <Grid container alignItems="center" wrap="nowrap" spacing={1}>
       <Grid item xs={6} style={{ fontVariantNumeric: "tabular-nums" }}>
@@ -48,7 +53,11 @@ export default function Slider({ column, value }: IDisplayCellProps) {
               maxWidth: "100%",
 
               width: `${progress}%`,
-              backgroundColor: resultColorsScale(progress / 100).toHex(),
+              backgroundColor: resultColorsScale(
+                percentage,
+                colors,
+                theme.palette.background.paper
+              ).toHex(),
             }}
           />
         </Box>

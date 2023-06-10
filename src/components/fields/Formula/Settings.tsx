@@ -29,8 +29,7 @@ import {
 import PreviewTable from "./PreviewTable";
 import { getFieldProp } from "..";
 
-/* eslint-disable import/no-webpack-loader-syntax */
-import formulaDefs from "!!raw-loader!./formula.d.ts";
+import formulaDefs from "./formula.d.ts?raw";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 import { currentUserAtom } from "@src/atoms/projectScope";

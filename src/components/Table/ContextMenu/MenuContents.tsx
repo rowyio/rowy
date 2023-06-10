@@ -22,6 +22,7 @@ import {
   userRolesAtom,
   altPressAtom,
   confirmDialogAtom,
+  updateUserSettingsAtom,
 } from "@src/atoms/projectScope";
 import {
   tableScope,
@@ -34,8 +35,10 @@ import {
   updateFieldAtom,
   tableFiltersPopoverAtom,
   _updateRowDbAtom,
+  tableIdAtom,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
+import { TableRow } from "@src/types/table";
 
 interface IMenuContentsProps {
   onClose: () => void;
@@ -58,6 +61,8 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
     tableFiltersPopoverAtom,
     tableScope
   );
+  const [updateUserSettings] = useAtom(updateUserSettingsAtom, projectScope);
+  const [tableId] = useAtom(tableIdAtom, tableScope);
 
   const addRowIdType = tableSchema.idType || "decrement";
 
@@ -241,7 +246,28 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
 
     // Cell actions
     // TODO: Add copy and paste here
-    const cellValue = row?.[selectedCell.columnKey];
+
+    const selectedColumnKey = selectedCell.columnKey;
+    const selectedColumnKeySplit = selectedColumnKey.split(".");
+
+    const getNestedFieldValue = (object: TableRow, keys: string[]) => {
+      let value = object;
+
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+
+        if (value && typeof value === "object" && key in value) {
+          value = value[key];
+        } else {
+          // Handle cases where the key does not exist in the nested structure
+          return undefined;
+        }
+      }
+
+      return value;
+    };
+
+    const cellValue = getNestedFieldValue(row, selectedColumnKeySplit);
 
     const columnFilters = getFieldProp(
       "filter",
@@ -249,14 +275,18 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
         ? selectedColumn.config?.renderFieldType
         : selectedColumn?.type
     );
-    const handleFilterValue = () => {
-      openTableFiltersPopover({
-        defaultQuery: {
+    const handleFilterBy = () => {
+      const filters = [
+        {
           key: selectedColumn.fieldName,
           operator: columnFilters!.operators[0]?.value || "==",
           value: cellValue,
         },
-      });
+      ];
+
+      if (updateUserSettings) {
+        updateUserSettings({ tables: { [`${tableId}`]: { filters } } });
+      }
       onClose();
     };
     const cellActions = [
@@ -272,10 +302,10 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
         onClick: handleClearValue,
       },
       {
-        label: "Filter value",
+        label: "Filter by",
         icon: <FilterIcon />,
         disabled: !columnFilters || cellValue === undefined,
-        onClick: handleFilterValue,
+        onClick: handleFilterBy,
       },
     ];
     actionGroups.push(cellActions);

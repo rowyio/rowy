@@ -2,11 +2,11 @@ import { useEffect } from "react";
 
 const DOCUMENT_TITLE_BASE =
   "Rowy" +
-  (process.env.NODE_ENV === "production"
+  (import.meta.env.MODE === "production"
     ? ""
     : ` (${
-        process.env.REACT_APP_FIREBASE_EMULATORS ? "Emulator • " : ""
-      }${process.env.NODE_ENV.replace("development", "dev")})`);
+        import.meta.env.VITE_APP_FIREBASE_EMULATORS ? "Emulator • " : ""
+      }${import.meta.env.MODE.replace("development", "dev")})`);
 
 /**
  * Sets the document/tab title and resets when the page is changed
