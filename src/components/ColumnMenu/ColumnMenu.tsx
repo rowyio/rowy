@@ -419,7 +419,7 @@ export default function ColumnMenu({
       key: "insertLeft",
       icon: <ColumnPlusBeforeIcon />,
       onClick: () => {
-        openColumnModal({ type: "new", index: column.index - 1 });
+        openColumnModal({ type: "new", index: column.index });
         handleClose();
       },
       disabled: !canAddColumns,
