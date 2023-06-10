@@ -85,6 +85,7 @@ export const useFormula = ({
   }, [useDeepCompareMemoize(listeners), formulaFn]);
 
   const updateField = useSetAtom(updateFieldAtom, tableScope);
+
   useEffect(() => {
     updateField({
       path: row._rowy_ref.path,
