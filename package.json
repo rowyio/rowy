@@ -17,7 +17,7 @@
     "@mui/lab": "^5.0.0-alpha.76",
     "@mui/material": "^5.10.16",
     "@mui/x-date-pickers": "^5.0.0-alpha.4",
-    "@rowy/form-builder": "^0.8.0",
+    "@rowy/form-builder": "^1.0.0",
     "@rowy/multiselect": "^0.4.1",
     "@tanstack/react-table": "^8.5.15",
     "@tinymce/tinymce-react": "^3",

@@ -18,6 +18,7 @@ export default defineConfig({
           "jotai/babel/plugin-debug-label",
         ],
       },
+      include: "**/*.tsx",
     }),
     // To enable import '@src/' type of imports
     viteTsconfigPaths(),

@@ -2526,10 +2526,10 @@
     estree-walker "^2.0.2"
     picomatch "^2.3.1"
 
-"@rowy/form-builder@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@rowy/form-builder/-/form-builder-0.8.0.tgz#6bdf284033ce1dfa665e3adac01bcb99c981602a"
-  integrity sha512-FJRcfnDCTVn9+AyGWCa1SZ5bRGNZJ+uWo2vgrHep4Xef+pXmgxTLUXrpuUirCrL9F/omfC5/q3/KgcYUME4qdA==
+"@rowy/form-builder@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@rowy/form-builder/-/form-builder-1.0.0.tgz#8809036c911557977cdbb8eb9fdf23df643bf888"
+  integrity sha512-tahK56DXVoe8pYfEjmyUnJQ2VJQZLD1cI5TPsU/0W6CXB72PO+7HGpxh+xzhKWMicEK1v2HO7+Y5uxmZEyErHw==
   dependencies:
     "@hookform/resolvers" "^2.6.0"
     "@types/lodash-es" "^4.17.6"
@@ -2542,8 +2542,8 @@
     react-dnd "^14.0.2"
     react-dnd-html5-backend "^14.0.0"
     react-element-scroll-hook "^1.1.0"
-    react-hook-form "^7.10.0"
-    use-debounce "^8.0.0"
+    react-hook-form "7.39.7"
+    use-debounce "^9.0.4"
     yup "^0.32.9"
 
 "@rowy/multiselect@^0.4.1":
@@ -7451,36 +7451,6 @@ react-color-palette@^6.2.0:
   resolved "https://registry.yarnpkg.com/react-color-palette/-/react-color-palette-6.2.0.tgz#aa3be88f6953d57502c00f4433692129ffbad3e7"
   integrity sha512-9rIboaRJNoeF8aCI2f3J8wgMyhl74SnGmZLDjor3bKf0iDBhP2EBv0/jGmm0hrj6OackGCqtWl5ZvM89XUc3sg==
 
-react-dev-utils@^12.0.1:
-  version "12.0.1"
-  resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-12.0.1.tgz#ba92edb4a1f379bd46ccd6bcd4e7bc398df33e73"
-  integrity sha512-84Ivxmr17KjUupyqzFode6xKhjwuEJDROWKJy/BthkL7Wn6NJ8h4WE6k/exAv6ImS+0oZLRRW5j/aINMHyeGeQ==
-  dependencies:
-    "@babel/code-frame" "^7.16.0"
-    address "^1.1.2"
-    browserslist "^4.18.1"
-    chalk "^4.1.2"
-    cross-spawn "^7.0.3"
-    detect-port-alt "^1.1.6"
-    escape-string-regexp "^4.0.0"
-    filesize "^8.0.6"
-    find-up "^5.0.0"
-    fork-ts-checker-webpack-plugin "^6.5.0"
-    global-modules "^2.0.0"
-    globby "^11.0.4"
-    gzip-size "^6.0.0"
-    immer "^9.0.7"
-    is-root "^2.1.0"
-    loader-utils "^3.2.0"
-    open "^8.4.0"
-    pkg-up "^3.1.0"
-    prompts "^2.4.2"
-    react-error-overlay "^6.0.11"
-    recursive-readdir "^2.2.2"
-    shell-quote "^1.7.3"
-    strip-ansi "^6.0.1"
-    text-table "^0.2.0"
-
 react-div-100vh@*, react-div-100vh@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/react-div-100vh/-/react-div-100vh-0.7.0.tgz#b3bec03a833fa40e406f36ed2e23a35a59d1068f"
@@ -7567,12 +7537,7 @@ react-helmet-async@^1.3.0:
     react-fast-compare "^3.2.0"
     shallowequal "^1.1.0"
 
-react-hook-form@^7.10.0:
-  version "7.44.3"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.44.3.tgz#a99e560c6ef2b668db1daaebc4f98267331b6828"
-  integrity sha512-/tHId6p2ViAka1wECMw8FEPn/oz/w226zehHrJyQ1oIzCBNMIJCaj6ZkQcv+MjDxYh9MWR7RQic7Qqwe4a5nkw==
-
-react-hook-form@^7.30.0:
+react-hook-form@7.39.7, react-hook-form@^7.30.0:
   version "7.39.7"
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.39.7.tgz#8eabf2dbb9fce5baccfa60f401f6ef99c4e17fb4"
   integrity sha512-RT0NE1uW1bY3nAuMdzfqHrpv2+sICVFaxBOvNJsCva4if2sxPxcyJy/CSqU56UXqAdRg724CNDhjMYPSHSF3rg==
@@ -8999,11 +8964,6 @@ use-composed-ref@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/use-composed-ref/-/use-composed-ref-1.3.0.tgz#3d8104db34b7b264030a9d916c5e94fbe280dbda"
   integrity sha512-GLMG0Jc/jiKov/3Ulid1wbv3r54K9HlMW29IWcDFPEqFkSO2nS0MuefWgMJpeHQ9YJeXDL3ZUF+P3jdXlZX/cQ==
-
-use-debounce@^8.0.0:
-  version "8.0.4"
-  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-8.0.4.tgz#27e93b2f010bd0b8ad06e9fc7de891d9ee5d6b8e"
-  integrity sha512-fGqsYQzl8kLHF2QpQSgIwgOgJmnh6j5L6SIzQiHdLfwp3q1egUL3btq5Bg2SJysH6A0ILLgT2IqXZKoNJr0nFw==
 
 use-debounce@^9.0.4:
   version "9.0.4"
