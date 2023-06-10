@@ -12,6 +12,7 @@ import {
   serverDocCountAtom,
 } from "@src/atoms/tableScope";
 import { spreadSx } from "@src/utils/ui";
+import useOffline from "@src/hooks/useOffline";
 
 const StatusText = forwardRef(function StatusText(
   props: TypographyProps,
@@ -77,13 +78,8 @@ function LoadedRowsStatus() {
 }
 
 export default function SuspendedLoadedRowsStatus() {
-  if (navigator.onLine) {
-    return (
-      <Suspense fallback={<StatusText>{loadingIcon}Loading…</StatusText>}>
-        <LoadedRowsStatus />
-      </Suspense>
-    );
-  } else {
+  const isOffline = useOffline();
+  if (isOffline) {
     return (
       <Tooltip title="Changes will be saved when you reconnect" describeChild>
         <StatusText color="error.main">
@@ -91,6 +87,12 @@ export default function SuspendedLoadedRowsStatus() {
           Offline
         </StatusText>
       </Tooltip>
+    );
+  } else {
+    return (
+      <Suspense fallback={<StatusText>{loadingIcon}Loading…</StatusText>}>
+        <LoadedRowsStatus />
+      </Suspense>
     );
   }
 }
