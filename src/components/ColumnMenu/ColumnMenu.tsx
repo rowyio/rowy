@@ -192,9 +192,10 @@ export default function ColumnMenu({
         setTableSorts(
           isSorted && !isAsc ? [] : [{ key: sortKey, direction: "desc" }]
         );
-        if (!isSorted || isAsc) {
-          triggerSaveTableSorts([{ key: sortKey, direction: "desc" }]);
-        }
+
+        triggerSaveTableSorts(
+          isSorted && !isAsc ? [] : [{ key: sortKey, direction: "desc" }]
+        );
         handleClose();
       },
       active: isSorted && !isAsc,
@@ -209,9 +210,9 @@ export default function ColumnMenu({
         setTableSorts(
           isSorted && isAsc ? [] : [{ key: sortKey, direction: "asc" }]
         );
-        if (!isSorted || !isAsc) {
-          triggerSaveTableSorts([{ key: sortKey, direction: "asc" }]);
-        }
+        triggerSaveTableSorts(
+          isSorted && isAsc ? [] : [{ key: sortKey, direction: "asc" }]
+        );
         handleClose();
       },
       active: isSorted && isAsc,
@@ -418,7 +419,7 @@ export default function ColumnMenu({
       key: "insertLeft",
       icon: <ColumnPlusBeforeIcon />,
       onClick: () => {
-        openColumnModal({ type: "new", index: column.index - 1 });
+        openColumnModal({ type: "new", index: column.index });
         handleClose();
       },
       disabled: !canAddColumns,

@@ -7,6 +7,8 @@ import ColorIcon from "@mui/icons-material/Colorize";
 import DisplayCell from "./DisplayCell";
 import { filterOperators, valueFormatter } from "./filters";
 
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
+
 const EditorCell = lazy(
   () => import("./EditorCell" /* webpackChunkName: "EditorCell-Color" */)
 );
@@ -41,5 +43,6 @@ export const config: IFieldConfig = {
       return null;
     }
   },
+  contextMenuActions: BasicContextMenuActions,
 };
 export default config;

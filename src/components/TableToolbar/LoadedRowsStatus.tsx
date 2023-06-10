@@ -1,6 +1,5 @@
 import { Suspense, forwardRef } from "react";
 import { useAtom } from "jotai";
-import { Offline, Online } from "react-detect-offline";
 
 import { Tooltip, Typography, TypographyProps } from "@mui/material";
 import SyncIcon from "@mui/icons-material/Sync";
@@ -13,6 +12,7 @@ import {
   serverDocCountAtom,
 } from "@src/atoms/tableScope";
 import { spreadSx } from "@src/utils/ui";
+import useOffline from "@src/hooks/useOffline";
 
 const StatusText = forwardRef(function StatusText(
   props: TypographyProps,
@@ -78,22 +78,21 @@ function LoadedRowsStatus() {
 }
 
 export default function SuspendedLoadedRowsStatus() {
-  return (
-    <>
-      <Online>
-        <Suspense fallback={<StatusText>{loadingIcon}Loading…</StatusText>}>
-          <LoadedRowsStatus />
-        </Suspense>
-      </Online>
-
-      <Offline>
-        <Tooltip title="Changes will be saved when you reconnect" describeChild>
-          <StatusText color="error.main">
-            <OfflineIcon />
-            Offline
-          </StatusText>
-        </Tooltip>
-      </Offline>
-    </>
-  );
+  const isOffline = useOffline();
+  if (isOffline) {
+    return (
+      <Tooltip title="Changes will be saved when you reconnect" describeChild>
+        <StatusText color="error.main">
+          <OfflineIcon />
+          Offline
+        </StatusText>
+      </Tooltip>
+    );
+  } else {
+    return (
+      <Suspense fallback={<StatusText>{loadingIcon}Loading…</StatusText>}>
+        <LoadedRowsStatus />
+      </Suspense>
+    );
+  }
 }

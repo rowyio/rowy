@@ -24,7 +24,7 @@ import JsonDisplayCell from "@src/components/fields/Json/DisplayCell";
 import CodeDisplayCell from "@src/components/fields/Code/DisplayCell";
 import MarkdownDisplayCell from "@src/components/fields/Markdown/DisplayCell";
 import CreatedByDisplayCell from "@src/components/fields/CreatedBy/DisplayCell";
-import { TableRowRef } from "@src/types/table";
+import { TableRowRef, TableSettings } from "@src/types/table";
 import { DocumentData, DocumentReference } from "firebase/firestore";
 
 export function useDeepCompareMemoize<T>(value: T) {

@@ -1,9 +1,16 @@
+import { lazy } from "react";
 import FormulaIcon from "@mui/icons-material/Functions";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 import DisplayCell from "./DisplayCell";
 
 import Settings, { settingsValidator } from "./Settings";
+const SideDrawerField = lazy(
+  () =>
+    import(
+      "./SideDrawerField" /* webpackChunkName: "SideDrawerField-Formula" */
+    )
+);
 
 export const config: IFieldConfig = {
   type: FieldType.formula,
@@ -16,7 +23,7 @@ export const config: IFieldConfig = {
   TableCell: withRenderTableCell(DisplayCell as any, null, undefined, {
     usesRowData: true,
   }),
-  SideDrawerField: () => null as any,
+  SideDrawerField,
   settings: Settings,
   settingsValidator: settingsValidator,
   requireConfiguration: true,

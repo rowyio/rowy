@@ -9,6 +9,7 @@ import {
   MenuItem,
   ListItemText,
   Box,
+  Tooltip,
 } from "@mui/material";
 import {
   AddRow as AddRowIcon,
@@ -83,42 +84,51 @@ export default function AddRow() {
 
   return (
     <>
-      <ButtonGroup
-        variant="contained"
-        color="primary"
-        aria-label="Split button"
-        ref={anchorEl}
-        disabled={tableSettings.tableType === "collectionGroup" || !addRow}
+      <Tooltip
+        title={
+          tableSettings.tableType === "collectionGroup"
+            ? "Add row is not supported for collection group."
+            : null
+        }
+        arrow
       >
-        <Button
+        <ButtonGroup
           variant="contained"
           color="primary"
-          onClick={handleClick}
-          startIcon={
-            idType === "decrement" && !forceRandomId ? (
-              <AddRowTopIcon />
-            ) : (
-              <AddRowIcon />
-            )
-          }
+          aria-label="Split button"
+          ref={anchorEl}
+          disabled={tableSettings.tableType === "collectionGroup" || !addRow}
         >
-          Add row{idType === "custom" ? "…" : ""}
-        </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleClick}
+            startIcon={
+              idType === "decrement" && !forceRandomId ? (
+                <AddRowTopIcon />
+              ) : (
+                <AddRowIcon />
+              )
+            }
+          >
+            Add row{idType === "custom" ? "…" : ""}
+          </Button>
 
-        <Button
-          variant="contained"
-          color="primary"
-          aria-label="Select row add position"
-          aria-haspopup="menu"
-          style={{ padding: 0 }}
-          onClick={() => setOpen(true)}
-          id="add-row-menu-button"
-          aria-controls={open ? "add-row-menu" : undefined}
-          aria-expanded={open ? "true" : "false"}
-        >
-          <ArrowDropDownIcon />
-        </Button>
-      </ButtonGroup>
+          <Button
+            variant="contained"
+            color="primary"
+            aria-label="Select row add position"
+            aria-haspopup="menu"
+            style={{ padding: 0 }}
+            onClick={() => setOpen(true)}
+            id="add-row-menu-button"
+            aria-controls={open ? "add-row-menu" : undefined}
+            aria-expanded={open ? "true" : "false"}
+          >
+            <ArrowDropDownIcon />
+          </Button>
+        </ButtonGroup>
+      </Tooltip>
 
       <Select
         id="add-row-menu"

@@ -6,6 +6,8 @@ import withRenderTableCell from "@src/components/Table/TableCell/withRenderTable
 
 import DisplayCell from "./DisplayCell";
 
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
+
 const SideDrawerField = lazy(
   () =>
     import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Array" */)
@@ -26,5 +28,6 @@ export const config: IFieldConfig = {
   }),
   SideDrawerField,
   requireConfiguration: false,
+  contextMenuActions: BasicContextMenuActions,
 };
 export default config;

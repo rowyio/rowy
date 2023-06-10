@@ -6,6 +6,7 @@ import RatingIcon from "@mui/icons-material/StarBorder";
 import DisplayCell from "./DisplayCell";
 import EditorCell from "./EditorCell";
 import { filterOperators } from "@src/components/fields/Number/Filter";
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
 
 const SideDrawerField = lazy(
   () =>
@@ -44,5 +45,6 @@ export const config: IFieldConfig = {
       return null;
     }
   },
+  contextMenuActions: BasicContextMenuActions,
 };
 export default config;

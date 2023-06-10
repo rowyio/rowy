@@ -201,7 +201,7 @@ export function useFirestoreDocAsCollectionWithAtom<T = TableRow>(
   useEffect(() => {
     if (deleteDocAtom) {
       setDeleteRowAtom(() => (_: string, options?: ArrayTableRowData) => {
-        if (!options || !options.index) return;
+        if (!options || options.index === undefined) return;
         const updateFunction = deleteRow(options.index);
         return setRows(updateFunction);
       });
@@ -348,7 +348,6 @@ function useAlterArrayTable<T>({
 
       return (rows) => {
         if (addTo === "bottom") {
-          console.log("bottom", newRow(rows.length, false));
           rows.push(newRow(rows.length, false));
         } else {
           rows = [newRow(0, false), ...rows];

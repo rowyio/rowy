@@ -32,10 +32,14 @@ import {
   tableSettingsAtom,
   tableSchemaAtom,
   tableModalAtom,
+  tableSortsAtom,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 import { TableToolsType } from "@src/types/table";
 import FilterIcon from "@mui/icons-material/FilterList";
+
+// prettier-ignore
+const Sort = lazy(() => import("./Sort" /* webpackChunkName: "Filters" */));
 
 // prettier-ignore
 const Filters = lazy(() => import("./Filters" /* webpackChunkName: "Filters" */));
@@ -62,6 +66,7 @@ export default function TableToolbar({
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const openTableModal = useSetAtom(tableModalAtom, tableScope);
+  const [tableSorts] = useAtom(tableSortsAtom, tableScope);
   const hasDerivatives =
     Object.values(tableSchema.columns ?? {}).filter(
       (column) => column.type === FieldType.derivative
@@ -116,6 +121,11 @@ export default function TableToolbar({
           <Filters />
         </Suspense>
       )}
+      {tableSorts.length > 0 && tableSettings.isCollection !== false && (
+        <Suspense fallback={<ButtonSkeleton />}>
+          <Sort />
+        </Suspense>
+      )}
       <div /> {/* Spacer */}
       <LoadedRowsStatus />
       <div style={{ flexGrow: 1, minWidth: 64 }} />
@@ -134,22 +144,20 @@ export default function TableToolbar({
           </Suspense>
         )
       )}
-
       {(!projectSettings.exporterRoles ||
         projectSettings.exporterRoles.length === 0 ||
         userRoles.some((role) =>
           projectSettings.exporterRoles?.includes(role)
         )) && (
-          <Suspense fallback={<ButtonSkeleton />}>
-            <TableToolbarButton
-              title="Export/Download"
-              onClick={() => openTableModal("export")}
-              icon={<ExportIcon />}
-              disabled={disabledTools.includes("export")}
-            />
+        <Suspense fallback={<ButtonSkeleton />}>
+          <TableToolbarButton
+            title="Export/Download"
+            onClick={() => openTableModal("export")}
+            icon={<ExportIcon />}
+            disabled={disabledTools.includes("export")}
+          />
         </Suspense>
       )}
-      
       {userRoles.includes("ADMIN") && (
         <>
           <div /> {/* Spacer */}

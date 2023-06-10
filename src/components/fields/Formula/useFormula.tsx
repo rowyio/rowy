@@ -1,9 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { pick, zipObject } from "lodash-es";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
-import { TableRow, TableRowRef } from "@src/types/table";
-import { tableColumnsOrderedAtom, tableScope } from "@src/atoms/tableScope";
+import { TableRow, TableRowRef, ColumnConfig } from "@src/types/table";
+import {
+  tableColumnsOrderedAtom,
+  tableScope,
+  updateFieldAtom,
+} from "@src/atoms/tableScope";
 
 import {
   listenerFieldTypes,
@@ -12,11 +16,13 @@ import {
 } from "./util";
 
 export const useFormula = ({
+  column,
   row,
   ref,
   listenerFields,
   formulaFn,
 }: {
+  column: ColumnConfig;
   row: TableRow;
   ref: TableRowRef;
   listenerFields: string[];
@@ -77,6 +83,16 @@ export const useFormula = ({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [useDeepCompareMemoize(listeners), formulaFn]);
+
+  const updateField = useSetAtom(updateFieldAtom, tableScope);
+
+  useEffect(() => {
+    updateField({
+      path: row._rowy_ref.path,
+      fieldName: `_rowy_formulaValue_${column.key}`,
+      value: result,
+    });
+  }, [result, column.key, row._rowy_ref.path, updateField]);
 
   return { result, error, loading };
 };

@@ -7,6 +7,7 @@ import { DATE_FORMAT } from "@src/constants/dates";
 import DateIcon from "@mui/icons-material/TodayOutlined";
 import DisplayCell from "./DisplayCell";
 import { filterOperators, valueFormatter } from "./filters";
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
 
 const EditorCell = lazy(
   () => import("./EditorCell" /* webpackChunkName: "EditorCell-Date" */)
@@ -42,6 +43,7 @@ export const config: IFieldConfig = {
       return format(value.toDate(), DATE_FORMAT);
     }
   },
+  contextMenuActions: BasicContextMenuActions,
 };
 export default config;
 
