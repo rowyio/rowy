@@ -48,7 +48,6 @@
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.0",
     "react-color-palette": "^6.2.0",
-    "react-detect-offline": "^2.4.5",
     "react-div-100vh": "^0.7.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
