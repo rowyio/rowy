@@ -21,7 +21,7 @@ export function changePageUrl(newURL: string | undefined = URL) {
 }
 
 function findOperators(str: string) {
-  const operators = [">=", "<=", ">", "<", "==", "!=", "=", "-is-"];
+  const operators = [">=", "<=", ">", "<", "==", "!=", "="];
   const regex = new RegExp(operators.map((op) => `\\${op}`).join("|"), "g");
   return str.match(regex) || [];
 }

@@ -193,8 +193,7 @@ export type TableFilter = {
     | "time-minute-equal"
     | "id-equal"
     | "color-equal"
-    | "color-not-equal"
-    | "-is-";
+    | "color-not-equal";
   value: any;
 };
 

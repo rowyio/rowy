@@ -124,7 +124,7 @@ export default function Filters() {
     );
     if (!isFilterableColumn?.length) return false;
     filter.key = isFilterableColumn?.[0]?.value;
-    filter.operator = filter.operator === "-is-" ? "id-equal" : filter.operator;
+    filter.operator = filter.operator;
     filter.value =
       filter.operator === "id-equal" ? filter.value.toString() : filter.value;
     return true;
@@ -225,8 +225,7 @@ export default function Filters() {
     } else {
       const [filter] = filters;
       const fieldName = filter.key === "_rowy_ref.id" ? "ID" : filter.key;
-      const operator =
-        filter.operator === "id-equal" ? "-is-" : filter.operator;
+      const operator = filter.operator;
       const formattedValue = availableFilters?.valueFormatter
         ? availableFilters.valueFormatter(filter.value, filter.operator)
         : filter.value.toString();

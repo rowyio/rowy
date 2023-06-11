@@ -24,6 +24,10 @@ export const config: IFieldConfig = {
   dataType: "Record<string, any>",
   initialValue: {},
   initializable: true,
+  filter: {
+    operators: filterOperators,
+    valueFormatter,
+  },
   icon: <ColorIcon />,
   description:
     "Color stored as Hex, RGB, and HSV. Edited with a visual picker.",
