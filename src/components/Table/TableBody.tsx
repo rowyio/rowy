@@ -1,6 +1,11 @@
 import { memo } from "react";
 import { useAtom } from "jotai";
-import type { Column, Row, ColumnSizingState } from "@tanstack/react-table";
+import {
+  Column,
+  Row,
+  ColumnSizingState,
+  flexRender,
+} from "@tanstack/react-table";
 
 import StyledRow from "./Styled/StyledRow";
 import OutOfOrderIndicator from "./OutOfOrderIndicator";
@@ -18,6 +23,7 @@ import { getFieldProp } from "@src/components/fields";
 import type { TableRow } from "@src/types/table";
 import useVirtualization from "./useVirtualization";
 import { DEFAULT_ROW_HEIGHT, OUT_OF_ORDER_MARGIN } from "./Table";
+import StyledCell from "./Styled/StyledCell";
 
 export interface ITableBodyProps {
   /**
@@ -48,7 +54,7 @@ export interface ITableBodyProps {
  * - Renders row out of order indicator
  * - Renders next page loading UI (`RowsSkeleton`)
  */
-export const TableBody = memo(function TableBody({
+export const TableBody = function TableBody({
   containerRef,
   leafColumns,
   rows,
@@ -114,6 +120,14 @@ export const TableBody = memo(function TableBody({
               const isReadOnlyCell =
                 fieldTypeGroup === "Auditing" || fieldTypeGroup === "Metadata";
 
+              if (cell.id.includes("_rowy_select")) {
+                return (
+                  <StyledCell key={cell.id} role="gridcell">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </StyledCell>
+                );
+              }
+
               return (
                 <TableCell
                   key={cell.id}
@@ -143,6 +157,6 @@ export const TableBody = memo(function TableBody({
       )}
     </div>
   );
-});
+};
 
 export default TableBody;

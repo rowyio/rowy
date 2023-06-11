@@ -3,6 +3,7 @@ import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { useThrottledCallback } from "use-debounce";
 import {
+  RowSelectionState,
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
@@ -42,6 +43,7 @@ import { useSaveColumnSizing } from "./useSaveColumnSizing";
 import useHotKeys from "./useHotKey";
 import type { TableRow, ColumnConfig } from "@src/types/table";
 import useStateWithRef from "./useStateWithRef"; // testing with useStateWithRef
+import { Checkbox, FormControlLabel } from "@mui/material";
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
@@ -75,6 +77,20 @@ export interface ITableProps {
    * Loading state handled by Suspense in parent component.
    */
   emptyState?: React.ReactNode;
+  /**
+   * If defined, it will show a checkbox to select rows. The
+   * state is to be maintained by the parent component.
+   *
+   * Usage:
+   *
+   * const [selectedRows, setSelectedRows] = useState<RowSelectionState>({});
+   * const selectedRowsProp = useMemo(() => ({state: selectedRows, setState: setSelectedRows}), [selectedRows, setSelectedRows])
+   * <Table selectedRows={selectedRowsProp} />
+   */
+  selectedRows?: {
+    state: RowSelectionState;
+    setState: React.Dispatch<React.SetStateAction<{}>>;
+  };
 }
 
 /**
@@ -93,6 +109,7 @@ export default function Table({
   canEditCells,
   hiddenColumns,
   emptyState,
+  selectedRows,
 }: ITableProps) {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
@@ -142,8 +159,44 @@ export default function Table({
       );
     }
 
+    if (selectedRows)
+      _columns.unshift(
+        columnHelper.display({
+          id: "_rowy_select",
+          size: 41.8, // TODO: We shouldn't have to change this often
+          header: ({ table }) => (
+            <FormControlLabel
+              sx={{ margin: 0 }}
+              label=""
+              control={
+                <Checkbox
+                  checked={table.getIsAllRowsSelected()}
+                  indeterminate={table.getIsSomeRowsSelected()}
+                  onChange={table.getToggleAllRowsSelectedHandler()}
+                />
+              }
+            />
+          ),
+          cell: ({ row }) => {
+            return (
+              <FormControlLabel
+                label=""
+                sx={{ margin: 0 }}
+                control={
+                  <Checkbox
+                    checked={row.getIsSelected()}
+                    disabled={!row.getCanSelect()}
+                    onChange={row.getToggleSelectedHandler()}
+                  />
+                }
+              />
+            );
+          },
+        })
+      );
+
     return _columns;
-  }, [tableColumnsOrdered, canAddColumns, canEditCells]);
+  }, [tableColumnsOrdered, canAddColumns, canEditCells, selectedRows]);
 
   // Get user’s hidden columns from props and memoize into a `VisibilityState`
   const columnVisibility: VisibilityState = useMemo(() => {
@@ -172,6 +225,14 @@ export default function Table({
     getCoreRowModel: getCoreRowModel(),
     getRowId,
     columnResizeMode: "onChange",
+    ...(selectedRows && {
+      enableRowSelection: true,
+      enableMultiRowSelection: true,
+      state: {
+        rowSelection: selectedRows.state,
+      },
+      onRowSelectionChange: selectedRows.setState,
+    }),
   });
 
   // Store local `columnSizing` state so we can save it to table schema
@@ -292,7 +353,7 @@ export default function Table({
           }}
         >
           <TableHeader
-            headerGroups={table.getHeaderGroups()}
+            table={table}
             handleDropColumn={handleDropColumn}
             canAddColumns={canAddColumns}
             canEditColumns={canEditColumns}

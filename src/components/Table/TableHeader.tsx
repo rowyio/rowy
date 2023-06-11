@@ -2,7 +2,7 @@ import { memo, Fragment } from "react";
 import { useAtom } from "jotai";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import type { DropResult } from "react-beautiful-dnd";
-import type { ColumnSizingState, HeaderGroup } from "@tanstack/react-table";
+import { ColumnSizingState, Table, flexRender } from "@tanstack/react-table";
 import type { TableRow } from "@src/types/table";
 
 import StyledRow from "./Styled/StyledRow";
@@ -11,10 +11,11 @@ import FinalColumnHeader from "./FinalColumn/FinalColumnHeader";
 
 import { tableScope, selectedCellAtom } from "@src/atoms/tableScope";
 import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
+import StyledColumnHeader from "./Styled/StyledColumnHeader";
 
 export interface ITableHeaderProps {
   /** Headers with context from TanStack Table state */
-  headerGroups: HeaderGroup<TableRow>[];
+  table: Table<TableRow>;
   /** Called when a header is dropped in a new position */
   handleDropColumn: (result: DropResult) => void;
   /** Passed to `FinalColumnHeader` */
@@ -34,13 +35,14 @@ export interface ITableHeaderProps {
  *
  * - Renders drag & drop components
  */
-export const TableHeader = memo(function TableHeader({
-  headerGroups,
+export const TableHeader = function TableHeader({
+  table,
   handleDropColumn,
   canAddColumns,
   canEditColumns,
   lastFrozen,
 }: ITableHeaderProps) {
+  const headerGroups = table.getHeaderGroups();
   const [selectedCell] = useAtom(selectedCellAtom, tableScope);
   const focusInside = selectedCell?.focusInside ?? false;
 
@@ -68,6 +70,20 @@ export const TableHeader = memo(function TableHeader({
                     selectedCell?.columnKey === header.id);
 
                 const isLastHeader = i === headerGroup.headers.length - 1;
+
+                if (header.id === "_rowy_select")
+                  return (
+                    <StyledColumnHeader
+                      key={header.id}
+                      role="columnheader"
+                      style={{ padding: 0 }}
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                    </StyledColumnHeader>
+                  );
 
                 // Render later, after the drag & drop placeholder
                 if (header.id === "_rowy_column_actions")
@@ -129,6 +145,6 @@ export const TableHeader = memo(function TableHeader({
       ))}
     </DragDropContext>
   );
-});
+};
 
 export default TableHeader;
