@@ -198,6 +198,7 @@ export type TableFilter = {
     | "color-not-equal"
     | "";
   value: any;
+  id: number;
 };
 
 export const TableTools = [

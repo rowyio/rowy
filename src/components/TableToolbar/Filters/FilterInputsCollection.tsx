@@ -44,8 +44,8 @@ export default function FilterInputsCollection({
               {queries.map((query, index) => {
                 return (
                   <Draggable
-                    key={query.key}
-                    draggableId={query.key}
+                    key={query.id}
+                    draggableId={query.id.toString()}
                     index={index}
                   >
                     {(provided) => (
@@ -58,7 +58,7 @@ export default function FilterInputsCollection({
                           filterColumns={filterColumns}
                           selectedColumn={selectedColumns[index]}
                           handleChangeColumn={(key: string) => {
-                            handleColumnChange(query.key, key);
+                            handleColumnChange(query.id, key);
                           }}
                           availableFilters={
                             availableFiltersForEachSelectedColumn[index]
@@ -103,16 +103,19 @@ export default function FilterInputsCollection({
             return !find(selectedColumns, { key: column.key });
           });
 
+          const id = Math.random();
+
           setQueries((prevQueries) => [
             ...prevQueries,
             {
               key: "",
               operator: "",
               value: "",
+              id,
             },
           ]);
 
-          handleColumnChange("", column?.key ?? filterColumns[0].key);
+          handleColumnChange(id, column?.key ?? filterColumns[0].key);
         }}
         startIcon={<AddIcon />}
       >
