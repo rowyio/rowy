@@ -189,7 +189,7 @@ export default function Filters() {
         tableSchema.joinOperator === "AND" ? "AND" : "OR"
       );
     }
-  }, [userSettings.tables?.[tableId]?.joinOperator]);
+  }, [userSettings.tables?.[tableId]?.joinOperator, tableSchema.joinOperator]);
 
   useEffect(() => {
     if (tableFiltersOverridable && (hasUserFilters || userFilters === null)) {

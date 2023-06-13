@@ -44,13 +44,14 @@ export const useFilterInputs = (
             value:
               getFieldProp("filter", getFieldType(filterColumns[0]))
                 .defaultValue ?? "",
+            id: Math.random(),
           },
         ]
       : [];
 
   // State for filter inputs
   const [queries, setQueries] = useState<TableFilter[]>(
-    defaultQuery ? [defaultQuery] : INITIAL_QUERY
+    defaultQuery ? [{ ...defaultQuery, id: Math.random() }] : INITIAL_QUERY
   );
   const resetQuery = () => setQueries([]);
 
@@ -58,11 +59,11 @@ export const useFilterInputs = (
   const [joinOperator, setJoinOperator] = useState<"AND" | "OR">("AND");
 
   // When the user sets a new column, automatically set the operator and value
-  const handleColumnChange = (oldKey: string, newKey: string) => {
+  const handleColumnChange = (oldId: number, newKey: string) => {
     if (newKey === "_rowy_ref.id") {
       setQueries((prevQueries) => {
         const newQueries = [...prevQueries];
-        const query = find(newQueries, ["key", oldKey]);
+        const query = find(newQueries, ["id", oldId]);
         if (query) {
           query.key = newKey;
           query.operator = "id-equal";
@@ -79,7 +80,7 @@ export const useFilterInputs = (
       const filter = getFieldProp("filter", getFieldType(column));
       setQueries((prevQueries) => {
         const newQueries = [...prevQueries];
-        const query = find(newQueries, ["key", oldKey]);
+        const query = find(newQueries, ["id", oldId]);
         if (query) {
           query.key = newKey;
           query.operator = filter.operators[0].value;
@@ -98,9 +99,12 @@ export const useFilterInputs = (
   }
 
   const availableFiltersForEachSelectedColumn: IFieldConfig["filter"][] =
-    selectedColumns.map((column) =>
-      getFieldProp("filter", getFieldType(column))
-    );
+    selectedColumns.map((column) => {
+      if (column.key === "_rowy_ref.id") {
+        return { operators: [{ value: "id-equal", label: "is" }] };
+      }
+      return getFieldProp("filter", getFieldType(column));
+    });
 
   return {
     filterColumns,
