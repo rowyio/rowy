@@ -6,7 +6,7 @@ import { FieldType } from "@src/constants/fields";
 import type { ColumnConfig, TableFilter } from "@src/types/table";
 import type { IFieldConfig } from "@src/components/fields/types";
 
-export const INITIAL_QUERY = { key: "", operator: "", value: "" };
+export let INITIAL_QUERY: TableFilter[] = [];
 
 export const useFilterInputs = (
   columns: ColumnConfig[],
@@ -34,50 +34,83 @@ export const useFilterInputs = (
     config: {},
   });
 
+  INITIAL_QUERY =
+    filterColumns && filterColumns.length > 0
+      ? [
+          {
+            key: filterColumns[0].key,
+            operator: getFieldProp("filter", getFieldType(filterColumns[0]))
+              .operators[0].value,
+            value:
+              getFieldProp("filter", getFieldType(filterColumns[0]))
+                .defaultValue ?? "",
+          },
+        ]
+      : [];
+
   // State for filter inputs
-  const [query, setQuery] = useState<TableFilter | typeof INITIAL_QUERY>(
-    defaultQuery || INITIAL_QUERY
+  const [queries, setQueries] = useState<TableFilter[]>(
+    defaultQuery ? [defaultQuery] : INITIAL_QUERY
   );
-  const resetQuery = () => setQuery(INITIAL_QUERY);
+  const resetQuery = () => setQueries([]);
+
+  // State for filter inputs joined by AND/OR
+  const [joinOperator, setJoinOperator] = useState<"AND" | "OR">("AND");
 
   // When the user sets a new column, automatically set the operator and value
-  const handleChangeColumn = (value: string | null) => {
-    if (value === "_rowy_ref.id") {
-      setQuery({ key: "_rowy_ref.id", operator: "id-equal", value: "" });
+  const handleColumnChange = (oldKey: string, newKey: string) => {
+    if (newKey === "_rowy_ref.id") {
+      setQueries((prevQueries) => {
+        const newQueries = [...prevQueries];
+        const query = find(newQueries, ["key", oldKey]);
+        if (query) {
+          query.key = newKey;
+          query.operator = "id-equal";
+          query.value = "";
+        }
+        return newQueries;
+      });
+
       return;
     }
 
-    const column = find(filterColumns, ["key", value]);
-
+    const column = find(filterColumns, ["key", newKey]);
     if (column) {
       const filter = getFieldProp("filter", getFieldType(column));
-      setQuery({
-        key: column.key,
-        operator: filter.operators[0].value,
-        value: filter.defaultValue ?? "",
+      setQueries((prevQueries) => {
+        const newQueries = [...prevQueries];
+        const query = find(newQueries, ["key", oldKey]);
+        if (query) {
+          query.key = newKey;
+          query.operator = filter.operators[0].value;
+          query.value = filter.defaultValue ?? "";
+        }
+        return newQueries;
       });
-    } else {
-      setQuery(INITIAL_QUERY);
     }
   };
 
   // Get the column config
-  const selectedColumn = find(filterColumns, ["key", query?.key]);
-  // Get available filters from selected column type
-  const availableFilters: IFieldConfig["filter"] =
-    query?.key === "_rowy_ref.id"
-      ? { operators: [{ value: "id-equal", label: "is" }] }
-      : selectedColumn
-      ? getFieldProp("filter", getFieldType(selectedColumn))
-      : undefined;
+  const selectedColumns = [];
+  for (const query of queries) {
+    const column = find(filterColumns, ["key", query.key]);
+    if (column) selectedColumns.push(column);
+  }
+
+  const availableFiltersForEachSelectedColumn: IFieldConfig["filter"][] =
+    selectedColumns.map((column) =>
+      getFieldProp("filter", getFieldType(column))
+    );
 
   return {
     filterColumns,
-    selectedColumn,
-    handleChangeColumn,
-    availableFilters,
-    query,
-    setQuery,
+    selectedColumns,
+    handleColumnChange,
+    availableFiltersForEachSelectedColumn,
+    queries,
+    setQueries,
     resetQuery,
+    joinOperator,
+    setJoinOperator,
   } as const;
 };
