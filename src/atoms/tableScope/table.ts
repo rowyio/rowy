@@ -59,6 +59,8 @@ export const tableColumnsReducer = (
 
 /** Filters applied to the local view */
 export const tableFiltersAtom = atom<TableFilter[]>([]);
+/** Join operator applied to mulitple filters */
+export const tableFiltersJoinAtom = atom<"AND" | "OR">("AND");
 /** Sorts applied to the local view */
 export const tableSortsAtom = atom<TableSort[]>([]);
 

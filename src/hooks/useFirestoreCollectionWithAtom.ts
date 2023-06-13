@@ -24,6 +24,7 @@ import {
   documentId,
   getCountFromServer,
   DocumentData,
+  or,
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
@@ -66,6 +67,8 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
   nextPageAtom?: PrimitiveAtom<NextPageState>;
   /** Set this atom's value to the number of docs in the collection on each new snapshot */
   serverDocCountAtom?: PrimitiveAtom<number | undefined>;
+
+  joinOperator?: string;
 }
 
 /**
@@ -100,6 +103,7 @@ export function useFirestoreCollectionWithAtom<
     deleteDocAtom,
     nextPageAtom,
     serverDocCountAtom,
+    joinOperator,
   } = options || {};
 
   const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
@@ -140,6 +144,7 @@ export function useFirestoreCollectionWithAtom<
       page,
       pageSize,
       filters,
+      joinOperator,
       sorts,
       onError
     ),
@@ -151,6 +156,9 @@ export function useFirestoreCollectionWithAtom<
         JSON.stringify(prev?.firestoreFilters)
       )
         return false;
+
+      // If joinOperator is not equal, update the query
+      if (next?.joinOperator !== prev?.joinOperator) return false;
 
       // If sorts are not equal, update the query
       // Overrides isLastPage check
@@ -309,6 +317,7 @@ const getQuery = <T>(
   page: number,
   pageSize: number,
   filters: IUseFirestoreCollectionWithAtomOptions<T>["filters"],
+  joinOperator: string | undefined,
   sorts: IUseFirestoreCollectionWithAtomOptions<T>["sorts"],
   onError: IUseFirestoreCollectionWithAtomOptions<T>["onError"]
 ) => {
@@ -335,19 +344,39 @@ const getQuery = <T>(
     const limit = (page + 1) * pageSize;
     const firestoreFilters = tableFiltersToFirestoreFilters(filters || []);
 
-    return {
-      query: query<T>(
-        collectionRef,
-        queryLimit(limit),
-        ...firestoreFilters,
-        ...(sorts?.map((order) => orderBy(order.key, order.direction)) || [])
-      ),
-      page,
-      limit,
-      firestoreFilters,
-      sorts,
-      unlimitedQuery: query<T>(collectionRef, ...firestoreFilters),
-    };
+    console.log("useFirestoreCollectionWithAtom joinOperator", joinOperator);
+
+    return joinOperator === "OR"
+      ? {
+          query: query<T>(
+            collectionRef,
+            or(...firestoreFilters),
+            queryLimit(limit),
+            ...(sorts?.map((order) => orderBy(order.key, order.direction)) ||
+              [])
+          ),
+          page,
+          limit,
+          firestoreFilters,
+          sorts,
+          unlimitedQuery: query<T>(collectionRef, ...firestoreFilters),
+          joinOperator,
+        }
+      : {
+          query: query<T>(
+            collectionRef,
+            queryLimit(limit),
+            ...firestoreFilters,
+            ...(sorts?.map((order) => orderBy(order.key, order.direction)) ||
+              [])
+          ),
+          page,
+          limit,
+          firestoreFilters,
+          sorts,
+          unlimitedQuery: query<T>(collectionRef, ...firestoreFilters),
+          joinOperator,
+        };
   } catch (e) {
     if (onError) onError(e as FirestoreError);
     return null;

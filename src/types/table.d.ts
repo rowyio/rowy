@@ -123,6 +123,8 @@ export type TableSchema = {
   subTables?: SubTablesSchema;
   /** @deprecated Migrate to Extensions */
   sparks?: string;
+
+  joinOperator?: "AND" | "OR";
 };
 
 export type SubTablesSchema = {
@@ -193,7 +195,8 @@ export type TableFilter = {
     | "time-minute-equal"
     | "id-equal"
     | "color-equal"
-    | "color-not-equal";
+    | "color-not-equal"
+    | "";
   value: any;
 };
 
