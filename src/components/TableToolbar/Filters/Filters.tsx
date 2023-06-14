@@ -42,18 +42,23 @@ import { analytics, logEvent } from "@src/analytics";
 import type { TableFilter } from "@src/types/table";
 
 const shouldDisableApplyButton = (queries: any) => {
-  let disable = queries.length === 0;
+  if (queries.length === 0) return true;
 
   for (let query of queries) {
-    disable =
-      disable ||
-      (isEmpty(query.value) &&
-        !isDate(query.value) &&
-        typeof query.value !== "boolean" &&
-        typeof query.value !== "number");
+    if (query.operator === "is-empty" || query.operator === "is-not-empty") {
+      continue;
+    }
+
+    if (
+      isEmpty(query.value) &&
+      !isDate(query.value) &&
+      typeof query.value !== "boolean" &&
+      typeof query.value !== "number"
+    )
+      return true;
   }
 
-  return disable;
+  return false;
 };
 
 enum FilterType {

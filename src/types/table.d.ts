@@ -196,6 +196,8 @@ export type TableFilter = {
     | "id-equal"
     | "color-equal"
     | "color-not-equal"
+    | "is-empty"
+    | "is-not-empty"
     | "";
   value: any;
   id: number;
