@@ -344,8 +344,6 @@ const getQuery = <T>(
     const limit = (page + 1) * pageSize;
     const firestoreFilters = tableFiltersToFirestoreFilters(filters || []);
 
-    console.log("useFirestoreCollectionWithAtom joinOperator", joinOperator);
-
     return joinOperator === "OR"
       ? {
           query: query<T>(
@@ -434,7 +432,14 @@ export const tableFiltersToFirestoreFilters = (filters: TableFilter[]) => {
         where(filter.key.concat(".hex"), "!=", filter.value.hex.toString())
       );
       continue;
+    } else if (filter.operator === "is-empty") {
+      firestoreFilters.push(where(filter.key, "==", ""));
+      continue;
+    } else if (filter.operator === "is-not-empty") {
+      firestoreFilters.push(where(filter.key, "!=", ""));
+      continue;
     }
+
     firestoreFilters.push(
       where(filter.key, filter.operator as WhereFilterOp, filter.value)
     );

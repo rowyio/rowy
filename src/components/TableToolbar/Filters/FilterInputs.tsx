@@ -141,41 +141,44 @@ export default function FilterInputs({
       </Grid>
 
       <Grid item xs={3.5} key={query.key + query.operator}>
-        {query.key && query.operator && (
-          <ErrorBoundary FallbackComponent={InlineErrorFallback}>
-            <InputLabel
-              variant="filled"
-              id={`filters-label-${query.key}`}
-              htmlFor={`sidedrawer-field-${query.key}`}
-            >
-              Value
-            </InputLabel>
+        {query.key &&
+          query.operator &&
+          query.operator !== "is-empty" &&
+          query.operator != "is-not-empty" && (
+            <ErrorBoundary FallbackComponent={InlineErrorFallback}>
+              <InputLabel
+                variant="filled"
+                id={`filters-label-${query.key}`}
+                htmlFor={`sidedrawer-field-${query.key}`}
+              >
+                Value
+              </InputLabel>
 
-            <Suspense fallback={<FieldSkeleton />}>
-              {columnType &&
-                createElement(
-                  query.key === "_rowy_ref.id"
-                    ? IdFilterInput
-                    : getFieldProp("filter.customInput" as any, columnType) ||
-                        getFieldProp("SideDrawerField", columnType),
-                  {
-                    column: selectedColumn,
-                    _rowy_ref: {},
-                    value: query.value,
-                    onChange: (value: any) => {
-                      const newQuery = {
-                        ...query,
-                        value,
-                      };
-                      setQuery(newQuery);
-                    },
-                    disabled,
-                    operator: query.operator,
-                  }
-                )}
-            </Suspense>
-          </ErrorBoundary>
-        )}
+              <Suspense fallback={<FieldSkeleton />}>
+                {columnType &&
+                  createElement(
+                    query.key === "_rowy_ref.id"
+                      ? IdFilterInput
+                      : getFieldProp("filter.customInput" as any, columnType) ||
+                          getFieldProp("SideDrawerField", columnType),
+                    {
+                      column: selectedColumn,
+                      _rowy_ref: {},
+                      value: query.value,
+                      onChange: (value: any) => {
+                        const newQuery = {
+                          ...query,
+                          value,
+                        };
+                        setQuery(newQuery);
+                      },
+                      disabled,
+                      operator: query.operator,
+                    }
+                  )}
+              </Suspense>
+            </ErrorBoundary>
+          )}
       </Grid>
 
       <Grid
