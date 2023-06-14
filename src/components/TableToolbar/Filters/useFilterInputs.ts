@@ -6,8 +6,6 @@ import { FieldType } from "@src/constants/fields";
 import type { ColumnConfig, TableFilter } from "@src/types/table";
 import type { IFieldConfig } from "@src/components/fields/types";
 
-export let INITIAL_QUERY: TableFilter[] = [];
-
 export const useFilterInputs = (
   columns: ColumnConfig[],
   defaultQuery?: TableFilter
@@ -34,16 +32,21 @@ export const useFilterInputs = (
     config: {},
   });
 
-  INITIAL_QUERY =
+  const INITIAL_QUERY: TableFilter[] =
     filterColumns && filterColumns.length > 0
       ? [
           {
             key: filterColumns[0].key,
-            operator: getFieldProp("filter", getFieldType(filterColumns[0]))
-              .operators[0].value,
+            operator:
+              filterColumns[0].key === "_rowy_ref.id"
+                ? "id-equal"
+                : getFieldProp("filter", getFieldType(filterColumns[0]))
+                    .operators[0].value,
             value:
-              getFieldProp("filter", getFieldType(filterColumns[0]))
-                .defaultValue ?? "",
+              filterColumns[0].key === "_rowy_ref.id"
+                ? ""
+                : getFieldProp("filter", getFieldType(filterColumns[0]))
+                    .defaultValue ?? "",
             id: Math.random(),
           },
         ]
@@ -85,6 +88,17 @@ export const useFilterInputs = (
           query.key = newKey;
           query.operator = filter.operators[0].value;
           query.value = filter.defaultValue ?? "";
+        }
+        return newQueries;
+      });
+    } else {
+      setQueries((prevQueries) => {
+        const newQueries = [...prevQueries];
+        const query = find(newQueries, ["id", oldId]);
+        if (query) {
+          query.key = newKey;
+          query.operator = "";
+          query.value = "";
         }
         return newQueries;
       });

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import useMemoValue from "use-memo-value";
 import { isEmpty, isDate } from "lodash-es";
 
@@ -37,7 +37,7 @@ import {
   tableFiltersPopoverAtom,
   tableFiltersJoinAtom,
 } from "@src/atoms/tableScope";
-import { useFilterInputs, INITIAL_QUERY } from "./useFilterInputs";
+import { useFilterInputs } from "./useFilterInputs";
 import { analytics, logEvent } from "@src/analytics";
 import type { TableFilter } from "@src/types/table";
 
@@ -81,10 +81,7 @@ export default function Filters() {
   const availableFiltersForFirstColumn =
     availableFiltersForEachSelectedColumn[0];
 
-  const [tableFiltersJoin, setTableFiltersJoin] = useAtom(
-    tableFiltersJoinAtom,
-    tableScope
-  );
+  const setTableFiltersJoin = useSetAtom(tableFiltersJoinAtom, tableScope);
 
   // Get table filters & user filters from config documents
   const tableFilters = useMemoValue(
@@ -103,16 +100,18 @@ export default function Filters() {
   // Set the local table filter
   useEffect(() => {
     // Set local state for UI
-    setTableQueries(
-      Array.isArray(tableFilters) && tableFilters && tableFilters.length > 0
-        ? tableFilters
-        : INITIAL_QUERY
-    );
-    setUserQueries(
-      Array.isArray(userFilters) && userFilters && userFilters.length > 0
-        ? userFilters
-        : INITIAL_QUERY
-    );
+    if (
+      Array.isArray(tableFilters) &&
+      tableFilters &&
+      tableFilters.length > 0
+    ) {
+      setTableQueries(tableFilters);
+    }
+
+    if (Array.isArray(userFilters) && userFilters && userFilters.length > 0) {
+      setUserQueries(userFilters);
+    }
+
     setCanOverrideCheckbox(tableFiltersOverridable);
 
     let filtersToApply: TableFilter[] = [];
