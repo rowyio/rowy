@@ -7,6 +7,7 @@ import type { useFilterInputs } from "./useFilterInputs";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import AddIcon from "@mui/icons-material/Add";
 import { find } from "lodash-es";
+import { TableFilter } from "@src/types/table";
 
 export interface IFilterInputsCollectionProps
   extends ReturnType<typeof useFilterInputs> {
@@ -64,7 +65,7 @@ export default function FilterInputsCollection({
                             availableFiltersForEachSelectedColumn[index]
                           }
                           query={query}
-                          setQuery={(newQuery: any) => {
+                          setQuery={(newQuery: TableFilter) => {
                             setQueries((prevQueries) => {
                               const newQueries = [...prevQueries];
                               newQueries[index] = newQuery;

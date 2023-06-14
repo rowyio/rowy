@@ -68,7 +68,7 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
   /** Set this atom's value to the number of docs in the collection on each new snapshot */
   serverDocCountAtom?: PrimitiveAtom<number | undefined>;
 
-  joinOperator?: string;
+  joinOperator?: "AND" | "OR";
 }
 
 /**
@@ -317,7 +317,7 @@ const getQuery = <T>(
   page: number,
   pageSize: number,
   filters: IUseFirestoreCollectionWithAtomOptions<T>["filters"],
-  joinOperator: string | undefined,
+  joinOperator: "AND" | "OR" | undefined,
   sorts: IUseFirestoreCollectionWithAtomOptions<T>["sorts"],
   onError: IUseFirestoreCollectionWithAtomOptions<T>["onError"]
 ) => {

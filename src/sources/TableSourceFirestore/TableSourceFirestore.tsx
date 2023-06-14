@@ -113,10 +113,7 @@ export const TableSourceFirestore = memo(function TableSourceFirestore() {
     }
   );
 
-  const [joinOperator, setJoinOperator] = useAtom(
-    tableFiltersJoinAtom,
-    tableScope
-  );
+  const [joinOperator] = useAtom(tableFiltersJoinAtom, tableScope);
 
   // Get table filters and sorts
   const [filters] = useAtom(tableFiltersAtom, tableScope);
