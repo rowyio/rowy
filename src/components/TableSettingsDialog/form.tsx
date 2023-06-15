@@ -149,6 +149,7 @@ export const tableSettings = (
           // https://firebase.google.com/docs/firestore/quotas#collections_documents_and_fields
           validation: [
             ["matches", /^[^\s]+$/, "Collection name cannot have spaces"],
+            ["matches", /^[^.]+$/, "Collection name cannot have dots"],
             ["notOneOf", [".", ".."], "Collection name cannot be . or .."],
             [
               "test",
@@ -194,6 +195,7 @@ export const tableSettings = (
           // https://firebase.google.com/docs/firestore/quotas#collections_documents_and_fields
           validation: [
             ["matches", /^[^\s]+$/, "Collection name cannot have spaces"],
+            ["matches", /^[^.]+$/, "Collection name cannot have dots"],
             ["notOneOf", [".", ".."], "Collection name cannot be . or .."],
             [
               "test",
