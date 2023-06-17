@@ -33,7 +33,11 @@ export default function EmptyTable() {
       : false;
   let contents = <></>;
 
-  if (hasData) {
+  if (
+    (tableSettings.isCollection !== false ||
+      tableSettings.subTableKey?.length) &&
+    hasData
+  ) {
     contents = (
       <>
         <div>
