@@ -150,6 +150,7 @@ export default function BuildLogsSnack({
                   timeRange: { type: "days", value: 7 },
                   buildLogExpanded: 0,
                 });
+                setExpanded(false);
               }}
               style={{ color: "white" }}
             >
