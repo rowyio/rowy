@@ -2,7 +2,11 @@ import { memo, Fragment } from "react";
 import { useAtom } from "jotai";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import type { DropResult } from "react-beautiful-dnd";
-import { ColumnSizingState, Table, flexRender } from "@tanstack/react-table";
+import {
+  ColumnSizingState,
+  HeaderGroup,
+  flexRender,
+} from "@tanstack/react-table";
 import type { TableRow } from "@src/types/table";
 
 import StyledRow from "./Styled/StyledRow";
@@ -15,7 +19,7 @@ import StyledColumnHeader from "./Styled/StyledColumnHeader";
 
 export interface ITableHeaderProps {
   /** Headers with context from TanStack Table state */
-  table: Table<TableRow>;
+  headerGroups: HeaderGroup<TableRow>[];
   /** Called when a header is dropped in a new position */
   handleDropColumn: (result: DropResult) => void;
   /** Passed to `FinalColumnHeader` */
@@ -35,14 +39,13 @@ export interface ITableHeaderProps {
  *
  * - Renders drag & drop components
  */
-export const TableHeader = function TableHeader({
-  table,
+export const TableHeader = memo(function TableHeader({
+  headerGroups,
   handleDropColumn,
   canAddColumns,
   canEditColumns,
   lastFrozen,
 }: ITableHeaderProps) {
-  const headerGroups = table.getHeaderGroups();
   const [selectedCell] = useAtom(selectedCellAtom, tableScope);
   const focusInside = selectedCell?.focusInside ?? false;
 
@@ -145,6 +148,6 @@ export const TableHeader = function TableHeader({
       ))}
     </DragDropContext>
   );
-};
+});
 
 export default TableHeader;

@@ -353,7 +353,7 @@ export default function Table({
           }}
         >
           <TableHeader
-            table={table}
+            headerGroups={table.getHeaderGroups()}
             handleDropColumn={handleDropColumn}
             canAddColumns={canAddColumns}
             canEditColumns={canEditColumns}

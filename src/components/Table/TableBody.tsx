@@ -54,7 +54,7 @@ export interface ITableBodyProps {
  * - Renders row out of order indicator
  * - Renders next page loading UI (`RowsSkeleton`)
  */
-export const TableBody = function TableBody({
+export const TableBody = memo(function TableBody({
   containerRef,
   leafColumns,
   rows,
@@ -157,6 +157,6 @@ export const TableBody = function TableBody({
       )}
     </div>
   );
-};
+});
 
 export default TableBody;
