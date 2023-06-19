@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useAtom } from "jotai";
+import { matchSorter } from "match-sorter";
 
 import {
   tableScope,
@@ -82,8 +83,6 @@ export default function useMonacoCustomizations({
         "ts:filename/utils.d.ts"
       );
       monaco.languages.typescript.javascriptDefaults.addExtraLib(rowyUtilsDefs);
-
-      setLoggingReplacementActions();
     } catch (error) {
       console.error(
         "An error occurred during initialization of Monaco: ",
@@ -124,13 +123,13 @@ export default function useMonacoCustomizations({
     }
   }, [monaco, stringifiedDiagnosticsOptions]);
 
-  const setLoggingReplacementActions = () => {
+  const setReplacementActions = () => {
     if (!monaco) return;
     const { dispose } = monaco.languages.registerCodeActionProvider(
       "javascript",
       {
         provideCodeActions: (model, range, context, token) => {
-          const actions = context.markers
+          const consoleLogReplacements = context.markers
             .filter((error) => {
               return error.message.includes("Rowy Cloud Logging");
             })
@@ -156,8 +155,63 @@ export default function useMonacoCustomizations({
                 isPreferred: true,
               };
             });
+          const secretNameReplacements = context.markers
+            .filter((error) => {
+              return error.message.includes(
+                "is not assignable to parameter of type 'SecretNames'"
+              );
+            })
+            .map((error) => {
+              const typoSecretName = model
+                .getLineContent(error.startLineNumber)
+                .slice(error.startColumn, error.endColumn - 2);
+              const similarSecretNames =
+                matchSorter(secretNames.secretNames ?? [], typoSecretName) ??
+                [];
+              const otherSecretNames =
+                secretNames.secretNames?.filter(
+                  (secretName) => !similarSecretNames.includes(secretName)
+                ) ?? [];
+              return [
+                ...similarSecretNames.map((secretName) => ({
+                  title: `Replace with "${secretName}"`,
+                  diagnostics: [error],
+                  kind: "quickfix",
+                  edit: {
+                    edits: [
+                      {
+                        resource: model.uri,
+                        edit: {
+                          range: error,
+                          text: `"${secretName}"`,
+                        },
+                      },
+                    ],
+                  },
+                  isPreferred: true,
+                })),
+                ...otherSecretNames.map((secretName) => ({
+                  title: `Replace with "${secretName}"`,
+                  diagnostics: [error],
+                  kind: "quickfix",
+                  edit: {
+                    edits: [
+                      {
+                        resource: model.uri,
+                        edit: {
+                          range: error,
+                          text: `"${secretName}"`,
+                        },
+                      },
+                    ],
+                  },
+                  isPreferred: false,
+                })),
+              ];
+            })
+            .flat();
           return {
-            actions: actions,
+            actions: [...consoleLogReplacements, ...secretNameReplacements],
             dispose: () => {},
           };
         },
@@ -169,7 +223,6 @@ export default function useMonacoCustomizations({
       dispose();
     });
   };
-
   const addJsonFieldDefinition = async (
     columnKey: string,
     interfaceName: string
@@ -269,6 +322,8 @@ export default function useMonacoCustomizations({
         }
        `;
     monaco?.languages.typescript.javascriptDefaults.addExtraLib(secretsDef);
+
+    setReplacementActions();
   }, [monaco, secretNames]);
 
   let boxSx: SystemStyleObject<Theme> = {
