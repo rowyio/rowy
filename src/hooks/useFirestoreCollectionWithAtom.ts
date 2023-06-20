@@ -19,12 +19,12 @@ import {
   deleteField,
   CollectionReference,
   Query,
-  QueryConstraint,
   WhereFilterOp,
   documentId,
   getCountFromServer,
   DocumentData,
   or,
+  QueryFieldFilterConstraint,
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
@@ -388,7 +388,7 @@ const getQuery = <T>(
  * @returns Array of Firestore query `where` constraints
  */
 export const tableFiltersToFirestoreFilters = (filters: TableFilter[]) => {
-  const firestoreFilters: QueryConstraint[] = [];
+  const firestoreFilters: QueryFieldFilterConstraint[] = [];
 
   for (const filter of filters) {
     if (filter.operator.startsWith("date-")) {
