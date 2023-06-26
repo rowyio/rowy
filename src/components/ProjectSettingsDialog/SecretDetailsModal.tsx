@@ -30,7 +30,6 @@ export default function SecretDetailsModal({
   const [newSecretName, setNewSecretName] = useState("");
   const [secretValue, setSecretValue] = useState("");
 
-  console.log(open);
   return (
     <Modal
       onClose={handleClose}

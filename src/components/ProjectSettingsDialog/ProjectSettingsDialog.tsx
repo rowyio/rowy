@@ -34,9 +34,6 @@ export default function ProjectSettingsDialog() {
   const [rowyRun] = useAtom(rowyRunAtom, projectScope);
   const [updateSecretNames] = useAtom(updateSecretNamesAtom, projectScope);
 
-  console.log("open", open);
-  console.log("tab", tab);
-
   if (!open) return null;
 
   const handleClose = () => {
