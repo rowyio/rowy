@@ -131,6 +131,26 @@ export const tableSettingsDialogAtom = atom(
   }
 );
 
+export type ProjectSettingsDialogTab =
+  | "general"
+  | "rowy-run"
+  | "services"
+  | "secrets";
+export type ProjectSettingsDialogState = {
+  open: boolean;
+  tab: ProjectSettingsDialogTab;
+};
+export const projectSettingsDialogAtom = atom(
+  { open: false, tab: "secrets" } as ProjectSettingsDialogState,
+  (_, set, update?: Partial<ProjectSettingsDialogState>) => {
+    set(projectSettingsDialogAtom, {
+      open: true,
+      tab: "secrets",
+      ...update,
+    });
+  }
+);
+
 /**
  * Store the current ID of the table being edited in tableSettingsDialog
  * to derive tableSettingsDialogSchemaAtom
