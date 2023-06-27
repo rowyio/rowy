@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { GlobalStyles } from "tss-react";
-import { Button, Paper, alpha, styled, useTheme } from "@mui/material";
+import { alpha, styled, useTheme } from "@mui/material";
 import { Editor } from "@tinymce/tinymce-react";
 
 // TinyMCE so the global var exists
