@@ -78,7 +78,9 @@ function TableTestPage() {
 
       <button
         onClick={() =>
-          setTableFilters([{ key: "signedUp", operator: "==", value: true }])
+          setTableFilters([
+            { key: "signedUp", operator: "==", value: true, id: Math.random() },
+          ])
         }
       >
         Set table filters

@@ -251,6 +251,7 @@ export default function ColumnMenu({
                   : column.type
               )!.operators[0]?.value || "==",
             value: "",
+            id: Math.random(),
           },
         });
         handleClose();
