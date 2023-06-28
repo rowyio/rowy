@@ -281,6 +281,7 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
           key: selectedColumn.fieldName,
           operator: columnFilters!.operators[0]?.value || "==",
           value: cellValue,
+          id: Math.random(),
         },
       ];
 
