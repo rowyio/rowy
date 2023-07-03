@@ -23,14 +23,11 @@ steps:
       - --project
       - "${_PROJECT_ID}"
   - name: gcr.io/$PROJECT_ID/firebase
-    entrypoint: yarn
     args:
       - deploy
       - --project
       - "${_PROJECT_ID}"
       - --debug
-      - --token
-      - "${_FIREBASE_TOKEN}"
       - --only
       - hosting
 substitutions:
