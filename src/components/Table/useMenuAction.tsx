@@ -19,6 +19,9 @@ import { format } from "date-fns";
 import { DATE_FORMAT, DATE_TIME_FORMAT } from "@src/constants/dates";
 import { isDate, isFunction } from "lodash-es";
 import { getDurationString } from "@src/components/fields/Duration/utils";
+import { doc } from "firebase/firestore";
+import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
+import { projectScope } from "@src/atoms/projectScope";
 
 export const SUPPORTED_TYPES_COPY = new Set([
   // TEXT
@@ -56,6 +59,8 @@ export const SUPPORTED_TYPES_COPY = new Set([
   FieldType.updatedBy,
   FieldType.createdAt,
   FieldType.updatedAt,
+  // CONNECTION
+  FieldType.reference,
 ]);
 
 export const SUPPORTED_TYPES_PASTE = new Set([
@@ -75,6 +80,8 @@ export const SUPPORTED_TYPES_PASTE = new Set([
   FieldType.json,
   FieldType.code,
   FieldType.markdown,
+  // CONNECTION
+  FieldType.reference,
 ]);
 
 export function useMenuAction(
@@ -87,6 +94,7 @@ export function useMenuAction(
   const updateField = useSetAtom(updateFieldAtom, tableScope);
   const [cellValue, setCellValue] = useState<any>();
   const [selectedCol, setSelectedCol] = useState<ColumnConfig>();
+  const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
 
   const handleCopy = useCallback(async () => {
     try {
@@ -164,6 +172,13 @@ export function useMenuAction(
           break;
         case "string":
           parsed = text;
+          break;
+        case "reference":
+          try {
+            parsed = doc(firebaseDb, text);
+          } catch (e: any) {
+            enqueueSnackbar(`Invalid reference.`, { variant: "error" });
+          }
           break;
         default:
           parsed = JSON.parse(text);
@@ -319,6 +334,8 @@ export function useMenuAction(
         case FieldType.createdBy:
         case FieldType.updatedBy:
           return cellValue.displayName;
+        case FieldType.reference:
+          return cellValue.path;
         default:
           return cellValue;
       }
