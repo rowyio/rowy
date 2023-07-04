@@ -276,11 +276,13 @@ export default function Table({
 
       updateColumn({
         key: result.draggableId,
-        index: result.destination.index,
+        index: selectedRows
+          ? result.destination.index - 1
+          : result.destination.index,
         config: {},
       });
     },
-    [updateColumn]
+    [updateColumn, selectedRows]
   );
 
   const fetchMoreOnBottomReached = useThrottledCallback(
