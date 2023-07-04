@@ -204,14 +204,16 @@ export default function Table({
     return hiddenColumns.reduce((a, c) => ({ ...a, [c]: false }), {});
   }, [hiddenColumns]);
 
-  // Get frozen columns and memoize into a `ColumnPinningState`
   const columnPinning: ColumnPinningState = useMemo(
     () => ({
-      left: columns
-        .filter(
-          (c) => c.meta?.fixed && c.id && columnVisibility[c.id] !== false
-        )
-        .map((c) => c.id!),
+      left: [
+        ...(selectedRows ? ["_rowy_select"] : []),
+        ...columns
+          .filter(
+            (c) => c.meta?.fixed && c.id && columnVisibility[c.id] !== false
+          )
+          .map((c) => c.id!),
+      ],
     }),
     [columns, columnVisibility]
   );
