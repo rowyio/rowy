@@ -1,7 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import { useAtom } from "jotai";
 import useMemoValue from "use-memo-value";
 import { isEmpty, isDate } from "lodash-es";
+import { useSearchParams } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 import {
   Tab,
@@ -19,6 +22,7 @@ import TabPanel from "@mui/lab/TabPanel";
 
 import FiltersPopover from "./FiltersPopover";
 import FilterInputs from "./FilterInputs";
+import { changePageUrl, separateOperands } from "./utils";
 
 import {
   projectScope,
@@ -62,12 +66,17 @@ export default function Filters() {
   const [, setTableSorts] = useAtom(tableSortsAtom, tableScope);
   const [updateTableSchema] = useAtom(updateTableSchemaAtom, tableScope);
   const [{ defaultQuery }] = useAtom(tableFiltersPopoverAtom, tableScope);
-
   const tableFilterInputs = useFilterInputs(tableColumnsOrdered);
   const setTableQuery = tableFilterInputs.setQuery;
   const userFilterInputs = useFilterInputs(tableColumnsOrdered, defaultQuery);
   const setUserQuery = userFilterInputs.setQuery;
-  const { availableFilters } = userFilterInputs;
+  const { availableFilters, filterColumns } = userFilterInputs;
+  const [searchParams] = useSearchParams();
+  const { enqueueSnackbar } = useSnackbar();
+  useEffect(() => {
+    let isFiltered = searchParams.get("filter");
+    if (isFiltered) updateUserFilter(isFiltered);
+  }, [searchParams]);
 
   // Get table filters & user filters from config documents
   const tableFilters = useMemoValue(
@@ -82,6 +91,44 @@ export default function Filters() {
   const hasTableFilters =
     Array.isArray(tableFilters) && tableFilters.length > 0;
   const hasUserFilters = Array.isArray(userFilters) && userFilters.length > 0;
+  function updateUserFilter(str: string) {
+    let { operators, operands = [] } = separateOperands(str);
+    if (!operators.length) return;
+    if (operators.length) {
+      let appliedFilter: TableFilter[] = [];
+      appliedFilter = [
+        {
+          key: operands[0],
+          operator: operators[0],
+          value: Number(operands[1]),
+        },
+      ];
+      let isValidFilter = checkFilterValidation(appliedFilter[0]);
+      if (isValidFilter) {
+        setOverrideTableFilters(true);
+        setUserFilters(appliedFilter);
+      } else {
+        enqueueSnackbar("Oops, Invalid filter!!!", { variant: "error" });
+        setUserFilters([]);
+        setOverrideTableFilters(false);
+        userFilterInputs.resetQuery();
+      }
+    }
+  }
+  function checkFilterValidation(filter: TableFilter): boolean {
+    let isFilterableColumn = filterColumns?.filter(
+      (item) =>
+        item.key === filter.key ||
+        item.label === filter.key ||
+        item.type === filter.key
+    );
+    if (!isFilterableColumn?.length) return false;
+    filter.key = isFilterableColumn?.[0]?.value;
+    filter.operator = filter.operator === "-is-" ? "id-equal" : filter.operator;
+    filter.value =
+      filter.operator === "id-equal" ? filter.value.toString() : filter.value;
+    return true;
+  }
 
   // Set the local table filter
   useEffect(() => {
@@ -109,7 +156,7 @@ export default function Filters() {
     } else if (hasUserFilters) {
       filtersToApply = userFilters;
     }
-
+    updatePageURL(filtersToApply);
     setLocalFilters(filtersToApply);
     // Reset order so we don’t have to make a new index
     if (filtersToApply.length) {
@@ -120,7 +167,6 @@ export default function Filters() {
     hasUserFilters,
     setLocalFilters,
     setTableSorts,
-    setTableQuery,
     tableFilters,
     tableFiltersOverridable,
     setUserQuery,
@@ -173,7 +219,21 @@ export default function Filters() {
     if (updateUserSettings && filters)
       updateUserSettings({ tables: { [`${tableId}`]: { filters } } });
   };
-
+  function updatePageURL(filters: TableFilter[]) {
+    if (!filters.length) {
+      changePageUrl();
+    } else {
+      const [filter] = filters;
+      const fieldName = filter.key === "_rowy_ref.id" ? "ID" : filter.key;
+      const operator =
+        filter.operator === "id-equal" ? "-is-" : filter.operator;
+      const formattedValue = availableFilters?.valueFormatter
+        ? availableFilters.valueFormatter(filter.value, filter.operator)
+        : filter.value.toString();
+      const queryParams = `?filter=${fieldName}${operator}${formattedValue}`;
+      changePageUrl(queryParams);
+    }
+  }
   return (
     <FiltersPopover
       appliedFilters={appliedFilters}
