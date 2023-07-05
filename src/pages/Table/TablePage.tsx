@@ -57,6 +57,8 @@ export interface ITablePageProps {
   disableSideDrawer?: boolean;
   /** list of table tools to be disabled */
   disabledTools?: TableToolsType;
+  /** If true shows checkbox to select rows */
+  enableRowSelection: boolean;
 }
 
 /**
@@ -76,6 +78,7 @@ export default function TablePage({
   disableModals,
   disableSideDrawer,
   disabledTools,
+  enableRowSelection = true,
 }: ITablePageProps) {
   const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [userSettings] = useAtom(userSettingsAtom, projectScope);
@@ -179,7 +182,7 @@ export default function TablePage({
               hiddenColumns={
                 userSettings.tables?.[formatSubTableName(tableId)]?.hiddenFields
               }
-              selectedRows={selectedRowsProp}
+              selectedRows={enableRowSelection ? selectedRowsProp : undefined}
               emptyState={
                 <EmptyState
                   Icon={AddRowIcon}
