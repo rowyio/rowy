@@ -36,6 +36,17 @@ import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 import { suggestType } from "@src/components/TableModals/ImportAirtableWizard/utils";
 
+function getFieldKeys(records: any[]) {
+  let fieldKeys = new Set<string>();
+  for (let i = 0; i < records.length; i++) {
+    const keys = Object.keys(records[i].fields);
+    for (let j = 0; j < keys.length; j++) {
+      fieldKeys.add(keys[j]);
+    }
+  }
+  return [...fieldKeys];
+}
+
 export default function Step1Columns({
   airtableData,
   config,
@@ -57,8 +68,7 @@ export default function Step1Columns({
     config.pairs.map((pair) => pair.fieldKey)
   );
 
-  const fieldKeys = Object.keys(airtableData.records[0].fields);
-
+  const fieldKeys = getFieldKeys(airtableData.records);
   // When a field is selected to be imported
   const handleSelect =
     (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {

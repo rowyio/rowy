@@ -47,7 +47,7 @@ export const getColors = (
   option: string
 ): SelectColorThemeOptions => {
   const defaultColor = paletteToMui(palette.aGray);
-  const key = option.toLocaleLowerCase().replace(" ", "_").trim();
+  const key = option.toLocaleLowerCase?.().replace(" ", "_").trim();
   const color = list.find((opt: IColors) => opt.name === key);
   // Null check in return
   return color || defaultColor;
@@ -113,7 +113,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
     color?: SelectColorThemeOptions,
     newKey?: string
   ) => {
-    const _key = key.toLocaleLowerCase().replace(" ", "_").trim();
+    const _key = key.toLocaleLowerCase?.().replace(" ", "_").trim();
     const exists = colors.findIndex((option: IColors) => option.name === _key);
 
     // If saving Check if object with the `color.name` is equal to `_key` and replace value at the index of `exists`
@@ -135,7 +135,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
     }
 
     if (type === "update" && newKey) {
-      const _newKey = newKey.toLocaleLowerCase().replace(" ", "_").trim();
+      const _newKey = newKey.toLocaleLowerCase?.().replace(" ", "_").trim();
       const updatedColors = colors.map((option: IColors) =>
         option.name === _key ? { ...option, name: _newKey } : option
       );

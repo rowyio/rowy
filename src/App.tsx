@@ -52,8 +52,6 @@ const ProvidedSubTablePage = lazy(() => import("@src/pages/Table/ProvidedSubTabl
 const TableTutorialPage = lazy(() => import("@src/pages/Table/TableTutorialPage" /* webpackChunkName: "TableTutorialPage" */));
 
 // prettier-ignore
-const FunctionPage = lazy(() => import("@src/pages/FunctionPage" /* webpackChunkName: "FunctionPage" */));
-// prettier-ignore
 const UserSettingsPage = lazy(() => import("@src/pages/Settings/UserSettingsPage" /* webpackChunkName: "UserSettingsPage" */));
 // prettier-ignore
 const ProjectSettingsPage = lazy(() => import("@src/pages/Settings/ProjectSettingsPage" /* webpackChunkName: "ProjectSettingsPage" */));
@@ -169,13 +167,6 @@ export default function App() {
               element={<TableTutorialPage />}
             />
 
-            <Route path={ROUTES.function}>
-              <Route
-                index
-                element={<Navigate to={ROUTES.functions} replace />}
-              />
-              <Route path=":id" element={<FunctionPage />} />
-            </Route>
             <Route
               path={ROUTES.settings}
               element={<Navigate to={ROUTES.userSettings} replace />}

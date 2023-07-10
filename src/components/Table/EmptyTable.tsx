@@ -33,7 +33,7 @@ export default function EmptyTable() {
       : false;
   let contents = <></>;
 
-  if (tableSettings.isCollection !== false && hasData) {
+  if (hasData) {
     contents = (
       <>
         <div>
@@ -41,9 +41,15 @@ export default function EmptyTable() {
             Get started
           </Typography>
           <Typography>
-            There is existing data in the Firestore collection:
+            {tableSettings.isCollection === false
+              ? "There is existing data in the Array Sub Table:"
+              : "There is existing data in the Firestore collection:"}
             <br />
-            <code>{tableSettings.collection}</code>
+            <code>
+              {tableSettings.collection}
+              {tableSettings.subTableKey?.length &&
+                `.${tableSettings.subTableKey}`}
+            </code>
           </Typography>
         </div>
 
