@@ -229,6 +229,12 @@ export default function withRenderTableCell(
               onDoubleClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => e.stopPropagation()}
               onContextMenu={(e) => e.stopPropagation()}
+              onPaste={(e) => {
+                const pastedContent = e.clipboardData.getData("text/plain");
+                // console.log("Pasted content:", pastedContent);
+                // /claim #533
+              }}
+
             >
               {editorCell}
             </Popover>
