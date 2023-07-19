@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useCallback, useState } from "react";
 import { useSetAtom } from "jotai";
 import { ErrorBoundary } from "react-error-boundary";
 import { flexRender } from "@tanstack/react-table";
@@ -130,6 +130,45 @@ export const TableCell = memo(function TableCell({
     disabled: !canEditCells || cell.column.columnDef.meta?.editable === false,
     rowHeight,
   };
+  const handleDragStart = (event: React.DragEvent<HTMLDivElement>) => {
+    event.dataTransfer.setData(' text/plain', cell.getValue()); // Set the desired content here
+    event.currentTarget.classList.add('dragging');
+  };
+
+  const handleDragEnd = (event: React.DragEvent<HTMLDivElement>) => {
+    event.currentTarget.classList.remove('dragging');
+  };
+
+  const handleDragEnter = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.currentTarget.classList.add('drag-entered');
+  };
+
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
+
+  const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+    event.currentTarget.classList.remove('drag-entered');
+  };
+
+  const [content, setContent] = useState('');
+
+  const handleDrop = useCallback(
+    (event: React.DragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      event.currentTarget.classList.remove('drag-entered');
+      const draggedContent = event.dataTransfer.getData('text/plain');
+  
+      const cellContentElement = event.currentTarget.querySelector('.cell-contents');
+      if (cellContentElement) {
+        cellContentElement.innerHTML = draggedContent;
+      }
+    },
+    []
+  );
+
+
 
   return (
     <StyledCell
@@ -190,7 +229,18 @@ export const TableCell = memo(function TableCell({
         (e.target as HTMLDivElement).focus();
         setContextMenuTarget(e.target as HTMLElement);
       }}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onDragEnter={handleDragEnter}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      draggable={true}
     >
+     
+
+      {content}
+   
       {renderedValidationTooltip}
       <ErrorBoundary fallbackRender={InlineErrorFallback}>
         {flexRender(cell.column.columnDef.cell, tableCellComponentProps)}
