@@ -58,7 +58,7 @@ export interface ITablePageProps {
   /** list of table tools to be disabled */
   disabledTools?: TableToolsType;
   /** If true shows checkbox to select rows */
-  enableRowSelection: boolean;
+  enableRowSelection?: boolean;
 }
 
 /**
@@ -78,7 +78,7 @@ export default function TablePage({
   disableModals,
   disableSideDrawer,
   disabledTools,
-  enableRowSelection = true,
+  enableRowSelection = false,
 }: ITablePageProps) {
   const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [userSettings] = useAtom(userSettingsAtom, projectScope);
