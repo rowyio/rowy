@@ -21,6 +21,25 @@ export function ErrorFallbackContents({
   ...props
 }: IErrorFallbackProps) {
   const isOffline = useOffline();
+  const [isOnline, setIsOnline] = useState(window.navigator.onLine);
+
+  useEffect(() => {
+    function handleOnlineStatus() {
+      setIsOnline(true);
+    }
+
+    function handleOfflineStatus() {
+      setIsOnline(false);
+    }
+
+    window.addEventListener("online", handleOnlineStatus);
+    window.addEventListener("offline", handleOfflineStatus);
+
+    return () => {
+      window.removeEventListener("online", handleOnlineStatus);
+      window.removeEventListener("offline", handleOfflineStatus);
+    };
+  }, []);
 
   if ((error as any).code === "permission-denied")
     return (
@@ -69,23 +88,37 @@ export function ErrorFallbackContents({
   if (error.message.startsWith("Loading chunk")) {
     if (isOffline) {
       renderProps = { Icon: OfflineIcon, message: "You’re offline" };
-    } else {
+    } else if (isOnline) {
       renderProps = {
         Icon: ReloadIcon,
         message: "Update available",
         description: (
-          <Button
-            size={props.basic ? "small" : "medium"}
-            variant="outlined"
-            color="secondary"
-            startIcon={<ReloadIcon />}
-            onClick={() => window.location.reload()}
-            sx={{ mt: 1 }}
-          >
-            Reload
-          </Button>
+          <>
+            <Typography variant="inherit"  style={{ whiteSpace: "pre-line" }}>
+              The page will automatically reload in 5 seconds.
+            </Typography>
+            <Button
+              size={props.basic ? "small" : "medium"}
+              variant="outlined"
+              color="secondary"
+              startIcon={<ReloadIcon />}
+              onClick={() => window.location.reload()}
+              sx={{ mt: 1 }}
+            >
+              Reload Now
+            </Button>
+          </>
         ),
       };
+
+      // Auto-reload after 5 seconds when the user is online and an update is available
+      setTimeout(() => {
+       console.log("SET");
+        if (isOnline) {
+         
+          window.location.reload();
+        }
+      }, 5000);
     }
   }
 
