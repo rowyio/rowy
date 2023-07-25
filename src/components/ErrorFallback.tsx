@@ -85,7 +85,7 @@ export function ErrorFallbackContents({
     ),
   };
 
-  if (error.message.startsWith("Loading chunk")) {
+  if (error.message.startsWith("Loading chunk") || error.message.includes("Failed to fetch") ) {
     if (isOffline) {
       renderProps = { Icon: OfflineIcon, message: "You’re offline" };
     } else if (isOnline) {
@@ -122,24 +122,6 @@ export function ErrorFallbackContents({
     }
   }
 
-  if (error.message.includes("Failed to fetch")) {
-    renderProps = {
-      Icon: OfflineIcon,
-      message: "You’re offline",
-      description: isOffline ? null : (
-        <Button
-          size={props.basic ? "small" : "medium"}
-          variant="outlined"
-          color="secondary"
-          startIcon={<ReloadIcon />}
-          onClick={() => window.location.reload()}
-          sx={{ mt: 1 }}
-        >
-          Reload
-        </Button>
-      ),
-    };
-  }
 
   return <EmptyState role="alert" fullScreen {...renderProps} {...props} />;
 }
