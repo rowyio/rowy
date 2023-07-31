@@ -14,8 +14,8 @@ export const webhookTypeform = {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
   logging.log("typeformParser started")
   
-  // Import any NPM package needed
-  // const lodash = require('lodash');
+  // Import NPM package needed, some packages may not work in Webhooks
+  // const {default: lodash} = await import("lodash");
   
   // This reduces the form submission into a single object of key value pairs
   // Example: {name: "John", age: 20}
