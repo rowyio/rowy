@@ -25,8 +25,8 @@ export const webhookStripe = {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
   logging.log("stripeParser started")
   
-  // Import any NPM package needed
-  // const lodash = require('lodash');
+  // Import NPM package needed, some packages may not work in Webhooks
+  // const {default: lodash} = await import("lodash");
   
   const event = req.body
   switch (event.type) {

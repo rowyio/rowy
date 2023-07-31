@@ -14,8 +14,8 @@ export const webhookSendgrid = {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
   logging.log("sendgridParser started")
   
-  // Import any NPM package needed
-  // const lodash = require('lodash');
+  // Import NPM package needed, some packages may not work in Webhooks
+  // const {default: lodash} = await import("lodash");
   
   const { body } = req 
   const eventHandler = async (sgEvent) => {
