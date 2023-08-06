@@ -16,6 +16,7 @@ import {
   BulkWriteFunction,
 } from "@src/types/table";
 import { updateRowData } from "@src/utils/table";
+import { Header } from "@tanstack/react-table";
 
 /** Root atom from which others are derived */
 export const tableIdAtom = atom("");
@@ -47,6 +48,8 @@ export const tableColumnsOrderedAtom = atom<ColumnConfig[]>((get) => {
     ["desc", "asc"]
   );
 });
+/** Store the headers of the table as an array. */
+export const tableHeadersAtom = atom<Header<TableRow, any>[]>([]);
 /** Reducer function to convert from array of columns to columns object */
 export const tableColumnsReducer = (
   a: Record<string, ColumnConfig>,
