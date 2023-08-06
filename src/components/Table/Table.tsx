@@ -193,10 +193,7 @@ export default function Table({
   // and their headers are added to the array.
   setTableHeaders(
     table.getHeaderGroups().reduce((currentHeadersList, headerGroup) => {
-      return [
-        ...currentHeadersList,
-        ...headerGroup.headers.map((header) => header),
-      ];
+      return [...currentHeadersList, ...headerGroup.headers];
     }, [] as Header<TableRow, any>[])
   );
   // Get rows and columns for virtualization

@@ -9,7 +9,7 @@ import Modal from "@src/components/Modal";
 import { TableRow } from "@src/types/table";
 import { Header } from "@tanstack/react-table";
 
-export default function ResizeColumnModal({
+export default function SetColumnWidthModal({
   onClose,
   column,
 }: IColumnModalProps) {
