@@ -52,7 +52,7 @@ export default function ResizeColumnModal({
       }
       actions={{
         primary: {
-          onMouseDown: (e) => {
+          onMouseUp: (e) => {
             selectedHeader &&
               selectedHeader.getResizeHandler()({
                 clientX: e.clientX - (newWidth - selectedHeader.getSize()),
