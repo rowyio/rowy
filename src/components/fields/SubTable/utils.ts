@@ -26,7 +26,7 @@ export const useSubTableData = (
     rootTablePath,
     ROUTES.subTable,
     encodeURIComponent(_rowy_ref.path),
-    column.config?.parentLabel![0],
+    column.key
   ].join("/");
 
   subTablePath += "?parentLabel=" + encodeURIComponent(label ?? "");
