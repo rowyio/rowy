@@ -5,6 +5,7 @@ import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withRenderTableCell from "@src/components/Table/TableCell/withRenderTableCell";
 
 import DisplayCell from "./DisplayCell";
+import { filterOperators } from "./Filter";
 
 const SideDrawerField = lazy(
   () =>
@@ -25,6 +26,6 @@ export const config: IFieldConfig = {
     popoverProps: { PaperProps: { sx: { p: 1, minWidth: "200px" } } },
   }),
   SideDrawerField,
-  requireConfiguration: false,
+  filter: { operators: filterOperators },
 };
 export default config;
