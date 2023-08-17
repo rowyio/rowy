@@ -127,6 +127,16 @@ export default function Filters() {
     userFilters,
     userRoles,
   ]);
+  if (selectedColumn?.type === FieldType.array) {
+    const operator = availableFilters?.operators.find(op => op.value === query.operator);
+    if (operator?.value === "array-contains") {
+      // Apply array filtering logic here
+      const filteredData = data.filter(item => {
+        const fieldValue = item[selectedColumn.key]; // Assuming the key corresponds to the array column
+        return Array.isArray(fieldValue) && fieldValue.includes(query.value);
+      });
+    }
+  }
 
   // Helper booleans for local table filter state
   const appliedFilters = localFilters;
@@ -173,7 +183,7 @@ export default function Filters() {
     if (updateUserSettings && filters)
       updateUserSettings({ tables: { [`${tableId}`]: { filters } } });
   };
-
+  \
   return (
     <FiltersPopover
       appliedFilters={appliedFilters}

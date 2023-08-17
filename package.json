@@ -8,6 +8,8 @@
   },
   "private": true,
   "dependencies": {
+    "@rowy/multiselect": "^0.4.1",
+    "tss-react": "^4.4.4",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mdi/js": "^6.6.96",

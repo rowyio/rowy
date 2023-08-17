@@ -52,6 +52,20 @@ export default function FilterInputs({
     </MenuItem>
   ));
 
+  // Inside FilterInputs component
+  if (selectedColumn?.type === FieldType.array) {
+    // Render a custom input component for array filtering
+    return (
+      <TextField
+        label="Value"
+        fullWidth
+        value={query.value}
+        onChange={(e) => setQuery({ ...query, value: e.target.value })}
+      />
+    );
+  }
+
+
   // Insert ListSubheader components in between groups of operators
   for (let i = 0; i < operators.length; i++) {
     if (!operators[i].group) continue;
@@ -130,7 +144,7 @@ export default function FilterInputs({
                   query.key === "_rowy_ref.id"
                     ? IdFilterInput
                     : getFieldProp("filter.customInput" as any, columnType) ||
-                        getFieldProp("SideDrawerField", columnType),
+                    getFieldProp("SideDrawerField", columnType),
                   {
                     column: selectedColumn,
                     _rowy_ref: {},

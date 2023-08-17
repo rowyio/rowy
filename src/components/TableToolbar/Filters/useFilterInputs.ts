@@ -68,8 +68,19 @@ export const useFilterInputs = (
     query?.key === "_rowy_ref.id"
       ? { operators: [{ value: "id-equal", label: "is" }] }
       : selectedColumn
-      ? getFieldProp("filter", getFieldType(selectedColumn))
-      : undefined;
+        ? getFieldProp("filter", getFieldType(selectedColumn))
+        : undefined;
+
+  if (selectedColumn?.type === FieldType.array) {
+    availableFilters = {
+      operators: [
+        { value: "array-contains", label: "Contains" },
+        // Add other array-specific operators as needed
+      ],
+      valueFormatter: (value) => JSON.stringify(value), // Format array values for display
+    };
+  }
+
 
   return {
     filterColumns,

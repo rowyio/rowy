@@ -34,103 +34,145 @@ export default function FiltersPopover({
     tableFiltersPopoverAtom,
     tableScope
   );
+  appliedFilters.map((filter) => {
+    // ... Render applied filters based on column type
+    if (selectedColumn?.type === FieldType.array) {
+      const operator = availableFilters?.operators.find(op => op.value === filter.operator);
+      if (operator?.value === "array-contains") {
+        return (
+          <Chip
+            key={filter.key}
+            label={
+              <Typography variant="inherit" component="span">
+                {fieldName}{" "}
+                <Typography
+                  variant="inherit"
+                  display="inline"
+                  color="text.secondary"
+                  fontWeight="normal"
+                >
+                  {operatorLabel}
+                </Typography>{" "}
+                {formattedValue}
+              </Typography>
+            }
+            onDelete={
+              hasTableFilters && !tableFiltersOverridden
+                ? undefined
+                : () => setUserFilters([])
+            }
+            sx={{
+              borderRadius: 1,
+              borderTopLeftRadius: 0,
+              borderBottomLeftRadius: 0,
+              borderLeft: "none",
 
-  const anchorEl = useRef<HTMLButtonElement>(null);
-  const popoverId = open ? "filters-popover" : undefined;
-  const handleClose = () => setTableFiltersPopoverState({ open: false });
+              backgroundColor: "background.paper",
+              height: 32,
 
-  return (
-    <>
-      <Stack direction="row" style={{ width: "auto" }}>
-        <ButtonWithStatus
-          ref={anchorEl}
-          variant="outlined"
-          color="primary"
-          onClick={() => setTableFiltersPopoverState({ open: true })}
-          startIcon={<FilterIcon />}
-          active={hasAppliedFilters}
-          style={
-            hasAppliedFilters
-              ? {
-                  borderTopRightRadius: 0,
-                  borderBottomRightRadius: 0,
-                  position: "relative",
-                  zIndex: 1,
-                }
-              : {}
-          }
-          aria-describedby={popoverId}
-        >
-          {hasAppliedFilters ? "Filtered" : "Filter"}
-        </ButtonWithStatus>
+              "& .MuiChip-label": { px: 1.5 },
+            }}
+            variant="outlined"
+          />
+        );
+      }
 
-        {appliedFilters.map((filter) => {
-          const fieldName = filter.key === "_rowy_ref.id" ? "ID" : filter.key;
-          const operator = (availableFilters?.operators ?? []).find(
-            (f) => f.value === filter.operator
-          );
-          const operatorLabel = (operator?.label ?? filter.operator).replace(
-            "id-equal",
-            "is"
-          );
+      const anchorEl = useRef<HTMLButtonElement>(null);
+      const popoverId = open ? "filters-popover" : undefined;
+      const handleClose = () => setTableFiltersPopoverState({ open: false });
 
-          const formattedValue = availableFilters?.valueFormatter
-            ? availableFilters.valueFormatter(filter.value, filter.operator)
-            : filter.value.toString();
-
-          return (
-            <Chip
-              key={filter.key}
-              label={
-                <Typography variant="inherit" component="span">
-                  {fieldName}{" "}
-                  <Typography
-                    variant="inherit"
-                    display="inline"
-                    color="text.secondary"
-                    fontWeight="normal"
-                  >
-                    {operatorLabel}
-                  </Typography>{" "}
-                  {formattedValue}
-                </Typography>
-              }
-              onDelete={
-                hasTableFilters && !tableFiltersOverridden
-                  ? undefined
-                  : () => setUserFilters([])
-              }
-              sx={{
-                borderRadius: 1,
-                borderTopLeftRadius: 0,
-                borderBottomLeftRadius: 0,
-                borderLeft: "none",
-
-                backgroundColor: "background.paper",
-                height: 32,
-
-                "& .MuiChip-label": { px: 1.5 },
-              }}
+      return (
+        <>
+          <Stack direction="row" style={{ width: "auto" }}>
+            <ButtonWithStatus
+              ref={anchorEl}
               variant="outlined"
-            />
-          );
-        })}
-      </Stack>
+              color="primary"
+              onClick={() => setTableFiltersPopoverState({ open: true })}
+              startIcon={<FilterIcon />}
+              active={hasAppliedFilters}
+              style={
+                hasAppliedFilters
+                  ? {
+                    borderTopRightRadius: 0,
+                    borderBottomRightRadius: 0,
+                    position: "relative",
+                    zIndex: 1,
+                  }
+                  : {}
+              }
+              aria-describedby={popoverId}
+            >
+              {hasAppliedFilters ? "Filtered" : "Filter"}
+            </ButtonWithStatus>
 
-      <Popover
-        id={popoverId}
-        open={open}
-        anchorEl={anchorEl.current}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        transformOrigin={{ vertical: "top", horizontal: "left" }}
-        sx={{
-          "& .MuiPaper-root": { width: 640 },
-          "& .content": { p: 3 },
-        }}
-      >
-        {children({ handleClose })}
-      </Popover>
-    </>
-  );
-}
+            {appliedFilters.map((filter) => {
+              const fieldName = filter.key === "_rowy_ref.id" ? "ID" : filter.key;
+              const operator = (availableFilters?.operators ?? []).find(
+                (f) => f.value === filter.operator
+              );
+              const operatorLabel = (operator?.label ?? filter.operator).replace(
+                "id-equal",
+                "is"
+              );
+
+              const formattedValue = availableFilters?.valueFormatter
+                ? availableFilters.valueFormatter(filter.value, filter.operator)
+                : filter.value.toString();
+
+              return (
+                <Chip
+                  key={filter.key}
+                  label={
+                    <Typography variant="inherit" component="span">
+                      {fieldName}{" "}
+                      <Typography
+                        variant="inherit"
+                        display="inline"
+                        color="text.secondary"
+                        fontWeight="normal"
+                      >
+                        {operatorLabel}
+                      </Typography>{" "}
+                      {formattedValue}
+                    </Typography>
+                  }
+                  onDelete={
+                    hasTableFilters && !tableFiltersOverridden
+                      ? undefined
+                      : () => setUserFilters([])
+                  }
+                  sx={{
+                    borderRadius: 1,
+                    borderTopLeftRadius: 0,
+                    borderBottomLeftRadius: 0,
+                    borderLeft: "none",
+
+                    backgroundColor: "background.paper",
+                    height: 32,
+
+                    "& .MuiChip-label": { px: 1.5 },
+                  }}
+                  variant="outlined"
+                />
+              );
+            })}
+          </Stack>
+
+          <Popover
+            id={popoverId}
+            open={open}
+            anchorEl={anchorEl.current}
+            onClose={handleClose}
+            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            transformOrigin={{ vertical: "top", horizontal: "left" }}
+            sx={{
+              "& .MuiPaper-root": { width: 640 },
+              "& .content": { p: 3 },
+            }}
+          >
+            {children({ handleClose })}
+          </Popover>
+        </>
+      );
+    }
