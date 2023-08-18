@@ -200,7 +200,7 @@ export type TableFilter = {
     | "is-not-empty"
     | "";
   value: any;
-  id: number;
+  id: string;
 };
 
 export const TableTools = [

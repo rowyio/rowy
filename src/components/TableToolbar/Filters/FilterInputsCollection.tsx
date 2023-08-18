@@ -8,6 +8,7 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import AddIcon from "@mui/icons-material/Add";
 import { find } from "lodash-es";
 import { TableFilter } from "@src/types/table";
+import { generateId } from "@src/utils/table";
 
 export interface IFilterInputsCollectionProps
   extends ReturnType<typeof useFilterInputs> {
@@ -104,7 +105,7 @@ export default function FilterInputsCollection({
             return !find(selectedColumns, { key: column.key });
           });
 
-          const id = Math.random();
+          const id = generateId();
 
           setQueries((prevQueries) => [
             ...prevQueries,

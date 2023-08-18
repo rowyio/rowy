@@ -59,6 +59,7 @@ import { getFieldProp } from "@src/components/fields";
 import { analytics, logEvent } from "@src/analytics";
 import {
   formatSubTableName,
+  generateId,
   getTableBuildFunctionPathname,
   getTableSchemaPath,
 } from "@src/utils/table";
@@ -251,7 +252,7 @@ export default function ColumnMenu({
                   : column.type
               )!.operators[0]?.value || "==",
             value: "",
-            id: Math.random(),
+            id: generateId(),
           },
         });
         handleClose();

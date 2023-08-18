@@ -5,6 +5,7 @@ import { getFieldType, getFieldProp } from "@src/components/fields";
 import { FieldType } from "@src/constants/fields";
 import type { ColumnConfig, TableFilter } from "@src/types/table";
 import type { IFieldConfig } from "@src/components/fields/types";
+import { generateId } from "@src/utils/table";
 
 export const useFilterInputs = (
   columns: ColumnConfig[],
@@ -47,14 +48,14 @@ export const useFilterInputs = (
                 ? ""
                 : getFieldProp("filter", getFieldType(filterColumns[0]))
                     .defaultValue ?? "",
-            id: Math.random(),
+            id: generateId(),
           },
         ]
       : [];
 
   // State for filter inputs
   const [queries, setQueries] = useState<TableFilter[]>(
-    defaultQuery ? [{ ...defaultQuery, id: Math.random() }] : INITIAL_QUERY
+    defaultQuery ? [{ ...defaultQuery, id: generateId() }] : INITIAL_QUERY
   );
   const resetQuery = () => setQueries([]);
 
@@ -62,17 +63,20 @@ export const useFilterInputs = (
   const [joinOperator, setJoinOperator] = useState<"AND" | "OR">("AND");
 
   // When the user sets a new column, automatically set the operator and value
-  const handleColumnChange = (oldId: number, newKey: string) => {
+  const handleColumnChange = (oldId: string, newKey: string) => {
     if (newKey === "_rowy_ref.id") {
       setQueries((prevQueries) => {
-        const newQueries = [...prevQueries];
-        const query = find(newQueries, ["id", oldId]);
-        if (query) {
-          query.key = newKey;
-          query.operator = "id-equal";
-          query.value = "";
-        }
-        return newQueries;
+        return prevQueries.map((q) => {
+          if (q.id === oldId)
+            return {
+              key: newKey,
+              operator: "id-equal",
+              value: "",
+              id: q.id,
+            };
+
+          return q;
+        });
       });
 
       return;
@@ -82,25 +86,31 @@ export const useFilterInputs = (
     if (column) {
       const filter = getFieldProp("filter", getFieldType(column));
       setQueries((prevQueries) => {
-        const newQueries = [...prevQueries];
-        const query = find(newQueries, ["id", oldId]);
-        if (query) {
-          query.key = newKey;
-          query.operator = filter.operators[0].value;
-          query.value = filter.defaultValue ?? "";
-        }
-        return newQueries;
+        return prevQueries.map((q) => {
+          if (q.id === oldId)
+            return {
+              key: newKey,
+              operator: filter.operators[0].value,
+              value: filter.defaultValue ?? "",
+              id: q.id,
+            };
+
+          return q;
+        });
       });
     } else {
       setQueries((prevQueries) => {
-        const newQueries = [...prevQueries];
-        const query = find(newQueries, ["id", oldId]);
-        if (query) {
-          query.key = newKey;
-          query.operator = "";
-          query.value = "";
-        }
-        return newQueries;
+        return prevQueries.map((q) => {
+          if (q.id === oldId)
+            return {
+              key: newKey,
+              operator: "",
+              value: "",
+              id: q.id,
+            };
+
+          return q;
+        });
       });
     }
   };

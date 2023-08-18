@@ -40,10 +40,9 @@ import {
 import { useFilterInputs } from "./useFilterInputs";
 import { analytics, logEvent } from "@src/analytics";
 import type { TableFilter } from "@src/types/table";
+import { generateId } from "@src/utils/table";
 
 const shouldDisableApplyButton = (queries: any) => {
-  if (queries.length === 0) return true;
-
   for (let query of queries) {
     if (query.operator === "is-empty" || query.operator === "is-not-empty") {
       continue;
@@ -110,10 +109,18 @@ export default function Filters() {
       tableFilters &&
       tableFilters.length > 0
     ) {
+      // Older filters do not have ID. Migrating them here.
+      for (const filter of tableFilters) {
+        if (!filter.id) filter.id = generateId();
+      }
       setTableQueries(tableFilters);
     }
 
     if (Array.isArray(userFilters) && userFilters && userFilters.length > 0) {
+      // Older filters do not have ID. Migrating them here.
+      for (const filter of userFilters) {
+        if (!filter.id) filter.id = generateId();
+      }
       setUserQueries(userFilters);
     }
 
@@ -338,20 +345,15 @@ export default function Filters() {
                 >
                   <Button
                     disabled={
-                      !overrideTableFilters &&
-                      !tableFiltersOverridden &&
+                      !overrideTableFilters ||
                       userFilterInputs.queries.length === 0
                     }
                     onClick={() => {
-                      setUserFilters(overrideTableFilters ? null : []);
+                      setUserFilters([]);
                       userFilterInputs.resetQuery();
                     }}
                   >
                     Clear All
-                    {hasTableFilters &&
-                      (overrideTableFilters
-                        ? " (ignore table filter)"
-                        : " (use table filter)")}
                   </Button>
 
                   <Button
@@ -487,14 +489,11 @@ export default function Filters() {
                     userFilterInputs.queries.length === 0
                   }
                   onClick={() => {
-                    setUserFilters(overrideTableFilters ? null : []);
+                    setUserFilters([]);
                     userFilterInputs.resetQuery();
                   }}
                 >
                   Clear All
-                  {overrideTableFilters
-                    ? " (ignore table filter)"
-                    : " (use table filter)"}
                 </Button>
 
                 <Button

@@ -21,6 +21,7 @@ import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { currentUserAtom, projectScope } from "@src/atoms/projectScope";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { TABLE_SCHEMAS } from "@src/config/dbPaths";
+import { generateId } from "@src/utils/table";
 
 function TableTestPage() {
   const [tableId] = useAtom(tableIdAtom, tableScope);
@@ -79,7 +80,12 @@ function TableTestPage() {
       <button
         onClick={() =>
           setTableFilters([
-            { key: "signedUp", operator: "==", value: true, id: Math.random() },
+            {
+              key: "signedUp",
+              operator: "==",
+              value: true,
+              id: generateId(),
+            },
           ])
         }
       >
