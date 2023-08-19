@@ -314,10 +314,10 @@ export default function useMonacoCustomizations({
     if (!secretNames.secretNames) return;
     const secretsDef = `type SecretNames = ${secretNames.secretNames
       .map((secret: string) => `"${secret}"`)
-      .join(" | ")}
+      .join(" | ")} \n
         enum secrets {
           ${secretNames.secretNames
-            .map((secret: string) => `${secret} = "${secret}"`)
+            .map((secret: string) => `"${secret}" = "${secret}"`)
             .join("\n")}
         }
        `;
