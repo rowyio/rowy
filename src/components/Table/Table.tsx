@@ -9,7 +9,6 @@ import {
 } from "@tanstack/react-table";
 import type {
   ColumnPinningState,
-  Header,
   VisibilityState,
 } from "@tanstack/react-table";
 import { DropResult } from "react-beautiful-dnd";
@@ -26,7 +25,7 @@ import EmptyState from "@src/components/EmptyState";
 import {
   tableScope,
   tableSchemaAtom,
-  tableHeadersAtom,
+  reactTableAtom,
   tableColumnsOrderedAtom,
   tableRowsAtom,
   tableNextPageAtom,
@@ -98,7 +97,6 @@ export default function Table({
 }: ITableProps) {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
-  const setTableHeaders = useSetAtom(tableHeadersAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
   const [tablePage, setTablePage] = useAtom(tablePageAtom, tableScope);
@@ -188,14 +186,10 @@ export default function Table({
     state: { ...prev.state, columnVisibility, columnPinning, columnSizing },
     onColumnSizingChange: setColumnSizing,
   }));
-  // Store the headers of the current table as an array.
-  // Initial value is an empty array, which progressively grows as headerGroups are cycled through
-  // and their headers are added to the array.
-  setTableHeaders(
-    table.getHeaderGroups().reduce((currentHeadersList, headerGroup) => {
-      return [...currentHeadersList, ...headerGroup.headers];
-    }, [] as Header<TableRow, any>[])
-  );
+  const setReactTable = useSetAtom(reactTableAtom, tableScope);
+  useMemo(() => {
+    setReactTable(table);
+  }, [table, setReactTable]);
   // Get rows and columns for virtualization
   const { rows } = table.getRowModel();
   const leafColumns = table.getVisibleLeafColumns();

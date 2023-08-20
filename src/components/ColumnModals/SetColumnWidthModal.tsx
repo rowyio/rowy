@@ -1,37 +1,31 @@
 import { useEffect, useState } from "react";
 import { IColumnModalProps } from ".";
-import { selectedCellAtom, tableHeadersAtom } from "@src/atoms/tableScope";
+import { reactTableAtom } from "@src/atoms/tableScope";
 import { tableScope } from "@src/atoms/tableScope";
 import { useAtom } from "jotai";
 
 import { TextField } from "@mui/material";
 import Modal from "@src/components/Modal";
-import { TableRow } from "@src/types/table";
-import { Header } from "@tanstack/react-table";
 
 export default function SetColumnWidthModal({
   onClose,
   column,
 }: IColumnModalProps) {
+  const [reactTable] = useAtom(reactTableAtom, tableScope);
   const [newWidth, setWidth] = useState<number>(0);
-  const [selectedCell] = useAtom(selectedCellAtom, tableScope);
-  const [tableHeaders] = useAtom(tableHeadersAtom, tableScope);
-  const [selectedHeader, setSelectedHeader] = useState<Header<
-    TableRow,
-    any
-  > | null>(null);
 
   useEffect(() => {
-    if (selectedCell && tableHeaders) {
-      setSelectedHeader(
-        tableHeaders.find((h) => h.id === selectedCell?.columnKey) ?? null
-      );
-    }
-  }, [selectedCell, tableHeaders]);
+    setWidth(reactTable?.getAllColumns()[column.index].getSize() || 0);
+  }, [reactTable, column]);
 
-  useEffect(() => {
-    selectedHeader && setWidth(selectedHeader.getSize());
-  }, [selectedHeader]);
+  const handleUpdate = () => {
+    reactTable?.setColumnSizing((old) => {
+      const newSizing = { ...old };
+      newSizing[column.name] = newWidth;
+      return newSizing;
+    });
+    onClose();
+  };
 
   return (
     <Modal
@@ -48,17 +42,14 @@ export default function SetColumnWidthModal({
           type="number"
           fullWidth
           onChange={(e) => setWidth(Number(e.target.value))}
+          onKeyDown={(e) => {
+            e.key === "Enter" && handleUpdate();
+          }}
         />
       }
       actions={{
         primary: {
-          onMouseUp: (e) => {
-            selectedHeader &&
-              selectedHeader.getResizeHandler()({
-                clientX: e.clientX - (newWidth - selectedHeader.getSize()),
-              } as any);
-            onClose();
-          },
+          onClick: handleUpdate,
           children: "Update",
         },
         secondary: {
