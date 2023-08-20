@@ -272,7 +272,7 @@ export default function ColumnMenu({
         openColumnModal({ type: "setColumnWidth", columnKey: column.key });
         handleClose();
       },
-      disabled: !column.resizable,
+      disabled: column.resizable === false,
     },
   ];
 
