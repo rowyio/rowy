@@ -120,7 +120,7 @@ export default function ArraySideDrawerField({
 }: ISideDrawerFieldProps) {
   const handleAddNew = (fieldType: ArraySupportedFiledTypes) => {
     onChange([...(value || []), SupportedTypes[fieldType].initialValue]);
-    onDirty(true);
+    if (onDirty) onDirty(true);
   };
   const handleChange = (newValue_: any, indexUpdated: number) => {
     onChange(
@@ -137,13 +137,13 @@ export default function ArraySideDrawerField({
   const handleRemove = (index: number) => {
     value.splice(index, 1);
     onChange([...value]);
-    onDirty(true);
+    if (onDirty) onDirty(true);
     onSubmit();
   };
 
   const handleClearField = () => {
     onChange([]);
-    onSubmit();
+    if (onSubmit) onSubmit();
   };
 
   function handleOnDragEnd(result: DropResult) {
@@ -157,7 +157,7 @@ export default function ArraySideDrawerField({
     const [removed] = list.splice(result.source.index, 1);
     list.splice(result.destination.index, 0, removed);
     onChange(list);
-    onSubmit();
+    if (onSubmit) onSubmit();
   }
 
   if (value === undefined || Array.isArray(value)) {
