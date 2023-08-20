@@ -15,12 +15,14 @@ export default function SetColumnWidthModal({
   const [newWidth, setWidth] = useState<number>(0);
 
   useEffect(() => {
+    // Set the initial width to the current column width once the table is fetched.
     setWidth(reactTable?.getAllColumns()[column.index].getSize() || 0);
   }, [reactTable, column]);
 
   const handleUpdate = () => {
     reactTable?.setColumnSizing((old) => {
       const newSizing = { ...old };
+      // Set the new width for the column.
       newSizing[column.name] = newWidth;
       return newSizing;
     });

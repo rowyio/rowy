@@ -48,7 +48,7 @@ export const tableColumnsOrderedAtom = atom<ColumnConfig[]>((get) => {
     ["desc", "asc"]
   );
 });
-/** Store the headers of the table as an array. */
+/** Store the table */
 export const reactTableAtom = atom<Table<TableRow> | null>(null);
 /** Reducer function to convert from array of columns to columns object */
 export const tableColumnsReducer = (
