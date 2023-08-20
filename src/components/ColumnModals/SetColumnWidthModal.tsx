@@ -23,7 +23,7 @@ export default function SetColumnWidthModal({
     reactTable?.setColumnSizing((old) => {
       const newSizing = { ...old };
       // Set the new width for the column.
-      newSizing[column.name] = newWidth;
+      newSizing[column.fieldName] = newWidth;
       return newSizing;
     });
     onClose();
@@ -35,24 +35,30 @@ export default function SetColumnWidthModal({
       title="Set Column Width"
       maxWidth="xs"
       children={
-        <TextField
-          value={newWidth}
-          autoFocus
-          variant="filled"
-          id="name"
-          label="Width"
-          type="number"
-          fullWidth
-          onChange={(e) => setWidth(Number(e.target.value))}
-          onKeyDown={(e) => {
-            e.key === "Enter" && handleUpdate();
+        <form
+          id="column-width-modal"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleUpdate();
           }}
-        />
+        >
+          <TextField
+            value={newWidth}
+            autoFocus
+            variant="filled"
+            id="name"
+            label="Width"
+            type="number"
+            fullWidth
+            onChange={(e) => setWidth(Number(e.target.value))}
+          />
+        </form>
       }
       actions={{
         primary: {
-          onClick: handleUpdate,
           children: "Update",
+          type: "submit",
+          form: "column-width-modal",
         },
         secondary: {
           onClick: onClose,
