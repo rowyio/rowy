@@ -166,7 +166,7 @@ export default function ArraySideDrawerField({
         <DragDropContext onDragEnd={handleOnDragEnd}>
           <Droppable droppableId="columns_manager" direction="vertical">
             {(provided) => (
-              <List {...provided.droppableProps} ref={provided.innerRef}>
+              <List sx={{ padding: 0 }} {...provided.droppableProps} ref={provided.innerRef}>
                 {(value || []).map((v: any, index: number) => (
                   <ArrayFieldInput
                     key={`index-${index}-value`}
