@@ -166,7 +166,11 @@ export default function ArraySideDrawerField({
         <DragDropContext onDragEnd={handleOnDragEnd}>
           <Droppable droppableId="columns_manager" direction="vertical">
             {(provided) => (
-              <List sx={{ padding: 0 }} {...provided.droppableProps} ref={provided.innerRef}>
+              <List
+                sx={{ padding: 0 }}
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
                 {(value || []).map((v: any, index: number) => (
                   <ArrayFieldInput
                     key={`index-${index}-value`}
@@ -185,7 +189,15 @@ export default function ArraySideDrawerField({
             )}
           </Droppable>
         </DragDropContext>
-        <AddButton handleAddNew={handleAddNew} />
+        {props.operator === "array-contains" ? (
+          value?.length < 1 ? (
+            <AddButton handleAddNew={handleAddNew} />
+          ) : (
+            <></>
+          )
+        ) : (
+          <AddButton handleAddNew={handleAddNew} />
+        )}
       </>
     );
   }
