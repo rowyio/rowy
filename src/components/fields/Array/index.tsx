@@ -28,7 +28,7 @@ export const config: IFieldConfig = {
     popoverProps: { PaperProps: { sx: { p: 1, minWidth: "200px" } } },
   }),
   SideDrawerField,
-  filter: { operators },
+  filter: { operators, defaultValue: [] },
   requireConfiguration: false,
   contextMenuActions: BasicContextMenuActions,
 };
