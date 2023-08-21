@@ -104,7 +104,7 @@ export const useFilterInputs = (
           if (q.id === oldId)
             return {
               key: newKey,
-              operator: "",
+              operator: "is-not-empty",
               value: "",
               id: q.id,
             };

@@ -197,8 +197,7 @@ export type TableFilter = {
     | "color-equal"
     | "color-not-equal"
     | "is-empty"
-    | "is-not-empty"
-    | "";
+    | "is-not-empty";
   value: any;
   id: string;
 };

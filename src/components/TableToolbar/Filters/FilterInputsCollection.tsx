@@ -111,7 +111,7 @@ export default function FilterInputsCollection({
             ...prevQueries,
             {
               key: "",
-              operator: "",
+              operator: "is-not-empty",
               value: "",
               id,
             },
