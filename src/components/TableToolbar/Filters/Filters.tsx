@@ -345,7 +345,7 @@ export default function Filters() {
                 >
                   <Button
                     disabled={
-                      !overrideTableFilters ||
+                      (!overrideTableFilters && hasTableFilters) ||
                       userFilterInputs.queries.length === 0
                     }
                     onClick={() => {
