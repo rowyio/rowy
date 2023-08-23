@@ -34,6 +34,7 @@ import {
   selectedCellAtom,
   tableSortsAtom,
   tableIdAtom,
+  serverDocCountAtom,
 } from "@src/atoms/tableScope";
 import { projectScope, userSettingsAtom } from "@src/atoms/projectScope";
 import { getFieldType, getFieldProp } from "@src/components/fields";
@@ -112,6 +113,7 @@ export default function Table({
   selectedRows,
 }: ITableProps) {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
+  const [serverDocCount] = useAtom(serverDocCountAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
@@ -159,24 +161,39 @@ export default function Table({
       );
     }
 
-    if (selectedRows)
-      _columns.unshift(
+    return _columns;
+  }, [tableColumnsOrdered, canAddColumns, canEditCells, selectedRows]);
+
+  columns.unshift(
+    ...useMemo(() => {
+      if (!selectedRows) return [];
+
+      return [
         columnHelper.display({
           id: "_rowy_select",
           size: 41.8, // TODO: We shouldn't have to change this often
-          header: ({ table }) => (
-            <FormControlLabel
-              sx={{ margin: 0 }}
-              label=""
-              control={
-                <Checkbox
-                  checked={table.getIsAllRowsSelected()}
-                  indeterminate={table.getIsSomeRowsSelected()}
-                  onChange={table.getToggleAllRowsSelectedHandler()}
-                />
-              }
-            />
-          ),
+          header: ({ table }) => {
+            const checked =
+              Object.keys(selectedRows.state).length >= serverDocCount!;
+            const indeterminate = Object.keys(selectedRows.state).length > 0;
+            return (
+              <FormControlLabel
+                sx={{ margin: 0 }}
+                label=""
+                control={
+                  <Checkbox
+                    checked={checked}
+                    indeterminate={indeterminate && !checked}
+                    onChange={() => {
+                      table.toggleAllRowsSelected(
+                        !table.getIsAllRowsSelected()
+                      );
+                    }}
+                  />
+                }
+              />
+            );
+          },
           cell: ({ row }) => {
             return (
               <FormControlLabel
@@ -192,11 +209,10 @@ export default function Table({
               />
             );
           },
-        })
-      );
-
-    return _columns;
-  }, [tableColumnsOrdered, canAddColumns, canEditCells, selectedRows]);
+        }),
+      ];
+    }, [selectedRows])
+  );
 
   // Get user’s hidden columns from props and memoize into a `VisibilityState`
   const columnVisibility: VisibilityState = useMemo(() => {
