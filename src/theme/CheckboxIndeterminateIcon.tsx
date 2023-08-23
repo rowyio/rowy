@@ -47,7 +47,7 @@ export default function CheckboxIndeterminateIcon() {
           boxShadow: 1,
         },
 
-        ".Mui-checked &, [aria-selected='true'] &": {
+        ".MuiCheckbox-indeterminate &, [aria-selected='true'] &": {
           backgroundColor: "currentColor",
           borderColor: "currentColor",
 
