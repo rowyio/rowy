@@ -20,13 +20,17 @@ export function ErrorFallbackContents({
   resetErrorBoundary,
   ...props
 }: IErrorFallbackProps) {
+  // Detect if the user is offline
   const isOffline = useOffline();
 
-  if ((error as any).code === "permission-denied")
+  // Handle permission-denied error
+  if ((error as any).code === "permission-denied") {
     return (
       <AccessDenied error={error} resetErrorBoundary={resetErrorBoundary} />
     );
+  }
 
+  // Default renderProps for generic errors
   let renderProps: Partial<IEmptyStateProps> = {
     message: "Something went wrong",
     description: (
@@ -39,6 +43,7 @@ export function ErrorFallbackContents({
         <Button
           size={props.basic ? "small" : "medium"}
           href={
+            // Construct the GitHub issue URL
             EXTERNAL_LINKS.gitHub +
             "/discussions/new?" +
             new URLSearchParams({
@@ -66,10 +71,28 @@ export function ErrorFallbackContents({
     ),
   };
 
+  // Handle "Loading chunk" error
   if (error.message.startsWith("Loading chunk")) {
     if (isOffline) {
-      renderProps = { Icon: OfflineIcon, message: "You’re offline" };
+      // Display offline message and provide a reload option
+      renderProps = {
+        Icon: OfflineIcon,
+        message: "You’re offline",
+        description: (
+          <Button
+            size={props.basic ? "small" : "medium"}
+            variant="outlined"
+            color="secondary"
+            startIcon={<ReloadIcon />}
+            onClick={() => window.location.reload()}
+            sx={{ mt: 1 }}
+          >
+            Reload
+          </Button>
+        ),
+      };
     } else {
+      // Display update available message with reload option
       renderProps = {
         Icon: ReloadIcon,
         message: "Update available",
@@ -89,6 +112,7 @@ export function ErrorFallbackContents({
     }
   }
 
+  // Handle "Failed to fetch" error
   if (error.message.includes("Failed to fetch")) {
     renderProps = {
       Icon: OfflineIcon,
@@ -108,6 +132,7 @@ export function ErrorFallbackContents({
     };
   }
 
+  // Display the empty state component with the appropriate renderProps
   return <EmptyState role="alert" fullScreen {...renderProps} {...props} />;
 }
 
@@ -116,16 +141,21 @@ export default function ErrorFallback(props: IErrorFallbackProps) {
 
   // Reset error boundary when navigating away from the page
   const location = useLocation();
-  const [errorPathname] = useState(location.pathname);
+  const [errorPathname, setErrorPathname] = useState(location.pathname);
   useEffect(() => {
-    if (errorPathname !== location.pathname) resetErrorBoundary();
+    if (errorPathname !== location.pathname) {
+      resetErrorBoundary();
+      setErrorPathname(location.pathname);
+    }
   }, [errorPathname, location.pathname, resetErrorBoundary]);
 
+  // Render the ErrorFallbackContents component with props
   return <ErrorFallbackContents {...props} />;
 }
 
 export function InlineErrorFallback(props: IErrorFallbackProps) {
   return (
+    // Render the ErrorFallbackContents component with specific props
     <ErrorFallbackContents
       {...props}
       fullScreen={false}
@@ -137,5 +167,8 @@ export function InlineErrorFallback(props: IErrorFallbackProps) {
 }
 
 export function NonFullScreenErrorFallback(props: IErrorFallbackProps) {
-  return <ErrorFallbackContents {...props} fullScreen={false} />;
+  return (
+    // Render the ErrorFallbackContents component with specific props
+    <ErrorFallbackContents {...props} fullScreen={false} />
+  );
 }
