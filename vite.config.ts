@@ -9,6 +9,9 @@ export default defineConfig({
     // Explicitly setting mainFields to default value. For some reason, Vitest isn't
     // respecting the 'module' field in package.json without specifying it explicitly
     mainFields: ["module", "jsnext:main", "jsnext"],
+    alias: {
+      path: "rollup-plugin-node-polyfills/polyfills/path",
+    },
   },
   plugins: [
     react({
