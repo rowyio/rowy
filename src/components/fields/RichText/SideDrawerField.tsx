@@ -8,6 +8,7 @@ export default function RichText({
   onChange,
   onSubmit,
   disabled,
+  _rowy_ref,
 }: ISideDrawerFieldProps) {
   return (
     <RichTextEditor
@@ -16,6 +17,8 @@ export default function RichText({
       onChange={onChange}
       onBlur={onSubmit}
       id={getFieldId(column.key)}
+      _rowy_ref={_rowy_ref}
+      column={column}
     />
   );
 }

@@ -11,14 +11,14 @@ import "tinymce/themes/silver";
 import "tinymce/icons/default";
 // Editor styles
 /* eslint import/no-webpack-loader-syntax: off */
-import skinCss from "!!raw-loader!tinymce/skins/ui/oxide/skin.min.css";
-import skinDarkCss from "!!raw-loader!tinymce/skins/ui/oxide-dark/skin.min.css";
+import skinCss from "tinymce/skins/ui/oxide/skin.min.css?inline";
+import skinDarkCss from "tinymce/skins/ui/oxide-dark/skin.min.css?inline";
 // Content styles, including inline UI like fake cursors
 /* eslint import/no-webpack-loader-syntax: off */
-import contentCss from "!!raw-loader!tinymce/skins/content/default/content.min.css";
-import contentUiCss from "!!raw-loader!tinymce/skins/ui/oxide/content.min.css";
-import contentCssDark from "!!raw-loader!tinymce/skins/content/dark/content.min.css";
-import contentUiCssDark from "!!raw-loader!tinymce/skins/ui/oxide-dark/content.min.css";
+import contentCss from "tinymce/skins/content/default/content.min.css?inline";
+import contentUiCss from "tinymce/skins/ui/oxide/content.min.css?inline";
+import contentCssDark from "tinymce/skins/content/dark/content.min.css?inline";
+import contentUiCssDark from "tinymce/skins/ui/oxide-dark/content.min.css?inline";
 
 // Plugins
 import "tinymce/plugins/autoresize";
@@ -29,6 +29,14 @@ import "tinymce/plugins/paste";
 import "tinymce/plugins/help";
 import "tinymce/plugins/code";
 import "tinymce/plugins/fullscreen";
+import { useAtom } from "jotai";
+import { firebaseStorageAtom } from "@src/sources/ProjectSourceFirebase";
+import { projectScope } from "@src/atoms/projectScope";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { generateId } from "@src/utils/table";
+import { useSnackbar } from "notistack";
+import { ColumnConfig, TableRowRef } from "@src/types/table";
+import { IMAGE_MIME_TYPES } from "./fields/Image";
 
 const Styles = styled("div", {
   shouldForwardProp: (prop) => prop !== "focus",
@@ -136,6 +144,8 @@ export interface IRichTextEditorProps {
   id: string;
   onFocus?: () => void;
   onBlur?: () => void;
+  column: ColumnConfig;
+  _rowy_ref: TableRowRef;
 }
 
 export default function RichTextEditor({
@@ -145,9 +155,42 @@ export default function RichTextEditor({
   id,
   onFocus,
   onBlur,
+  column,
+  _rowy_ref,
 }: IRichTextEditorProps) {
   const theme = useTheme();
   const [focus, setFocus] = useState(false);
+
+  const [firebaseStorage] = useAtom(firebaseStorageAtom, projectScope);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleImageUpload = (file: any) => {
+    return new Promise((resolve, reject) => {
+      const path = _rowy_ref.path;
+      const key = column.key;
+      const storageRef = ref(
+        firebaseStorage,
+        `${path}/${key}/${generateId()}-${file.name}`
+      );
+      const uploadTask = uploadBytesResumable(storageRef, file, {
+        cacheControl: "public, max-age=31536000",
+      });
+      uploadTask.on(
+        "state_changed",
+        null,
+        (error: any) => {
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(
+            (downloadURL: string) => {
+              resolve(downloadURL);
+            }
+          );
+        }
+      );
+    });
+  };
 
   return (
     <Styles focus={focus} disabled={disabled}>
@@ -257,8 +300,37 @@ export default function RichTextEditor({
           ],
           statusbar: false,
           toolbar:
-            "formatselect | bold italic forecolor | link | fullscreen | bullist numlist outdent indent | removeformat code | help",
+            "formatselect | bold italic forecolor | link | fullscreen | bullist numlist outdent indent | image | removeformat code | help",
           body_id: id,
+          file_picker_types: "image",
+          file_picker_callback: async (callback, value, meta) => {
+            const input = document.createElement("input");
+            input.setAttribute("type", "file");
+            input.setAttribute("accept", IMAGE_MIME_TYPES.join(","));
+
+            // Handle file selection
+            input.onchange = async () => {
+              const file = input && input.files && input.files[0];
+              try {
+                const imageUrl = await handleImageUpload(file); // Upload the image to Firebase Storage
+
+                // Create the image object to be inserted into the editor
+                const imageObj = {
+                  src: imageUrl,
+                  alt: file && file.name,
+                };
+
+                // Pass the image object to the callback function
+                callback(imageUrl, imageObj);
+              } catch (error) {
+                enqueueSnackbar("Error uploading image", {
+                  variant: "error",
+                });
+              }
+            };
+
+            input.click();
+          },
         }}
         value={value}
         onEditorChange={onChange}

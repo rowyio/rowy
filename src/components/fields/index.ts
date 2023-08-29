@@ -26,11 +26,13 @@ import Image_ from "./Image";
 import File_ from "./File";
 import Connector from "./Connector";
 import SubTable from "./SubTable";
+import ArraySubTable from "./ArraySubTable";
 import Reference from "./Reference";
 import ConnectTable from "./ConnectTable";
 import ConnectService from "./ConnectService";
 import Json from "./Json";
 import Code from "./Code";
+import Array from "./Array";
 import Action from "./Action";
 import Derivative from "./Derivative";
 import Formula from "./Formula";
@@ -74,6 +76,7 @@ export const FIELDS: IFieldConfig[] = [
   File_,
   /** CONNECTION */
   Connector,
+  ArraySubTable,
   SubTable,
   Reference,
   ConnectTable,
@@ -82,6 +85,7 @@ export const FIELDS: IFieldConfig[] = [
   Json,
   Code,
   Markdown,
+  Array,
   /** CLOUD FUNCTION */
   Action,
   Derivative,

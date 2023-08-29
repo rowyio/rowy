@@ -6,7 +6,9 @@ import { defaultFn, getDisplayCell } from "./util";
 
 export default function Formula(props: IDisplayCellProps) {
   const { result, error, loading } = useFormula({
+    column: props.column,
     row: props.row,
+    ref: props._rowy_ref,
     listenerFields: props.column.config?.listenerFields || [],
     formulaFn: props.column.config?.formulaFn || defaultFn,
   });

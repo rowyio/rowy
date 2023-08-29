@@ -31,6 +31,7 @@ export const config: IFieldConfig = {
   settings: Settings,
   requireConfiguration: true,
   requireCloudFunction: true,
+  requireCollectionTable: true,
   sortKey: "status",
 };
 export default config;

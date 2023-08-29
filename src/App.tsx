@@ -23,6 +23,7 @@ import useKeyPressWithAtom from "@src/hooks/useKeyPressWithAtom";
 
 import TableGroupRedirectPage from "./pages/TableGroupRedirectPage";
 import SignOutPage from "@src/pages/Auth/SignOutPage";
+import ProvidedArraySubTablePage from "./pages/Table/ProvidedArraySubTablePage";
 
 // prettier-ignore
 const AuthPage = lazy(() => import("@src/pages/Auth/AuthPage" /* webpackChunkName: "AuthPage" */));
@@ -50,8 +51,6 @@ const ProvidedSubTablePage = lazy(() => import("@src/pages/Table/ProvidedSubTabl
 // prettier-ignore
 const TableTutorialPage = lazy(() => import("@src/pages/Table/TableTutorialPage" /* webpackChunkName: "TableTutorialPage" */));
 
-// prettier-ignore
-const FunctionPage = lazy(() => import("@src/pages/FunctionPage" /* webpackChunkName: "FunctionPage" */));
 // prettier-ignore
 const UserSettingsPage = lazy(() => import("@src/pages/Settings/UserSettingsPage" /* webpackChunkName: "UserSettingsPage" */));
 // prettier-ignore
@@ -134,6 +133,27 @@ export default function App() {
                     }
                   />
                 </Route>
+                <Route path={ROUTES.arraySubTable}>
+                  <Route index element={<NotFound />} />
+                  <Route
+                    path=":docPath/:subTableKey"
+                    element={
+                      <Suspense
+                        fallback={
+                          <Backdrop
+                            key="sub-table-modal-backdrop"
+                            open
+                            sx={{ zIndex: "modal" }}
+                          >
+                            <Loading />
+                          </Backdrop>
+                        }
+                      >
+                        <ProvidedArraySubTablePage />
+                      </Suspense>
+                    }
+                  />
+                </Route>
               </Route>
             </Route>
 
@@ -147,13 +167,6 @@ export default function App() {
               element={<TableTutorialPage />}
             />
 
-            <Route path={ROUTES.function}>
-              <Route
-                index
-                element={<Navigate to={ROUTES.functions} replace />}
-              />
-              <Route path=":id" element={<FunctionPage />} />
-            </Route>
             <Route
               path={ROUTES.settings}
               element={<Navigate to={ROUTES.userSettings} replace />}

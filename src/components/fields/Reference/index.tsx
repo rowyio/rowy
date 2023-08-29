@@ -7,6 +7,7 @@ import DisplayCell from "./DisplayCell";
 import EditorCell from "./EditorCell";
 import { filterOperators } from "@src/components/fields/ShortText/Filter";
 import { valueFormatter } from "./filters";
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
 
 const SideDrawerField = lazy(
   () =>
@@ -24,10 +25,12 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <Reference />,
   description: "Firestore document reference",
+  contextMenuActions: BasicContextMenuActions,
   TableCell: withRenderTableCell(DisplayCell, EditorCell, "focus", {
     disablePadding: true,
   }),
   SideDrawerField,
   filter: { operators: filterOperators, valueFormatter: valueFormatter },
+  csvExportFormatter: (value: any) => value?.path,
 };
 export default config;

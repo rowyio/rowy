@@ -1,29 +1,39 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useMemo } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { useAtom } from "jotai";
+import { Provider, useAtom } from "jotai";
 import MultiSelect from "@rowy/multiselect";
 
+import { Grid, InputLabel, Stack, FormHelperText, Box } from "@mui/material";
+
 import {
-  Grid,
-  InputLabel,
-  Typography,
-  Stack,
-  FormHelperText,
-  Tooltip,
-} from "@mui/material";
+  tableColumnsOrderedAtom,
+  tableRowsDbAtom,
+  tableSchemaAtom,
+  tableScope,
+  tableSettingsAtom,
+  updateFieldAtom,
+} from "@src/atoms/tableScope";
 
 import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 import { ISettingsProps } from "@src/components/fields/types";
-import { tableColumnsOrderedAtom, tableScope } from "@src/atoms/tableScope";
 import FieldsDropdown from "@src/components/ColumnModals/FieldsDropdown";
+import { DEFAULT_COL_WIDTH, DEFAULT_ROW_HEIGHT } from "@src/components/Table";
+import { ColumnConfig } from "@src/types/table";
 
-import { defaultFn, listenerFieldTypes, outputFieldTypes } from "./util";
+import {
+  defaultFn,
+  listenerFieldTypes,
+  outputFieldTypes,
+  serializeRef,
+} from "./util";
+import PreviewTable from "./PreviewTable";
 import { getFieldProp } from "..";
 
-/* eslint-disable import/no-webpack-loader-syntax */
-import formulaDefs from "!!raw-loader!./formula.d.ts";
+import formulaDefs from "./formula.d.ts?raw";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
+import { currentUserAtom } from "@src/atoms/projectScope";
+import TableSourcePreview from "./TableSourcePreview";
 
 const CodeEditor = lazy(
   () =>
@@ -38,13 +48,43 @@ const diagnosticsOptions = {
 
 export default function Settings({
   config,
+  fieldName,
   onChange,
   onBlur,
   errors,
 }: ISettingsProps) {
+  const [currentUser] = useAtom(currentUserAtom, tableScope);
+  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
+  const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
   const returnType = getFieldProp("dataType", config.renderFieldType) ?? "any";
   const formulaFn = config?.formulaFn ? config.formulaFn : defaultFn;
+
+  const previewTableSchema = useMemo(() => {
+    const columns = tableSchema.columns || {};
+    return {
+      ...tableSchema,
+      columns: Object.keys(columns).reduce((previewSchema, key) => {
+        if ((config.listenerFields || []).includes(columns[key].fieldName)) {
+          previewSchema[key] = {
+            ...columns[key],
+            fixed: false,
+            width: DEFAULT_COL_WIDTH,
+            editable: true,
+          };
+        }
+        if (columns[key].fieldName === fieldName) {
+          previewSchema[key] = {
+            ...columns[key],
+            config,
+            fixed: true,
+          };
+        }
+        return previewSchema;
+      }, {} as { [key: string]: ColumnConfig }),
+      rowHeight: DEFAULT_ROW_HEIGHT,
+    };
+  }, [config, fieldName, tableSchema]);
 
   return (
     <Stack spacing={1}>
@@ -107,7 +147,11 @@ export default function Settings({
           additionalVariables={[
             {
               key: "row",
-              description: `Current row's data`,
+              description: `row has the value of doc.data() it has type definitions using this table's schema, but you can only access formula's listener fields.`,
+            },
+            {
+              key: "ref",
+              description: `reference object that holds the readonly reference of the row document.(i.e ref.id)`,
             },
           ]}
         />
@@ -125,6 +169,21 @@ export default function Settings({
           />
         </Suspense>
       </div>
+      <Box>
+        <InputLabel>Preview table</InputLabel>
+        <Provider
+          key={"preview-table"}
+          scope={tableScope}
+          initialValues={[
+            [currentUserAtom, currentUser],
+            [tableSchemaAtom, previewTableSchema],
+            [tableSettingsAtom, tableSettings],
+          ]}
+        >
+          <TableSourcePreview formulaFn={formulaFn} />
+          <PreviewTable />
+        </Provider>
+      </Box>
     </Stack>
   );
 }

@@ -64,6 +64,7 @@ import {
 } from "@src/utils/table";
 import { runRoutes } from "@src/constants/runRoutes";
 import { useSnackLogContext } from "@src/contexts/SnackLogContext";
+import useSaveTableSorts from "@src/components/Table/ColumnHeader/useSaveTableSorts";
 
 export interface IMenuModalProps {
   name: string;
@@ -115,6 +116,8 @@ export default function ColumnMenu({
 
   const [altPress] = useAtom(altPressAtom, projectScope);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  const triggerSaveTableSorts = useSaveTableSorts(canEditColumns);
 
   if (!columnMenu) return null;
   const { column, anchorEl } = columnMenu;
@@ -189,6 +192,10 @@ export default function ColumnMenu({
         setTableSorts(
           isSorted && !isAsc ? [] : [{ key: sortKey, direction: "desc" }]
         );
+
+        triggerSaveTableSorts(
+          isSorted && !isAsc ? [] : [{ key: sortKey, direction: "desc" }]
+        );
         handleClose();
       },
       active: isSorted && !isAsc,
@@ -201,6 +208,9 @@ export default function ColumnMenu({
       icon: <ArrowUpwardIcon />,
       onClick: () => {
         setTableSorts(
+          isSorted && isAsc ? [] : [{ key: sortKey, direction: "asc" }]
+        );
+        triggerSaveTableSorts(
           isSorted && isAsc ? [] : [{ key: sortKey, direction: "asc" }]
         );
         handleClose();
@@ -409,7 +419,7 @@ export default function ColumnMenu({
       key: "insertLeft",
       icon: <ColumnPlusBeforeIcon />,
       onClick: () => {
-        openColumnModal({ type: "new", index: column.index - 1 });
+        openColumnModal({ type: "new", index: column.index });
         handleClose();
       },
       disabled: !canAddColumns,

@@ -83,7 +83,7 @@ export const TableBody = memo(function TableBody({
 
         return (
           <StyledRow
-            key={row.id}
+            key={row.id + row.original._rowy_ref.arrayTableData?.index}
             role="row"
             aria-rowindex={row.index + 2}
             style={{
@@ -102,7 +102,10 @@ export const TableBody = memo(function TableBody({
 
               const isSelectedCell =
                 selectedCell?.path === row.original._rowy_ref.path &&
-                selectedCell?.columnKey === cell.column.id;
+                selectedCell?.columnKey === cell.column.id &&
+                // if the table is an array sub table, we need to check the array index as well
+                selectedCell?.arrayIndex ===
+                  row.original._rowy_ref.arrayTableData?.index;
 
               const fieldTypeGroup = getFieldProp(
                 "group",

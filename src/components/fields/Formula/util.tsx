@@ -24,6 +24,8 @@ import JsonDisplayCell from "@src/components/fields/Json/DisplayCell";
 import CodeDisplayCell from "@src/components/fields/Code/DisplayCell";
 import MarkdownDisplayCell from "@src/components/fields/Markdown/DisplayCell";
 import CreatedByDisplayCell from "@src/components/fields/CreatedBy/DisplayCell";
+import { TableRowRef, TableSettings } from "@src/types/table";
+import { DocumentData, DocumentReference } from "firebase/firestore";
 
 export function useDeepCompareMemoize<T>(value: T) {
   const ref = useRef<T>(value);
@@ -65,7 +67,7 @@ export const outputFieldTypes = Object.values(FieldType).filter(
     ].includes(type)
 );
 
-export const defaultFn = `const formula:Formula = async ({ row })=> {
+export const defaultFn = `const formula:Formula = async ({ row, ref })=> {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
   
   // Example:
@@ -119,4 +121,24 @@ export const getDisplayCell = (type: FieldType) => {
     default:
       return ShortTextDisplayCell;
   }
+};
+
+export const serializeRef = (path: string, maxDepth = 20) => {
+  const pathArr = path.split("/");
+  const serializedRef = {
+    path: pathArr.join("/"),
+    id: pathArr.pop(),
+  } as any;
+  let curr: TableRowRef | Partial<DocumentReference<DocumentData>> =
+    serializedRef;
+  let depth = 0;
+  while (pathArr.length > 0 && curr && depth < maxDepth) {
+    (curr.parent as any) = {
+      path: pathArr.join("/"),
+      id: pathArr.pop(),
+    } as Partial<DocumentReference<DocumentData>>;
+    curr = curr.parent as any;
+    maxDepth++;
+  }
+  return serializedRef;
 };

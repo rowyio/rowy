@@ -5,6 +5,8 @@ import withRenderTableCell from "@src/components/Table/TableCell/withRenderTable
 import CodeIcon from "@mui/icons-material/Code";
 import DisplayCell from "./DisplayCell";
 
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
+
 const Settings = lazy(
   () => import("./Settings" /* webpackChunkName: "Settings-Code" */)
 );
@@ -31,5 +33,6 @@ export const config: IFieldConfig = {
   }),
   SideDrawerField,
   settings: Settings,
+  contextMenuActions: BasicContextMenuActions,
 };
 export default config;

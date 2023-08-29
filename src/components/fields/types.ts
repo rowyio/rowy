@@ -20,6 +20,7 @@ export interface IFieldConfig {
   initializable?: boolean;
   requireConfiguration?: boolean;
   requireCloudFunction?: boolean;
+  requireCollectionTable?: boolean;
   initialValue: any;
   icon?: React.ReactNode;
   description?: string;
@@ -80,18 +81,19 @@ export interface ISideDrawerFieldProps<T = any> {
   column: ColumnConfig;
   /** The row’s _rowy_ref object */
   _rowy_ref: TableRowRef;
-
   /** The field’s local value – synced with db when field is not dirty */
   value: T;
   /** Call when the user has input but changes have not been saved */
   onDirty: (dirty?: boolean) => void;
   /** Update the local value. Also calls onDirty */
-  onChange: (T: any) => void;
+  onChange: (value: T) => void;
   /** Call when user input is ready to be saved (e.g. onBlur) */
   onSubmit: () => void;
 
   /** Field locked. Do NOT check `column.locked` */
   disabled: boolean;
+
+  row: TableRow;
 }
 
 export interface ISettingsProps {

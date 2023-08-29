@@ -1,18 +1,30 @@
 import { useEffect, useMemo, useState } from "react";
 import { pick, zipObject } from "lodash-es";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
-import { TableRow } from "@src/types/table";
-import { tableColumnsOrderedAtom, tableScope } from "@src/atoms/tableScope";
+import { TableRow, TableRowRef, ColumnConfig } from "@src/types/table";
+import {
+  tableColumnsOrderedAtom,
+  tableScope,
+  updateFieldAtom,
+} from "@src/atoms/tableScope";
 
-import { listenerFieldTypes, useDeepCompareMemoize } from "./util";
+import {
+  listenerFieldTypes,
+  serializeRef,
+  useDeepCompareMemoize,
+} from "./util";
 
 export const useFormula = ({
+  column,
   row,
+  ref,
   listenerFields,
   formulaFn,
 }: {
+  column: ColumnConfig;
   row: TableRow;
+  ref: TableRowRef;
   listenerFields: string[];
   formulaFn: string;
 }) => {
@@ -58,16 +70,29 @@ export const useFormula = ({
       setLoading(false);
     };
 
-    worker.postMessage({
-      formulaFn,
-      row: availableFields,
-    });
+    worker.postMessage(
+      JSON.stringify({
+        formulaFn,
+        row: availableFields,
+        ref: serializeRef(ref.path),
+      })
+    );
 
     return () => {
       worker.terminate();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [useDeepCompareMemoize(listeners), formulaFn]);
+
+  const updateField = useSetAtom(updateFieldAtom, tableScope);
+
+  useEffect(() => {
+    updateField({
+      path: row._rowy_ref.path,
+      fieldName: `_rowy_formulaValue_${column.key}`,
+      value: result,
+    });
+  }, [result, column.key, row._rowy_ref.path, updateField]);
 
   return { result, error, loading };
 };

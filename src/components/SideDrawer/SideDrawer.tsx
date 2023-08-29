@@ -30,11 +30,21 @@ export default function SideDrawer() {
 
   const [cell, setCell] = useAtom(selectedCellAtom, tableScope);
   const [open, setOpen] = useAtom(sideDrawerOpenAtom, tableScope);
-  const selectedRow = find(tableRows, ["_rowy_ref.path", cell?.path]);
-  const selectedCellRowIndex = findIndex(tableRows, [
-    "_rowy_ref.path",
-    cell?.path,
-  ]);
+  const selectedRow = find(
+    tableRows,
+    cell?.arrayIndex === undefined
+      ? ["_rowy_ref.path", cell?.path]
+      : // if the table is an array table, we need to use the array index to find the row
+        ["_rowy_ref.arrayTableData.index", cell?.arrayIndex]
+  );
+
+  const selectedCellRowIndex = findIndex(
+    tableRows,
+    cell?.arrayIndex === undefined
+      ? ["_rowy_ref.path", cell?.path]
+      : // if the table is an array table, we need to use the array index to find the row
+        ["_rowy_ref.arrayTableData.index", cell?.arrayIndex]
+  );
 
   const handleNavigate = (direction: "up" | "down") => () => {
     if (!tableRows || !cell) return;
@@ -45,8 +55,9 @@ export default function SideDrawer() {
 
     setCell((cell) => ({
       columnKey: cell!.columnKey,
-      path: newPath,
+      path: cell?.arrayIndex !== undefined ? cell.path : newPath,
       focusInside: false,
+      arrayIndex: cell?.arrayIndex !== undefined ? rowIndex : undefined,
     }));
   };
 

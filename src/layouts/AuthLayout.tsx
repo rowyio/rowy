@@ -105,18 +105,25 @@ export default function AuthLayout({
 
             display: "flex",
             flexDirection: "column",
+            justifyContent: "center",
+            alignContent: "center",
 
             "& > :not(style) + :not(style)": { mt: 4 },
           } as any
         }
       >
         {title && (
-          <Typography component="h1" variant="h4" sx={{ mt: -1 }}>
+          <Typography
+            component="h1"
+            variant="h4"
+            align="center"
+            sx={{ mt: -1 }}
+          >
             {title}
           </Typography>
         )}
         {description && (
-          <Typography variant="body1" style={{ marginTop: 8 }}>
+          <Typography variant="body1" align="center" style={{ marginTop: 8 }}>
             {description}
           </Typography>
         )}
@@ -126,6 +133,7 @@ export default function AuthLayout({
           justifyContent="center"
           alignItems="flex-start"
           style={{ flexGrow: 1 }}
+          margin="auto"
         >
           {children}
         </Stack>
@@ -146,6 +154,7 @@ export default function AuthLayout({
           <Typography
             variant="caption"
             color="text.disabled"
+            align="center"
             sx={{ display: hideProject ? "none" : "block", mb: -0.5 }}
           >
             Project: <span style={{ userSelect: "all" }}>{projectId}</span>

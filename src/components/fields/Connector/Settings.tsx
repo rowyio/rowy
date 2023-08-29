@@ -14,8 +14,7 @@ import {
 import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
-/* eslint-disable import/no-webpack-loader-syntax */
-import connectorDefs from "!!raw-loader!./connector.d.ts";
+import connectorDefs from "./connector.d.ts?raw";
 
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { baseFunction } from "./utils";
@@ -26,7 +25,7 @@ import {
   rowyRunModalAtom,
 } from "@src/atoms/projectScope";
 
-//import typeDefs from "!!raw-loader!./types.d.ts";
+//import typeDefs from "./types.d.ts?raw";
 const CodeEditor = lazy(
   () =>
     import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)

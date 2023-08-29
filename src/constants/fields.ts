@@ -28,6 +28,7 @@ export enum FieldType {
   // CONNECTION
   connector = "CONNECTOR",
   subTable = "SUB_TABLE",
+  arraySubTable = "ARRAY_SUB_TABLE",
   reference = "REFERENCE",
   connectTable = "DOCUMENT_SELECT",
   connectService = "SERVICE_SELECT",
@@ -35,6 +36,7 @@ export enum FieldType {
   json = "JSON",
   code = "CODE",
   markdown = "MARKDOWN",
+  array = "ARRAY",
   // CLOUD FUNCTION
   action = "ACTION",
   derivative = "DERIVATIVE",
