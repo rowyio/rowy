@@ -405,6 +405,13 @@ export const tableFiltersToFirestoreFilters = (filters: TableFilter[]) => {
         where(filter.key.concat(".hex"), "!=", filter.value.hex.toString())
       );
       continue;
+    } else if (filter.operator === "array-contains") {
+      if (!filter.value || !filter.value.length) continue;
+      // make the value as a singular string
+      firestoreFilters.push(
+        where(filter.key, filter.operator as WhereFilterOp, filter.value[0])
+      );
+      continue;
     }
     firestoreFilters.push(
       where(filter.key, filter.operator as WhereFilterOp, filter.value)
