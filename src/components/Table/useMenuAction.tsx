@@ -61,6 +61,7 @@ export const SUPPORTED_TYPES_COPY = new Set([
   FieldType.updatedAt,
   // CONNECTION
   FieldType.reference,
+  FieldType.id,
 ]);
 
 export const SUPPORTED_TYPES_PASTE = new Set([
@@ -98,7 +99,16 @@ export function useMenuAction(
 
   const handleCopy = useCallback(async () => {
     try {
-      if (cellValue !== undefined && cellValue !== null && cellValue !== "") {
+      if (selectedCol?.type === FieldType.id && selectedCell?.path) {
+        await navigator.clipboard.writeText(
+          selectedCell?.path.split("/").pop() || ""
+        );
+        enqueueSnackbar("Copied");
+      } else if (
+        cellValue !== undefined &&
+        cellValue !== null &&
+        cellValue !== ""
+      ) {
         const value = getValue(cellValue);
         await navigator.clipboard.writeText(value);
         enqueueSnackbar("Copied");
