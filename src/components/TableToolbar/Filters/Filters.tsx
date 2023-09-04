@@ -41,6 +41,7 @@ import { useFilterInputs } from "./useFilterInputs";
 import { analytics, logEvent } from "@src/analytics";
 import type { TableFilter } from "@src/types/table";
 import { generateId } from "@src/utils/table";
+import { useFilterUrl } from "./useFilterUrl";
 
 const shouldDisableApplyButton = (queries: any) => {
   for (let query of queries) {
@@ -248,6 +249,27 @@ export default function Filters() {
         tables: { [`${tableId}`]: { filters, joinOperator: op } },
       });
   };
+
+  const { filtersUrl, updateFilterQueryParam } = useFilterUrl();
+
+  // If the filter in URL is not the same as currently applied local filter
+  // then update the user filter.
+  useEffect(() => {
+    if (
+      filtersUrl &&
+      JSON.stringify(filtersUrl) !== JSON.stringify(appliedFilters)
+    ) {
+      setUserFilters(filtersUrl);
+      setOverrideTableFilters(true);
+    }
+  }, [filtersUrl]);
+
+  // Update queyy param if the locally applied filter changes
+  useEffect(() => {
+    if (appliedFilters) {
+      updateFilterQueryParam(appliedFilters);
+    }
+  }, [appliedFilters]);
 
   return (
     <FiltersPopover
