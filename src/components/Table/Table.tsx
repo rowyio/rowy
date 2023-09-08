@@ -26,6 +26,7 @@ import EmptyState from "@src/components/EmptyState";
 import {
   tableScope,
   tableSchemaAtom,
+  reactTableAtom,
   tableColumnsOrderedAtom,
   tableRowsAtom,
   tableNextPageAtom,
@@ -118,6 +119,7 @@ export default function Table({
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
   const [tablePage, setTablePage] = useAtom(tablePageAtom, tableScope);
+  const setReactTable = useSetAtom(reactTableAtom, tableScope);
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
 
@@ -264,6 +266,10 @@ export default function Table({
     state: { ...prev.state, columnVisibility, columnPinning, columnSizing },
     onColumnSizingChange: setColumnSizing,
   }));
+  // Update the reactTable atom when table state changes.
+  useMemo(() => {
+    setReactTable(table);
+  }, [table, setReactTable]);
   // Get rows and columns for virtualization
   const { rows } = table.getRowModel();
   const leafColumns = table.getVisibleLeafColumns();
