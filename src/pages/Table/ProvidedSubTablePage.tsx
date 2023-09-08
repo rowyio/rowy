@@ -137,7 +137,7 @@ export default function ProvidedSubTablePage() {
           >
             <DebugAtoms scope={tableScope} />
             <TableSourceFirestore />
-            <TablePage />
+            <TablePage enableRowSelection />
           </Provider>
         </Suspense>
       </ErrorBoundary>

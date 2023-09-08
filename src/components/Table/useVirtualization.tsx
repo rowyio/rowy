@@ -71,7 +71,8 @@ export function useVirtualization(
         const definedWidth = localWidth || schemaWidth;
 
         if (definedWidth === undefined) return DEFAULT_COL_WIDTH;
-        if (definedWidth < MIN_COL_WIDTH) return MIN_COL_WIDTH;
+        if (definedWidth < MIN_COL_WIDTH && columnDef.id !== "_rowy_select")
+          return MIN_COL_WIDTH;
         return definedWidth;
       },
       [leafColumns, columnSizing]
