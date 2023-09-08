@@ -41,7 +41,7 @@ export const columnMenuAtom = atom<{
  * ```
  */
 export const columnModalAtom = atomWithHash<{
-  type: "new" | "name" | "type" | "config";
+  type: "new" | "name" | "type" | "config" | "setColumnWidth";
   columnKey?: string;
   index?: number;
 } | null>("columnModal", null, { replaceState: true });

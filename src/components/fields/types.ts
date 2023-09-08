@@ -94,6 +94,8 @@ export interface ISideDrawerFieldProps<T = any> {
   disabled: boolean;
 
   row: TableRow;
+
+  operator?: TableFilter["operator"];
 }
 
 export interface ISettingsProps {

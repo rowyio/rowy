@@ -5,6 +5,7 @@ import NewColumnModal from "./NewColumnModal";
 import NameChangeModal from "./NameChangeModal";
 import TypeChangeModal from "./TypeChangeModal";
 import ColumnConfigModal from "./ColumnConfigModal";
+import SetColumnWidthModal from "./SetColumnWidthModal";
 
 import {
   tableScope,
@@ -39,6 +40,9 @@ export default function ColumnModals() {
 
   if (columnModal.type === "config")
     return <ColumnConfigModal onClose={onClose} column={column} />;
+
+  if (columnModal.type === "setColumnWidth")
+    return <SetColumnWidthModal onClose={onClose} column={column} />;
 
   return null;
 }

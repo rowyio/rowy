@@ -39,6 +39,7 @@ import {
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 import { TableRow } from "@src/types/table";
+import { generateId } from "@src/utils/table";
 
 interface IMenuContentsProps {
   onClose: () => void;
@@ -281,6 +282,7 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
           key: selectedColumn.fieldName,
           operator: columnFilters!.operators[0]?.value || "==",
           value: cellValue,
+          id: generateId(),
         },
       ];
 

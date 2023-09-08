@@ -10,6 +10,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@json2csv/plainjs": "^7.0.1",
     "@mdi/js": "^6.6.96",
     "@monaco-editor/react": "^4.4.4",
@@ -40,7 +41,7 @@
     "match-sorter": "^6.3.1",
     "material-ui-popup-state": "^4.0.1",
     "mdi-material-ui": "^7.3.0",
-    "monaco-editor-auto-typings": "^0.4.0",
+    "monaco-editor-auto-typings": "^0.4.3",
     "notistack": "^2.0.4",
     "path-browserify": "^1.0.1",
     "pb-util": "^1.0.3",

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useAtom } from "jotai";
+import { matchSorter } from "match-sorter";
 
 import {
   tableScope,
@@ -64,26 +65,26 @@ export default function useMonacoCustomizations({
     if (!monaco) return;
 
     try {
-      monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+      monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
         moduleResolution:
           monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+        module: monaco.languages.typescript.ModuleKind.CommonJS,
         target: monaco.languages.typescript.ScriptTarget.ES2020,
         allowNonTsExtensions: true,
+        typeRoots: ["node_modules/@types"],
       });
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(firestoreDefs);
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(firestoreDefs);
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(
         firebaseAuthDefs
       );
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(
         firebaseStorageDefs
       );
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(
         utilsDefs,
         "ts:filename/utils.d.ts"
       );
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(rowyUtilsDefs);
-
-      setLoggingReplacementActions();
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(rowyUtilsDefs);
     } catch (error) {
       console.error(
         "An error occurred during initialization of Monaco: ",
@@ -97,7 +98,7 @@ export default function useMonacoCustomizations({
     if (!monaco) return;
     if (!extraLibs) return;
     try {
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(
         extraLibs.join("\n"),
         "ts:filename/extraLibs.d.ts"
       );
@@ -112,7 +113,7 @@ export default function useMonacoCustomizations({
     if (!monaco) return;
 
     try {
-      monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+      monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
         ...JSON.parse(stringifiedDiagnosticsOptions),
         diagnosticCodesToIgnore: [
           1323, // remove dynamic import error
@@ -124,13 +125,13 @@ export default function useMonacoCustomizations({
     }
   }, [monaco, stringifiedDiagnosticsOptions]);
 
-  const setLoggingReplacementActions = () => {
+  const setReplacementActions = () => {
     if (!monaco) return;
     const { dispose } = monaco.languages.registerCodeActionProvider(
       "javascript",
       {
         provideCodeActions: (model, range, context, token) => {
-          const actions = context.markers
+          const consoleLogReplacements = context.markers
             .filter((error) => {
               return error.message.includes("Rowy Cloud Logging");
             })
@@ -156,8 +157,63 @@ export default function useMonacoCustomizations({
                 isPreferred: true,
               };
             });
+          const secretNameReplacements = context.markers
+            .filter((error) => {
+              return error.message.includes(
+                "is not assignable to parameter of type 'SecretNames'"
+              );
+            })
+            .map((error) => {
+              const typoSecretName = model
+                .getLineContent(error.startLineNumber)
+                .slice(error.startColumn, error.endColumn - 2);
+              const similarSecretNames =
+                matchSorter(secretNames.secretNames ?? [], typoSecretName) ??
+                [];
+              const otherSecretNames =
+                secretNames.secretNames?.filter(
+                  (secretName) => !similarSecretNames.includes(secretName)
+                ) ?? [];
+              return [
+                ...similarSecretNames.map((secretName) => ({
+                  title: `Replace with "${secretName}"`,
+                  diagnostics: [error],
+                  kind: "quickfix",
+                  edit: {
+                    edits: [
+                      {
+                        resource: model.uri,
+                        edit: {
+                          range: error,
+                          text: `"${secretName}"`,
+                        },
+                      },
+                    ],
+                  },
+                  isPreferred: true,
+                })),
+                ...otherSecretNames.map((secretName) => ({
+                  title: `Replace with "${secretName}"`,
+                  diagnostics: [error],
+                  kind: "quickfix",
+                  edit: {
+                    edits: [
+                      {
+                        resource: model.uri,
+                        edit: {
+                          range: error,
+                          text: `"${secretName}"`,
+                        },
+                      },
+                    ],
+                  },
+                  isPreferred: false,
+                })),
+              ];
+            })
+            .flat();
           return {
-            actions: actions,
+            actions: [...consoleLogReplacements, ...secretNameReplacements],
             dispose: () => {},
           };
         },
@@ -169,7 +225,6 @@ export default function useMonacoCustomizations({
       dispose();
     });
   };
-
   const addJsonFieldDefinition = async (
     columnKey: string,
     interfaceName: string
@@ -178,11 +233,11 @@ export default function useMonacoCustomizations({
       .map((row) => row[columnKey])
       .filter((entry) => entry !== undefined)
       .map((entry) => JSON.stringify(entry));
-    monaco?.languages.typescript.javascriptDefaults.addExtraLib(
+    monaco?.languages.typescript.typescriptDefaults.addExtraLib(
       `type ${interfaceName} = any;`
     );
     // if (!samples || samples.length === 0) {
-    //   monaco?.languages.typescript.javascriptDefaults.addExtraLib(
+    //   monaco?.languages.typescript.typescriptDefaults.addExtraLib(
     //     `type ${interfaceName} = any;`
     //   );
     //   return;
@@ -200,7 +255,7 @@ export default function useMonacoCustomizations({
     //     rendererOptions: { "just-types": "true" },
     //   });
     //   const newLib = result.lines.join("\n").replaceAll("export ", "");
-    //  monaco?.languages.typescript.javascriptDefaults.addExtraLib(newLib);
+    //  monaco?.languages.typescript.typescriptDefaults.addExtraLib(newLib);
     //}
   };
 
@@ -223,13 +278,13 @@ export default function useMonacoCustomizations({
       .map((key) => `"${key}"`)
       .join("|\n");
 
-    monaco?.languages.typescript.javascriptDefaults.addExtraLib(
+    monaco?.languages.typescript.typescriptDefaults.addExtraLib(
       ["/**", " * extensions type configuration", " */", extensionsDefs].join(
         "\n"
       ),
       "ts:filename/extensions.d.ts"
     );
-    monaco?.languages.typescript.javascriptDefaults.addExtraLib(
+    monaco?.languages.typescript.typescriptDefaults.addExtraLib(
       [
         "// basic types that are used in all places",
         "declare var require: any;",
@@ -261,14 +316,16 @@ export default function useMonacoCustomizations({
     if (!secretNames.secretNames) return;
     const secretsDef = `type SecretNames = ${secretNames.secretNames
       .map((secret: string) => `"${secret}"`)
-      .join(" | ")}
+      .join(" | ")} \n
         enum secrets {
           ${secretNames.secretNames
-            .map((secret: string) => `${secret} = "${secret}"`)
+            .map((secret: string) => `"${secret}" = "${secret}"`)
             .join("\n")}
         }
        `;
     monaco?.languages.typescript.javascriptDefaults.addExtraLib(secretsDef);
+
+    setReplacementActions();
   }, [monaco, secretNames]);
 
   let boxSx: SystemStyleObject<Theme> = {

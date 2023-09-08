@@ -24,6 +24,7 @@ import {
 } from "@src/assets/icons";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import StraightenIcon from "@mui/icons-material/Straighten";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import EvalIcon from "@mui/icons-material/PlayCircleOutline";
@@ -59,6 +60,7 @@ import { getFieldProp } from "@src/components/fields";
 import { analytics, logEvent } from "@src/analytics";
 import {
   formatSubTableName,
+  generateId,
   getTableBuildFunctionPathname,
   getTableSchemaPath,
 } from "@src/utils/table";
@@ -251,6 +253,7 @@ export default function ColumnMenu({
                   : column.type
               )!.operators[0]?.value || "==",
             value: "",
+            id: generateId(),
           },
         });
         handleClose();
@@ -262,6 +265,16 @@ export default function ColumnMenu({
           ? column.config?.renderFieldType
           : column.type
       ),
+    },
+    {
+      key: "setColumnWidth",
+      label: "Set Column Width",
+      icon: <StraightenIcon />,
+      onClick: () => {
+        openColumnModal({ type: "setColumnWidth", columnKey: column.key });
+        handleClose();
+      },
+      disabled: column.resizable === false,
     },
   ];
 

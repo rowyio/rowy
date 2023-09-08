@@ -139,6 +139,7 @@ export default function ProvidedArraySubTablePage() {
             <DebugAtoms scope={tableScope} />
             <ArraySubTableSourceFirestore />
             <TablePage
+              enableRowSelection={false}
               disabledTools={[
                 "import",
                 "export",

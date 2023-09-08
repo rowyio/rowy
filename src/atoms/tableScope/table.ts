@@ -16,6 +16,7 @@ import {
   BulkWriteFunction,
 } from "@src/types/table";
 import { updateRowData } from "@src/utils/table";
+import { Table } from "@tanstack/react-table";
 
 /** Root atom from which others are derived */
 export const tableIdAtom = atom("");
@@ -47,6 +48,8 @@ export const tableColumnsOrderedAtom = atom<ColumnConfig[]>((get) => {
     ["desc", "asc"]
   );
 });
+/** Store the table */
+export const reactTableAtom = atom<Table<TableRow> | null>(null);
 /** Reducer function to convert from array of columns to columns object */
 export const tableColumnsReducer = (
   a: Record<string, ColumnConfig>,
@@ -59,6 +62,8 @@ export const tableColumnsReducer = (
 
 /** Filters applied to the local view */
 export const tableFiltersAtom = atom<TableFilter[]>([]);
+/** Join operator applied to mulitple filters */
+export const tableFiltersJoinAtom = atom<"AND" | "OR">("AND");
 /** Sorts applied to the local view */
 export const tableSortsAtom = atom<TableSort[]>([]);
 

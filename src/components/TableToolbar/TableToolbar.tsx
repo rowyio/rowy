@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import { useAtom, useSetAtom } from "jotai";
 
-import { Button, Stack } from "@mui/material";
+import { Button, Stack, Tooltip, Typography } from "@mui/material";
 import WebhookIcon from "@mui/icons-material/Webhook";
 import {
   Export as ExportIcon,
@@ -33,10 +33,14 @@ import {
   tableSchemaAtom,
   tableModalAtom,
   tableSortsAtom,
+  serverDocCountAtom,
+  deleteRowAtom,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 import { TableToolsType } from "@src/types/table";
 import FilterIcon from "@mui/icons-material/FilterList";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import { RowSelectionState } from "@tanstack/react-table";
 
 // prettier-ignore
 const Sort = lazy(() => import("./Sort" /* webpackChunkName: "Filters" */));
@@ -51,10 +55,75 @@ const ReExecute = lazy(() => import("./ReExecute" /* webpackChunkName: "ReExecut
 
 export const TABLE_TOOLBAR_HEIGHT = 44;
 
+const StyledStack = ({ children }: React.PropsWithChildren) => (
+  <Stack
+    direction="row"
+    alignItems="center"
+    spacing={1}
+    sx={{
+      pl: (theme) => `max(env(safe-area-inset-left), ${theme.spacing(2)})`,
+      pb: 1.5,
+      height: TABLE_TOOLBAR_HEIGHT,
+      scrollbarWidth: "thin",
+      overflowX: "auto",
+      "&": { overflowX: "overlay" },
+      overflowY: "hidden",
+      "& > *": { flexShrink: 0 },
+
+      "& > .end-spacer": {
+        width: (theme) =>
+          `max(env(safe-area-inset-right), ${theme.spacing(2)})`,
+        height: "100%",
+        ml: 0,
+      },
+    }}
+  >
+    {children}
+  </Stack>
+);
+
+function RowSelectedToolBar({
+  selectedRows,
+  resetSelectedRows,
+}: {
+  selectedRows: RowSelectionState;
+  resetSelectedRows: () => void;
+}) {
+  const [serverDocCount] = useAtom(serverDocCountAtom, tableScope);
+  const deleteRow = useSetAtom(deleteRowAtom, tableScope);
+
+  const handleDelete = async () => {
+    await deleteRow({ path: Object.keys(selectedRows) });
+    resetSelectedRows();
+  };
+
+  return (
+    <StyledStack>
+      <Typography>
+        {Object.values(selectedRows).length} of {serverDocCount} rows selected
+      </Typography>
+      <Tooltip title="Delete row">
+        <Button
+          variant="outlined"
+          startIcon={<DeleteIcon fontSize="small" />}
+          color="error"
+          onClick={handleDelete}
+        >
+          Delete
+        </Button>
+      </Tooltip>
+    </StyledStack>
+  );
+}
+
 export default function TableToolbar({
   disabledTools,
+  selectedRows,
+  resetSelectedRows,
 }: {
   disabledTools?: TableToolsType[];
+  selectedRows?: RowSelectionState;
+  resetSelectedRows?: () => void;
 }) {
   const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
   const [userRoles] = useAtom(userRolesAtom, projectScope);
@@ -77,29 +146,17 @@ export default function TableToolbar({
     tableSchema.compiledExtension.replace(/\W/g, "")?.length > 0;
 
   disabledTools = disabledTools ?? [];
-  return (
-    <Stack
-      direction="row"
-      alignItems="center"
-      spacing={1}
-      sx={{
-        pl: (theme) => `max(env(safe-area-inset-left), ${theme.spacing(2)})`,
-        pb: 1.5,
-        height: TABLE_TOOLBAR_HEIGHT,
-        scrollbarWidth: "thin",
-        overflowX: "auto",
-        "&": { overflowX: "overlay" },
-        overflowY: "hidden",
-        "& > *": { flexShrink: 0 },
 
-        "& > .end-spacer": {
-          width: (theme) =>
-            `max(env(safe-area-inset-right), ${theme.spacing(2)})`,
-          height: "100%",
-          ml: 0,
-        },
-      }}
-    >
+  if (selectedRows && Object.keys(selectedRows).length > 0 && resetSelectedRows)
+    return (
+      <RowSelectedToolBar
+        selectedRows={selectedRows}
+        resetSelectedRows={resetSelectedRows}
+      />
+    );
+
+  return (
+    <StyledStack>
       {tableSettings.isCollection === false ? (
         <AddRowArraySubTable />
       ) : (
@@ -202,6 +259,6 @@ export default function TableToolbar({
       )}
       <TableInformation />
       <div className="end-spacer" />
-    </Stack>
+    </StyledStack>
   );
 }

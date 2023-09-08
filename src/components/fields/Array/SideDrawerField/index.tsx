@@ -120,7 +120,7 @@ export default function ArraySideDrawerField({
 }: ISideDrawerFieldProps) {
   const handleAddNew = (fieldType: ArraySupportedFiledTypes) => {
     onChange([...(value || []), SupportedTypes[fieldType].initialValue]);
-    onDirty(true);
+    if (onDirty) onDirty(true);
   };
   const handleChange = (newValue_: any, indexUpdated: number) => {
     onChange(
@@ -137,13 +137,13 @@ export default function ArraySideDrawerField({
   const handleRemove = (index: number) => {
     value.splice(index, 1);
     onChange([...value]);
-    onDirty(true);
+    if (onDirty) onDirty(true);
     onSubmit();
   };
 
   const handleClearField = () => {
     onChange([]);
-    onSubmit();
+    if (onSubmit) onSubmit();
   };
 
   function handleOnDragEnd(result: DropResult) {
@@ -157,7 +157,7 @@ export default function ArraySideDrawerField({
     const [removed] = list.splice(result.source.index, 1);
     list.splice(result.destination.index, 0, removed);
     onChange(list);
-    onSubmit();
+    if (onSubmit) onSubmit();
   }
 
   if (value === undefined || Array.isArray(value)) {
@@ -166,7 +166,11 @@ export default function ArraySideDrawerField({
         <DragDropContext onDragEnd={handleOnDragEnd}>
           <Droppable droppableId="columns_manager" direction="vertical">
             {(provided) => (
-              <List {...provided.droppableProps} ref={provided.innerRef}>
+              <List
+                sx={{ padding: 0 }}
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
                 {(value || []).map((v: any, index: number) => (
                   <ArrayFieldInput
                     key={`index-${index}-value`}
@@ -185,7 +189,15 @@ export default function ArraySideDrawerField({
             )}
           </Droppable>
         </DragDropContext>
-        <AddButton handleAddNew={handleAddNew} />
+        {props.operator === "array-contains" ? (
+          value?.length < 1 ? (
+            <AddButton handleAddNew={handleAddNew} />
+          ) : (
+            <></>
+          )
+        ) : (
+          <AddButton handleAddNew={handleAddNew} />
+        )}
       </>
     );
   }

@@ -24,6 +24,7 @@ import {
   _deleteRowDbAtom,
   tableNextPageAtom,
   serverDocCountAtom,
+  tableFiltersJoinAtom,
 } from "@src/atoms/tableScope";
 
 import useFirestoreDocWithAtom, {
@@ -112,6 +113,8 @@ export const TableSourceFirestore = memo(function TableSourceFirestore() {
     }
   );
 
+  const [joinOperator] = useAtom(tableFiltersJoinAtom, tableScope);
+
   // Get table filters and sorts
   const [filters] = useAtom(tableFiltersAtom, tableScope);
   const [sorts] = useAtom(tableSortsAtom, tableScope);
@@ -130,6 +133,7 @@ export const TableSourceFirestore = memo(function TableSourceFirestore() {
     tableSettings.collection,
     {
       filters,
+      joinOperator,
       sorts,
       page,
       collectionGroup: isCollectionGroup,
