@@ -123,6 +123,8 @@ export type TableSchema = {
   subTables?: SubTablesSchema;
   /** @deprecated Migrate to Extensions */
   sparks?: string;
+
+  joinOperator?: "AND" | "OR";
 };
 
 export type SubTablesSchema = {
@@ -194,8 +196,10 @@ export type TableFilter = {
     | "id-equal"
     | "color-equal"
     | "color-not-equal"
-    | "-is-";
+    | "is-empty"
+    | "is-not-empty";
   value: any;
+  id: string;
 };
 
 export const TableTools = [

@@ -316,12 +316,7 @@ export default function Table({
   // for large screen heights
   useEffect(() => {
     fetchMoreOnBottomReached(containerRef.current);
-  }, [
-    fetchMoreOnBottomReached,
-    tablePage,
-    tableNextPage.loading,
-    containerRef,
-  ]);
+  }, [fetchMoreOnBottomReached, tableNextPage.loading, containerRef]);
 
   // apply user default sort on first render
   const [applySort, setApplySort] = useState(true);

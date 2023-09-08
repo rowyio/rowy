@@ -57,6 +57,7 @@ export type UserSettings = Partial<{
       filters: TableFilter[];
       hiddenFields: string[];
       sorts: TableSort[];
+      joinOperator: "AND" | "OR";
     }>
   >;
 
