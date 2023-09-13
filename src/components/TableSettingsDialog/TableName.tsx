@@ -27,7 +27,7 @@ export default function TableName({ watchedField, ...props }: ITableNameProps) {
         onChange(startCase(watchedValue));
       } else if (typeof value === "string") {
         // otherwise if table name is valid, set watched value to table name
-        onChange(value.trim());
+        onChange(startCase(value.trim()));
       }
     }
   }, [watchedValue, disabled, onChange, value]);
