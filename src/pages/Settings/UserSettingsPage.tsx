@@ -9,6 +9,7 @@ import SettingsSkeleton from "@src/components/Settings/SettingsSkeleton";
 import SettingsSection from "@src/components/Settings/SettingsSection";
 import Account from "@src/components/Settings/UserSettings/Account";
 import Theme from "@src/components/Settings/UserSettings/Theme";
+import TableSettings from "@src/components/Settings/UserSettings/TableSettings";
 import Personalization from "@src/components/Settings/UserSettings/Personalization";
 
 import {
@@ -19,7 +20,6 @@ import {
 } from "@src/atoms/projectScope";
 import { useScrollToHash } from "@src/hooks/useScrollToHash";
 import { UserSettings } from "@src/types/settings";
-import TableSettings from "@src/components/Settings/UserSettings/TableSettings";
 
 export interface IUserSettingsChildProps {
   settings: UserSettings;
