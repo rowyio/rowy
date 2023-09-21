@@ -42,9 +42,9 @@ function useSaveTableSorts(canEditColumns: boolean) {
       }
       if (!canEditColumns) return;
       // If the user has disabled the popup, return early
-      if (defaultTableSettings?.saveSortingPopupDisabled) {
-        // If the user has `automaticallyApplySorting` set to true, apply the sorting before returning
-        if (defaultTableSettings?.automaticallyApplySorting) {
+      if (defaultTableSettings?.saveSortsPopupDisabled) {
+        // If the user has `automaticallyApplySorts` set to true, apply the sorting before returning
+        if (defaultTableSettings?.automaticallyApplySorts) {
           const updateTable = async () => await updateTableSchema({ sorts });
           updateTable();
         }

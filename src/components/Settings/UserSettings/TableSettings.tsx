@@ -20,12 +20,12 @@ export default function TableSettings({
           control={
             <Checkbox
               checked={Boolean(
-                settings.defaultTableSettings?.saveSortingPopupDisabled
+                settings.defaultTableSettings?.saveSortsPopupDisabled
               )}
               onChange={(e) => {
                 updateSettings({
                   defaultTableSettings: merge(settings.defaultTableSettings, {
-                    saveSortingPopupDisabled: e.target.checked,
+                    saveSortsPopupDisabled: e.target.checked,
                   }),
                 });
               }}
@@ -34,17 +34,17 @@ export default function TableSettings({
           label="Disable popup - to save sorting changes to the team"
           style={{ marginLeft: -11, marginBottom: 13 }}
         />
-        <Collapse in={settings.defaultTableSettings?.saveSortingPopupDisabled}>
+        <Collapse in={settings.defaultTableSettings?.saveSortsPopupDisabled}>
           <FormControlLabel
             control={
               <Checkbox
                 checked={Boolean(
-                  settings.defaultTableSettings?.automaticallyApplySorting
+                  settings.defaultTableSettings?.automaticallyApplySorts
                 )}
                 onChange={(e) => {
                   updateSettings({
                     defaultTableSettings: merge(settings.defaultTableSettings, {
-                      automaticallyApplySorting: e.target.checked,
+                      automaticallyApplySorts: e.target.checked,
                     }),
                   });
                 }}
@@ -61,12 +61,12 @@ export default function TableSettings({
           control={
             <Checkbox
               checked={Boolean(
-                settings.defaultTableSettings?.saveColumnWidthPopupDisabled
+                settings.defaultTableSettings?.saveColumnSizingPopupDisabled
               )}
               onChange={(e) => {
                 updateSettings({
                   defaultTableSettings: merge(settings.defaultTableSettings, {
-                    saveColumnWidthPopupDisabled: e.target.checked,
+                    saveColumnSizingPopupDisabled: e.target.checked,
                   }),
                 });
               }}
@@ -76,18 +76,18 @@ export default function TableSettings({
           style={{ marginLeft: -11, marginTop: 13 }}
         />
         <Collapse
-          in={settings.defaultTableSettings?.saveColumnWidthPopupDisabled}
+          in={settings.defaultTableSettings?.saveColumnSizingPopupDisabled}
         >
           <FormControlLabel
             control={
               <Checkbox
                 checked={Boolean(
-                  settings.defaultTableSettings?.automaticallyApplyColumnWidth
+                  settings.defaultTableSettings?.automaticallyApplyColumnSizing
                 )}
                 onChange={(e) => {
                   updateSettings({
                     defaultTableSettings: merge(settings.defaultTableSettings, {
-                      automaticallyApplyColumnWidth: e.target.checked,
+                      automaticallyApplyColumnSizing: e.target.checked,
                     }),
                   });
                 }}

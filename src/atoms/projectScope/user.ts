@@ -33,7 +33,6 @@ export const themeOverriddenAtom = atomWithStorage(
 /** User's default table settings (affecting saving and popup behavior) */
 export const defaultTableSettingsAtom = atom((get) => {
   const userSettings = get(userSettingsAtom);
-  console.log("defaultTableSettings", userSettings.defaultTableSettings);
   return userSettings.defaultTableSettings;
 });
 

@@ -43,9 +43,9 @@ export function useSaveColumnSizing(
   useEffect(() => {
     if (!canEditColumns || isEmpty(debouncedColumnSizing)) return;
     // If the user has disabled the popup, return early
-    if (defaultTableSettings?.saveColumnWidthPopupDisabled) {
-      // If the user has `automaticallyApplyColumnWidth` set to true, apply the column width before returning
-      if (defaultTableSettings?.automaticallyApplyColumnWidth) {
+    if (defaultTableSettings?.saveColumnSizingPopupDisabled) {
+      // If the user has `automaticallyApplyColumnSizing` set to true, apply the column width before returning
+      if (defaultTableSettings?.automaticallyApplyColumnSizing) {
         const updateTable = async () => {
           for (const [key, value] of Object.entries(debouncedColumnSizing)) {
             await updateColumn({ key, config: { width: value } });

@@ -52,10 +52,10 @@ export type UserSettings = Partial<{
   favoriteTables: string[];
   /** Stores default user settings for all tables */
   defaultTableSettings: Partial<{
-    saveSortingPopupDisabled: boolean;
-    automaticallyApplySorting: boolean;
-    saveColumnWidthPopupDisabled: boolean;
-    automaticallyApplyColumnWidth: boolean;
+    saveSortsPopupDisabled: boolean;
+    automaticallyApplySorts: boolean;
+    saveColumnSizingPopupDisabled: boolean;
+    automaticallyApplyColumnSizing: boolean;
   }>;
   /** Stores table-specific user overrides */
   tables: Record<
