@@ -50,7 +50,14 @@ export type UserSettings = Partial<{
   theme: Record<"base" | "light" | "dark", ThemeOptions>;
 
   favoriteTables: string[];
-  /** Stores user overrides */
+  /** Stores default user settings for all tables */
+  defaultTableSettings: Partial<{
+    saveSortingPopupDisabled: boolean;
+    automaticallyApplySorting: boolean;
+    saveColumnWidthPopupDisabled: boolean;
+    automaticallyApplyColumnWidth: boolean;
+  }>;
+  /** Stores table-specific user overrides */
   tables: Record<
     string,
     Partial<{

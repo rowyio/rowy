@@ -19,6 +19,7 @@ import {
 } from "@src/atoms/projectScope";
 import { useScrollToHash } from "@src/hooks/useScrollToHash";
 import { UserSettings } from "@src/types/settings";
+import TableSettings from "@src/components/Settings/UserSettings/TableSettings";
 
 export interface IUserSettingsChildProps {
   settings: UserSettings;
@@ -57,6 +58,7 @@ export default function UserSettingsPage() {
   const sections = [
     { title: "Account", Component: Account, props: childProps },
     { title: "Theme", Component: Theme, props: childProps },
+    { title: "Table Settings", Component: TableSettings, props: childProps },
     { title: "Personalization", Component: Personalization, props: childProps },
   ];
 
