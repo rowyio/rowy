@@ -8,6 +8,7 @@ import {
   IconButton,
   Stack,
   TextField,
+  Tooltip,
   Typography,
   useTheme,
 } from "@mui/material";
@@ -98,16 +99,17 @@ export default function Details() {
               Description
             </Typography>
             {isAdmin && (
-              <IconButton
-                aria-label="Edit description"
-                title="Edit"
-                onClick={() => {
-                  setEditDescription(!editDescription);
-                }}
-                sx={{ top: 4 }}
-              >
-                {editDescription ? <EditOffIcon /> : <EditIcon />}
-              </IconButton>
+              <Tooltip title="Edit">
+                <IconButton
+                  aria-label="Edit description"
+                  onClick={() => {
+                    setEditDescription(!editDescription);
+                  }}
+                  sx={{ top: 4 }}
+                >
+                  {editDescription ? <EditOffIcon /> : <EditIcon />}
+                </IconButton>
+              </Tooltip>
             )}
           </Stack>
           {editDescription ? (
@@ -146,16 +148,17 @@ export default function Details() {
               Details
             </Typography>
             {isAdmin && (
-              <IconButton
-                aria-label="Edit details"
-                title="Edit"
-                onClick={() => {
-                  setEditDetails(!editDetails);
-                }}
-                sx={{ top: 4 }}
-              >
-                {editDetails ? <EditOffIcon /> : <EditIcon />}
-              </IconButton>
+              <Tooltip title="Edit">
+                <IconButton
+                  aria-label="Edit details"
+                  onClick={() => {
+                    setEditDetails(!editDetails);
+                  }}
+                  sx={{ top: 4 }}
+                >
+                  {editDetails ? <EditOffIcon /> : <EditIcon />}
+                </IconButton>
+              </Tooltip>
             )}
           </Stack>
           <Box
