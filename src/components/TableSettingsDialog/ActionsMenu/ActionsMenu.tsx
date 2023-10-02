@@ -53,6 +53,7 @@ export default function ActionsMenu({
       <IconButton
         aria-label="Actions…"
         id="table-settings-actions-button"
+        title="Actions menu"
         aria-controls="table-settings-actions-menu"
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}

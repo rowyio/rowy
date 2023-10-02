@@ -100,6 +100,7 @@ export default function Details() {
             {isAdmin && (
               <IconButton
                 aria-label="Edit description"
+                title="Edit"
                 onClick={() => {
                   setEditDescription(!editDescription);
                 }}
@@ -147,6 +148,7 @@ export default function Details() {
             {isAdmin && (
               <IconButton
                 aria-label="Edit details"
+                title="Edit"
                 onClick={() => {
                   setEditDetails(!editDetails);
                 }}

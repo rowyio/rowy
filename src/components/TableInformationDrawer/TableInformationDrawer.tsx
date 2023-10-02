@@ -114,6 +114,7 @@ export default function SideDrawer() {
               <IconButton
                 onClick={() => setSideDrawer(RESET)}
                 aria-label="Close"
+                title="Close"
               >
                 <CloseIcon />
               </IconButton>

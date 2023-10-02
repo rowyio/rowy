@@ -58,6 +58,7 @@ export default function DeleteMenu({ clearDialog, data }: IDeleteMenuProps) {
       <IconButton
         aria-label="Delete table…"
         id="table-settings-delete-button"
+        title="Delete menu"
         aria-controls="table-settings-delete-menu"
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}

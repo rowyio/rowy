@@ -139,6 +139,7 @@ export default function TablesPage() {
       {userRoles.includes("ADMIN") && (
         <IconButton
           aria-label="Edit table"
+          title="Edit table"
           onClick={() =>
             openTableSettingsDialog({ mode: "update", data: table })
           }
@@ -151,6 +152,7 @@ export default function TablesPage() {
         onChange={handleFavorite(table.id)}
         checked={favorites.includes(table.id)}
         icon={<FavoriteBorderIcon />}
+        title="Favorite"
         checkedIcon={
           <Zoom in>
             <FavoriteIcon />
@@ -163,6 +165,7 @@ export default function TablesPage() {
       />
       <IconButton
         aria-label="Table information"
+        title="Table information"
         size={view === "list" ? "large" : undefined}
         component={Link}
         to={`${getLink(table)}#sideDrawer="table-information"`}
