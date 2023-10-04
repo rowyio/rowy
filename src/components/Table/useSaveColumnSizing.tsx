@@ -63,7 +63,7 @@ export function useSaveColumnSizing(
           updateColumn={updateColumn}
         />
       ),
-      anchorOrigin: { horizontal: "center", vertical: "top" },
+      anchorOrigin: { horizontal: "left", vertical: "bottom" },
     });
 
     return () => closeSnackbar(snackbarId);

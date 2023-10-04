@@ -60,7 +60,7 @@ function useSaveTableSorts(canEditColumns: boolean) {
               updateTable={async () => await updateTableSchema({ sorts })}
             />
           ),
-          anchorOrigin: { horizontal: "center", vertical: "top" },
+          anchorOrigin: { horizontal: "left", vertical: "bottom" },
         })
       );
 
