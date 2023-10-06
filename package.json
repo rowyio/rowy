@@ -30,6 +30,7 @@
     "dompurify": "^2.3.6",
     "file-saver": "^2.0.5",
     "firebase": "^9.12.1",
+    "firebase-admin": "^11.11.0",
     "firebaseui": "^6.0.1",
     "jotai": "^1.8.4",
     "json-stable-stringify-without-jsonify": "^1.0.1",
