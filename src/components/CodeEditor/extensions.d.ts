@@ -128,4 +128,12 @@ type PushNotificationRequest = {
 type PushNotificationBody = (
   context: ExtensionContext
 ) => Message | Message[] | Promise<Message | Message[]>;
+
 type TaskBody = (context: ExtensionContext) => Promise<any>;
+
+type BuildshipAuthenticatedTriggerBody = (
+  context: ExtensionContext
+) => Promise<{
+  url: string;
+  body: string;
+}>;

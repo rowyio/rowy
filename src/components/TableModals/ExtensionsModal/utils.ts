@@ -1,4 +1,5 @@
 export const extensionTypes = [
+  "buildshipAuthenticatedTrigger",
   "task",
   "docSync",
   "historySnapshot",
@@ -15,6 +16,7 @@ export const extensionTypes = [
 export type ExtensionType = typeof extensionTypes[number];
 
 export const extensionNames: Record<ExtensionType, string> = {
+  buildshipAuthenticatedTrigger: "Buildship Authenticated Trigger",
   task: "Task",
   docSync: "Doc Sync",
   historySnapshot: "History Snapshot",
@@ -61,6 +63,18 @@ export interface IRuntimeOptions {
 export const triggerTypes: ExtensionTrigger[] = ["create", "update", "delete"];
 
 const extensionBodyTemplate = {
+  buildshipAuthenticatedTrigger: `const extensionBody: BuildshipAuthenticatedTriggerBody = async({row, db, change, ref, logging}) => {
+  logging.log("extensionBody started")
+  
+  // Put your endpoint URL and request body below. 
+  // It will trigger your endpoint with the request body.
+  return ({
+    url: "",
+    body: JSON.stringify({
+      
+    })
+  })
+}`,
   task: `const extensionBody: TaskBody = async({row, db, change, ref, logging}) => {
  
   logging.log("extensionBody started")
