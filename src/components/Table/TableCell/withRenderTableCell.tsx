@@ -12,6 +12,7 @@ import type {
   IDisplayCellProps,
   IEditorCellProps,
 } from "@src/components/fields/types";
+import { useMakeCopilotReadable } from "@copilotkit/react-core";
 
 export interface ICellOptions {
   /** If the rest of the row’s data is used, set this to true for memoization */
@@ -164,6 +165,8 @@ export default function withRenderTableCell(
           <DisplayCellComponent {...basicCellProps} />
         </div>
       );
+
+      useMakeCopilotReadable(value, column.id, undefined);
 
       if (disabled || (editorMode !== "inline" && !focusInsideCell))
         return displayCell;
