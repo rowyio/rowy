@@ -17,6 +17,11 @@ import { SnackLogProvider } from "@src/contexts/SnackLogContext";
 import { Suspense } from "react";
 import Loading from "@src/components/Loading";
 
+import { CopilotProvider } from "@copilotkit/react-core";
+import { CopilotSidebarUIProvider } from "@copilotkit/react-ui";
+import "@copilotkit/react-textarea/styles.css";
+import "@copilotkit/react-ui/styles.css";
+
 export const muiCache = createCache({ key: "mui", prepend: true });
 
 export interface IProvidersProps {
@@ -51,17 +56,21 @@ export default function Providers({
             <DebugAtoms scope={projectScope} />
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <CacheProvider value={muiCache}>
-                <RowyThemeProvider>
-                  <ErrorBoundary FallbackComponent={ErrorFallback}>
-                    <SnackbarProvider>
-                      <SnackLogProvider>
-                        <Suspense fallback={<Loading fullScreen />}>
-                          {children}
-                        </Suspense>
-                      </SnackLogProvider>
-                    </SnackbarProvider>
-                  </ErrorBoundary>
-                </RowyThemeProvider>
+                <CopilotProvider>
+                  <CopilotSidebarUIProvider>
+                    <RowyThemeProvider>
+                      <ErrorBoundary FallbackComponent={ErrorFallback}>
+                        <SnackbarProvider>
+                          <SnackLogProvider>
+                            <Suspense fallback={<Loading fullScreen />}>
+                              {children}
+                            </Suspense>
+                          </SnackLogProvider>
+                        </SnackbarProvider>
+                      </ErrorBoundary>
+                    </RowyThemeProvider>
+                  </CopilotSidebarUIProvider>
+                </CopilotProvider>
               </CacheProvider>
             </LocalizationProvider>
           </JotaiProvider>
