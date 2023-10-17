@@ -16,7 +16,7 @@ export const extensionTypes = [
 export type ExtensionType = typeof extensionTypes[number];
 
 export const extensionNames: Record<ExtensionType, string> = {
-  buildshipAuthenticatedTrigger: "Buildship Authenticated Trigger",
+  buildshipAuthenticatedTrigger: "BuildShip Authenticated Trigger",
   task: "Task",
   docSync: "Doc Sync",
   historySnapshot: "History Snapshot",
