@@ -71,7 +71,16 @@ const extensionBodyTemplate = {
   return ({
     url: "",
     body: JSON.stringify({
-      
+      row,
+      ref: {
+        id: ref.id,
+        path: ref.path
+      },
+      change: {
+        before: change.before.get(),
+        after: change.after.get(),
+      },
+      // Add your own payload here
     })
   })
 }`,
