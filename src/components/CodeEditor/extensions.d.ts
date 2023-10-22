@@ -134,6 +134,9 @@ type TaskBody = (context: ExtensionContext) => Promise<any>;
 type BuildshipAuthenticatedTriggerBody = (
   context: ExtensionContext
 ) => Promise<{
-  url: string;
+  buildshipConfig: {
+    projectId: string;
+    workflowId: string;
+  };
   body: string;
 }>;
