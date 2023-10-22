@@ -25,6 +25,7 @@ const CommandKProvider = ({ children }: { children: ReactNode }) => {
   const setNavOpen = useSetAtom(navOpenAtom, projectScope);
   const navigate = useNavigate();
 
+  // styles according to kbar docs
   const searchStyle = {
     padding: "16px 16px",
     fontSize: "16px",
@@ -32,7 +33,7 @@ const CommandKProvider = ({ children }: { children: ReactNode }) => {
     boxSizing: "border-box" as React.CSSProperties["boxSizing"],
     outline: "none",
     border: "none",
-    background: theme.palette.mode === "dark" ? "#1C1C1F" : "#FFFFFF",
+    background: theme.palette.mode === "dark" ? "#1C1C1F" : "#FFFFFF", //bgColor based on theme
     color: theme.palette.text.primary,
     zIndex: "2000",
   };
@@ -53,7 +54,7 @@ const CommandKProvider = ({ children }: { children: ReactNode }) => {
     {
       id: "tables",
       name: "Tables",
-      shortcut: ["t"],
+      shortcut: ["t"], // hotkey for this action
       keywords: "Go to tables page",
       perform: () => navigate("/tables"),
     },
