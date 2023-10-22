@@ -69,7 +69,10 @@ const extensionBodyTemplate = {
   // Put your endpoint URL and request body below. 
   // It will trigger your endpoint with the request body.
   return ({
-    url: "",
+    buildshipConfig: {
+      projectId: "",
+      workflowId: ""
+    },
     body: JSON.stringify({
       row,
       ref: {
