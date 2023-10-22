@@ -161,71 +161,89 @@ export function useMenuAction(
     handleClose,
   ]);
 
-  const handlePaste = useCallback(async () => {
-    try {
-      if (!selectedCell || !selectedCol) return;
-      let text;
+  const handlePaste = useCallback(
+    async (e?: ClipboardEvent) => {
       try {
-        text = await navigator.clipboard.readText();
-      } catch (e) {
-        enqueueSnackbar(`Read clipboard permission denied.`, {
-          variant: "error",
-        });
-        return;
-      }
-      const cellDataType = getFieldProp("dataType", getFieldType(selectedCol));
-      let parsed;
-      switch (cellDataType) {
-        case "number":
-          parsed = Number(text);
-          if (isNaN(parsed)) throw new Error(`${text} is not a number`);
-          break;
-        case "string":
-          parsed = text;
-          break;
-        case "reference":
-          try {
-            parsed = doc(firebaseDb, text);
-          } catch (e: any) {
-            enqueueSnackbar(`Invalid reference.`, { variant: "error" });
+        if (!selectedCell || !selectedCol) return;
+        let text: string;
+        // Firefox doesn't allow for reading clipboard data, hence the workaround
+        if (navigator.userAgent.includes("Firefox")) {
+          if (!e || !e.clipboardData) {
+            enqueueSnackbar(`Cannot read clipboard data.`, {
+              variant: "error",
+            });
+            return;
           }
-          break;
-        default:
-          parsed = JSON.parse(text);
-          break;
-      }
+          text = e.clipboardData.getData("text/plain") || "";
+        } else {
+          try {
+            text = await navigator.clipboard.readText();
+          } catch (e) {
+            enqueueSnackbar(`Read clipboard permission denied.`, {
+              variant: "error",
+            });
+            return;
+          }
+        }
+        const cellDataType = getFieldProp(
+          "dataType",
+          getFieldType(selectedCol)
+        );
+        let parsed;
+        switch (cellDataType) {
+          case "number":
+            parsed = Number(text);
+            if (isNaN(parsed)) throw new Error(`${text} is not a number`);
+            break;
+          case "string":
+            parsed = text;
+            break;
+          case "reference":
+            try {
+              parsed = doc(firebaseDb, text);
+            } catch (e: any) {
+              enqueueSnackbar(`Invalid reference.`, { variant: "error" });
+            }
+            break;
+          default:
+            parsed = JSON.parse(text);
+            break;
+        }
 
-      if (selectedCol.type === FieldType.slider) {
-        if (parsed < selectedCol.config?.min) parsed = selectedCol.config?.min;
-        else if (parsed > selectedCol.config?.max)
-          parsed = selectedCol.config?.max;
-      }
+        if (selectedCol.type === FieldType.slider) {
+          if (parsed < selectedCol.config?.min)
+            parsed = selectedCol.config?.min;
+          else if (parsed > selectedCol.config?.max)
+            parsed = selectedCol.config?.max;
+        }
 
-      if (selectedCol.type === FieldType.rating) {
-        if (parsed < 0) parsed = 0;
-        if (parsed > (selectedCol.config?.max || 5))
-          parsed = selectedCol.config?.max || 5;
-      }
+        if (selectedCol.type === FieldType.rating) {
+          if (parsed < 0) parsed = 0;
+          if (parsed > (selectedCol.config?.max || 5))
+            parsed = selectedCol.config?.max || 5;
+        }
 
-      if (selectedCol.type === FieldType.percentage) {
-        parsed = parsed / 100;
+        if (selectedCol.type === FieldType.percentage) {
+          parsed = parsed / 100;
+        }
+        updateField({
+          path: selectedCell.path,
+          fieldName: selectedCol.fieldName,
+          value: parsed,
+          arrayTableData: {
+            index: selectedCell.arrayIndex,
+          },
+        });
+      } catch (error) {
+        enqueueSnackbar(
+          `${selectedCol?.type} field does not support the data type being pasted`,
+          { variant: "error" }
+        );
       }
-      updateField({
-        path: selectedCell.path,
-        fieldName: selectedCol.fieldName,
-        value: parsed,
-        arrayTableData: {
-          index: selectedCell.arrayIndex,
-        },
-      });
-    } catch (error) {
-      enqueueSnackbar(
-        `${selectedCol?.type} field does not support the data type being pasted`,
-        { variant: "error" }
-      );
-    }
-    if (handleClose) handleClose();
-  }, [selectedCell, selectedCol, updateField, enqueueSnackbar, handleClose]);
+      if (handleClose) handleClose();
+    },
+    [selectedCell, selectedCol, updateField, enqueueSnackbar, handleClose]
+  );
 
   useEffect(() => {
     if (!selectedCell) return setCellValue("");
@@ -276,9 +294,9 @@ export function useMenuAction(
         };
       }
       const fieldType = getFieldType(selectedCol);
-      return function () {
+      return function (e?: ClipboardEvent) {
         if (SUPPORTED_TYPES_PASTE.has(fieldType)) {
-          return func();
+          return func(e);
         } else {
           enqueueSnackbar(
             `${fieldType} field does not support paste functionality`,
