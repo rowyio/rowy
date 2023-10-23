@@ -169,6 +169,13 @@ export function useMenuAction(
         // Firefox doesn't allow for reading clipboard data, hence the workaround
         if (navigator.userAgent.includes("Firefox")) {
           if (!e || !e.clipboardData) {
+            enqueueSnackbar(
+              `If you're on Firefox, please use the hotkey instead (Ctrl + V / Cmd + V).`,
+              {
+                variant: "info",
+                autoHideDuration: 7000,
+              }
+            );
             enqueueSnackbar(`Cannot read clipboard data.`, {
               variant: "error",
             });
