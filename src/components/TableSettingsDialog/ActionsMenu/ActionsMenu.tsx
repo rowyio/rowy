@@ -3,7 +3,7 @@ import { Control } from "react-hook-form";
 import { useSetAtom } from "jotai";
 import type { UseFormReturn, FieldValues } from "react-hook-form";
 
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import { Export as ExportIcon, Import as ImportIcon } from "@src/assets/icons";
 
 import ImportSettings from "./ImportSettings";
@@ -50,16 +50,18 @@ export default function ActionsMenu({
 
   return (
     <>
-      <IconButton
-        aria-label="Actions…"
-        id="table-settings-actions-button"
-        aria-controls="table-settings-actions-menu"
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
-        onClick={handleOpen}
-      >
-        {mode === "create" ? <ImportIcon /> : <ExportIcon />}
-      </IconButton>
+      <Tooltip title="Actions menu">
+        <IconButton
+          aria-label="Actions…"
+          id="table-settings-actions-button"
+          aria-controls="table-settings-actions-menu"
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+          onClick={handleOpen}
+        >
+          {mode === "create" ? <ImportIcon /> : <ExportIcon />}
+        </IconButton>
+      </Tooltip>
 
       <Menu
         id="table-settings-actions-menu"

@@ -3,7 +3,13 @@ import { useAtom, useSetAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
-import { IconButton, Menu, MenuItem, DialogContentText } from "@mui/material";
+import {
+  IconButton,
+  Menu,
+  MenuItem,
+  DialogContentText,
+  Tooltip,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
 import {
@@ -55,16 +61,18 @@ export default function DeleteMenu({ clearDialog, data }: IDeleteMenuProps) {
 
   return (
     <>
-      <IconButton
-        aria-label="Delete table…"
-        id="table-settings-delete-button"
-        aria-controls="table-settings-delete-menu"
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
-        onClick={(e) => setAnchorEl(e.currentTarget)}
-      >
-        <DeleteIcon />
-      </IconButton>
+      <Tooltip title="Delete menu">
+        <IconButton
+          aria-label="Delete table…"
+          id="table-settings-delete-button"
+          aria-controls="table-settings-delete-menu"
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+          onClick={(e) => setAnchorEl(e.currentTarget)}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </Tooltip>
 
       <Menu
         id="table-settings-delete-menu"
