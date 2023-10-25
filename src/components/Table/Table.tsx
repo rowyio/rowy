@@ -285,7 +285,7 @@ export default function Table({
   const { handler: hotKeysHandler } = useHotKeys([
     ["mod+C", handleCopy],
     ["mod+X", handleCut],
-    ["mod+V", handlePaste],
+    ["mod+V", (e) => handlePaste], // So the event isn't passed to the handler
   ]);
 
   // Handle prompt to save local column sizes if user `canEditColumns`
@@ -323,6 +323,14 @@ export default function Table({
   useEffect(() => {
     fetchMoreOnBottomReached(containerRef.current);
   }, [fetchMoreOnBottomReached, tableNextPage.loading, containerRef]);
+
+  useEffect(() => {
+    document.addEventListener("paste", handlePaste);
+
+    return () => {
+      document.removeEventListener("paste", handlePaste);
+    };
+  }, [handlePaste]);
 
   // apply user default sort on first render
   const [applySort, setApplySort] = useState(true);

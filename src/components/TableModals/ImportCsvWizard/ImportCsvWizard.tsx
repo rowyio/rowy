@@ -323,7 +323,9 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
             disableNext:
               config.pairs.length === 0 ||
               !validRows ||
-              (config.documentId === "column" && !config.documentIdCsvKey),
+              (config.documentId === "column" && !config.documentIdCsvKey) ||
+              config.pairs.some((pair) => !pair.columnKey) ||
+              config.newColumns.some((col) => !col.key),
           },
           config.newColumns.length > 0 && {
             title: "Set column types",
