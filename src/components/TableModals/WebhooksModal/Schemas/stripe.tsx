@@ -7,6 +7,7 @@ import {
   projectScope,
   secretNamesAtom,
   updateSecretNamesAtom,
+  projectSettingsDialogAtom,
 } from "@src/atoms/projectScope";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -56,6 +57,10 @@ export const webhookStripe = {
   Auth: (webhookObject: IWebhook, setWebhookObject: (w: IWebhook) => void) => {
     const [secretNames] = useAtom(secretNamesAtom, projectScope);
     const [updateSecretNames] = useAtom(updateSecretNamesAtom, projectScope);
+    const [{ open, tab }, setProjectSettingsDialog] = useAtom(
+      projectSettingsDialogAtom,
+      projectScope
+    );
 
     return (
       <>
@@ -118,8 +123,9 @@ export const webhookStripe = {
               })}
               <MenuItem
                 onClick={() => {
-                  const secretManagerLink = `https://console.cloud.google.com/security/secret-manager/create`;
-                  window?.open?.(secretManagerLink, "_blank")?.focus();
+                  setProjectSettingsDialog({
+                    open: true,
+                  });
                 }}
               >
                 Add a key in Secret Manager

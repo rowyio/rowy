@@ -41,6 +41,12 @@ const SetupPage = lazy(() => import("@src/pages/SetupPage" /* webpackChunkName: 
 const Navigation = lazy(() => import("@src/layouts/Navigation" /* webpackChunkName: "Navigation" */));
 // prettier-ignore
 const TableSettingsDialog = lazy(() => import("@src/components/TableSettingsDialog" /* webpackChunkName: "TableSettingsDialog" */));
+const ProjectSettingsDialog = lazy(
+  () =>
+    import(
+      "@src/components/ProjectSettingsDialog" /* webpackChunkName: "ProjectSettingsDialog" */
+    )
+);
 
 // prettier-ignore
 const TablesPage = lazy(() => import("@src/pages/TablesPage" /* webpackChunkName: "TablesPage" */));
@@ -99,6 +105,7 @@ export default function App() {
               <RequireAuth>
                 <Navigation>
                   <TableSettingsDialog />
+                  <ProjectSettingsDialog />
                 </Navigation>
               </RequireAuth>
             }
