@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { SnackbarKey, useSnackbar } from "notistack";
 
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -11,17 +11,25 @@ import {
   tableScope,
   updateTableSchemaAtom,
 } from "@src/atoms/tableScope";
-import { projectScope, updateUserSettingsAtom } from "@src/atoms/projectScope";
+import {
+  defaultTableSettingsAtom,
+  projectScope,
+  updateUserSettingsAtom,
+} from "@src/atoms/projectScope";
 import { TableSort } from "@src/types/table";
 
 function useSaveTableSorts(canEditColumns: boolean) {
   const [updateTableSchema] = useAtom(updateTableSchemaAtom, tableScope);
   const [updateUserSettings] = useAtom(updateUserSettingsAtom, projectScope);
   const [tableId] = useAtom(tableIdAtom, tableScope);
+  const defaultTableSettings = useAtomValue(
+    defaultTableSettingsAtom,
+    projectScope
+  );
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [snackbarId, setSnackbarId] = useState<SnackbarKey | null>(null);
 
-  // Offer to save when table sorts changes
+  // Offer to save when table sorts changes, depending on user settings
   const trigger = useCallback(
     (sorts: TableSort[]) => {
       if (!updateTableSchema) throw new Error("Cannot update table schema");
@@ -33,6 +41,15 @@ function useSaveTableSorts(canEditColumns: boolean) {
         });
       }
       if (!canEditColumns) return;
+      // If the user has disabled the popup, return early
+      if (defaultTableSettings?.saveSortsPopupDisabled) {
+        // If the user has `automaticallyApplySorts` set to true, apply the sorting before returning
+        if (defaultTableSettings?.automaticallyApplySorts) {
+          const updateTable = async () => await updateTableSchema({ sorts });
+          updateTable();
+        }
+        return;
+      }
       if (snackbarId) {
         closeSnackbar(snackbarId);
       }
@@ -43,7 +60,7 @@ function useSaveTableSorts(canEditColumns: boolean) {
               updateTable={async () => await updateTableSchema({ sorts })}
             />
           ),
-          anchorOrigin: { horizontal: "center", vertical: "top" },
+          anchorOrigin: { horizontal: "left", vertical: "bottom" },
         })
       );
 
@@ -57,6 +74,7 @@ function useSaveTableSorts(canEditColumns: boolean) {
       tableId,
       closeSnackbar,
       updateTableSchema,
+      defaultTableSettings,
     ]
   );
 

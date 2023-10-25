@@ -10,6 +10,7 @@ import {
   IconButton,
   Stack,
   styled,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -111,12 +112,14 @@ export default function SideDrawer() {
                   Information
                 </Typography>
               </Stack>
-              <IconButton
-                onClick={() => setSideDrawer(RESET)}
-                aria-label="Close"
-              >
-                <CloseIcon />
-              </IconButton>
+              <Tooltip title="Close">
+                <IconButton
+                  onClick={() => setSideDrawer(RESET)}
+                  aria-label="Close"
+                >
+                  <CloseIcon />
+                </IconButton>
+              </Tooltip>
             </Stack>
             <Box
               sx={{

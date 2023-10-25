@@ -1,10 +1,7 @@
 import { Typography, Link, TextField } from "@mui/material";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import { TableSettings } from "@src/types/table";
-import {
-  IWebhook,
-  ISecret,
-} from "@src/components/TableModals/WebhooksModal/utils";
+import { IWebhook } from "@src/components/TableModals/WebhooksModal/utils";
 
 export const webhook = {
   name: "Web Form",
@@ -18,8 +15,8 @@ export const webhook = {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
   logging.log("formParser started")
   
-  // Import any NPM package needed
-  // const lodash = require('lodash');
+  // Import NPM package needed, some packages may not work in Webhooks
+  // const {default: lodash} = await import("lodash");
   
   // Optionally return an object to be added as a new row to the table
   // Example: add the webhook body as row
@@ -51,11 +48,7 @@ export const webhook = {
   // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,
   },
-  auth: (
-    webhookObject: IWebhook,
-    setWebhookObject: (w: IWebhook) => void,
-    secrets: ISecret
-  ) => {
+  Auth: (webhookObject: IWebhook, setWebhookObject: (w: IWebhook) => void) => {
     return (
       <>
         <Typography gutterBottom>

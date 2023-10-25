@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import useMemoValue from "use-memo-value";
 import { isEmpty, isDate } from "lodash-es";
 
@@ -18,7 +18,7 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
 import FiltersPopover from "./FiltersPopover";
-import FilterInputs from "./FilterInputs";
+import FilterInputsCollection from "./FilterInputsCollection";
 
 import {
   projectScope,
@@ -35,16 +35,31 @@ import {
   tableSortsAtom,
   updateTableSchemaAtom,
   tableFiltersPopoverAtom,
+  tableFiltersJoinAtom,
 } from "@src/atoms/tableScope";
-import { useFilterInputs, INITIAL_QUERY } from "./useFilterInputs";
+import { useFilterInputs } from "./useFilterInputs";
 import { analytics, logEvent } from "@src/analytics";
 import type { TableFilter } from "@src/types/table";
+import { generateId } from "@src/utils/table";
+import { useFilterUrl } from "./useFilterUrl";
 
-const shouldDisableApplyButton = (value: any) =>
-  isEmpty(value) &&
-  !isDate(value) &&
-  typeof value !== "boolean" &&
-  typeof value !== "number";
+const shouldDisableApplyButton = (queries: any) => {
+  for (let query of queries) {
+    if (query.operator === "is-empty" || query.operator === "is-not-empty") {
+      continue;
+    }
+
+    if (
+      isEmpty(query.value) &&
+      !isDate(query.value) &&
+      typeof query.value !== "boolean" &&
+      typeof query.value !== "number"
+    )
+      return true;
+  }
+
+  return false;
+};
 
 enum FilterType {
   yourFilter = "local_filter",
@@ -64,10 +79,14 @@ export default function Filters() {
   const [{ defaultQuery }] = useAtom(tableFiltersPopoverAtom, tableScope);
 
   const tableFilterInputs = useFilterInputs(tableColumnsOrdered);
-  const setTableQuery = tableFilterInputs.setQuery;
+  const setTableQueries = tableFilterInputs.setQueries;
   const userFilterInputs = useFilterInputs(tableColumnsOrdered, defaultQuery);
-  const setUserQuery = userFilterInputs.setQuery;
-  const { availableFilters } = userFilterInputs;
+  const setUserQueries = userFilterInputs.setQueries;
+  const { availableFiltersForEachSelectedColumn } = userFilterInputs;
+  const availableFiltersForFirstColumn =
+    availableFiltersForEachSelectedColumn[0];
+
+  const setTableFiltersJoin = useSetAtom(tableFiltersJoinAtom, tableScope);
 
   // Get table filters & user filters from config documents
   const tableFilters = useMemoValue(
@@ -86,16 +105,26 @@ export default function Filters() {
   // Set the local table filter
   useEffect(() => {
     // Set local state for UI
-    setTableQuery(
-      Array.isArray(tableFilters) && tableFilters[0]
-        ? tableFilters[0]
-        : INITIAL_QUERY
-    );
-    setUserQuery(
-      Array.isArray(userFilters) && userFilters[0]
-        ? userFilters[0]
-        : INITIAL_QUERY
-    );
+    if (
+      Array.isArray(tableFilters) &&
+      tableFilters &&
+      tableFilters.length > 0
+    ) {
+      // Older filters do not have ID. Migrating them here.
+      for (const filter of tableFilters) {
+        if (!filter.id) filter.id = generateId();
+      }
+      setTableQueries(tableFilters);
+    }
+
+    if (Array.isArray(userFilters) && userFilters && userFilters.length > 0) {
+      // Older filters do not have ID. Migrating them here.
+      for (const filter of userFilters) {
+        if (!filter.id) filter.id = generateId();
+      }
+      setUserQueries(userFilters);
+    }
+
     setCanOverrideCheckbox(tableFiltersOverridable);
 
     let filtersToApply: TableFilter[] = [];
@@ -120,10 +149,10 @@ export default function Filters() {
     hasUserFilters,
     setLocalFilters,
     setTableSorts,
-    setTableQuery,
+    setTableQueries,
     tableFilters,
     tableFiltersOverridable,
-    setUserQuery,
+    setUserQueries,
     userFilters,
     userRoles,
   ]);
@@ -151,28 +180,96 @@ export default function Filters() {
   // When defaultQuery (from atom) is updated, update the UI
   useEffect(() => {
     if (defaultQuery) {
-      setUserQuery(defaultQuery);
+      setUserQueries([defaultQuery]);
       setTab("user");
     }
-  }, [setUserQuery, defaultQuery]);
+  }, [setUserQueries, defaultQuery]);
 
   const [overrideTableFilters, setOverrideTableFilters] = useState(
     tableFiltersOverridden
   );
 
+  useEffect(() => {
+    if (userSettings.tables?.[tableId]?.joinOperator) {
+      userFilterInputs.setJoinOperator(
+        userSettings.tables?.[tableId]?.joinOperator === "AND" ? "AND" : "OR"
+      );
+    }
+
+    if (tableSchema.joinOperator) {
+      tableFilterInputs.setJoinOperator(
+        tableSchema.joinOperator === "AND" ? "AND" : "OR"
+      );
+    }
+  }, [userSettings.tables?.[tableId]?.joinOperator, tableSchema.joinOperator]);
+
+  useEffect(() => {
+    if (tableFiltersOverridable && (hasUserFilters || userFilters === null)) {
+      setTableFiltersJoin(
+        userSettings.tables?.[tableId]?.joinOperator === "AND" ? "AND" : "OR"
+      );
+    } else if (hasTableFilters) {
+      setTableFiltersJoin(tableSchema.joinOperator === "AND" ? "AND" : "OR");
+    } else if (hasUserFilters) {
+      setTableFiltersJoin(
+        userSettings.tables?.[tableId]?.joinOperator === "AND" ? "AND" : "OR"
+      );
+    }
+  }, [
+    tableFiltersOverridable,
+    hasUserFilters,
+    hasTableFilters,
+    userFilters,
+    tableSchema.joinOperator,
+    userSettings.tables?.[tableId]?.joinOperator,
+  ]);
+
   // Save table filters to table schema document
-  const setTableFilters = (filters: TableFilter[]) => {
+  const setTableFilters = (
+    filters: TableFilter[],
+    op: "AND" | "OR" = "AND"
+  ) => {
     logEvent(analytics, FilterType.tableFilter);
     if (updateTableSchema)
-      updateTableSchema({ filters, filtersOverridable: canOverrideCheckbox });
+      updateTableSchema({
+        filters,
+        filtersOverridable: canOverrideCheckbox,
+        joinOperator: op,
+      });
   };
   // Save user filters to user document
   // null overrides table filters
-  const setUserFilters = (filters: TableFilter[] | null) => {
+  const setUserFilters = (
+    filters: TableFilter[] | null,
+    op: "AND" | "OR" = "AND"
+  ) => {
     logEvent(analytics, FilterType.yourFilter);
     if (updateUserSettings && filters)
-      updateUserSettings({ tables: { [`${tableId}`]: { filters } } });
+      updateUserSettings({
+        tables: { [`${tableId}`]: { filters, joinOperator: op } },
+      });
   };
+
+  const { filtersUrl, updateFilterQueryParam } = useFilterUrl();
+
+  // If the filter in URL is not the same as currently applied local filter
+  // then update the user filter.
+  useEffect(() => {
+    if (
+      filtersUrl &&
+      JSON.stringify(filtersUrl) !== JSON.stringify(appliedFilters)
+    ) {
+      setUserFilters(filtersUrl);
+      setOverrideTableFilters(true);
+    }
+  }, [filtersUrl]);
+
+  // Update queyy param if the locally applied filter changes
+  useEffect(() => {
+    if (appliedFilters) {
+      updateFilterQueryParam(appliedFilters);
+    }
+  }, [appliedFilters]);
 
   return (
     <FiltersPopover
@@ -180,7 +277,7 @@ export default function Filters() {
       hasAppliedFilters={hasAppliedFilters}
       hasTableFilters={hasTableFilters}
       tableFiltersOverridden={tableFiltersOverridden}
-      availableFilters={availableFilters}
+      availableFilters={availableFiltersForFirstColumn}
       setUserFilters={setUserFilters}
     >
       {({ handleClose }) => {
@@ -245,7 +342,7 @@ export default function Filters() {
               <Divider style={{ marginTop: -1 }} />
 
               <TabPanel value="user" className="content">
-                <FilterInputs {...userFilterInputs} />
+                <FilterInputsCollection {...userFilterInputs} />
 
                 {hasTableFilters && (
                   <FormControlLabel
@@ -270,31 +367,29 @@ export default function Filters() {
                 >
                   <Button
                     disabled={
-                      !overrideTableFilters &&
-                      !tableFiltersOverridden &&
-                      userFilterInputs.query.key === ""
+                      (!overrideTableFilters && hasTableFilters) ||
+                      userFilterInputs.queries.length === 0
                     }
                     onClick={() => {
-                      setUserFilters(overrideTableFilters ? null : []);
+                      setUserFilters([]);
                       userFilterInputs.resetQuery();
                     }}
                   >
-                    Clear
-                    {hasTableFilters &&
-                      (overrideTableFilters
-                        ? " (ignore table filter)"
-                        : " (use table filter)")}
+                    Clear All
                   </Button>
 
                   <Button
                     disabled={
                       (!overrideTableFilters && hasTableFilters) ||
-                      shouldDisableApplyButton(userFilterInputs.query.value)
+                      shouldDisableApplyButton(userFilterInputs.queries)
                     }
                     color="primary"
                     variant="contained"
                     onClick={() => {
-                      setUserFilters([userFilterInputs.query as TableFilter]);
+                      setUserFilters(
+                        userFilterInputs.queries as TableFilter[],
+                        userFilterInputs.joinOperator
+                      );
                       handleClose();
                     }}
                   >
@@ -304,7 +399,7 @@ export default function Filters() {
               </TabPanel>
 
               <TabPanel value="table" className="content">
-                <FilterInputs {...tableFilterInputs} />
+                <FilterInputsCollection {...tableFilterInputs} />
 
                 <FormControlLabel
                   control={
@@ -342,23 +437,26 @@ export default function Filters() {
                   spacing={1}
                 >
                   <Button
-                    disabled={tableFilterInputs.query.key === ""}
+                    disabled={tableFilterInputs.queries.length === 0}
                     onClick={() => {
                       setTableFilters([]);
                       tableFilterInputs.resetQuery();
                     }}
                   >
-                    Clear
+                    Clear All
                   </Button>
 
                   <Button
                     disabled={shouldDisableApplyButton(
-                      tableFilterInputs.query.value
+                      tableFilterInputs.queries
                     )}
                     color="primary"
                     variant="contained"
                     onClick={() => {
-                      setTableFilters([tableFilterInputs.query as TableFilter]);
+                      setTableFilters(
+                        tableFilterInputs.queries as TableFilter[],
+                        tableFilterInputs.joinOperator
+                      );
                       handleClose();
                     }}
                   >
@@ -374,7 +472,7 @@ export default function Filters() {
         if (hasTableFilters && !tableFiltersOverridable) {
           return (
             <div className="content">
-              <FilterInputs {...tableFilterInputs} disabled />
+              <FilterInputsCollection {...tableFilterInputs} disabled />
 
               <Alert severity="info" style={{ width: "auto" }}>
                 An ADMIN user has set the filter for this table
@@ -387,7 +485,7 @@ export default function Filters() {
         if (hasTableFilters && tableFiltersOverridable) {
           return (
             <div className="content">
-              <FilterInputs {...userFilterInputs} />
+              <FilterInputsCollection {...userFilterInputs} />
 
               <FormControlLabel
                 control={
@@ -410,28 +508,28 @@ export default function Filters() {
                   disabled={
                     !overrideTableFilters &&
                     !tableFiltersOverridden &&
-                    userFilterInputs.query.key === ""
+                    userFilterInputs.queries.length === 0
                   }
                   onClick={() => {
-                    setUserFilters(overrideTableFilters ? null : []);
+                    setUserFilters([]);
                     userFilterInputs.resetQuery();
                   }}
                 >
-                  Clear
-                  {overrideTableFilters
-                    ? " (ignore table filter)"
-                    : " (use table filter)"}
+                  Clear All
                 </Button>
 
                 <Button
                   disabled={
                     (!overrideTableFilters && hasTableFilters) ||
-                    shouldDisableApplyButton(userFilterInputs.query.value)
+                    shouldDisableApplyButton(userFilterInputs.queries)
                   }
                   color="primary"
                   variant="contained"
                   onClick={() => {
-                    setUserFilters([userFilterInputs.query as TableFilter]);
+                    setUserFilters(
+                      userFilterInputs.queries as TableFilter[],
+                      userFilterInputs.joinOperator
+                    );
                     handleClose();
                   }}
                 >
@@ -445,7 +543,7 @@ export default function Filters() {
         // Non-ADMIN, no table filters
         return (
           <div className="content">
-            <FilterInputs {...userFilterInputs} />
+            <FilterInputsCollection {...userFilterInputs} />
 
             <Stack
               direction="row"
@@ -454,23 +552,24 @@ export default function Filters() {
               spacing={1}
             >
               <Button
-                disabled={userFilterInputs.query.key === ""}
+                disabled={userFilterInputs.queries.length === 0}
                 onClick={() => {
                   setUserFilters([]);
                   userFilterInputs.resetQuery();
                 }}
               >
-                Clear
+                Clear All
               </Button>
 
               <Button
-                disabled={shouldDisableApplyButton(
-                  userFilterInputs.query.value
-                )}
+                disabled={shouldDisableApplyButton(userFilterInputs.queries)}
                 color="primary"
                 variant="contained"
                 onClick={() => {
-                  setUserFilters([userFilterInputs.query as TableFilter]);
+                  setUserFilters(
+                    userFilterInputs.queries as TableFilter[],
+                    userFilterInputs.joinOperator
+                  );
                   handleClose();
                 }}
               >

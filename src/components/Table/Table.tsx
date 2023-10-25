@@ -3,6 +3,7 @@ import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { useThrottledCallback } from "use-debounce";
 import {
+  RowSelectionState,
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
@@ -25,6 +26,7 @@ import EmptyState from "@src/components/EmptyState";
 import {
   tableScope,
   tableSchemaAtom,
+  reactTableAtom,
   tableColumnsOrderedAtom,
   tableRowsAtom,
   tableNextPageAtom,
@@ -33,6 +35,7 @@ import {
   selectedCellAtom,
   tableSortsAtom,
   tableIdAtom,
+  serverDocCountAtom,
 } from "@src/atoms/tableScope";
 import { projectScope, userSettingsAtom } from "@src/atoms/projectScope";
 import { getFieldType, getFieldProp } from "@src/components/fields";
@@ -42,6 +45,7 @@ import { useSaveColumnSizing } from "./useSaveColumnSizing";
 import useHotKeys from "./useHotKey";
 import type { TableRow, ColumnConfig } from "@src/types/table";
 import useStateWithRef from "./useStateWithRef"; // testing with useStateWithRef
+import { Checkbox, FormControlLabel } from "@mui/material";
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
@@ -75,6 +79,20 @@ export interface ITableProps {
    * Loading state handled by Suspense in parent component.
    */
   emptyState?: React.ReactNode;
+  /**
+   * If defined, it will show a checkbox to select rows. The
+   * state is to be maintained by the parent component.
+   *
+   * Usage:
+   *
+   * const [selectedRows, setSelectedRows] = useState<RowSelectionState>({});
+   * const selectedRowsProp = useMemo(() => ({state: selectedRows, setState: setSelectedRows}), [selectedRows, setSelectedRows])
+   * <Table selectedRows={selectedRowsProp} />
+   */
+  selectedRows?: {
+    state: RowSelectionState;
+    setState: React.Dispatch<React.SetStateAction<{}>>;
+  };
 }
 
 /**
@@ -93,12 +111,15 @@ export default function Table({
   canEditCells,
   hiddenColumns,
   emptyState,
+  selectedRows,
 }: ITableProps) {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
+  const [serverDocCount] = useAtom(serverDocCountAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
   const [tablePage, setTablePage] = useAtom(tablePageAtom, tableScope);
+  const setReactTable = useSetAtom(reactTableAtom, tableScope);
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
 
@@ -143,7 +164,57 @@ export default function Table({
     }
 
     return _columns;
-  }, [tableColumnsOrdered, canAddColumns, canEditCells]);
+  }, [tableColumnsOrdered, canAddColumns, canEditCells, selectedRows]);
+
+  columns.unshift(
+    ...useMemo(() => {
+      if (!selectedRows) return [];
+
+      return [
+        columnHelper.display({
+          id: "_rowy_select",
+          size: 41.8, // TODO: We shouldn't have to change this often
+          header: ({ table }) => {
+            const checked =
+              Object.keys(selectedRows.state).length >= serverDocCount!;
+            const indeterminate = Object.keys(selectedRows.state).length > 0;
+            return (
+              <FormControlLabel
+                sx={{ margin: 0 }}
+                label=""
+                control={
+                  <Checkbox
+                    checked={checked}
+                    indeterminate={indeterminate && !checked}
+                    onChange={() => {
+                      table.toggleAllRowsSelected(
+                        !table.getIsAllRowsSelected()
+                      );
+                    }}
+                  />
+                }
+              />
+            );
+          },
+          cell: ({ row }) => {
+            return (
+              <FormControlLabel
+                label=""
+                sx={{ margin: 0 }}
+                control={
+                  <Checkbox
+                    checked={row.getIsSelected()}
+                    disabled={!row.getCanSelect()}
+                    onChange={row.getToggleSelectedHandler()}
+                  />
+                }
+              />
+            );
+          },
+        }),
+      ];
+    }, [selectedRows])
+  );
 
   // Get user’s hidden columns from props and memoize into a `VisibilityState`
   const columnVisibility: VisibilityState = useMemo(() => {
@@ -151,14 +222,16 @@ export default function Table({
     return hiddenColumns.reduce((a, c) => ({ ...a, [c]: false }), {});
   }, [hiddenColumns]);
 
-  // Get frozen columns and memoize into a `ColumnPinningState`
   const columnPinning: ColumnPinningState = useMemo(
     () => ({
-      left: columns
-        .filter(
-          (c) => c.meta?.fixed && c.id && columnVisibility[c.id] !== false
-        )
-        .map((c) => c.id!),
+      left: [
+        ...(selectedRows ? ["_rowy_select"] : []),
+        ...columns
+          .filter(
+            (c) => c.meta?.fixed && c.id && columnVisibility[c.id] !== false
+          )
+          .map((c) => c.id!),
+      ],
     }),
     [columns, columnVisibility]
   );
@@ -172,6 +245,14 @@ export default function Table({
     getCoreRowModel: getCoreRowModel(),
     getRowId,
     columnResizeMode: "onChange",
+    ...(selectedRows && {
+      enableRowSelection: true,
+      enableMultiRowSelection: true,
+      state: {
+        rowSelection: selectedRows.state,
+      },
+      onRowSelectionChange: selectedRows.setState,
+    }),
   });
 
   // Store local `columnSizing` state so we can save it to table schema
@@ -185,6 +266,10 @@ export default function Table({
     state: { ...prev.state, columnVisibility, columnPinning, columnSizing },
     onColumnSizingChange: setColumnSizing,
   }));
+  // Update the reactTable atom when table state changes.
+  useMemo(() => {
+    setReactTable(table);
+  }, [table, setReactTable]);
   // Get rows and columns for virtualization
   const { rows } = table.getRowModel();
   const leafColumns = table.getVisibleLeafColumns();
@@ -200,7 +285,7 @@ export default function Table({
   const { handler: hotKeysHandler } = useHotKeys([
     ["mod+C", handleCopy],
     ["mod+X", handleCut],
-    ["mod+V", handlePaste],
+    ["mod+V", (e) => handlePaste], // So the event isn't passed to the handler
   ]);
 
   // Handle prompt to save local column sizes if user `canEditColumns`
@@ -211,15 +296,15 @@ export default function Table({
       if (result.destination?.index === undefined || !result.draggableId)
         return;
 
-      console.log(result.draggableId, result.destination.index);
-
       updateColumn({
         key: result.draggableId,
-        index: result.destination.index,
+        index: selectedRows
+          ? result.destination.index - 1
+          : result.destination.index,
         config: {},
       });
     },
-    [updateColumn]
+    [updateColumn, selectedRows]
   );
 
   const fetchMoreOnBottomReached = useThrottledCallback(
@@ -237,12 +322,15 @@ export default function Table({
   // for large screen heights
   useEffect(() => {
     fetchMoreOnBottomReached(containerRef.current);
-  }, [
-    fetchMoreOnBottomReached,
-    tablePage,
-    tableNextPage.loading,
-    containerRef,
-  ]);
+  }, [fetchMoreOnBottomReached, tableNextPage.loading, containerRef]);
+
+  useEffect(() => {
+    document.addEventListener("paste", handlePaste);
+
+    return () => {
+      document.removeEventListener("paste", handlePaste);
+    };
+  }, [handlePaste]);
 
   // apply user default sort on first render
   const [applySort, setApplySort] = useState(true);

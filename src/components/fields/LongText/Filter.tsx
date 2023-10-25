@@ -9,4 +9,12 @@ export const filterOperators: IFilterOperator[] = [
     label: "not equals",
     value: "!=",
   },
+  {
+    label: "is empty",
+    value: "is-empty",
+  },
+  {
+    label: "is not empty",
+    value: "is-not-empty",
+  },
 ];

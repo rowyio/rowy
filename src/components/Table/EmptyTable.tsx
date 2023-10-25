@@ -1,5 +1,4 @@
 import { useAtom, useSetAtom } from "jotai";
-import { Offline, Online } from "react-detect-offline";
 
 import { Grid, Stack, Typography, Button, Divider } from "@mui/material";
 import {
@@ -42,9 +41,15 @@ export default function EmptyTable() {
             Get started
           </Typography>
           <Typography>
-            There is existing data in the Firestore collection:
+            {tableSettings.isCollection === false
+              ? "There is existing data in the Array Sub Table:"
+              : "There is existing data in the Firestore collection:"}
             <br />
-            <code>{tableSettings.collection}</code>
+            <code>
+              {tableSettings.collection}
+              {tableSettings.subTableKey?.length &&
+                `.${tableSettings.subTableKey}`}
+            </code>
           </Typography>
         </div>
 
@@ -72,47 +77,56 @@ export default function EmptyTable() {
             Get started
           </Typography>
           <Typography>
-            There is no data in the Firestore collection:
+            {tableSettings.isCollection === false
+              ? "There is no data in this Array Sub Table:"
+              : "There is no data in the Firestore collection:"}
             <br />
-            <code>{tableSettings.collection}</code>
+            <code>
+              {tableSettings.collection}
+              {tableSettings.subTableKey?.length &&
+                `.${tableSettings.subTableKey}`}
+            </code>
           </Typography>
         </div>
-
         <Grid container spacing={1}>
-          <Grid item xs>
-            <Typography paragraph>
-              You can import data from an external source:
-            </Typography>
+          {tableSettings.isCollection !== false && (
+            <>
+              <Grid item xs>
+                <Typography paragraph>
+                  You can import data from an external source:
+                </Typography>
 
-            <ImportData
-              render={(onClick) => (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<ImportIcon />}
-                  onClick={onClick}
-                >
-                  Import data
-                </Button>
-              )}
-              PopoverProps={{
-                anchorOrigin: {
-                  vertical: "bottom",
-                  horizontal: "center",
-                },
-                transformOrigin: {
-                  vertical: "top",
-                  horizontal: "center",
-                },
-              }}
-            />
-          </Grid>
+                <ImportData
+                  render={(onClick) => (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      startIcon={<ImportIcon />}
+                      onClick={onClick}
+                    >
+                      Import data
+                    </Button>
+                  )}
+                  PopoverProps={{
+                    anchorOrigin: {
+                      vertical: "bottom",
+                      horizontal: "center",
+                    },
+                    transformOrigin: {
+                      vertical: "top",
+                      horizontal: "center",
+                    },
+                  }}
+                />
+              </Grid>
 
-          <Grid item>
-            <Divider orientation="vertical">
-              <Typography variant="overline">or</Typography>
-            </Divider>
-          </Grid>
+              <Grid item>
+                <Divider orientation="vertical">
+                  <Typography variant="overline">or</Typography>
+                </Divider>
+              </Grid>
+            </>
+          )}
 
           <Grid item xs>
             <Typography paragraph>
@@ -133,36 +147,34 @@ export default function EmptyTable() {
     );
   }
 
-  return (
-    <>
-      <Offline>
-        <EmptyState
-          role="alert"
-          Icon={OfflineIcon}
-          message="You’re offline"
-          description="Go online to view this table’s data"
-          style={{ height: `calc(100vh - ${TOP_BAR_HEIGHT}px)` }}
-        />
-      </Offline>
-
-      <Online>
-        <Stack
-          spacing={3}
-          justifyContent="center"
-          alignItems="center"
-          sx={{
-            height: `calc(100vh - ${TOP_BAR_HEIGHT}px)`,
-            width: "100%",
-            p: 2,
-            maxWidth: 480,
-            margin: "0 auto",
-            textAlign: "center",
-          }}
-          id="empty-table"
-        >
-          {contents}
-        </Stack>
-      </Online>
-    </>
-  );
+  if (navigator.onLine) {
+    return (
+      <Stack
+        spacing={3}
+        justifyContent="center"
+        alignItems="center"
+        sx={{
+          height: `calc(100vh - ${TOP_BAR_HEIGHT}px)`,
+          width: "100%",
+          p: 2,
+          maxWidth: 480,
+          margin: "0 auto",
+          textAlign: "center",
+        }}
+        id="empty-table"
+      >
+        {contents}
+      </Stack>
+    );
+  } else {
+    return (
+      <EmptyState
+        role="alert"
+        Icon={OfflineIcon}
+        message="You’re offline"
+        description="Go online to view this table’s data"
+        style={{ height: `calc(100vh - ${TOP_BAR_HEIGHT}px)` }}
+      />
+    );
+  }
 }

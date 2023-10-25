@@ -411,7 +411,7 @@ export default function TableSettingsDialog() {
                   },
                   /*
                    * TODO: Figure out where to store this settings
-                  
+
                   {
                     id: "function",
                     title: "Cloud Function",

@@ -26,6 +26,7 @@ import Image_ from "./Image";
 import File_ from "./File";
 import Connector from "./Connector";
 import SubTable from "./SubTable";
+import ArraySubTable from "./ArraySubTable";
 import Reference from "./Reference";
 import ConnectTable from "./ConnectTable";
 import ConnectService from "./ConnectService";
@@ -75,6 +76,7 @@ export const FIELDS: IFieldConfig[] = [
   File_,
   /** CONNECTION */
   Connector,
+  ArraySubTable,
   SubTable,
   Reference,
   ConnectTable,

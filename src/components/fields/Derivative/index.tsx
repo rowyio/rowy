@@ -22,5 +22,6 @@ export const config: IFieldConfig = {
   settingsValidator,
   requireConfiguration: true,
   requireCloudFunction: true,
+  requireCollectionTable: true,
 };
 export default config;

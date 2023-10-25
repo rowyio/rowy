@@ -141,7 +141,7 @@ export default function ProvidedTablePage() {
             }
           >
             <main>
-              <TablePage disableModals={Boolean(outlet)} />
+              <TablePage enableRowSelection disableModals={Boolean(outlet)} />
             </main>
           </Suspense>
           <Suspense fallback={null}>{outlet}</Suspense>

@@ -41,7 +41,7 @@ export const columnMenuAtom = atom<{
  * ```
  */
 export const columnModalAtom = atomWithHash<{
-  type: "new" | "name" | "type" | "config";
+  type: "new" | "name" | "type" | "config" | "setColumnWidth";
   columnKey?: string;
   index?: number;
 } | null>("columnModal", null, { replaceState: true });
@@ -134,6 +134,7 @@ export type SelectedCell = {
   path: string | "_rowy_header";
   columnKey: string | "_rowy_row_actions";
   focusInside: boolean;
+  arrayIndex?: number; // for array sub table
 };
 /** Store selected cell in table. Used in side drawer and context menu */
 export const selectedCellAtom = atom<SelectedCell | null>(null);

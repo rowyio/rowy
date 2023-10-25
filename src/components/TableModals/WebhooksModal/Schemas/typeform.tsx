@@ -1,10 +1,7 @@
 import { Typography, Link, TextField } from "@mui/material";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import { TableSettings } from "@src/types/table";
-import {
-  IWebhook,
-  ISecret,
-} from "@src/components/TableModals/WebhooksModal/utils";
+import { IWebhook } from "@src/components/TableModals/WebhooksModal/utils";
 
 export const webhookTypeform = {
   name: "Typeform",
@@ -17,8 +14,8 @@ export const webhookTypeform = {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
   logging.log("typeformParser started")
   
-  // Import any NPM package needed
-  // const lodash = require('lodash');
+  // Import NPM package needed, some packages may not work in Webhooks
+  // const {default: lodash} = await import("lodash");
   
   // This reduces the form submission into a single object of key value pairs
   // Example: {name: "John", age: 20}
@@ -83,11 +80,7 @@ export const webhookTypeform = {
   // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,
   },
-  auth: (
-    webhookObject: IWebhook,
-    setWebhookObject: (w: IWebhook) => void,
-    secrets: ISecret
-  ) => {
+  Auth: (webhookObject: IWebhook, setWebhookObject: (w: IWebhook) => void) => {
     return (
       <>
         <Typography gutterBottom>

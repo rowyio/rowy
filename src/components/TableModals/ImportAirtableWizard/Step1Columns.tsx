@@ -36,6 +36,17 @@ import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 import { suggestType } from "@src/components/TableModals/ImportAirtableWizard/utils";
 
+function getFieldKeys(records: any[]) {
+  let fieldKeys = new Set<string>();
+  for (let i = 0; i < records.length; i++) {
+    const keys = Object.keys(records[i].fields);
+    for (let j = 0; j < keys.length; j++) {
+      fieldKeys.add(keys[j]);
+    }
+  }
+  return [...fieldKeys];
+}
+
 export default function Step1Columns({
   airtableData,
   config,
@@ -57,9 +68,7 @@ export default function Step1Columns({
     config.pairs.map((pair) => pair.fieldKey)
   );
 
-
-  const fieldKeys = Object.keys(airtableData.records[0].fields);
-
+  const fieldKeys = getFieldKeys(airtableData.records);
   // When a field is selected to be imported
   const handleSelect =
     (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,8 +137,8 @@ export default function Step1Columns({
 
   const handleSelectAll = () => {
     if (selectedFields.length !== fieldKeys.length) {
-      setSelectedFields(fieldKeys)
-      fieldKeys.forEach(field => {
+      setSelectedFields(fieldKeys);
+      fieldKeys.forEach((field) => {
         // Try to match each field to a column in the table
         const match =
           find(tableColumns, (column) =>
@@ -158,14 +167,12 @@ export default function Step1Columns({
           ];
         }
         updateConfig(columnConfig);
-      })
+      });
     } else {
-      setSelectedFields([])
-      setConfig((config) => ({ ...config, newColumns: [], pairs: [] }))
+      setSelectedFields([]);
+      setConfig((config) => ({ ...config, newColumns: [], pairs: [] }));
     }
-
   };
-
 
   // When a field is mapped to a new column
   const handleChange = (fieldKey: string) => (value: string) => {
@@ -236,7 +243,11 @@ export default function Step1Columns({
                 color="default"
               />
             }
-            label={selectedFields.length == fieldKeys.length ? "Clear all" : "Select all"}
+            label={
+              selectedFields.length === fieldKeys.length
+                ? "Clear all"
+                : "Select all"
+            }
             sx={{
               height: 42,
               mr: 0,
@@ -251,8 +262,8 @@ export default function Step1Columns({
             find(config.pairs, { fieldKey: field })?.columnKey ?? null;
           const matchingColumn = columnKey
             ? tableSchema.columns?.[columnKey] ??
-            find(config.newColumns, { key: columnKey }) ??
-            null
+              find(config.newColumns, { key: columnKey }) ??
+              null
             : null;
           const isNewColumn = !!find(config.newColumns, { key: columnKey });
           return (

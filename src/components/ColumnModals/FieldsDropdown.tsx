@@ -11,6 +11,7 @@ import {
   projectSettingsAtom,
   rowyRunModalAtom,
 } from "@src/atoms/projectScope";
+import { tableScope, tableSettingsAtom } from "@src/atoms/tableScope";
 
 export interface IFieldsDropdownProps {
   value: FieldType | "";
@@ -35,17 +36,22 @@ export default function FieldsDropdown({
 }: IFieldsDropdownProps) {
   const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
   const openRowyRunModal = useSetAtom(rowyRunModalAtom, projectScope);
+  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const fieldTypesToDisplay = optionsProp
     ? FIELDS.filter((fieldConfig) => optionsProp.indexOf(fieldConfig.type) > -1)
     : FIELDS;
   const options = fieldTypesToDisplay.map((fieldConfig) => {
     const requireCloudFunctionSetup =
       fieldConfig.requireCloudFunction && !projectSettings.rowyRunUrl;
+    const requireCollectionTable =
+      tableSettings.isCollection === false &&
+      fieldConfig.requireCollectionTable === true;
     return {
       label: fieldConfig.name,
       value: fieldConfig.type,
-      disabled: requireCloudFunctionSetup,
+      disabled: requireCloudFunctionSetup || requireCollectionTable,
       requireCloudFunctionSetup,
+      requireCollectionTable,
     };
   });
 
@@ -82,7 +88,18 @@ export default function FieldsDropdown({
             {getFieldProp("icon", option.value as FieldType)}
           </ListItemIcon>
           <Typography>{option.label}</Typography>
-          {option.requireCloudFunctionSetup && (
+          {option.requireCollectionTable ? (
+            <Typography
+              color="error"
+              variant="inherit"
+              component="span"
+              marginLeft={1}
+              className={"require-cloud-function"}
+            >
+              {" "}
+              Unavailable
+            </Typography>
+          ) : option.requireCloudFunctionSetup ? (
             <Typography
               color="error"
               variant="inherit"
@@ -107,7 +124,7 @@ export default function FieldsDropdown({
                 Cloud Function
               </span>
             </Typography>
-          )}
+          ) : null}
         </>
       )}
       label={label || "Field type"}

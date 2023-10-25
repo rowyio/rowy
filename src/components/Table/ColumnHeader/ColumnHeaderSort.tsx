@@ -38,14 +38,12 @@ export const ColumnHeaderSort = memo(function ColumnHeaderSort({
   const triggerSaveTableSorts = useSaveTableSorts(canEditColumns);
 
   const handleSortClick = () => {
-    if (nextSort === "none") setTableSorts([]);
-    else setTableSorts([{ key: sortKey, direction: nextSort }]);
-    triggerSaveTableSorts([
-      {
-        key: sortKey,
-        direction: nextSort === "none" ? "asc" : nextSort,
-      },
-    ]);
+    setTableSorts(
+      nextSort === "none" ? [] : [{ key: sortKey, direction: nextSort }]
+    );
+    triggerSaveTableSorts(
+      nextSort === "none" ? [] : [{ key: sortKey, direction: nextSort }]
+    );
   };
 
   return (

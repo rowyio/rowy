@@ -1,14 +1,19 @@
-import { Typography, Link, TextField, Alert } from "@mui/material";
+import { useAtom } from "jotai";
+import { Typography, Link, TextField, Alert, Box } from "@mui/material";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import { TableSettings } from "@src/types/table";
+import { IWebhook } from "@src/components/TableModals/WebhooksModal/utils";
 import {
-  IWebhook,
-  ISecret,
-} from "@src/components/TableModals/WebhooksModal/utils";
+  projectScope,
+  secretNamesAtom,
+  updateSecretNamesAtom,
+  projectSettingsDialogAtom,
+} from "@src/atoms/projectScope";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 export const webhookStripe = {
   name: "Stripe",
@@ -21,8 +26,8 @@ export const webhookStripe = {
   // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
   logging.log("stripeParser started")
   
-  // Import any NPM package needed
-  // const lodash = require('lodash');
+  // Import NPM package needed, some packages may not work in Webhooks
+  // const {default: lodash} = await import("lodash");
   
   const event = req.body
   switch (event.type) {
@@ -49,11 +54,14 @@ export const webhookStripe = {
   // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`,
   },
-  auth: (
-    webhookObject: IWebhook,
-    setWebhookObject: (w: IWebhook) => void,
-    secrets: ISecret
-  ) => {
+  Auth: (webhookObject: IWebhook, setWebhookObject: (w: IWebhook) => void) => {
+    const [secretNames] = useAtom(secretNamesAtom, projectScope);
+    const [updateSecretNames] = useAtom(updateSecretNamesAtom, projectScope);
+    const [{ open, tab }, setProjectSettingsDialog] = useAtom(
+      projectSettingsDialogAtom,
+      projectScope
+    );
+
     return (
       <>
         <Typography gutterBottom>
@@ -77,8 +85,9 @@ export const webhookStripe = {
         </Typography>
 
         {webhookObject.auth.secretKey &&
-          !secrets.loading &&
-          !secrets.keys.includes(webhookObject.auth.secretKey) && (
+          !secretNames.loading &&
+          secretNames.secretNames &&
+          !secretNames.secretNames.includes(webhookObject.auth.secretKey) && (
             <Alert severity="error" sx={{ height: "auto!important" }}>
               Your previously selected key{" "}
               <code>{webhookObject.auth.secretKey}</code> does not exist in
@@ -86,34 +95,56 @@ export const webhookStripe = {
             </Alert>
           )}
 
-        <FormControl fullWidth margin={"normal"}>
-          <InputLabel id="stripe-secret-key">Secret key</InputLabel>
-          <Select
-            labelId="stripe-secret-key"
-            id="stripe-secret-key"
-            label="Secret key"
-            variant="filled"
-            value={webhookObject.auth.secretKey}
-            onChange={(e) => {
-              setWebhookObject({
-                ...webhookObject,
-                auth: { ...webhookObject.auth, secretKey: e.target.value },
-              });
-            }}
-          >
-            {secrets.keys.map((secret) => {
-              return <MenuItem value={secret}>{secret}</MenuItem>;
-            })}
-            <MenuItem
-              onClick={() => {
-                const secretManagerLink = `https://console.cloud.google.com/security/secret-manager/create?project=${secrets.projectId}`;
-                window?.open?.(secretManagerLink, "_blank")?.focus();
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginY: 1,
+          }}
+        >
+          <FormControl fullWidth>
+            <InputLabel id="stripe-secret-key">Secret key</InputLabel>
+            <Select
+              labelId="stripe-secret-key"
+              id="stripe-secret-key"
+              label="Secret key"
+              variant="filled"
+              value={webhookObject.auth.secretKey}
+              onChange={(e) => {
+                setWebhookObject({
+                  ...webhookObject,
+                  auth: { ...webhookObject.auth, secretKey: e.target.value },
+                });
               }}
             >
-              Add a key in Secret Manager
-            </MenuItem>
-          </Select>
-        </FormControl>
+              {secretNames.secretNames?.map((secret) => {
+                return <MenuItem value={secret}>{secret}</MenuItem>;
+              })}
+              <MenuItem
+                onClick={() => {
+                  setProjectSettingsDialog({
+                    open: true,
+                  });
+                }}
+              >
+                Add a key in Secret Manager
+              </MenuItem>
+            </Select>
+          </FormControl>
+          <LoadingButton
+            sx={{
+              height: "100%",
+              marginLeft: 1,
+            }}
+            loading={secretNames.loading}
+            onClick={() => {
+              updateSecretNames?.();
+            }}
+          >
+            Refresh
+          </LoadingButton>
+        </Box>
         <TextField
           id="stripe-signing-secret"
           label="Signing key"

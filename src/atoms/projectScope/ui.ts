@@ -131,6 +131,26 @@ export const tableSettingsDialogAtom = atom(
   }
 );
 
+export type ProjectSettingsDialogTab =
+  | "general"
+  | "rowy-run"
+  | "services"
+  | "secrets";
+export type ProjectSettingsDialogState = {
+  open: boolean;
+  tab: ProjectSettingsDialogTab;
+};
+export const projectSettingsDialogAtom = atom(
+  { open: false, tab: "secrets" } as ProjectSettingsDialogState,
+  (_, set, update?: Partial<ProjectSettingsDialogState>) => {
+    set(projectSettingsDialogAtom, {
+      open: true,
+      tab: "secrets",
+      ...update,
+    });
+  }
+);
+
 /**
  * Store the current ID of the table being edited in tableSettingsDialog
  * to derive tableSettingsDialogSchemaAtom
@@ -147,10 +167,6 @@ export const tableSettingsDialogSchemaAtom = atom(async (get) => {
 /** Open the Get Started checklist from anywhere */
 export const getStartedChecklistAtom = atom(false);
 
-/** Persist the state of the add row ID type */
-export const tableAddRowIdTypeAtom = atomWithStorage<
-  "decrement" | "random" | "custom"
->("__ROWY__ADD_ROW_ID_TYPE", "decrement");
 /** Persist when the user dismissed the row out of order warning */
 export const tableOutOfOrderDismissedAtom = atomWithStorage(
   "__ROWY__OUT_OF_ORDER_TOOLTIP_DISMISSED",

@@ -137,39 +137,45 @@ export default function TablesPage() {
   const getActions = (table: TableSettings) => (
     <>
       {userRoles.includes("ADMIN") && (
-        <IconButton
-          aria-label="Edit table"
-          onClick={() =>
-            openTableSettingsDialog({ mode: "update", data: table })
-          }
-          size={view === "list" ? "large" : undefined}
-        >
-          <EditIcon />
-        </IconButton>
+        <Tooltip title="Edit Table">
+          <IconButton
+            aria-label="Edit table"
+            onClick={() =>
+              openTableSettingsDialog({ mode: "update", data: table })
+            }
+            size={view === "list" ? "large" : undefined}
+          >
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
       )}
-      <Checkbox
-        onChange={handleFavorite(table.id)}
-        checked={favorites.includes(table.id)}
-        icon={<FavoriteBorderIcon />}
-        checkedIcon={
-          <Zoom in>
-            <FavoriteIcon />
-          </Zoom>
-        }
-        name={`favorite-${table.id}`}
-        inputProps={{ "aria-label": "Favorite" }}
-        sx={view === "list" ? { p: 1.5 } : undefined}
-        color="secondary"
-      />
-      <IconButton
-        aria-label="Table information"
-        size={view === "list" ? "large" : undefined}
-        component={Link}
-        to={`${getLink(table)}#sideDrawer="table-information"`}
-        style={{ marginLeft: 0 }}
-      >
-        <InfoIcon />
-      </IconButton>
+      <Tooltip title="Favorite">
+        <Checkbox
+          onChange={handleFavorite(table.id)}
+          checked={favorites.includes(table.id)}
+          icon={<FavoriteBorderIcon />}
+          checkedIcon={
+            <Zoom in>
+              <FavoriteIcon />
+            </Zoom>
+          }
+          name={`favorite-${table.id}`}
+          inputProps={{ "aria-label": "Favorite" }}
+          sx={view === "list" ? { p: 1.5 } : undefined}
+          color="secondary"
+        />
+      </Tooltip>
+      <Tooltip title="Table information">
+        <IconButton
+          aria-label="Table information"
+          size={view === "list" ? "large" : undefined}
+          component={Link}
+          to={`${getLink(table)}#sideDrawer="table-information"`}
+          style={{ marginLeft: 0 }}
+        >
+          <InfoIcon />
+        </IconButton>
+      </Tooltip>
     </>
   );
 

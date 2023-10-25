@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useSnackbar } from "notistack";
 import { useDebounce } from "use-debounce";
 import { isEqual, isEmpty } from "lodash-es";
@@ -13,6 +13,10 @@ import {
   updateColumnAtom,
   IUpdateColumnOptions,
 } from "@src/atoms/tableScope";
+import {
+  defaultTableSettingsAtom,
+  projectScope,
+} from "@src/atoms/projectScope";
 import { DEBOUNCE_DELAY } from "./Table";
 import { ColumnSizingState } from "@tanstack/react-table";
 
@@ -26,14 +30,31 @@ export function useSaveColumnSizing(
 ) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
+  const defaultTableSettings = useAtomValue(
+    defaultTableSettingsAtom,
+    projectScope
+  );
 
   // Debounce for saving to schema
   const [debouncedColumnSizing] = useDebounce(columnSizing, DEBOUNCE_DELAY, {
     equalityFn: isEqual,
   });
-  // Offer to save when column sizing changes
+  // Offer to save when column sizing changes, depending on user settings
   useEffect(() => {
     if (!canEditColumns || isEmpty(debouncedColumnSizing)) return;
+    // If the user has disabled the popup, return early
+    if (defaultTableSettings?.saveColumnSizingPopupDisabled) {
+      // If the user has `automaticallyApplyColumnSizing` set to true, apply the column width before returning
+      if (defaultTableSettings?.automaticallyApplyColumnSizing) {
+        const updateTable = async () => {
+          for (const [key, value] of Object.entries(debouncedColumnSizing)) {
+            await updateColumn({ key, config: { width: value } });
+          }
+        };
+        updateTable();
+      }
+      return;
+    }
 
     const snackbarId = enqueueSnackbar("Save column sizes for all users?", {
       action: (
@@ -42,7 +63,7 @@ export function useSaveColumnSizing(
           updateColumn={updateColumn}
         />
       ),
-      anchorOrigin: { horizontal: "center", vertical: "top" },
+      anchorOrigin: { horizontal: "left", vertical: "bottom" },
     });
 
     return () => closeSnackbar(snackbarId);
@@ -52,6 +73,7 @@ export function useSaveColumnSizing(
     enqueueSnackbar,
     closeSnackbar,
     updateColumn,
+    defaultTableSettings,
   ]);
 
   return null;

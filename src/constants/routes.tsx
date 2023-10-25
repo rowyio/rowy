@@ -16,17 +16,15 @@ export enum ROUTES {
   pageNotFound = "/404",
 
   tables = "/tables",
-  automations = "/automations",
-  functions = "/functions",
-  function = "/function",
-  functionWithId = "/function/:id",
 
   table = "/table",
   tableWithId = "/table/:id",
   /** Nested route: `/table/:id/subTable/...` */
   subTable = "subTable",
+  arraySubTable = "arraySubTable",
   /** Nested route: `/table/:id/subTable/...` */
   subTableWithId = "subTable/:docPath/:subTableKey",
+  arraySubTableWithId = "arraySubTable/:docPath/:subTableKey",
   /** @deprecated Redirects to /table */
   tableGroup = "/tableGroup",
   /** @deprecated Redirects to /table */

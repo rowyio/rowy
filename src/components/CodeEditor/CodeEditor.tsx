@@ -14,6 +14,7 @@ import FullScreenButton from "@src/components/FullScreenButton";
 import { spreadSx } from "@src/utils/ui";
 import githubLightTheme from "@src/components/CodeEditor/github-light-default.json";
 import githubDarkTheme from "@src/components/CodeEditor/github-dark-default.json";
+import { AutoTypings, LocalStorageCache } from "monaco-editor-auto-typings";
 
 export interface ICodeEditorProps
   extends Partial<EditorProps>,
@@ -47,7 +48,7 @@ export default function CodeEditor({
   extraLibs,
   diagnosticsOptions,
   onUnmount,
-  defaultLanguage = "javascript",
+  defaultLanguage = "typescript",
   ...props
 }: ICodeEditorProps) {
   const theme = useTheme();
@@ -131,11 +132,22 @@ export default function CodeEditor({
               });
             });
           }}
-          onMount={(editor) => {
+          {...props}
+          onMount={async (editor, monaco) => {
+            if (props.onMount) {
+              props.onMount(editor, monaco);
+            }
             if (onFocus) editor.onDidFocusEditorWidget(onFocus);
             if (onBlur) editor.onDidBlurEditorWidget(onBlur);
+            const autoTypings = await AutoTypings.create(editor, {
+              monaco: monaco,
+              sourceCache: new LocalStorageCache(),
+              debounceDuration: 500, // ms
+              onError: (e) => {
+                console.log("Auto typing error", e);
+              },
+            });
           }}
-          {...props}
           onValidate={onValidate_}
           theme={`github-${theme.palette.mode}`}
           options={{
@@ -149,6 +161,7 @@ export default function CodeEditor({
             fixedOverflowWidgets: true,
             tabSize: 2,
             ...props.options,
+            language: "typescript",
           }}
         />
 

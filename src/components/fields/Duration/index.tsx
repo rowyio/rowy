@@ -4,6 +4,7 @@ import withRenderTableCell from "@src/components/Table/TableCell/withRenderTable
 
 import DurationIcon from "@mui/icons-material/TimerOutlined";
 import DisplayCell from "./DisplayCell";
+import BasicContextMenuActions from "@src/components/Table/ContextMenu/BasicCellContextMenuActions";
 
 const SideDrawerField = lazy(
   () =>
@@ -24,5 +25,6 @@ export const config: IFieldConfig = {
     popoverProps: { PaperProps: { sx: { p: 1 } } },
   }),
   SideDrawerField,
+  contextMenuActions: BasicContextMenuActions,
 };
 export default config;

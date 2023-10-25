@@ -31,5 +31,6 @@ export const config: IFieldConfig = {
   SideDrawerField,
   initializable: false,
   requireConfiguration: true,
+  requireCollectionTable: true,
 };
 export default config;

@@ -12,7 +12,6 @@ export default function useHotKeys(actions: HotKeysAction[]) {
       const event_ = "nativeEvent" in event ? event.nativeEvent : event;
       actions.forEach(([hotkey, handler_]) => {
         if (getHotkeyMatcher(hotkey)(event_)) {
-          event.preventDefault();
           handler_(event_);
         }
       });

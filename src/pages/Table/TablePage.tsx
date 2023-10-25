@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useMemo, useState } from "react";
 import { useAtom } from "jotai";
 import { ErrorBoundary } from "react-error-boundary";
 import { isEmpty, intersection } from "lodash-es";
@@ -33,7 +33,6 @@ import {
   tableSchemaAtom,
   columnModalAtom,
   tableModalAtom,
-  tableSortsAtom,
 } from "@src/atoms/tableScope";
 import useBeforeUnload from "@src/hooks/useBeforeUnload";
 import ActionParamsProvider from "@src/components/fields/Action/FormDialog/Provider";
@@ -42,6 +41,8 @@ import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
 import { DRAWER_COLLAPSED_WIDTH } from "@src/components/SideDrawer";
 import { formatSubTableName } from "@src/utils/table";
+import { TableToolsType } from "@src/types/table";
+import { RowSelectionState } from "@tanstack/react-table";
 
 // prettier-ignore
 const BuildLogsSnack = lazy(() => import("@src/components/TableModals/CloudLogsModal/BuildLogs/BuildLogsSnack" /* webpackChunkName: "TableModals-BuildLogsSnack" */));
@@ -54,6 +55,10 @@ export interface ITablePageProps {
   disableModals?: boolean;
   /** Disable side drawer */
   disableSideDrawer?: boolean;
+  /** list of table tools to be disabled */
+  disabledTools?: TableToolsType;
+  /** If true shows checkbox to select rows */
+  enableRowSelection?: boolean;
 }
 
 /**
@@ -72,6 +77,8 @@ export interface ITablePageProps {
 export default function TablePage({
   disableModals,
   disableSideDrawer,
+  disabledTools,
+  enableRowSelection = false,
 }: ITablePageProps) {
   const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [userSettings] = useAtom(userSettingsAtom, projectScope);
@@ -96,6 +103,21 @@ export default function TablePage({
   // Warn user about leaving when they have a table modal open
   useBeforeUnload(columnModalAtom, tableScope);
   useBeforeUnload(tableModalAtom, tableScope);
+
+  const [selectedRows, setSelectedRows] = useState<RowSelectionState>({});
+
+  // Without useMemo we'll be stuck in an infinite loop
+  const selectedRowsProp = useMemo(
+    () => ({
+      state: selectedRows,
+      setState: setSelectedRows,
+    }),
+    [selectedRows, setSelectedRows]
+  );
+
+  const resetSelectedRows = () => {
+    setSelectedRows({});
+  };
 
   if (!(tableSchema as any)._rowy_ref)
     return (
@@ -128,7 +150,11 @@ export default function TablePage({
     <ActionParamsProvider>
       <ErrorBoundary FallbackComponent={InlineErrorFallback}>
         <Suspense fallback={<TableToolbarSkeleton />}>
-          <TableToolbar />
+          <TableToolbar
+            disabledTools={disabledTools}
+            selectedRows={selectedRows}
+            resetSelectedRows={resetSelectedRows}
+          />
         </Suspense>
       </ErrorBoundary>
 
@@ -156,6 +182,7 @@ export default function TablePage({
               hiddenColumns={
                 userSettings.tables?.[formatSubTableName(tableId)]?.hiddenFields
               }
+              selectedRows={enableRowSelection ? selectedRowsProp : undefined}
               emptyState={
                 <EmptyState
                   Icon={AddRowIcon}

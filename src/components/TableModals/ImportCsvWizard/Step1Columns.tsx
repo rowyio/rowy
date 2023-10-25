@@ -67,7 +67,7 @@ export default function Step1Columns({
   const handleSelectAll = () => {
     if (selectedFields.length !== csvData.columns.length) {
       setSelectedFields(csvData.columns);
-      csvData.columns.forEach(field => {
+      csvData.columns.forEach((field) => {
         // Try to match each field to a column in the table
         const match =
           find(tableColumns, (column) =>
@@ -89,10 +89,10 @@ export default function Step1Columns({
           ];
         }
         updateConfig(columnConfig);
-      })
+      });
     } else {
-      setSelectedFields([])
-      setConfig((config) => ({ ...config, newColumns: [], pairs: [] }))
+      setSelectedFields([]);
+      setConfig((config) => ({ ...config, newColumns: [], pairs: [] }));
     }
   };
 
@@ -232,7 +232,11 @@ export default function Step1Columns({
                 color="default"
               />
             }
-            label={selectedFields.length == csvData.columns.length ? "Clear all" : "Select all"}
+            label={
+              selectedFields.length === csvData.columns.length
+                ? "Clear all"
+                : "Select all"
+            }
             sx={{
               height: 42,
               mr: 0,
@@ -247,14 +251,22 @@ export default function Step1Columns({
             find(config.pairs, { csvKey: field })?.columnKey ?? null;
           const matchingColumn = columnKey
             ? tableSchema.columns?.[columnKey] ??
-            find(config.newColumns, { key: columnKey }) ??
-            null
+              find(config.newColumns, { key: columnKey }) ??
+              null
             : null;
           const isNewColumn = !!find(config.newColumns, { key: columnKey });
 
           return (
-            <Grid container key={field} component="li" wrap="nowrap">
-              <Grid item xs>
+            <Grid
+              container
+              key={field}
+              component="li"
+              wrap="nowrap"
+              sx={{
+                marginTop: "36px !important",
+              }}
+            >
+              <Grid container item xs alignItems={"center"}>
                 <FormControlLabel
                   key={field}
                   control={
@@ -287,88 +299,145 @@ export default function Step1Columns({
                 <ArrowIcon color="disabled" sx={{ color: "secondary.main" }} />
               </Grid>
 
-              <Grid item xs>
+              <Grid item container spacing={4} xs alignItems={"center"}>
                 {selected && (
-                  <ColumnSelect
-                    multiple={false}
-                    value={columnKey}
-                    onChange={handleChange(field) as any}
-                    TextFieldProps={{
-                      hiddenLabel: true,
-                      SelectProps: {
-                        renderValue: () => {
-                          if (!columnKey) return "Select or add column";
-                          else
-                            return (
-                              <Stack
-                                direction="row"
-                                gap={1}
-                                alignItems="center"
-                              >
-                                <Box sx={{ width: 24, height: 24 }}>
-                                  {!isNewColumn ? (
-                                    getFieldProp("icon", matchingColumn?.type)
-                                  ) : (
-                                    <TableColumnIcon color="disabled" />
-                                  )}
-                                </Box>
-                                {matchingColumn?.name}
-                                {isNewColumn && (
-                                  <Chip
-                                    label="New"
-                                    color="primary"
-                                    size="small"
-                                    variant="outlined"
-                                    style={{
-                                      marginLeft: "auto",
-                                      pointerEvents: "none",
-                                      height: 24,
-                                      fontWeight: "normal",
-                                    }}
-                                  />
-                                )}
-                              </Stack>
-                            );
-                        },
-                        sx: [
-                          {
-                            backgroundColor: "background.default",
-                            border: (theme) =>
-                              `1px solid ${theme.palette.divider}`,
-                            borderRadius: 0,
-                            boxShadow: "none",
-                            "& .MuiSelect-select": {
-                              boxSizing: "border-box",
-                              height: COLUMN_HEADER_HEIGHT - 2,
-                              typography: "caption",
-                              fontWeight: "medium",
-                              lineHeight: "28px",
+                  <>
+                    <Grid item xs>
+                      <ColumnSelect
+                        multiple={false}
+                        value={columnKey}
+                        onChange={handleChange(field) as any}
+                        TextFieldProps={{
+                          hiddenLabel: true,
+                          SelectProps: {
+                            renderValue: () => {
+                              if (!columnKey) return "Select or add column";
+                              else
+                                return (
+                                  <Stack
+                                    direction="row"
+                                    gap={1}
+                                    alignItems="center"
+                                  >
+                                    <Box sx={{ width: 24, height: 24 }}>
+                                      {!isNewColumn ? (
+                                        getFieldProp(
+                                          "icon",
+                                          matchingColumn?.type
+                                        )
+                                      ) : (
+                                        <TableColumnIcon color="disabled" />
+                                      )}
+                                    </Box>
+                                    {matchingColumn?.name}
+                                    {isNewColumn && (
+                                      <Chip
+                                        label="New"
+                                        color="primary"
+                                        size="small"
+                                        variant="outlined"
+                                        style={{
+                                          marginLeft: "auto",
+                                          pointerEvents: "none",
+                                          height: 24,
+                                          fontWeight: "normal",
+                                        }}
+                                      />
+                                    )}
+                                  </Stack>
+                                );
                             },
+                            sx: [
+                              {
+                                backgroundColor: "background.default",
+                                border: (theme) =>
+                                  `1px solid ${theme.palette.divider}`,
+                                borderRadius: 0,
+                                boxShadow: "none",
+                                "& .MuiSelect-select": {
+                                  boxSizing: "border-box",
+                                  height: COLUMN_HEADER_HEIGHT - 2,
+                                  typography: "caption",
+                                  fontWeight: "medium",
+                                  lineHeight: "28px",
+                                },
 
-                            color: "text.secondary",
-                            "&:hover": {
-                              backgroundColor: "background.default",
-                              color: "text.primary",
-                              boxShadow: "none",
-                            },
+                                color: "text.secondary",
+                                "&:hover": {
+                                  backgroundColor: "background.default",
+                                  color: "text.primary",
+                                  boxShadow: "none",
+                                },
 
-                            "&::before": { content: "none" },
-                            "&::after": { pointerEvents: "none" },
+                                "&::before": { content: "none" },
+                                "&::after": { pointerEvents: "none" },
+                              },
+                              !columnKey && { color: "text.disabled" },
+                            ],
                           },
-                          !columnKey && { color: "text.disabled" },
-                        ],
-                      },
-                      sx: { "& .MuiInputLabel-root": { display: "none" } },
-                    }}
-                    clearable={false}
-                    displayEmpty
-                    freeText
-                    AddButtonProps={{ children: "Create column…" }}
-                    AddDialogProps={{
-                      title: "Create column",
-                      textFieldLabel: "Column name",
-                    }}
-                  />
+                          sx: { "& .MuiInputLabel-root": { display: "none" } },
+                        }}
+                        clearable={false}
+                        displayEmpty
+                        freeText
+                        AddButtonProps={{ children: "Create column…" }}
+                        AddDialogProps={{
+                          title: "Create column",
+                          textFieldLabel: "Column name",
+                        }}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        label="Field key"
+                        value={
+                          config.pairs.find(
+                            (pair) => pair.columnKey === columnKey
+                          )?.columnKey ??
+                          config.newColumns.find(
+                            (pair) => pair.key === columnKey
+                          )?.key
+                        }
+                        onChange={(e) => {
+                          const newKey = e.target.value;
+                          const newPairs = config.pairs.map((pair) => {
+                            if (pair.columnKey === columnKey) {
+                              return { ...pair, columnKey: newKey };
+                            } else {
+                              return pair;
+                            }
+                          });
+
+                          const newColumns = config.newColumns.map((column) => {
+                            if (column.key === columnKey) {
+                              return {
+                                ...column,
+                                key: newKey,
+                                fieldName: newKey,
+                              };
+                            } else {
+                              return column;
+                            }
+                          });
+
+                          setConfig((config) => ({
+                            ...config,
+                            pairs: newPairs,
+                            newColumns,
+                          }));
+                        }}
+                        sx={{
+                          "& .MuiInputLabel-root": {
+                            position: "absolute",
+                            transform: "translateY(-100%)",
+                          },
+                          "& .MuiInputBase-root": {
+                            height: 40,
+                          },
+                        }}
+                      />
+                    </Grid>
+                  </>
                 )}
               </Grid>
             </Grid>

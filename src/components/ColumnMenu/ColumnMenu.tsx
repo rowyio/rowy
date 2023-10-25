@@ -24,6 +24,7 @@ import {
 } from "@src/assets/icons";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import StraightenIcon from "@mui/icons-material/Straighten";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import EvalIcon from "@mui/icons-material/PlayCircleOutline";
@@ -59,6 +60,7 @@ import { getFieldProp } from "@src/components/fields";
 import { analytics, logEvent } from "@src/analytics";
 import {
   formatSubTableName,
+  generateId,
   getTableBuildFunctionPathname,
   getTableSchemaPath,
 } from "@src/utils/table";
@@ -192,9 +194,10 @@ export default function ColumnMenu({
         setTableSorts(
           isSorted && !isAsc ? [] : [{ key: sortKey, direction: "desc" }]
         );
-        if (!isSorted || isAsc) {
-          triggerSaveTableSorts([{ key: sortKey, direction: "desc" }]);
-        }
+
+        triggerSaveTableSorts(
+          isSorted && !isAsc ? [] : [{ key: sortKey, direction: "desc" }]
+        );
         handleClose();
       },
       active: isSorted && !isAsc,
@@ -209,9 +212,9 @@ export default function ColumnMenu({
         setTableSorts(
           isSorted && isAsc ? [] : [{ key: sortKey, direction: "asc" }]
         );
-        if (!isSorted || !isAsc) {
-          triggerSaveTableSorts([{ key: sortKey, direction: "asc" }]);
-        }
+        triggerSaveTableSorts(
+          isSorted && isAsc ? [] : [{ key: sortKey, direction: "asc" }]
+        );
         handleClose();
       },
       active: isSorted && isAsc,
@@ -250,6 +253,7 @@ export default function ColumnMenu({
                   : column.type
               )!.operators[0]?.value || "==",
             value: "",
+            id: generateId(),
           },
         });
         handleClose();
@@ -261,6 +265,16 @@ export default function ColumnMenu({
           ? column.config?.renderFieldType
           : column.type
       ),
+    },
+    {
+      key: "setColumnWidth",
+      label: "Set Column Width",
+      icon: <StraightenIcon />,
+      onClick: () => {
+        openColumnModal({ type: "setColumnWidth", columnKey: column.key });
+        handleClose();
+      },
+      disabled: column.resizable === false,
     },
   ];
 
@@ -418,7 +432,7 @@ export default function ColumnMenu({
       key: "insertLeft",
       icon: <ColumnPlusBeforeIcon />,
       onClick: () => {
-        openColumnModal({ type: "new", index: column.index - 1 });
+        openColumnModal({ type: "new", index: column.index });
         handleClose();
       },
       disabled: !canAddColumns,

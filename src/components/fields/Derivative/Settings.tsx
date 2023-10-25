@@ -19,8 +19,7 @@ import { FieldType } from "@src/constants/fields";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 import { getFieldProp } from "@src/components/fields";
-/* eslint-disable import/no-webpack-loader-syntax */
-import derivativeDefs from "!!raw-loader!./derivative.d.ts";
+import derivativeDefs from "./derivative.d.ts?raw";
 
 const CodeEditor = lazy(
   () =>
@@ -66,27 +65,26 @@ export default function Settings({
     ? config.derivativeFn
     : config?.script
     ? `const derivative:Derivative = async ({row,ref,db,storage,auth,logging})=>{
-  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
   logging.log("derivative started")
   
   // Import any NPM package needed
   // const lodash = require('lodash');
   
   ${config.script.replace(/utilFns.getSecret/g, "rowy.secrets.get")}
-  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`
-    : `const derivative:Derivative = async ({row,ref,db,storage,auth,logging})=>{
-  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
-  logging.log("derivative started")
-  
-  // Import any NPM package needed
-  // const lodash = require('lodash');
-  
+    : `// Import any NPM package needed
+// import _ from "lodash";
+
+const derivative: Derivative = async ({ row, ref, db, storage, auth, logging }) => {
+  logging.log("derivative started");
+
   // Example:
   // const sum = row.a + row.b;
   // return sum;
-  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
-}`;
+};
+
+export default derivative;
+`;
 
   return (
     <>

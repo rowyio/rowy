@@ -11,8 +11,7 @@ import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 import { FieldType } from "@src/constants/fields";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 
-/* eslint-disable import/no-webpack-loader-syntax */
-import defaultValueDefs from "!!raw-loader!./defaultValue.d.ts";
+import defaultValueDefs from "./defaultValue.d.ts?raw";
 import {
   projectScope,
   compatibleRowyRunVersionAtom,
@@ -54,22 +53,24 @@ function CodeEditor({ type, column, handleChange }: ICodeEditorProps) {
     dynamicValueFn = column.config?.defaultValue?.dynamicValueFn;
   } else if (column.config?.defaultValue?.script) {
     dynamicValueFn = `const dynamicValueFn: DefaultValue = async ({row,ref,db,storage,auth,logging})=>{
-  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
   logging.log("dynamicValueFn started")
   
   ${column.config?.defaultValue.script}
-  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
 }`;
   } else {
-    dynamicValueFn = `const dynamicValueFn: DefaultValue = async ({row,ref,db,storage,auth,logging})=>{
-  // WRITE YOUR CODE ONLY BELOW THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
-  logging.log("dynamicValueFn started")
-  
+    dynamicValueFn = `// Import any NPM package needed
+// import _ from "lodash";
+
+const defaultValue: DefaultValue = async ({ row, ref, db, storage, auth, logging }) => {
+  logging.log("dynamicValueFn started");
+
   // Example: generate random hex color
   // const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
   // return color;
-  // WRITE YOUR CODE ONLY ABOVE THIS LINE. DO NOT WRITE CODE/COMMENTS OUTSIDE THE FUNCTION BODY
-}`;
+};
+
+export default defaultValue;
+`;
   }
 
   return (

@@ -32,6 +32,7 @@ export type ProjectSettings = Partial<{
     builder: string;
     terminal: string;
   }>;
+  exporterRoles?: string[];
 }>;
 
 /** User info and settings */
@@ -49,13 +50,21 @@ export type UserSettings = Partial<{
   theme: Record<"base" | "light" | "dark", ThemeOptions>;
 
   favoriteTables: string[];
-  /** Stores user overrides */
+  /** Stores default user settings for all tables */
+  defaultTableSettings: Partial<{
+    saveSortsPopupDisabled: boolean;
+    automaticallyApplySorts: boolean;
+    saveColumnSizingPopupDisabled: boolean;
+    automaticallyApplyColumnSizing: boolean;
+  }>;
+  /** Stores table-specific user overrides */
   tables: Record<
     string,
     Partial<{
       filters: TableFilter[];
       hiddenFields: string[];
       sorts: TableSort[];
+      joinOperator: "AND" | "OR";
     }>
   >;
 

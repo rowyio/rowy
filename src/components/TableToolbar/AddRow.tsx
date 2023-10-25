@@ -9,6 +9,7 @@ import {
   MenuItem,
   ListItemText,
   Box,
+  Tooltip,
 } from "@mui/material";
 import {
   AddRow as AddRowIcon,
@@ -16,32 +17,41 @@ import {
   ChevronDown as ArrowDropDownIcon,
 } from "@src/assets/icons";
 
-import {
-  projectScope,
-  userRolesAtom,
-  tableAddRowIdTypeAtom,
-} from "@src/atoms/projectScope";
+import { projectScope, userRolesAtom } from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
   tableFiltersAtom,
   tableSortsAtom,
   addRowAtom,
+  _updateRowDbAtom,
+  tableColumnsOrderedAtom,
+  tableSchemaAtom,
+  updateTableSchemaAtom,
 } from "@src/atoms/tableScope";
+import { TableIdType } from "@src/types/table";
 
 export default function AddRow() {
   const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
+  const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableFilters] = useAtom(tableFiltersAtom, tableScope);
   const [tableSorts] = useAtom(tableSortsAtom, tableScope);
+  const [updateTableSchema] = useAtom(updateTableSchemaAtom, tableScope);
   const addRow = useSetAtom(addRowAtom, tableScope);
-  const [idType, setIdType] = useAtom(tableAddRowIdTypeAtom, projectScope);
-
   const anchorEl = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [openIdModal, setOpenIdModal] = useState(false);
 
+  const idType = tableSchema.idType || "decrement";
   const forceRandomId = tableFilters.length > 0 || tableSorts.length > 0;
+
+  const handleSetIdType = async (idType: TableIdType) => {
+    // TODO(han): refactor atom - error handler
+    await updateTableSchema!({
+      idType,
+    });
+  };
 
   const handleClick = () => {
     if (idType === "random" || (forceRandomId && idType === "decrement")) {
@@ -74,42 +84,51 @@ export default function AddRow() {
 
   return (
     <>
-      <ButtonGroup
-        variant="contained"
-        color="primary"
-        aria-label="Split button"
-        ref={anchorEl}
-        disabled={tableSettings.tableType === "collectionGroup" || !addRow}
+      <Tooltip
+        title={
+          tableSettings.tableType === "collectionGroup"
+            ? "Add row is not supported for collection group."
+            : null
+        }
+        arrow
       >
-        <Button
+        <ButtonGroup
           variant="contained"
           color="primary"
-          onClick={handleClick}
-          startIcon={
-            idType === "decrement" && !forceRandomId ? (
-              <AddRowTopIcon />
-            ) : (
-              <AddRowIcon />
-            )
-          }
+          aria-label="Split button"
+          ref={anchorEl}
+          disabled={tableSettings.tableType === "collectionGroup" || !addRow}
         >
-          Add row{idType === "custom" ? "…" : ""}
-        </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleClick}
+            startIcon={
+              idType === "decrement" && !forceRandomId ? (
+                <AddRowTopIcon />
+              ) : (
+                <AddRowIcon />
+              )
+            }
+          >
+            Add row{idType === "custom" ? "…" : ""}
+          </Button>
 
-        <Button
-          variant="contained"
-          color="primary"
-          aria-label="Select row add position"
-          aria-haspopup="menu"
-          style={{ padding: 0 }}
-          onClick={() => setOpen(true)}
-          id="add-row-menu-button"
-          aria-controls={open ? "add-row-menu" : undefined}
-          aria-expanded={open ? "true" : "false"}
-        >
-          <ArrowDropDownIcon />
-        </Button>
-      </ButtonGroup>
+          <Button
+            variant="contained"
+            color="primary"
+            aria-label="Select row add position"
+            aria-haspopup="menu"
+            style={{ padding: 0 }}
+            onClick={() => setOpen(true)}
+            id="add-row-menu-button"
+            aria-controls={open ? "add-row-menu" : undefined}
+            aria-expanded={open ? "true" : "false"}
+          >
+            <ArrowDropDownIcon />
+          </Button>
+        </ButtonGroup>
+      </Tooltip>
 
       <Select
         id="add-row-menu"
@@ -118,7 +137,7 @@ export default function AddRow() {
         label="Row add position"
         style={{ display: "none" }}
         value={forceRandomId && idType === "decrement" ? "random" : idType}
-        onChange={(e) => setIdType(e.target.value as typeof idType)}
+        onChange={(e) => handleSetIdType(e.target.value as typeof idType)}
         MenuProps={{
           anchorEl: anchorEl.current,
           MenuListProps: { "aria-labelledby": "add-row-menu-button" },
@@ -204,6 +223,103 @@ export default function AddRow() {
           SubmitButtonProps={{ children: "Add row" }}
         />
       )}
+    </>
+  );
+}
+
+export function AddRowArraySubTable() {
+  const [updateRowDb] = useAtom(_updateRowDbAtom, tableScope);
+  const [open, setOpen] = useState(false);
+
+  const anchorEl = useRef<HTMLDivElement>(null);
+  const [addRowAt, setAddNewRowAt] = useState<"top" | "bottom">("bottom");
+  const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
+
+  if (!updateRowDb) return null;
+
+  const handleClick = () => {
+    const initialValues: Record<string, any> = {};
+
+    // Set initial values based on default values
+    for (const column of tableColumnsOrdered) {
+      if (column.config?.defaultValue?.type === "static")
+        initialValues[column.key] = column.config.defaultValue.value!;
+      else if (column.config?.defaultValue?.type === "null")
+        initialValues[column.key] = null;
+    }
+
+    updateRowDb("", initialValues, undefined, {
+      index: 0,
+      operation: {
+        addRow: addRowAt,
+      },
+    });
+  };
+  return (
+    <>
+      <ButtonGroup
+        variant="contained"
+        color="primary"
+        aria-label="Split button"
+        ref={anchorEl}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleClick}
+          startIcon={addRowAt === "top" ? <AddRowTopIcon /> : <AddRowIcon />}
+        >
+          Add row to {addRowAt}
+        </Button>
+
+        <Button
+          variant="contained"
+          color="primary"
+          aria-label="Select row add position"
+          aria-haspopup="menu"
+          style={{ padding: 0 }}
+          onClick={() => setOpen(true)}
+          id="add-row-menu-button"
+          aria-controls={open ? "add-row-menu" : undefined}
+          aria-expanded={open ? "true" : "false"}
+        >
+          <ArrowDropDownIcon />
+        </Button>
+      </ButtonGroup>
+
+      <Select
+        id="add-row-menu"
+        open={open}
+        onClose={() => setOpen(false)}
+        label="Row add position"
+        style={{ display: "none" }}
+        value={addRowAt}
+        onChange={(e) => setAddNewRowAt(e.target.value as typeof addRowAt)}
+        MenuProps={{
+          anchorEl: anchorEl.current,
+          MenuListProps: { "aria-labelledby": "add-row-menu-button" },
+          anchorOrigin: { horizontal: "left", vertical: "bottom" },
+          transformOrigin: { horizontal: "left", vertical: "top" },
+        }}
+      >
+        <MenuItem value="top">
+          <ListItemText
+            primary="To top"
+            secondary="Adds a new row to the top of this table"
+            secondaryTypographyProps={{ variant: "caption" }}
+          />
+        </MenuItem>
+        <MenuItem value="bottom">
+          <ListItemText
+            primary="To bottom"
+            secondary={"Adds a new row to the bottom of this table"}
+            secondaryTypographyProps={{
+              variant: "caption",
+              whiteSpace: "pre-line",
+            }}
+          />
+        </MenuItem>
+      </Select>
     </>
   );
 }
