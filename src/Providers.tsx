@@ -13,7 +13,7 @@ import { CacheProvider } from "@emotion/react";
 import RowyThemeProvider from "@src/theme/RowyThemeProvider";
 import SnackbarProvider from "@src/contexts/SnackbarContext";
 import { SnackLogProvider } from "@src/contexts/SnackLogContext";
-
+import CommandKProvider from "./contexts/CommandKProvider";
 import { Suspense } from "react";
 import Loading from "@src/components/Loading";
 
@@ -52,15 +52,17 @@ export default function Providers({
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <CacheProvider value={muiCache}>
                 <RowyThemeProvider>
-                  <ErrorBoundary FallbackComponent={ErrorFallback}>
-                    <SnackbarProvider>
-                      <SnackLogProvider>
-                        <Suspense fallback={<Loading fullScreen />}>
-                          {children}
-                        </Suspense>
-                      </SnackLogProvider>
-                    </SnackbarProvider>
-                  </ErrorBoundary>
+                  <CommandKProvider>
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                      <SnackbarProvider>
+                        <SnackLogProvider>
+                          <Suspense fallback={<Loading fullScreen />}>
+                            {children}
+                          </Suspense>
+                        </SnackLogProvider>
+                      </SnackbarProvider>
+                    </ErrorBoundary>
+                  </CommandKProvider>
                 </RowyThemeProvider>
               </CacheProvider>
             </LocalizationProvider>

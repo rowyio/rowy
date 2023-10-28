@@ -5,6 +5,7 @@ import { AddColumn as AddColumnIcon } from "@src/assets/icons";
 
 import { tableScope, columnModalAtom } from "@src/atoms/tableScope";
 import { spreadSx } from "@src/utils/ui";
+import AddColumnRegister from "./AddColumnRegister";
 
 export interface IFinalColumnHeaderProps extends Partial<BoxProps> {
   focusInsideCell: boolean;
@@ -50,6 +51,7 @@ export default function FinalColumnHeader({
         >
           Add column
         </Button>
+        <AddColumnRegister />
       </Box>
     );
   else

@@ -41,6 +41,7 @@ import { TableToolsType } from "@src/types/table";
 import FilterIcon from "@mui/icons-material/FilterList";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { RowSelectionState } from "@tanstack/react-table";
+import AdminToolbarActionsRegister from "./KbarActions/AdminToolbarActionsRegister";
 
 // prettier-ignore
 const Sort = lazy(() => import("./Sort" /* webpackChunkName: "Filters" */));
@@ -136,6 +137,7 @@ export default function TableToolbar({
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const openTableModal = useSetAtom(tableModalAtom, tableScope);
   const [tableSorts] = useAtom(tableSortsAtom, tableScope);
+
   const hasDerivatives =
     Object.values(tableSchema.columns ?? {}).filter(
       (column) => column.type === FieldType.derivative
@@ -217,6 +219,7 @@ export default function TableToolbar({
       )}
       {userRoles.includes("ADMIN") && (
         <>
+          <AdminToolbarActionsRegister disabledTools={disabledTools} />
           <div /> {/* Spacer */}
           <TableToolbarButton
             title="Webhooks"
