@@ -80,8 +80,8 @@ const extensionBodyTemplate = {
         path: ref.path
       },
       change: {
-        before: change.before.get(),
-        after: change.after.get(),
+        before: change.before.data(),
+        after: change.after.data(),
       },
       // Add your own payload here
     })
