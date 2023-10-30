@@ -258,7 +258,7 @@ export function useFirestoreCollectionWithAtom<
     if (updateDocAtom) {
       setUpdateDocAtom(
         () =>
-          (
+          async (
             path: string,
             update: T,
             deleteFields?: string[],
@@ -271,10 +271,13 @@ export function useFirestoreCollectionWithAtom<
                 set(updateToDb as any, field, deleteField());
               }
             }
-            if (options?.useUpdate) {
-              return updateDoc(doc(firebaseDb, path), updateToDb);
+            try {
+              return await updateDoc(doc(firebaseDb, path), updateToDb);
+            } catch (e) {
+              return await setDoc(doc(firebaseDb, path), updateToDb, {
+                merge: true,
+              });
             }
-            return setDoc(doc(firebaseDb, path), updateToDb, { merge: true });
           }
       );
     }

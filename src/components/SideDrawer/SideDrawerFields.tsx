@@ -24,7 +24,6 @@ import {
 } from "@src/atoms/tableScope";
 import { formatSubTableName } from "@src/utils/table";
 import { TableRow } from "@src/types/table";
-import { onSubmitOptions } from "@src/components/fields/types";
 
 export interface ISideDrawerFieldsProps {
   row: TableRow;
@@ -55,7 +54,7 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
   }, []);
   // Called when an individual field is ready to be saved
   const onSubmit = useCallback(
-    async (fieldName: string, value: any, options?: onSubmitOptions) => {
+    async (fieldName: string, value: any) => {
       if (!selectedCell) return;
 
       const currentValue = get(row, fieldName);
@@ -75,7 +74,6 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
           arrayTableData: {
             index: selectedCell.arrayIndex,
           },
-          useUpdate: options?.useUpdateFn ?? false,
         });
 
         setSaveState("saved");

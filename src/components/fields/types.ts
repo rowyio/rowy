@@ -75,13 +75,6 @@ export interface IEditorCellProps<T = any> extends IDisplayCellProps<T> {
   parentRef: PopoverProps["anchorEl"];
 }
 
-export type onSubmitOptions = {
-  /** Use the update function instead of the set function */
-  useUpdateFn?: boolean;
-};
-
-export type onSubmitFunction = (options?: onSubmitOptions) => void;
-
 /** Props to be passed to all SideDrawerFields */
 export interface ISideDrawerFieldProps<T = any> {
   /** The column config */
@@ -95,7 +88,7 @@ export interface ISideDrawerFieldProps<T = any> {
   /** Update the local value. Also calls onDirty */
   onChange: (value: T) => void;
   /** Call when user input is ready to be saved (e.g. onBlur) */
-  onSubmit: onSubmitFunction;
+  onSubmit: () => void;
   /** Field locked. Do NOT check `column.locked` */
   disabled: boolean;
 

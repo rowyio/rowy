@@ -342,7 +342,7 @@ export interface IUpdateFieldOptions {
   /** Optionally, used to locate the row in ArraySubTable. */
   arrayTableData?: ArrayTableRowData;
   /** Optionally, explicitly specify to use firestore's update method. Required in case of JSON field update. */
-  useUpdate?: boolean;
+  // useUpdate?: boolean;
 }
 /**
  * Set function updates or deletes a field in a row.
@@ -371,7 +371,6 @@ export const updateFieldAtom = atom(
       useArrayUnion,
       useArrayRemove,
       arrayTableData,
-      useUpdate,
     }: IUpdateFieldOptions
   ) => {
     const updateRowDb = get(_updateRowDbAtom);
@@ -493,7 +492,7 @@ export const updateFieldAtom = atom(
           row._rowy_ref.path,
           omitRowyFields(newRowValues),
           deleteField ? [fieldName] : [],
-          { ...arrayTableData, useUpdate }
+          arrayTableData
         );
       }
     }
@@ -503,7 +502,7 @@ export const updateFieldAtom = atom(
         row._rowy_ref.path,
         omitRowyFields(dbUpdate),
         deleteField ? [fieldName] : [],
-        { ...arrayTableData, useUpdate }
+        arrayTableData
       );
     }
 
