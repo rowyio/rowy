@@ -3,7 +3,11 @@ import useStateRef from "react-usestateref";
 import { isEqual, isEmpty } from "lodash-es";
 
 import FieldWrapper from "./FieldWrapper";
-import { FieldType, IFieldConfig } from "@src/components/fields/types";
+import {
+  FieldType,
+  IFieldConfig,
+  onSubmitOptions,
+} from "@src/components/fields/types";
 import { getFieldProp } from "@src/components/fields";
 import { ColumnConfig, TableRowRef } from "@src/types/table";
 import { TableRow } from "@src/types/table";
@@ -16,7 +20,7 @@ export interface IMemoizedFieldProps {
   _rowy_ref: TableRowRef;
   isDirty: boolean;
   onDirty: (fieldName: string) => void;
-  onSubmit: (fieldName: string, value: any) => void;
+  onSubmit: (fieldName: string, value: any, options?: onSubmitOptions) => void;
   row: TableRow;
 }
 
@@ -39,9 +43,12 @@ export const MemoizedField = memo(
       if (!isDirty) setLocalValue(value);
     }, [isDirty, setLocalValue, value]);
 
-    const handleSubmit = useCallback(() => {
-      onSubmit(field.fieldName, localValueRef.current);
-    }, [field.fieldName, localValueRef, onSubmit]);
+    const handleSubmit = useCallback(
+      (options?: onSubmitOptions) => {
+        onSubmit(field.fieldName, localValueRef.current, options);
+      },
+      [field.fieldName, localValueRef, onSubmit]
+    );
 
     let type = field.type;
     if (field.type !== FieldType.formula && field.config?.renderFieldType) {

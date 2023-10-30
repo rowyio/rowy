@@ -212,7 +212,7 @@ export type TableSort = {
 };
 
 export type UpdateRowOptions = {
-  useSet?: boolean;
+  useUpdate?: boolean;
 };
 
 export type ArrayTableRowData = {

@@ -8,6 +8,7 @@ import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import type {
   IDisplayCellProps,
   IEditorCellProps,
+  onSubmitOptions,
 } from "@src/components/fields/types";
 
 interface IEditorCellControllerProps extends IDisplayCellProps {
@@ -56,7 +57,7 @@ export default function EditorCellController({
   }, [isDirty, localValueRef, setLocalValue, value]);
 
   // This is where we update the documents
-  const handleSubmit = async () => {
+  const handleSubmit = async (options?: onSubmitOptions) => {
     // props.disabled should always be false as withRenderTableCell would
     // render DisplayCell instead of EditorCell
     if (props.disabled || !isDirtyRef.current) return;
@@ -67,6 +68,7 @@ export default function EditorCellController({
         value: localValueRef.current,
         deleteField: localValueRef.current === undefined,
         arrayTableData: props.row?._rowy_ref.arrayTableData,
+        useUpdate: options?.useUpdateFn,
       });
     } catch (e) {
       enqueueSnackbar((e as Error).message, { variant: "error" });

@@ -271,11 +271,10 @@ export function useFirestoreCollectionWithAtom<
                 set(updateToDb as any, field, deleteField());
               }
             }
-            // console.log("update", updateToDb, path, options);
-            if (options?.useSet) {
-              return setDoc(doc(firebaseDb, path), updateToDb, { merge: true });
+            if (options?.useUpdate) {
+              return updateDoc(doc(firebaseDb, path), updateToDb);
             }
-            return updateDoc(doc(firebaseDb, path), updateToDb);
+            return setDoc(doc(firebaseDb, path), updateToDb, { merge: true });
           }
       );
     }

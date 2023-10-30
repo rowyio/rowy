@@ -68,7 +68,9 @@ export default function Json({
 
   const handleEdit = (edit: InteractionProps) => {
     onChange(edit.updated_src);
-    onSubmit();
+    onSubmit({
+      useUpdateFn: true,
+    });
   };
 
   return (
@@ -133,7 +135,11 @@ export default function Json({
           }}
           onValidStatusUpdate={({ isValid }) => setCodeValid(isValid)}
           error={!codeValid}
-          onBlur={onSubmit}
+          onBlur={() =>
+            onSubmit({
+              useUpdateFn: true,
+            })
+          }
           fullScreenTitle={
             <>
               {config.icon}
