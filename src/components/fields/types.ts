@@ -88,6 +88,7 @@ export interface ISideDrawerFieldProps<T = any> {
   /** Update the local value. Also calls onDirty */
   onChange: (value: T) => void;
   /** Call when user input is ready to be saved (e.g. onBlur) */
+
   onSubmit: () => void;
   /** Field locked. Do NOT check `column.locked` */
   disabled: boolean;

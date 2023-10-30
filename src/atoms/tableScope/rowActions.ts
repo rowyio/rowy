@@ -146,11 +146,7 @@ export const addRowAtom = atom(
 
       // Write to database if no required fields are missing
       else {
-        await updateRowDb(
-          row._rowy_ref.path,
-          omitRowyFields(rowValues),
-          undefined
-        );
+        await updateRowDb(row._rowy_ref.path, omitRowyFields(rowValues));
       }
 
       if (auditChange) auditChange("ADD_ROW", row._rowy_ref.path);
@@ -341,8 +337,6 @@ export interface IUpdateFieldOptions {
   useArrayRemove?: boolean;
   /** Optionally, used to locate the row in ArraySubTable. */
   arrayTableData?: ArrayTableRowData;
-  /** Optionally, explicitly specify to use firestore's update method. Required in case of JSON field update. */
-  // useUpdate?: boolean;
 }
 /**
  * Set function updates or deletes a field in a row.
