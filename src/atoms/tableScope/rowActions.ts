@@ -146,7 +146,14 @@ export const addRowAtom = atom(
 
       // Write to database if no required fields are missing
       else {
-        await updateRowDb(row._rowy_ref.path, omitRowyFields(rowValues));
+        await updateRowDb(
+          row._rowy_ref.path,
+          omitRowyFields(rowValues),
+          undefined,
+          {
+            useSet: true,
+          }
+        );
       }
 
       if (auditChange) auditChange("ADD_ROW", row._rowy_ref.path);

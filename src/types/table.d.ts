@@ -32,7 +32,7 @@ export type UpdateCollectionDocFunction<T = TableRow> = (
   path: string,
   update: Partial<T>,
   deleteFields?: string[],
-  options?: ArrayTableRowData
+  options?: ArrayTableRowData & UpdateRowOptions
 ) => Promise<void>;
 
 /**
@@ -209,6 +209,10 @@ export type TableToolsType = typeof Tools[number];
 export type TableSort = {
   key: string;
   direction: Parameters<typeof orderBy>[1];
+};
+
+export type UpdateRowOptions = {
+  useSet?: boolean;
 };
 
 export type ArrayTableRowData = {

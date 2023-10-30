@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import useMemoValue from "use-memo-value";
 import { useAtom, PrimitiveAtom, useSetAtom, SetStateAction } from "jotai";
-import { set } from "lodash-es";
+import { set, update } from "lodash-es";
 import {
   Firestore,
   query,
@@ -16,6 +16,7 @@ import {
   setDoc,
   doc,
   deleteDoc,
+  updateDoc,
   deleteField,
   CollectionReference,
   Query,
@@ -35,6 +36,7 @@ import {
   TableFilter,
   TableSort,
   TableRow,
+  UpdateRowOptions,
 } from "@src/types/table";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { COLLECTION_PAGE_SIZE } from "@src/config/db";
@@ -255,17 +257,26 @@ export function useFirestoreCollectionWithAtom<
     // set the atom’s value to a function that updates a doc in the collection
     if (updateDocAtom) {
       setUpdateDocAtom(
-        () => (path: string, update: T, deleteFields?: string[]) => {
-          const updateToDb = { ...update };
+        () =>
+          (
+            path: string,
+            update: T,
+            deleteFields?: string[],
+            options?: UpdateRowOptions
+          ) => {
+            const updateToDb = { ...update };
 
-          if (Array.isArray(deleteFields)) {
-            for (const field of deleteFields) {
-              set(updateToDb as any, field, deleteField());
+            if (Array.isArray(deleteFields)) {
+              for (const field of deleteFields) {
+                set(updateToDb as any, field, deleteField());
+              }
             }
+            // console.log("update", updateToDb, path, options);
+            if (options?.useSet) {
+              return setDoc(doc(firebaseDb, path), updateToDb, { merge: true });
+            }
+            return updateDoc(doc(firebaseDb, path), updateToDb);
           }
-
-          return setDoc(doc(firebaseDb, path), updateToDb, { merge: true });
-        }
       );
     }
 
