@@ -79,7 +79,8 @@ export const TableHeader = memo(function TableHeader({
                     <StyledColumnHeader
                       key={header.id}
                       role="columnheader"
-                      style={{ padding: 0 }}
+                      style={{ padding: 0, zIndex:11 }}
+                      data-frozen="left"
                     >
                       {flexRender(
                         header.column.columnDef.header,
