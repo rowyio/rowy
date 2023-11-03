@@ -79,7 +79,12 @@ export const TableHeader = memo(function TableHeader({
                     <StyledColumnHeader
                       key={header.id}
                       role="columnheader"
-                      style={{ padding: 0 }}
+                      style={{
+                        padding: 0,
+                        position: "sticky",
+                        left: 0,
+                        zIndex: 11,
+                      }}
                     >
                       {flexRender(
                         header.column.columnDef.header,
