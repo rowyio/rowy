@@ -174,6 +174,7 @@ export default function Table({
         columnHelper.display({
           id: "_rowy_select",
           size: 41.8, // TODO: We shouldn't have to change this often
+          fixed: true,
           header: ({ table }) => {
             const checked =
               Object.keys(selectedRows.state).length >= serverDocCount!;
