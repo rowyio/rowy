@@ -165,7 +165,10 @@ export function useMenuAction(
     async (e?: ClipboardEvent) => {
       try {
         if (!selectedCell || !selectedCol) return;
+
+        // checks which element has focus, if it is not the gridcell it won't paste the copied content inside the gridcell
         if (document.activeElement?.role !== "gridcell") return;
+
         let text: string;
         // Firefox doesn't allow for reading clipboard data, hence the workaround
         if (navigator.userAgent.includes("Firefox")) {
