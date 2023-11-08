@@ -26,6 +26,8 @@ import {
   userRolesAtom,
   compatibleRowyRunVersionAtom,
   rowyRunModalAtom,
+  altPressAtom,
+  confirmDialogAtom,
 } from "@src/atoms/projectScope";
 import {
   tableScope,
@@ -91,6 +93,8 @@ function RowSelectedToolBar({
 }) {
   const [serverDocCount] = useAtom(serverDocCountAtom, tableScope);
   const deleteRow = useSetAtom(deleteRowAtom, tableScope);
+  const [altPress] = useAtom(altPressAtom, projectScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
 
   const handleDelete = async () => {
     await deleteRow({ path: Object.keys(selectedRows) });
@@ -107,7 +111,20 @@ function RowSelectedToolBar({
           variant="outlined"
           startIcon={<DeleteIcon fontSize="small" />}
           color="error"
-          onClick={handleDelete}
+          onClick={
+            altPress
+              ? handleDelete
+              : () => {
+                  confirm({
+                    title: `Delete ${
+                      Object.values(selectedRows).length
+                    } of ${serverDocCount} selected rows?`,
+                    confirm: "Delete",
+                    confirmColor: "error",
+                    handleConfirm: handleDelete,
+                  });
+                }
+          }
         >
           Delete
         </Button>
