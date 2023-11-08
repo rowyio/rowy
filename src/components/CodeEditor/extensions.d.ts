@@ -131,9 +131,7 @@ type PushNotificationBody = (
 
 type TaskBody = (context: ExtensionContext) => Promise<any>;
 
-type BuildshipAuthenticatedTriggerBody = (
-  context: ExtensionContext
-) => Promise<{
+type BuildshipTriggerBody = (context: ExtensionContext) => Promise<{
   buildshipConfig: {
     projectId: string;
     workflowId: string;

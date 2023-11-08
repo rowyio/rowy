@@ -16,7 +16,7 @@ export const extensionTypes = [
 export type ExtensionType = typeof extensionTypes[number];
 
 export const extensionNames: Record<ExtensionType, string> = {
-  buildshipAuthenticatedTrigger: "BuildShip Authenticated Trigger",
+  buildshipAuthenticatedTrigger: "Buildship Trigger",
   task: "Task",
   docSync: "Doc Sync",
   historySnapshot: "History Snapshot",
@@ -63,7 +63,7 @@ export interface IRuntimeOptions {
 export const triggerTypes: ExtensionTrigger[] = ["create", "update", "delete"];
 
 const extensionBodyTemplate = {
-  buildshipAuthenticatedTrigger: `const extensionBody: BuildshipAuthenticatedTriggerBody = async({row, db, change, ref, logging}) => {
+  buildshipAuthenticatedTrigger: `const extensionBody: BuildshipTriggerBody = async({row, db, change, ref, logging}) => {
   logging.log("extensionBody started")
   
   // Put your endpoint URL and request body below. 
@@ -80,8 +80,8 @@ const extensionBodyTemplate = {
         path: ref.path
       },
       change: {
-        before: change.before.get(),
-        after: change.after.get(),
+        before: change.before.data(),
+        after: change.after.data(),
       },
       // Add your own payload here
     })
