@@ -16,6 +16,7 @@ import {
   setDoc,
   doc,
   deleteDoc,
+  updateDoc,
   deleteField,
   CollectionReference,
   Query,
@@ -263,7 +264,7 @@ export function useFirestoreCollectionWithAtom<
     // set the atom’s value to a function that updates a doc in the collection
     if (updateDocAtom) {
       setUpdateDocAtom(
-        () => (path: string, update: T, deleteFields?: string[]) => {
+        () => async (path: string, update: T, deleteFields?: string[]) => {
           const updateToDb = { ...update };
 
           if (Array.isArray(deleteFields)) {
@@ -271,8 +272,13 @@ export function useFirestoreCollectionWithAtom<
               set(updateToDb as any, field, deleteField());
             }
           }
-
-          return setDoc(doc(firebaseDb, path), updateToDb, { merge: true });
+          try {
+            return await updateDoc(doc(firebaseDb, path), updateToDb);
+          } catch (e) {
+            return await setDoc(doc(firebaseDb, path), updateToDb, {
+              merge: true,
+            });
+          }
         }
       );
     }

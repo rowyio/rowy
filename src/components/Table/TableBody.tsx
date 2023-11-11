@@ -122,7 +122,7 @@ export const TableBody = memo(function TableBody({
 
               if (cell.id.includes("_rowy_select")) {
                 return (
-                  <StyledCell key={cell.id} role="gridcell">
+                  <StyledCell key={cell.id} role="gridcell" data-frozen="left">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </StyledCell>
                 );
