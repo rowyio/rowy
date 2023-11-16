@@ -406,6 +406,13 @@ export const updateFieldAtom = atom(
         if (isEqual(currentValue, value)) return;
       }
       // Otherwise, apply the update
+
+      // Check if nested path
+      if (fieldName.split(".").length > 1) {
+        const p = tableRows.find((r) => r._rowy_ref.path === path);
+        // add the parent object
+        _set(update, fieldName.split(".")[0], _get(p, fieldName.split(".")[0]));
+      }
       _set(update, fieldName, value);
     }
 
