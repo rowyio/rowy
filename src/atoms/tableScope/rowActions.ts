@@ -497,7 +497,6 @@ export const updateFieldAtom = atom(
     }
     // Otherwise, update single field in database and write audit update field
     else {
-      console.log("newRowValues", fieldName);
       await updateRowDb(
         row._rowy_ref.path,
         omitRowyFields(dbUpdate),
