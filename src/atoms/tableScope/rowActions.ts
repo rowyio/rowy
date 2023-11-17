@@ -407,12 +407,6 @@ export const updateFieldAtom = atom(
       }
       // Otherwise, apply the update
 
-      // Check if nested path
-      if (fieldName.split(".").length > 1) {
-        const p = tableRows.find((r) => r._rowy_ref.path === path);
-        // add the parent object
-        _set(update, fieldName.split(".")[0], _get(p, fieldName.split(".")[0]));
-      }
       _set(update, fieldName, value);
     }
 
@@ -493,17 +487,26 @@ export const updateFieldAtom = atom(
           row._rowy_ref.path,
           omitRowyFields(newRowValues),
           deleteField ? [fieldName] : [],
-          arrayTableData
+          {
+            ...arrayTableData,
+            // using set if we are updating a nested field
+            useSet: fieldName.split(".").length > 1,
+          }
         );
       }
     }
     // Otherwise, update single field in database and write audit update field
     else {
+      console.log("newRowValues", fieldName);
       await updateRowDb(
         row._rowy_ref.path,
         omitRowyFields(dbUpdate),
         deleteField ? [fieldName] : [],
-        arrayTableData
+        {
+          ...arrayTableData,
+          // using set if we are updating a nested field
+          useSet: fieldName.split(".").length > 1,
+        }
       );
     }
 

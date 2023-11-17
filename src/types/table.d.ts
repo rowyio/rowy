@@ -26,13 +26,14 @@ export type UpdateDocFunction<T = TableRow> = (
  * @param path - The full path to the doc
  * @param update - The updates to be deeply merged with the existing doc. Note arrays should be ovewritten to match Firestore set with merge behavior
  * @param deleteFields - Optionally, fields to be deleted from the doc. Access nested fields with dot notation
+ * @param options - Optionally, filed to pass extra data to the function
  * @returns Promise
  */
 export type UpdateCollectionDocFunction<T = TableRow> = (
   path: string,
   update: Partial<T>,
   deleteFields?: string[],
-  options?: ArrayTableRowData
+  options?: ArrayTableRowData & { useSet?: boolean }
 ) => Promise<void>;
 
 /**
