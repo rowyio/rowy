@@ -406,7 +406,6 @@ export const updateFieldAtom = atom(
         if (isEqual(currentValue, value)) return;
       }
       // Otherwise, apply the update
-
       _set(update, fieldName, value);
     }
 
