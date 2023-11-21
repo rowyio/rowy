@@ -23,6 +23,7 @@ import { AddRow as AddRowIcon } from "@src/assets/icons";
 
 import {
   projectScope,
+  tablesAtom,
   userRolesAtom,
   userSettingsAtom,
 } from "@src/atoms/projectScope";
@@ -43,9 +44,14 @@ import { DRAWER_COLLAPSED_WIDTH } from "@src/components/SideDrawer";
 import { formatSubTableName } from "@src/utils/table";
 import { TableToolsType } from "@src/types/table";
 import { RowSelectionState } from "@tanstack/react-table";
+import { ROUTES } from "@src/constants/routes";
+import { useNavigate } from "react-router-dom";
+import { useRegisterActions } from "kbar";
 
 // prettier-ignore
 const BuildLogsSnack = lazy(() => import("@src/components/TableModals/CloudLogsModal/BuildLogs/BuildLogsSnack" /* webpackChunkName: "TableModals-BuildLogsSnack" */));
+const getLink = (table: any) =>
+  `${ROUTES.table}/${table.id.replace(/\//g, "~2F")}`;
 
 export interface ITablePageProps {
   /**
@@ -86,6 +92,38 @@ export default function TablePage({
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const snackLogContext = useSnackLogContext();
+  const [tables] = useAtom(tablesAtom, projectScope);
+  const navigate = useNavigate();
+
+// actions to switch between tables
+  useRegisterActions([
+    {
+      id: "nextTableIndex",
+      name: "Next table",
+      shortcut: ["x", "n"],
+      keywords: "Switch to next table",
+      perform: () => {
+        const currentIndex=tables.findIndex(item=>item.id===tableId)
+        const nextTable= tables.find((item,index)=>{
+          return index===currentIndex+1
+        })
+        navigate(getLink(nextTable))
+      },
+    },
+    {
+      id: "previousTableIndex",
+      name: "Previous table",
+      shortcut: ["x", "y"],
+      keywords: "Switch to previous table",
+      perform: () => {
+        const currentIndex=tables.findIndex(item=>item.id===tableId)
+        const nextTable= tables.find((item,index)=>{
+          return index===currentIndex-1
+        })
+        navigate(getLink(nextTable))
+      },
+    },
+  ]);
 
   // Set permissions here so we can pass them to the `Table` component, which
   // shouldn’t access `projectScope` at all, to separate concerns.
