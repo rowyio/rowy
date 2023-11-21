@@ -42,7 +42,7 @@ import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
 import { DRAWER_COLLAPSED_WIDTH } from "@src/components/SideDrawer";
 import { formatSubTableName } from "@src/utils/table";
-import { TableToolsType } from "@src/types/table";
+import { TableSettings, TableToolsType } from "@src/types/table";
 import { RowSelectionState } from "@tanstack/react-table";
 import { ROUTES } from "@src/constants/routes";
 import { useNavigate } from "react-router-dom";
@@ -50,7 +50,7 @@ import { useRegisterActions } from "kbar";
 
 // prettier-ignore
 const BuildLogsSnack = lazy(() => import("@src/components/TableModals/CloudLogsModal/BuildLogs/BuildLogsSnack" /* webpackChunkName: "TableModals-BuildLogsSnack" */));
-const getLink = (table: any) =>
+const getLink = (table: TableSettings) =>
   `${ROUTES.table}/${table.id.replace(/\//g, "~2F")}`;
 
 export interface ITablePageProps {
