@@ -95,7 +95,7 @@ export default function TablePage({
   const [tables] = useAtom(tablesAtom, projectScope);
   const navigate = useNavigate();
 
-// actions to switch between tables
+  // actions to switch between tables
   useRegisterActions([
     {
       id: "nextTableIndex",
@@ -103,11 +103,10 @@ export default function TablePage({
       shortcut: ["x", "n"],
       keywords: "Switch to next table",
       perform: () => {
-        const currentIndex=tables.findIndex(item=>item.id===tableId)
-        const nextTable= tables.find((item,index)=>{
-          return index===currentIndex+1
-        })
-        navigate(getLink(nextTable))
+        const currentIndex = tables.findIndex((item) => item.id === tableId);
+        if (currentIndex + 1 >= 0 && currentIndex + 1 < tables.length) {
+          navigate(getLink(tables[currentIndex + 1]));
+        }
       },
     },
     {
@@ -116,11 +115,10 @@ export default function TablePage({
       shortcut: ["x", "y"],
       keywords: "Switch to previous table",
       perform: () => {
-        const currentIndex=tables.findIndex(item=>item.id===tableId)
-        const nextTable= tables.find((item,index)=>{
-          return index===currentIndex-1
-        })
-        navigate(getLink(nextTable))
+        const currentIndex = tables.findIndex((item) => item.id === tableId);
+        if (currentIndex - 1 >= 0 && currentIndex - 1 < tables.length) {
+          navigate(getLink(tables[currentIndex - 1]));
+        }
       },
     },
   ]);
