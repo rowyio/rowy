@@ -42,6 +42,7 @@ import { analytics, logEvent } from "@src/analytics";
 import type { TableFilter } from "@src/types/table";
 import { generateId } from "@src/utils/table";
 import { useFilterUrl } from "./useFilterUrl";
+import { isEqual } from "lodash-es";
 
 const shouldDisableApplyButton = (queries: any) => {
   for (let query of queries) {
@@ -255,10 +256,7 @@ export default function Filters() {
   // If the filter in URL is not the same as currently applied local filter
   // then update the user filter.
   useEffect(() => {
-    if (
-      filtersUrl &&
-      JSON.stringify(filtersUrl) !== JSON.stringify(appliedFilters)
-    ) {
+    if (filtersUrl && !isEqual(filtersUrl, appliedFilters)) {
       setUserFilters(filtersUrl);
       setOverrideTableFilters(true);
     }
