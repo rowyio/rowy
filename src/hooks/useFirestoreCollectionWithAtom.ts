@@ -443,6 +443,7 @@ export const tableFiltersToFirestoreFilters = (filters: TableFilter[]) => {
       continue;
     } else if (filter.operator === "is-not-empty") {
       firestoreFilters.push(where(filter.key, "!=", ""));
+      continue;
     } else if (filter.operator === "array-contains") {
       if (!filter.value || !filter.value.length) continue;
       // make the value as a singular string
