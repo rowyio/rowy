@@ -165,6 +165,7 @@ export default function FilterInputs({
                       column: selectedColumn,
                       _rowy_ref: {},
                       value: query.value,
+                      onSubmit: () => {},
                       onChange: (value: any) => {
                         const newQuery = {
                           ...query,
