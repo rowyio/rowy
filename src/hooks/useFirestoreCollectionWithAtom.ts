@@ -264,22 +264,37 @@ export function useFirestoreCollectionWithAtom<
     // set the atom’s value to a function that updates a doc in the collection
     if (updateDocAtom) {
       setUpdateDocAtom(
-        () => async (path: string, update: T, deleteFields?: string[]) => {
-          const updateToDb = { ...update };
+        () =>
+          async (
+            path: string,
+            update: T,
+            deleteFields?: string[],
+            options?: {
+              useSet?: boolean;
+            }
+          ) => {
+            const updateToDb = { ...update };
 
-          if (Array.isArray(deleteFields)) {
-            for (const field of deleteFields) {
-              set(updateToDb as any, field, deleteField());
+            if (Array.isArray(deleteFields)) {
+              for (const field of deleteFields) {
+                set(updateToDb as any, field, deleteField());
+              }
+            }
+
+            if (options?.useSet) {
+              return await setDoc(doc(firebaseDb, path), updateToDb, {
+                merge: true,
+              });
+            }
+
+            try {
+              return await updateDoc(doc(firebaseDb, path), updateToDb);
+            } catch (e) {
+              return await setDoc(doc(firebaseDb, path), updateToDb, {
+                merge: true,
+              });
             }
           }
-          try {
-            return await updateDoc(doc(firebaseDb, path), updateToDb);
-          } catch (e) {
-            return await setDoc(doc(firebaseDb, path), updateToDb, {
-              merge: true,
-            });
-          }
-        }
       );
     }
 
@@ -443,6 +458,7 @@ export const tableFiltersToFirestoreFilters = (filters: TableFilter[]) => {
       continue;
     } else if (filter.operator === "is-not-empty") {
       firestoreFilters.push(where(filter.key, "!=", ""));
+      continue;
     } else if (filter.operator === "array-contains") {
       if (!filter.value || !filter.value.length) continue;
       // make the value as a singular string
