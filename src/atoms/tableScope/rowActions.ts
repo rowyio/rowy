@@ -486,7 +486,11 @@ export const updateFieldAtom = atom(
           row._rowy_ref.path,
           omitRowyFields(newRowValues),
           deleteField ? [fieldName] : [],
-          arrayTableData
+          {
+            ...arrayTableData,
+            // using set if we are updating a nested field
+            useSet: fieldName.split(".").length > 1,
+          }
         );
       }
     }
@@ -496,7 +500,11 @@ export const updateFieldAtom = atom(
         row._rowy_ref.path,
         omitRowyFields(dbUpdate),
         deleteField ? [fieldName] : [],
-        arrayTableData
+        {
+          ...arrayTableData,
+          // using set if we are updating a nested field
+          useSet: fieldName.split(".").length > 1,
+        }
       );
     }
 
