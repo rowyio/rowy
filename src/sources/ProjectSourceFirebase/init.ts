@@ -4,7 +4,8 @@ import { getAuth, connectAuthEmulator } from "firebase/auth";
 import {
   initializeFirestore,
   connectFirestoreEmulator,
-  enableMultiTabIndexedDbPersistence,
+  persistentLocalCache,
+  persistentMultipleTabManager,
 } from "firebase/firestore";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
 import { getFunctions } from "firebase/functions";
@@ -59,10 +60,12 @@ export const firebaseAuthAtom = atom((get) => {
 export const firebaseDbAtom = atom((get) => {
   const db = initializeFirestore(get(firebaseAppAtom), {
     ignoreUndefinedProperties: true,
+    localCache: persistentLocalCache({
+      tabManager: persistentMultipleTabManager(),
+    }),
   });
   if (!(window as any).firebaseDbStarted) {
     if (envConnectEmulators) connectFirestoreEmulator(db, "localhost", 9299);
-    else enableMultiTabIndexedDbPersistence(db);
     (window as any).firebaseDbStarted = true;
   }
   return db;
