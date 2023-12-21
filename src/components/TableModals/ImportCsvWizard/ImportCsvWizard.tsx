@@ -142,7 +142,7 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
     let requiredUploads: any = {};
     columns.forEach((column, index) => {
       if (needsConverter(column.type)) {
-        requiredConverts[index] = getConverter(column.type);
+        requiredConverts[column.columnKey] = getConverter(column.type);
         // console.log({ needsUploadTypes }, column.type);
         if (needsUploadTypes(column.type)) {
           requiredUploads[column.fieldName + ""] = true;
@@ -215,8 +215,8 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
       const newValidRows = validRows.map((row) => {
         // Convert required values
         Object.keys(row).forEach((key, i) => {
-          if (requiredConverts[i]) {
-            row[key] = requiredConverts[i](row[key]);
+          if (requiredConverts[key]) {
+            row[key] = requiredConverts[key](row[key]);
           }
         });
 
