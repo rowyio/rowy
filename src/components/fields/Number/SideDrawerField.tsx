@@ -6,8 +6,8 @@ import { getFieldId } from "@src/components/SideDrawer/utils";
 export default function Number_({
   column,
   value,
-  onChange,
-  onSubmit,
+  onChange = () => {},
+  onSubmit = () => {},
   disabled,
 }: ISideDrawerFieldProps<number | string>) {
   return (

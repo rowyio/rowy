@@ -213,7 +213,7 @@ export const tableSettings = (
       name: "name",
       label: "Table name",
       required: true,
-      watchedField: "name",
+      watchedField: "collection",
       assistiveText: "User-facing name for this table",
       autoFocus: true,
       gridCols: { xs: 12, sm: 6 },
