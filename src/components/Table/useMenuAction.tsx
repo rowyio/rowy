@@ -83,6 +83,7 @@ export const SUPPORTED_TYPES_PASTE = new Set([
   FieldType.markdown,
   // CONNECTION
   FieldType.reference,
+  FieldType.arraySubTable,
 ]);
 
 export function useMenuAction(
