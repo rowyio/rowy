@@ -62,6 +62,7 @@ export const SUPPORTED_TYPES_COPY = new Set([
   // CONNECTION
   FieldType.reference,
   FieldType.id,
+  FieldType.arraySubTable,
 ]);
 
 export const SUPPORTED_TYPES_PASTE = new Set([
