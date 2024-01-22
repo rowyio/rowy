@@ -6,9 +6,7 @@ import {
   _deleteRowDbAtom,
   _updateRowDbAtom,
   tableNextPageAtom,
-  tableRowsAtom,
   tableRowsDbAtom,
-  tableRowsLocalAtom,
   tableScope,
   tableSettingsAtom,
 } from "@src/atoms/tableScope";
