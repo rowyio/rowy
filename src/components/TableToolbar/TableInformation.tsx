@@ -9,17 +9,25 @@ import {
   tableScope,
   tableSettingsAtom,
 } from "@src/atoms/tableScope";
+import TableInformationActionRegister from "./KbarActions/TableInformationActionRegister";
 
 export default function TableInformation() {
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [sideDrawer, setSideDrawer] = useAtom(sideDrawerAtom, tableScope);
 
   return (
-    <TableToolbarButton
-      title="Table information"
-      icon={<InfoIcon />}
-      onClick={() => setSideDrawer(sideDrawer ? RESET : "table-information")}
-      disabled={!setSideDrawer || tableSettings.id.includes("/")}
-    />
+    <>
+      {!(!setSideDrawer || tableSettings.id.includes("/")) ? (
+        <TableInformationActionRegister />
+      ) : (
+        ""
+      )}
+      <TableToolbarButton
+        title="Table information"
+        icon={<InfoIcon />}
+        onClick={() => setSideDrawer(sideDrawer ? RESET : "table-information")}
+        disabled={!setSideDrawer || tableSettings.id.includes("/")}
+      />
+    </>
   );
 }

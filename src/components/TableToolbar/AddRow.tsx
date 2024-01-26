@@ -30,6 +30,7 @@ import {
   updateTableSchemaAtom,
 } from "@src/atoms/tableScope";
 import { TableIdType } from "@src/types/table";
+import { useRegisterActions } from "kbar";
 
 export default function AddRow() {
   const [userRoles] = useAtom(userRolesAtom, projectScope);
@@ -45,6 +46,18 @@ export default function AddRow() {
 
   const idType = tableSchema.idType || "decrement";
   const forceRandomId = tableFilters.length > 0 || tableSorts.length > 0;
+
+  useRegisterActions([
+    {
+      id: "addRow",
+      name: "Add Row",
+      shortcut: ["x", "r"],
+      keywords: "Add row",
+      perform: () => {
+        handleClick()
+      },
+    },
+  ]);
 
   const handleSetIdType = async (idType: TableIdType) => {
     // TODO(han): refactor atom - error handler

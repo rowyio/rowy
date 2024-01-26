@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 
 import { Backdrop } from "@mui/material";
@@ -17,6 +17,7 @@ import {
   currentUserAtom,
   userRolesAtom,
   altPressAtom,
+  tablesAtom,
 } from "@src/atoms/projectScope";
 import { ROUTES } from "@src/constants/routes";
 import useKeyPressWithAtom from "@src/hooks/useKeyPressWithAtom";
@@ -24,6 +25,8 @@ import useKeyPressWithAtom from "@src/hooks/useKeyPressWithAtom";
 import TableGroupRedirectPage from "./pages/TableGroupRedirectPage";
 import SignOutPage from "@src/pages/Auth/SignOutPage";
 import ProvidedArraySubTablePage from "./pages/Table/ProvidedArraySubTablePage";
+import SearchTableActionRegister from "./components/Kbar/SearchTableRegisterAction";
+import { TableSettings } from "./types/table";
 
 // prettier-ignore
 const AuthPage = lazy(() => import("@src/pages/Auth/AuthPage" /* webpackChunkName: "AuthPage" */));
@@ -66,10 +69,31 @@ const MembersPage = lazy(() => import("@src/pages/Settings/MembersPage" /* webpa
 // prettier-ignore
 const DebugPage = lazy(() => import("@src/pages/Settings/DebugPage" /* webpackChunkName: "DebugPage" */));
 
+const getLink = (table: TableSettings) =>
+  `${ROUTES.table}/${table.id.replace(/\//g, "~2F")}`;
+
 export default function App() {
   const [currentUser] = useAtom(currentUserAtom, projectScope);
   const [userRoles] = useAtom(userRolesAtom, projectScope);
+  const [tables] = useAtom(tablesAtom, projectScope);
+  const navigate = useNavigate();
   useKeyPressWithAtom("Alt", altPressAtom, projectScope);
+
+  // Actions for table navigation through kbar
+  const generateTableActionObjects = () => {
+    return tables.map((table) => {
+      const { id, name } = table;
+
+      return {
+        id: `switchTable-${id}`,
+        name: `Go to table: ${name}`,
+        keywords: "Go to table",
+        perform: () => {
+          navigate(getLink(table));
+        },
+      };
+    });
+  };
 
   return (
     <Suspense fallback={<Loading fullScreen />}>
@@ -192,6 +216,13 @@ export default function App() {
             <Route path={ROUTES.debug} element={<DebugPage />} />
           </Route>
         </Routes>
+      )}
+      {tables.length ? (
+        <SearchTableActionRegister
+          tableObjects={generateTableActionObjects()}
+        />
+      ) : (
+        ""
       )}
     </Suspense>
   );

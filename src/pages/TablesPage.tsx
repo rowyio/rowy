@@ -44,6 +44,7 @@ import { ROUTES } from "@src/constants/routes";
 import useBasicSearch from "@src/hooks/useBasicSearch";
 import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 import { useScrollToHash } from "@src/hooks/useScrollToHash";
+import { useRegisterActions } from "kbar";
 
 const SEARCH_KEYS = ["id", "name", "section", "description"];
 
@@ -58,6 +59,21 @@ export default function TablesPage() {
     projectScope
   );
   useScrollToHash();
+  useRegisterActions([
+    {
+      id: "Switch",
+      name: "Switch tables view",
+      shortcut: ["v"],
+      keywords: "switch tables view",
+      perform: () => {
+        setView((v) => {
+          if (v === "grid") {
+            return "list";
+          } else return "grid";
+        });
+      },
+    },
+  ]);
 
   const [results, query, handleQuery] = useBasicSearch(
     tables ?? [],

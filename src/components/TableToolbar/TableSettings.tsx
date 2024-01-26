@@ -5,6 +5,8 @@ import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 
 import { projectScope, tableSettingsDialogAtom } from "@src/atoms/projectScope";
 import { tableScope, tableSettingsAtom } from "@src/atoms/tableScope";
+import TableSettingsActionRegister from "./KbarActions/TableSettingsActionRegister";
+
 
 export default function TableSettings() {
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
@@ -14,13 +16,20 @@ export default function TableSettings() {
   );
 
   return (
-    <TableToolbarButton
-      title="Table settings"
-      onClick={() =>
-        openTableSettingsDialog({ mode: "update", data: tableSettings })
-      }
-      icon={<SettingsIcon />}
-      disabled={!openTableSettingsDialog || tableSettings.id.includes("/")}
-    />
+    <>
+      {!(!openTableSettingsDialog || tableSettings.id.includes("/")) ? (
+        <TableSettingsActionRegister />
+      ) : (
+        ""
+      )}
+      <TableToolbarButton
+        title="Table settings"
+        onClick={() =>
+          openTableSettingsDialog({ mode: "update", data: tableSettings })
+        }
+        icon={<SettingsIcon />}
+        disabled={!openTableSettingsDialog || tableSettings.id.includes("/")}
+      />
+    </>
   );
 }
