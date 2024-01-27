@@ -219,7 +219,7 @@ export function useMenuAction(
             }
             break;
           default:
-            parsed = JSON.parse(text);
+            parsed = JSON.parse(JSON.stringify(text);
             break;
         }
 
