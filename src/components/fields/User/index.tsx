@@ -29,5 +29,6 @@ export const config: IFieldConfig = {
   }),
   SideDrawerField,
   settings: Settings,
+  keywords: ["entity"]
 };
 export default config;

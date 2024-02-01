@@ -34,6 +34,7 @@
     "file-saver": "^2.0.5",
     "firebase": "^9.12.1",
     "firebaseui": "^6.0.1",
+    "fuse.js": "^7.0.0",
     "jotai": "^1.8.4",
     "json-stable-stringify-without-jsonify": "^1.0.1",
     "jszip": "^3.10.0",

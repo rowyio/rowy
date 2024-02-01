@@ -27,5 +27,6 @@ export const config: IFieldConfig = {
   settings: Settings,
   settingsValidator: settingsValidator,
   requireConfiguration: true,
+  keywords: ["equation"]
 };
 export default config;
