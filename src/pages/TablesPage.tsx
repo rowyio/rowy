@@ -1,5 +1,5 @@
 import { useAtom, useSetAtom } from "jotai";
-import { find, groupBy, sortBy } from "lodash-es";
+import { find, groupBy, sortBy, debounce } from "lodash-es";
 import { Link } from "react-router-dom";
 
 import {
@@ -63,6 +63,9 @@ export default function TablesPage() {
     tables ?? [],
     SEARCH_KEYS
   );
+
+  // Debounce the handleQuery function with a delay of 300 milliseconds
+  const debouncedHandleQuery = debounce((value) => handleQuery(value), 300);
 
   const favorites = Array.isArray(userSettings.favoriteTables)
     ? userSettings.favoriteTables
@@ -183,7 +186,7 @@ export default function TablesPage() {
     <Container component="main" sx={{ px: 1, pt: 1, pb: 7 + 3 + 3 }}>
       <FloatingSearch
         label="Search tables"
-        onChange={(e) => handleQuery(e.target.value)}
+        onChange={(e) => debouncedHandleQuery(e.target.value)}
         paperSx={{
           maxWidth: (theme) => ({
             md: theme.breakpoints.values.sm - 48 * 4,
