@@ -47,14 +47,14 @@ export default function TableList({
                 <SlideTransition
                   key={"list-section-" + sectionName}
                   in
-                  timeout={(sectionIndex + 1) * 100}
+                  timeout={(sectionIndex + 1) * 50}
                 >
                   <SectionHeading sx={{ pl: 2, pr: 1 }}>
                     {sectionName}
                   </SectionHeading>
                 </SlideTransition>
 
-                <SlideTransition in timeout={(sectionIndex + 1) * 100}>
+                <SlideTransition in timeout={(sectionIndex + 1) * 50}>
                   <Paper>
                     <List disablePadding>
                       <TransitionGroup>{tableItems}</TransitionGroup>
