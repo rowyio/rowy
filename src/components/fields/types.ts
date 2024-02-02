@@ -42,6 +42,7 @@ export interface IFieldConfig {
   sortKey?: string;
   csvExportFormatter?: (value: any, config?: any) => string;
   csvImportParser?: (value: string, config?: any) => any;
+  keywords?: string[];
 }
 
 /** See {@link IRenderedTableCellProps | `withRenderTableCell` } for guidance */

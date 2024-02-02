@@ -25,5 +25,6 @@ export const config: IFieldConfig = {
   contextMenuActions: BasicContextMenuActions,
   TableCell: withRenderTableCell(DisplayCell, SideDrawerField, "popover"),
   SideDrawerField,
+  keywords: ["string"]
 };
 export default config;

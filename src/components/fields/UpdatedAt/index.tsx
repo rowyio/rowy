@@ -31,5 +31,6 @@ export const config: IFieldConfig = {
   settings: Settings,
   requireCollectionTable: true,
   contextMenuActions: BasicContextMenuActions,
+  keywords: ["date", "time"]
 };
 export default config;

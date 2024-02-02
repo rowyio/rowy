@@ -28,5 +28,6 @@ export const config: IFieldConfig = {
   filter: {
     operators: filterOperators,
   },
+  keywords: ["number", "contact"]
 };
 export default config;
