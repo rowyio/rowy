@@ -188,8 +188,23 @@ export function useMenuAction(
     async (e?: ClipboardEvent) => {
       if (!selectedCell || !selectedCol) return;
 
-      // if the focus element is not gridcell, it won't paste the copied content inside the gridcell
-      if (document.activeElement?.role !== "gridcell") return;
+      // if the focus element is not gridcell or menuitem (click on paste menu action)
+      // it won't paste the copied content inside the gridcell
+      if (
+        !["gridcell", "menuitem"].includes(document.activeElement?.role ?? "")
+      )
+        return;
+
+      // prevent from pasting inside array subtable overwrites the whole object
+      if (
+        document.activeElement
+          ?.getAttribute?.("data-row-id")
+          ?.startsWith("subtable-array") &&
+        selectedCell.columnKey !==
+          document.activeElement?.getAttribute?.("data-col-id")
+      ) {
+        return;
+      }
 
       let clipboardText: string;
       if (navigator.userAgent.includes("Firefox")) {
@@ -284,6 +299,16 @@ export function useMenuAction(
               );
             }
             break;
+          case FieldType.arraySubTable:
+            try {
+              parsedValue = JSON.parse(clipboardText);
+            } catch (e: any) {
+              throw new Error(`${clipboardText} is not valid array subtable`);
+            }
+            if (!Array.isArray(parsedValue)) {
+              throw new Error(`${clipboardText} is not an array`);
+            }
+            break;
           default:
             switch (cellDataType) {
               case "number":
@@ -320,7 +345,6 @@ export function useMenuAction(
             parsedValue = selectedCol.config?.max || 5;
         }
 
-        console.log(`parsedValue`, parsedValue);
         updateField({
           path: selectedCell.path,
           fieldName: selectedCol.fieldName,
@@ -403,7 +427,6 @@ export function useMenuAction(
 
   const getValue = useCallback(
     (cellValue: any) => {
-      console.log(`getValue cellValue`, cellValue);
       switch (selectedCol?.type) {
         case FieldType.multiSelect:
         case FieldType.json:
