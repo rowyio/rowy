@@ -285,14 +285,7 @@ export default function Table({
   const { handler: hotKeysHandler } = useHotKeys([
     ["mod+C", handleCopy],
     ["mod+X", handleCut],
-    [
-      "mod+V",
-      (e) => {
-        console.log("mod+V", e);
-        e.stopPropagation();
-        return handlePaste;
-      },
-    ], // So the event isn't passed to the handler
+    ["mod+V", (e) => handlePaste], // So the event isn't passed to the handler
   ]);
 
   // Handle prompt to save local column sizes if user `canEditColumns`
