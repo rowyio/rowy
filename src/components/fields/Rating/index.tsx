@@ -46,5 +46,6 @@ export const config: IFieldConfig = {
     }
   },
   contextMenuActions: BasicContextMenuActions,
+  keywords: ["star"]
 };
 export default config;

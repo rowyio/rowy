@@ -30,5 +30,6 @@ export const config: IFieldConfig = {
   filter: {
     operators: filterOperators,
   },
+  keywords: ["link", "path"]
 };
 export default config;
