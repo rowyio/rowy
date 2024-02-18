@@ -26,5 +26,6 @@ export const config: IFieldConfig = {
   }),
   SideDrawerField,
   contextMenuActions: BasicContextMenuActions,
+  keywords: ["location", "latitude", "longitude", "point"]
 };
 export default config;

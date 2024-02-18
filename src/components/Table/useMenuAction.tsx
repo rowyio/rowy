@@ -1,29 +1,28 @@
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { useSnackbar } from "notistack";
-import { get, find } from "lodash-es";
+import { find, get, isDate, isFunction } from "lodash-es";
 
 import {
-  tableScope,
-  tableSchemaAtom,
-  tableRowsAtom,
-  updateFieldAtom,
   SelectedCell,
+  tableRowsAtom,
+  tableSchemaAtom,
+  tableScope,
+  updateFieldAtom,
 } from "@src/atoms/tableScope";
 import { getFieldProp, getFieldType } from "@src/components/fields";
 import { ColumnConfig } from "@src/types/table";
 
 import { FieldType } from "@src/constants/fields";
 
-import { format } from "date-fns";
+import { format, parse, isValid } from "date-fns";
 import { DATE_FORMAT, DATE_TIME_FORMAT } from "@src/constants/dates";
-import { isDate, isFunction } from "lodash-es";
 import { getDurationString } from "@src/components/fields/Duration/utils";
 import { doc } from "firebase/firestore";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { projectScope } from "@src/atoms/projectScope";
 
-export const SUPPORTED_TYPES_COPY = new Set([
+export const SUPPORTED_TYPES_COPY = new Set<FieldType>([
   // TEXT
   FieldType.shortText,
   FieldType.longText,
@@ -54,17 +53,24 @@ export const SUPPORTED_TYPES_COPY = new Set([
   FieldType.code,
   FieldType.markdown,
   FieldType.array,
+  // CLOUD FUNCTION
+  FieldType.action,
+  FieldType.derivative,
+  FieldType.status,
   // AUDIT
   FieldType.createdBy,
   FieldType.updatedBy,
   FieldType.createdAt,
   FieldType.updatedAt,
   // CONNECTION
+  FieldType.arraySubTable,
   FieldType.reference,
+  // METADATA
+  FieldType.user,
   FieldType.id,
 ]);
 
-export const SUPPORTED_TYPES_PASTE = new Set([
+export const SUPPORTED_TYPES_PASTE = new Set<FieldType>([
   // TEXT
   FieldType.shortText,
   FieldType.longText,
@@ -72,17 +78,34 @@ export const SUPPORTED_TYPES_PASTE = new Set([
   FieldType.email,
   FieldType.phone,
   FieldType.url,
+  // SELECT
+  FieldType.singleSelect,
+  FieldType.multiSelect,
   // NUMERIC
+  FieldType.checkbox,
   FieldType.number,
   FieldType.percentage,
   FieldType.rating,
   FieldType.slider,
+  FieldType.color,
+  FieldType.geoPoint,
+  // DATE & TIME
+  FieldType.date,
+  FieldType.dateTime,
+  FieldType.duration,
+  // FILE
+  FieldType.image,
+  FieldType.file,
   // CODE
   FieldType.json,
   FieldType.code,
   FieldType.markdown,
+  FieldType.array,
   // CONNECTION
+  FieldType.arraySubTable,
   FieldType.reference,
+  // METADATA
+  FieldType.user,
 ]);
 
 export function useMenuAction(
@@ -163,93 +186,177 @@ export function useMenuAction(
 
   const handlePaste = useCallback(
     async (e?: ClipboardEvent) => {
-      try {
-        if (!selectedCell || !selectedCol) return;
+      if (!selectedCell || !selectedCol) return;
 
-        // checks which element has focus, if it is not the gridcell it won't paste the copied content inside the gridcell
-        if (document.activeElement?.role !== "gridcell") return;
+      // if the focus element is not gridcell or menuitem (click on paste menu action)
+      // it won't paste the copied content inside the gridcell
+      if (
+        !["gridcell", "menuitem"].includes(document.activeElement?.role ?? "")
+      )
+        return;
 
-        let text: string;
+      // prevent from pasting inside array subtable overwrites the whole object
+      if (
+        document.activeElement
+          ?.getAttribute?.("data-row-id")
+          ?.startsWith("subtable-array") &&
+        selectedCell.columnKey !==
+          document.activeElement?.getAttribute?.("data-col-id")
+      ) {
+        return;
+      }
+
+      let clipboardText: string;
+      if (navigator.userAgent.includes("Firefox")) {
         // Firefox doesn't allow for reading clipboard data, hence the workaround
-        if (navigator.userAgent.includes("Firefox")) {
-          if (!e || !e.clipboardData) {
-            enqueueSnackbar(
-              `If you're on Firefox, please use the hotkey instead (Ctrl + V / Cmd + V).`,
-              {
-                variant: "info",
-                autoHideDuration: 7000,
-              }
-            );
-            enqueueSnackbar(`Cannot read clipboard data.`, {
-              variant: "error",
-            });
-            return;
-          }
-          text = e.clipboardData.getData("text/plain") || "";
-        } else {
-          try {
-            text = await navigator.clipboard.readText();
-          } catch (e) {
-            enqueueSnackbar(`Read clipboard permission denied.`, {
-              variant: "error",
-            });
-            return;
-          }
+        if (!e || !e.clipboardData) {
+          enqueueSnackbar(
+            `If you're on Firefox, please use the hotkey instead (Ctrl + V / Cmd + V).`,
+            {
+              variant: "info",
+              autoHideDuration: 7000,
+            }
+          );
+          enqueueSnackbar(`Cannot read clipboard data.`, {
+            variant: "error",
+          });
+          return;
         }
+        clipboardText = e.clipboardData.getData("text/plain") || "";
+      } else {
+        try {
+          clipboardText = await navigator.clipboard.readText();
+        } catch (e) {
+          enqueueSnackbar(`Read clipboard permission denied.`, {
+            variant: "error",
+          });
+          return;
+        }
+      }
+
+      try {
+        let parsedValue;
         const cellDataType = getFieldProp(
           "dataType",
           getFieldType(selectedCol)
         );
-        let parsed;
-        switch (cellDataType) {
-          case "number":
-            parsed = Number(text);
-            if (isNaN(parsed)) throw new Error(`${text} is not a number`);
+
+        // parse value first by type if matches, then by column type
+        switch (selectedCol.type) {
+          case FieldType.percentage:
+            clipboardText = clipboardText.trim();
+            if (clipboardText.endsWith("%")) {
+              clipboardText = clipboardText.slice(0, -1);
+              parsedValue = Number(clipboardText) / 100;
+            } else {
+              parsedValue = Number(clipboardText);
+            }
+            if (isNaN(parsedValue))
+              throw new Error(`${clipboardText} is not a percentage`);
             break;
-          case "string":
-            parsed = text;
+          case FieldType.date:
+            parsedValue = parse(
+              clipboardText,
+              selectedCol.config?.format || DATE_FORMAT,
+              new Date()
+            );
+            if (!isValid(parsedValue)) {
+              parsedValue = parse(clipboardText, DATE_FORMAT, new Date());
+            }
+            if (!isValid(parsedValue)) {
+              parsedValue = new Date(clipboardText);
+            }
+            if (!isValid(parsedValue)) {
+              throw new Error(`${clipboardText} is not a date`);
+            }
             break;
-          case "reference":
+          case FieldType.dateTime:
+            parsedValue = parse(
+              clipboardText,
+              selectedCol.config?.format || DATE_TIME_FORMAT,
+              new Date()
+            );
+            if (!isValid(parsedValue)) {
+              parsedValue = parse(clipboardText, DATE_TIME_FORMAT, new Date());
+            }
+            if (!isValid(parsedValue)) {
+              parsedValue = new Date(clipboardText);
+            }
+            if (!isValid(parsedValue)) {
+              throw new Error(`${clipboardText} is not a date`);
+            }
+            break;
+          case FieldType.duration:
             try {
-              parsed = doc(firebaseDb, text);
+              const json = JSON.parse(clipboardText);
+              parsedValue = {
+                start: new Date(json.start),
+                end: new Date(json.end),
+              };
             } catch (e: any) {
-              enqueueSnackbar(`Invalid reference.`, { variant: "error" });
+              throw new Error(
+                `${clipboardText} does not have valida start and end dates`
+              );
+            }
+            break;
+          case FieldType.arraySubTable:
+            try {
+              parsedValue = JSON.parse(clipboardText);
+            } catch (e: any) {
+              throw new Error(`${clipboardText} is not valid array subtable`);
+            }
+            if (!Array.isArray(parsedValue)) {
+              throw new Error(`${clipboardText} is not an array`);
             }
             break;
           default:
-            parsed = JSON.parse(text);
-            break;
+            switch (cellDataType) {
+              case "number":
+                parsedValue = Number(clipboardText);
+                if (isNaN(parsedValue))
+                  throw new Error(`${clipboardText} is not a number`);
+                break;
+              case "string":
+                parsedValue = clipboardText;
+                break;
+              case "reference":
+                try {
+                  parsedValue = doc(firebaseDb, clipboardText);
+                } catch (e: any) {
+                  enqueueSnackbar(`Invalid reference.`, { variant: "error" });
+                }
+                break;
+              default:
+                parsedValue = JSON.parse(clipboardText);
+                break;
+            }
         }
 
+        // post process parsed values
         if (selectedCol.type === FieldType.slider) {
-          if (parsed < selectedCol.config?.min)
-            parsed = selectedCol.config?.min;
-          else if (parsed > selectedCol.config?.max)
-            parsed = selectedCol.config?.max;
+          if (parsedValue < selectedCol.config?.min)
+            parsedValue = selectedCol.config?.min;
+          else if (parsedValue > (selectedCol.config?.max || 10))
+            parsedValue = selectedCol.config?.max || 10;
         }
-
         if (selectedCol.type === FieldType.rating) {
-          if (parsed < 0) parsed = 0;
-          if (parsed > (selectedCol.config?.max || 5))
-            parsed = selectedCol.config?.max || 5;
+          if (parsedValue < 0) parsedValue = 0;
+          if (parsedValue > (selectedCol.config?.max || 5))
+            parsedValue = selectedCol.config?.max || 5;
         }
 
-        if (selectedCol.type === FieldType.percentage) {
-          parsed = parsed / 100;
-        }
         updateField({
           path: selectedCell.path,
           fieldName: selectedCol.fieldName,
-          value: parsed,
+          value: parsedValue,
           arrayTableData: {
             index: selectedCell.arrayIndex,
           },
         });
       } catch (error) {
-        enqueueSnackbar(
-          `${selectedCol?.type} field does not support the data type being pasted`,
-          { variant: "error" }
-        );
+        enqueueSnackbar(`Paste error on ${selectedCol?.type}: ${error}`, {
+          variant: "error",
+        });
       }
       if (handleClose) handleClose();
     },
@@ -286,7 +393,7 @@ export function useMenuAction(
         if (SUPPORTED_TYPES_COPY.has(fieldType)) {
           return func();
         } else {
-          enqueueSnackbar(`${fieldType} field cannot be copied`, {
+          enqueueSnackbar(`${fieldType} cannot be copied`, {
             variant: "error",
           });
         }
@@ -309,12 +416,9 @@ export function useMenuAction(
         if (SUPPORTED_TYPES_PASTE.has(fieldType)) {
           return func(e);
         } else {
-          enqueueSnackbar(
-            `${fieldType} field does not support paste functionality`,
-            {
-              variant: "error",
-            }
-          );
+          enqueueSnackbar(`${fieldType} does not support paste`, {
+            variant: "error",
+          });
         }
       };
     },
@@ -324,11 +428,17 @@ export function useMenuAction(
   const getValue = useCallback(
     (cellValue: any) => {
       switch (selectedCol?.type) {
-        case FieldType.percentage:
-          return cellValue * 100;
+        case FieldType.multiSelect:
         case FieldType.json:
         case FieldType.color:
         case FieldType.geoPoint:
+        case FieldType.image:
+        case FieldType.file:
+        case FieldType.array:
+        case FieldType.arraySubTable:
+        case FieldType.createdBy:
+        case FieldType.updatedBy:
+        case FieldType.user:
           return JSON.stringify(cellValue);
         case FieldType.date:
           if (
@@ -362,19 +472,23 @@ export function useMenuAction(
             }
           }
           return;
+        case FieldType.percentage:
+          return `${cellValue * 100}%`;
         case FieldType.duration:
-          return getDurationString(
-            cellValue.start.toDate(),
-            cellValue.end.toDate()
-          );
-        case FieldType.image:
-        case FieldType.file:
-          return cellValue[0].downloadURL;
-        case FieldType.createdBy:
-        case FieldType.updatedBy:
-          return cellValue.displayName;
+          return JSON.stringify({
+            duration: getDurationString(
+              cellValue.start.toDate(),
+              cellValue.end.toDate()
+            ),
+            start: cellValue.start.toDate(),
+            end: cellValue.end.toDate(),
+          });
+        case FieldType.action:
+          return cellValue.status || "";
         case FieldType.reference:
           return cellValue.path;
+        case FieldType.formula:
+          return cellValue.formula || "";
         default:
           return cellValue;
       }

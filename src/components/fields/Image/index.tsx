@@ -28,6 +28,7 @@ export const config: IFieldConfig = {
   }),
   SideDrawerField,
   contextMenuActions: ContextMenuActions,
+  keywords: ["picture"]
 };
 export default config;
 

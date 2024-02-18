@@ -26,6 +26,7 @@ import {
   DocumentData,
   or,
   QueryFieldFilterConstraint,
+  Timestamp,
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
@@ -403,6 +404,26 @@ const getQuery = <T>(
 };
 
 /**
+ * Parse datetime to Date object
+ * \{ nanoseconds: number; seconds: number \} is a Timestamp object without toDate() method, we need to calculate it manually
+ * */
+const parseDateFilterValue = (
+  date: Date | Timestamp | { nanoseconds: number; seconds: number }
+) => {
+  if (date instanceof Date) {
+    return date;
+  } else if ("toDate" in date) {
+    return date.toDate();
+  } else if (date.seconds) {
+    return new Date(date.seconds * 1000 + date.nanoseconds / 1_000_000);
+  } else if (date instanceof Timestamp) {
+    return date.toDate();
+  } else {
+    throw new Error(`Invalid date ${date}`);
+  }
+};
+
+/**
  * Support custom filter operators not supported by Firestore.
  * e.g. date-range-equal: `>=` && `<=` operators when `==` is used on dates.
  * @param filters - Array of TableFilters to convert
@@ -414,8 +435,7 @@ export const tableFiltersToFirestoreFilters = (filters: TableFilter[]) => {
   for (const filter of filters) {
     if (filter.operator.startsWith("date-")) {
       if (!filter.value) continue;
-      const filterDate =
-        "toDate" in filter.value ? filter.value.toDate() : filter.value;
+      const filterDate = parseDateFilterValue(filter.value);
       const [startDate, endDate] = getDateRange(filterDate);
 
       if (filter.operator === "date-equal") {
@@ -433,8 +453,7 @@ export const tableFiltersToFirestoreFilters = (filters: TableFilter[]) => {
       continue;
     } else if (filter.operator === "time-minute-equal") {
       if (!filter.value) continue;
-      const filterDate =
-        "toDate" in filter.value ? filter.value.toDate() : filter.value;
+      const filterDate = parseDateFilterValue(filter.value);
       const [startDate, endDate] = getTimeRange(filterDate);
 
       firestoreFilters.push(where(filter.key, ">=", startDate));

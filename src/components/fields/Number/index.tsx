@@ -35,5 +35,6 @@ export const config: IFieldConfig = {
       return null;
     }
   },
+  keywords: ["digit"]
 };
 export default config;

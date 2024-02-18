@@ -31,5 +31,6 @@ export const config: IFieldConfig = {
   filter: { operators, defaultValue: [] },
   requireConfiguration: false,
   contextMenuActions: BasicContextMenuActions,
+  keywords: ["list"]
 };
 export default config;

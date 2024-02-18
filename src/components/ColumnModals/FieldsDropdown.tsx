@@ -1,5 +1,6 @@
 import MultiSelect from "@rowy/multiselect";
 import { Box, ListItemIcon, Typography } from "@mui/material";
+import Fuse from 'fuse.js';
 
 import { FIELDS } from "@src/components/fields";
 import { FieldType } from "@src/constants/fields";
@@ -21,6 +22,15 @@ export interface IFieldsDropdownProps {
   options?: FieldType[];
 
   [key: string]: any;
+}
+
+export interface OptionsType {
+  label: string;
+  value: string;
+  disabled: boolean;
+  requireCloudFunctionSetup: boolean;
+  requireCollectionTable: boolean;
+  keywords: string[];
 }
 
 /**
@@ -52,8 +62,20 @@ export default function FieldsDropdown({
       disabled: requireCloudFunctionSetup || requireCollectionTable,
       requireCloudFunctionSetup,
       requireCollectionTable,
+      keywords: fieldConfig.keywords || []
     };
   });
+
+  const filterOptions = (options: OptionsType[], inputConfig: any) => {
+    const fuse = new Fuse(options, {
+      keys: [{name:'label', weight: 2}, 'keywords'],
+      includeScore: true,
+      threshold: 0.4, 
+    });
+  
+    const results = fuse.search(inputConfig?.inputValue);
+    return results.length > 0 ? results.map((result) => result.item) : options;
+  }
 
   return (
     <MultiSelect
@@ -80,6 +102,7 @@ export default function FieldsDropdown({
                 },
             },
           },
+          filterOptions
         },
       } as any)}
       itemRenderer={(option) => (

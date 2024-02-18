@@ -101,7 +101,7 @@ https://user-images.githubusercontent.com/307298/157185793-f67511cd-7b7b-4229-95
 
 Set up Rowy on your Google Cloud Platform project with this easy deploy button.
 Your data and cloud functions stay on your own Firestore/GCP and is managed via
-a cloud run instance that operates exclusively on your GCP project. So we do do
+a cloud run instance that operates exclusively on your GCP project. So we do
 not access or store any of your data on Rowy.
 
 [<img width="200" alt="Guided quick start button" src="https://user-images.githubusercontent.com/307298/185548050-e9208fb6-fe53-4c84-bbfa-53c08e03c15f.png">](https://rowy.app/)

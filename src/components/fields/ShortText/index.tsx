@@ -36,5 +36,6 @@ export const config: IFieldConfig = {
   filter: {
     operators: filterOperators,
   },
+  keywords: ["string"]
 };
 export default config;

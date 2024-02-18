@@ -34,5 +34,6 @@ export const config: IFieldConfig = {
   SideDrawerField,
   settings: Settings,
   contextMenuActions: BasicContextMenuActions,
+  keywords: ["snippet", "block"]
 };
 export default config;

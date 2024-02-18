@@ -45,5 +45,6 @@ export const config: IFieldConfig = {
   },
   SideDrawerField,
   contextMenuActions: BasicContextMenuActions,
+  keywords: ["boolean", "switch", "true", "false", "on", "off"]
 };
 export default config;
