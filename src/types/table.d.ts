@@ -203,6 +203,12 @@ export type TableFilter = {
   id: string;
 };
 
+export type TableBulkEdit = {
+  key: string;
+  value: any;
+  id: string;
+};
+
 export const TableTools = [
   "import",
   "export",
