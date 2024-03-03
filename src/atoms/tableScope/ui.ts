@@ -2,7 +2,11 @@ import { atom } from "jotai";
 import { atomWithStorage, atomWithHash } from "jotai/utils";
 
 import type { PopoverProps } from "@mui/material";
-import type { ColumnConfig, TableFilter } from "@src/types/table";
+import type {
+  ColumnConfig,
+  TableBulkEdit,
+  TableFilter,
+} from "@src/types/table";
 import { SEVERITY_LEVELS } from "@src/components/TableModals/CloudLogsModal/CloudLogSeverityIcon";
 
 /**
@@ -69,6 +73,33 @@ export const tableFiltersPopoverAtom = atom(
   { open: false } as TableFiltersPopoverState,
   (_, set, update?: Partial<TableFiltersPopoverState>) => {
     set(tableFiltersPopoverAtom, { open: true, ...update });
+  }
+);
+
+export type BulkEditPopoverState = {
+  open: boolean;
+  defaultQuery?: TableBulkEdit;
+};
+
+/**
+ * Store bulk edit popover state.
+ * Calling the set function resets props.
+ *
+ * @example Basic usage:
+ * ```
+ * const openBulkEditltersPopover = useSetAtom(bulkEditPopoverAtom, projectScope);
+ * openBulkEditltersPopover({ query: ... });
+ * ```
+ *
+ * @example Close:
+ * ```
+ * openBulkEditltersPopover({ open: false })
+ * ```
+ */
+export const bulkEditPopoverAtom = atom(
+  { open: false } as BulkEditPopoverState,
+  (_, set, update?: Partial<BulkEditPopoverState>) => {
+    set(bulkEditPopoverAtom, { open: true, ...update });
   }
 );
 

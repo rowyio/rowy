@@ -49,6 +49,10 @@ const Sort = lazy(() => import("./Sort" /* webpackChunkName: "Filters" */));
 
 // prettier-ignore
 const Filters = lazy(() => import("./Filters" /* webpackChunkName: "Filters" */));
+
+// prettier-ignore
+const BulkEdit = lazy(() => import("./BulkEdit/BulkEdit" /* webpackChunkName: "Filters" */));
+
 // prettier-ignore
 const ImportData = lazy(() => import("./ImportData/ImportData" /* webpackChunkName: "ImportData" */));
 
@@ -129,6 +133,8 @@ function RowSelectedToolBar({
           Delete
         </Button>
       </Tooltip>
+
+      <BulkEdit selectedRows={selectedRows} />
     </StyledStack>
   );
 }
