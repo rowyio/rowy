@@ -219,7 +219,7 @@ const nummericEvaluatorType = [
   "number",
   "rating",
   "check_box",
-  "silder",
+  "slider",
 ];
 
 const dateEvalutorType = [
@@ -401,6 +401,14 @@ function getDuration(durationMeta: Record<string, any>) {
   }
 }
 
+function parseIntoNumber(value: string | number | undefined | null) {
+  value = Number(value);
+  if (isNumber(value) && isNaN(value)) {
+    return 0;
+  }
+  return value;
+}
+
 export const customComparator = (
   a: TableRow,
   b: TableRow,
@@ -409,11 +417,15 @@ export const customComparator = (
 ) => {
   let flag = 0;
   for (const { key, direction } of sortFilters) {
-    let [aValue, bValue] = [a[key], b[key]];
+    let [aValue, bValue] = [_get(a, key), _get(b, key)];
     const columnMeta = _get(columnsMap, key);
-
     if (direction?.toLowerCase() === "desc") {
       [aValue, bValue] = [bValue, aValue];
+    }
+    const fieldType = _get(columnMeta, "type", "").toLowerCase();
+    if (fieldType === "check_box") {
+      [aValue, bValue] = [Boolean(aValue), Boolean(bValue)];
+      return aValue - bValue;
     }
     if (aValue === bValue) {
       continue;
@@ -424,7 +436,6 @@ export const customComparator = (
     if (isAEmpty) return -1;
     if (isBEmpty) return 1;
 
-    const fieldType = _get(columnMeta, "type", "").toLowerCase();
     if (!fieldType) {
       continue;
     }
@@ -435,6 +446,7 @@ export const customComparator = (
         break;
 
       case includes(nummericEvaluatorType, fieldType):
+        [aValue, bValue] = [parseIntoNumber(aValue), parseIntoNumber(bValue)];
         flag = aValue - bValue;
         break;
       case fieldType.endsWith("_select"):
@@ -467,20 +479,32 @@ function mergeSortedArrays(
   localRows: TableRow[],
   dbRows: TableRow[],
   tableSort: TableSort[],
-  columnsMap: Record<string, ColumnConfig> | undefined
+  columnsMap: Record<string, ColumnConfig> | undefined,
+  pageInfo: number,
+  nextPageInfo: NextPageState
 ) {
   const mergedArray = [];
   let i = 0,
     j = 0;
 
-  while (i < localRows.length && j < dbRows.length) {
+  console.log("nextPageInfo", nextPageInfo);
+  console.log("pageInfo", pageInfo);
+  const currentLoadedData = (pageInfo + 1) * 30;
+  while (
+    i < localRows.length &&
+    j < dbRows.length &&
+    mergedArray.length < currentLoadedData
+  ) {
     const comparatorValue = customComparator(
       localRows[i],
       dbRows[j],
       tableSort,
       columnsMap
     );
-    if (comparatorValue <= 0) {
+    if (
+      comparatorValue <= 0 &&
+      (mergedArray.length < currentLoadedData || !nextPageInfo.available)
+    ) {
       mergedArray.push(localRows[i]);
       i++;
     } else {
@@ -489,12 +513,12 @@ function mergeSortedArrays(
     }
   }
 
-  while (i < localRows.length) {
+  while (i < localRows.length && mergedArray.length < currentLoadedData) {
     mergedArray.push(localRows[i]);
     i++;
   }
 
-  while (j < dbRows.length) {
+  while (j < dbRows.length && mergedArray.length < currentLoadedData) {
     mergedArray.push(dbRows[j]);
     j++;
   }
@@ -546,6 +570,8 @@ export const tableRowsAtom = atom<TableRow[]>((get) => {
   let tableFiltersJoin = get(tableFiltersJoinAtom);
   let tableSort = get(tableSortsAtom);
   const rowsDb = get(tableRowsDbAtom);
+  const pageInfo = get(tablePageAtom);
+  const nextPageInfo = get(tableNextPageAtom);
   if (tableType === "db") {
     return [...rowsDb];
   }
@@ -600,7 +626,9 @@ export const tableRowsAtom = atom<TableRow[]>((get) => {
       rowsLocal,
       rowsDb.filter((row) => rowsDbMap.has(row._rowy_ref.path)),
       tableSort,
-      columnsMap
+      columnsMap,
+      pageInfo,
+      nextPageInfo
     );
   }
 

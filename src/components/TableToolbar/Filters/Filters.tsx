@@ -192,6 +192,11 @@ export default function Filters() {
   const [overrideTableFilters, setOverrideTableFilters] = useState(
     tableFiltersOverridden
   );
+  const [localDataCheck, setLocalDataCheck] = useState(true);
+  const setCanIncludeLocalData = useSetAtom(
+    canIncludeLocalDataAtom,
+    tableScope
+  );
 
   useEffect(() => {
     if (userSettings.tables?.[tableId]?.joinOperator) {
@@ -363,7 +368,23 @@ export default function Filters() {
                     }
                   />
                 )}
-                <CustomFormControllableForNewTabs />
+                {tableType === "old" ? (
+                  <>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={localDataCheck}
+                          onChange={(e) => {
+                            setLocalDataCheck(e.target.checked);
+                          }}
+                        />
+                      }
+                      label="Include the Local and out of order rows too."
+                      sx={{ justifyContent: "start", mb: 1, mr: 0 }}
+                    />
+                  </>
+                ) : null}
+                {/* <CustomFormControllableForNewTabs /> */}
                 <Stack
                   direction="row"
                   sx={{ "& .MuiButton-root": { minWidth: 100 } }}
@@ -395,6 +416,7 @@ export default function Filters() {
                         userFilterInputs.queries as TableFilter[],
                         userFilterInputs.joinOperator
                       );
+                      setCanIncludeLocalData(localDataCheck);
                       handleClose();
                     }}
                   >
@@ -586,36 +608,4 @@ export default function Filters() {
       }}
     </FiltersPopover>
   );
-}
-
-export function CustomFormControllableForNewTabs() {
-  const [tableType] = useAtom(tableTypeAtom, tableScope);
-  const [canIncludeLocalData, setCanIncludeLocalData] = useAtom(
-    canIncludeLocalDataAtom,
-    tableScope
-  );
-  return tableType === "old" ? (
-    <>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={canIncludeLocalData}
-            onChange={(e) => {
-              setCanIncludeLocalData(e.target.checked);
-            }}
-          />
-        }
-        label="Include the Local and out of order rows too."
-        sx={{ justifyContent: "start", mb: 1, mr: 0 }}
-      />
-
-      {/* <Alert severity="info" style={{ width: "auto" }} sx={{ mb: 3 }}>
-        <ul style={{ margin: 0, paddingLeft: "1.5em" }}>
-          <li>
-            The filter above will include the local rows and out of order 
-          </li>
-        </ul>
-      </Alert> */}
-    </>
-  ) : null;
 }
