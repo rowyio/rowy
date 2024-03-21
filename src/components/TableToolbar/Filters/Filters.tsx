@@ -384,7 +384,6 @@ export default function Filters() {
                     />
                   </>
                 ) : null}
-                {/* <CustomFormControllableForNewTabs /> */}
                 <Stack
                   direction="row"
                   sx={{ "& .MuiButton-root": { minWidth: 100 } }}

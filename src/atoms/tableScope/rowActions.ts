@@ -23,6 +23,7 @@ import {
   tableSortsAtom,
   tableRowsDbAtom,
   tableTypeAtom,
+  tablePageAtom,
 } from "./table";
 
 import {
@@ -82,8 +83,7 @@ export const addRowAtom = atom(
     }
 
     const updateTableType = () => {
-      if (tableType === "db") {
-        window.alert("Navigating to Play ground");
+      if (tableType === "db" || (tableType === "old" && tableSort.length)) {
         set(tableTypeAtom, "local");
       }
     };
@@ -186,9 +186,6 @@ export const addRowAtom = atom(
       if (updateInDb) {
         await updateRowDb(row._rowy_ref.path, omitRowyFields(rowValues));
         if (tableType === "local") {
-          window.alert(
-            "As the row added in the playground is updated to the db. so not considering as local row. redirecting it to db"
-          );
           set(tableTypeAtom, "db");
         }
       }
@@ -229,7 +226,6 @@ export const addRowAtom = atom(
             (lRow) => lRow._rowy_ref.path === r._rowy_ref.path
           )
         ) {
-          window.alert("creating the row with already existing custom_id");
           continue;
         }
 
@@ -259,7 +255,6 @@ export const addRowAtom = atom(
           (lRow) => lRow._rowy_ref.path === row._rowy_ref.path
         )
       ) {
-        window.alert("creating the row with already existing custom_id");
         return;
       }
       await _addSingleRowAndAudit(

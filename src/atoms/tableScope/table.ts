@@ -42,7 +42,7 @@ import { Table } from "@tanstack/react-table";
 /** Root atom from which others are derived */
 export const tableIdAtom = atom("");
 
-export const tableTypeAtom = atom<"db" | "local" | "old">("db");
+export const tableTypeAtom = atom<"db" | "local" | "old">("old");
 
 export const canIncludeLocalDataAtom = atom<boolean>(true);
 
