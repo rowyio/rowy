@@ -46,6 +46,7 @@ import useHotKeys from "./useHotKey";
 import type { TableRow, ColumnConfig } from "@src/types/table";
 import useStateWithRef from "./useStateWithRef"; // testing with useStateWithRef
 import { Checkbox, FormControlLabel } from "@mui/material";
+import { TableTypeComp } from "@src/pages/Table/TablePage";
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;

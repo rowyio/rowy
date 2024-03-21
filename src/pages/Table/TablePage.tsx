@@ -3,7 +3,24 @@ import { useAtom } from "jotai";
 import { ErrorBoundary } from "react-error-boundary";
 import { isEmpty, intersection } from "lodash-es";
 
-import { Box, Fade } from "@mui/material";
+import {
+  Box,
+  Divider,
+  Fade,
+  IconButton,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Tooltip,
+  TooltipProps,
+  Typography,
+  Zoom,
+  styled,
+  tooltipClasses,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import NewReleasesIcon from "@mui/icons-material/NewReleases";
+
 import ErrorFallback, {
   InlineErrorFallback,
 } from "@src/components/ErrorFallback";
@@ -20,6 +37,8 @@ import TableModals from "@src/components/TableModals";
 import EmptyState from "@src/components/EmptyState";
 import AddRow from "@src/components/TableToolbar/AddRow";
 import { AddRow as AddRowIcon } from "@src/assets/icons";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
 import {
   projectScope,
@@ -33,6 +52,7 @@ import {
   tableSchemaAtom,
   columnModalAtom,
   tableModalAtom,
+  tableTypeAtom,
 } from "@src/atoms/tableScope";
 import useBeforeUnload from "@src/hooks/useBeforeUnload";
 import ActionParamsProvider from "@src/components/fields/Action/FormDialog/Provider";
@@ -43,6 +63,7 @@ import { DRAWER_COLLAPSED_WIDTH } from "@src/components/SideDrawer";
 import { formatSubTableName } from "@src/utils/table";
 import { TableToolsType } from "@src/types/table";
 import { RowSelectionState } from "@tanstack/react-table";
+import React from "react";
 
 // prettier-ignore
 const BuildLogsSnack = lazy(() => import("@src/components/TableModals/CloudLogsModal/BuildLogs/BuildLogsSnack" /* webpackChunkName: "TableModals-BuildLogsSnack" */));
@@ -162,7 +183,7 @@ export default function TablePage({
         <Suspense fallback={<TableSkeleton />}>
           <Box
             sx={{
-              height: `calc(100vh - ${TOP_BAR_HEIGHT}px - ${TABLE_TOOLBAR_HEIGHT}px)`,
+              height: `calc(95vh - ${TOP_BAR_HEIGHT}px - ${TABLE_TOOLBAR_HEIGHT}px)`,
               width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
               position: "relative",
 
@@ -243,4 +264,140 @@ export default function TablePage({
       )}
     </ActionParamsProvider>
   );
+}
+
+export function TableTypeComp() {
+  const [tableType, setTableType] = useAtom(tableTypeAtom, tableScope);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [tableId] = useAtom(tableIdAtom, tableScope);
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = (type: "db" | "local" | "old") => {
+    setAnchorEl(null);
+    if (type) {
+      setTableType(type);
+    }
+  };
+  const handleChange = (
+    event: React.MouseEvent<HTMLElement>,
+    type: "db" | "local" | "old"
+  ) => {
+    event.preventDefault();
+    if (type !== null) {
+      setTableType(type);
+    }
+  };
+
+  const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: "#f5f5f9",
+      color: "rgba(0, 0, 0, 0.87)",
+      maxWidth: 350,
+      fontSize: theme.typography.pxToRem(12),
+      border: "1px solid #dadde9",
+      marginLeft: "5px",
+    },
+  }));
+
+  return !isEmpty(tableId) ? (
+    <div
+      style={{
+        display: "flex",
+        gap: 15,
+        position: "fixed",
+        bottom: "0px",
+        zIndex: 10,
+        marginLeft: "15px",
+        alignItems: "center",
+      }}
+    >
+      <div style={{ textAlign: "right" }}>
+        <IconButton
+          aria-controls="hamburger-menu"
+          aria-haspopup="true"
+          onClick={handleClick}
+          color="inherit"
+        >
+          <MenuIcon />
+        </IconButton>
+        <Menu
+          id="hamburger-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: "top", horizontal: "left" }}
+          transformOrigin={{ vertical: "bottom", horizontal: "left" }}
+        >
+          <MenuItem onClick={() => handleClose("db")}>
+            <ListItemText>DB</ListItemText>
+          </MenuItem>
+          <Divider />
+          <MenuItem onClick={() => handleClose("local")}>
+            <ListItemText>Local Playground</ListItemText>
+          </MenuItem>
+          <Divider />
+          <MenuItem onClick={() => handleClose("old")}>
+            <ListItemText>Old View</ListItemText>
+          </MenuItem>
+        </Menu>
+      </div>
+      <ToggleButtonGroup
+        value={tableType}
+        exclusive
+        onChange={handleChange}
+        aria-label="Table Tab"
+        size="large"
+      >
+        <ToggleButton value="db" aria-label="Db">
+          DB
+        </ToggleButton>
+        <ToggleButton value="local" aria-label="Local">
+          Local Playground
+        </ToggleButton>
+        <ToggleButton value="old" aria-label="Old">
+          Old View
+        </ToggleButton>
+      </ToggleButtonGroup>
+      <HtmlTooltip
+        TransitionComponent={Zoom}
+        TransitionProps={{ timeout: 200 }}
+        title={
+          <React.Fragment>
+            <Typography variant="body1" color="inherit">
+              Tabs Overview
+            </Typography>
+            <Typography variant="body2">
+              Click on each tab to switch between different views:
+            </Typography>
+            <ul>
+              <li>
+                <strong>Db:</strong> View data from the database.
+              </li>
+              <li>
+                <strong>Local:</strong> View data in the local playground.
+              </li>
+              <li>
+                <strong>Old View:</strong> Switch to the old view.
+              </li>
+            </ul>
+            <span>note: Filters and sorts issue were taken care!</span>
+          </React.Fragment>
+        }
+      >
+        <IconButton
+          aria-controls="hamburger-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <NewReleasesIcon />
+          {/* <MenuIcon /> */}
+        </IconButton>
+      </HtmlTooltip>
+    </div>
+  ) : null;
 }

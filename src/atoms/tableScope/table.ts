@@ -1,6 +1,27 @@
 import { atom } from "jotai";
 import { atomWithReducer, atomWithHash } from "jotai/utils";
-import { findIndex, cloneDeep, unset, orderBy } from "lodash-es";
+import {
+  findIndex,
+  cloneDeep,
+  unset,
+  orderBy,
+  isEmpty,
+  get as _get,
+  includes,
+  isNumber,
+  isArray,
+  intersection,
+  isObject,
+  size,
+} from "lodash-es";
+import {
+  isAfter,
+  isBefore,
+  isMatch,
+  isSameDay,
+  parse,
+  isValid,
+} from "date-fns";
 
 import {
   TableSettings,
@@ -20,6 +41,11 @@ import { Table } from "@tanstack/react-table";
 
 /** Root atom from which others are derived */
 export const tableIdAtom = atom("");
+
+export const tableTypeAtom = atom<"db" | "local" | "old">("db");
+
+export const canIncludeLocalDataAtom = atom<boolean>(true);
+
 /** Store tableSettings from project settings document */
 export const tableSettingsAtom = atom<TableSettings>({
   id: "",
@@ -167,31 +193,419 @@ export const tableRowsLocalAtom = atomWithReducer(
 /** Store rows from the db listener */
 export const tableRowsDbAtom = atom<TableRow[]>([]);
 
+export const possibleFormats = [
+  "yyyy-MM-dd",
+  "yyyy-MM-dd HH:mm:ss",
+  "yyyy-MM-dd HH:mm",
+  "yyyy/MM/dd HH:mm:ss",
+  "yyyy/MM/dd HH:mm",
+  "yyyy/MM/dd",
+  "dd/MM/yyyy",
+  "MM/dd/yyyy",
+  "dd-MM-yyyy",
+  "MM-dd-yyyy",
+];
+
+const commonEvaluatorTypes = ["email", "phone", "markdown"];
+
+const strictEvaluatorTypes = [
+  "json", //costly operations on filters and sorts
+  "code", //costly operations on filters and sorts
+  "array",
+];
+
+const nummericEvaluatorType = [
+  "percentage",
+  "number",
+  "rating",
+  "check_box",
+  "silder",
+];
+
+const dateEvalutorType = [
+  "created_by",
+  "updated_by",
+  "created_at",
+  "updated_at",
+];
+
+function toArray(value: [] | string | null | undefined) {
+  return isArray(value) ? value : [value ?? ""];
+}
+
+function hasIntersected(filterValue: [] | string, rowValue: [] | string) {
+  if (!filterValue || !rowValue) {
+    return false;
+  }
+  return !isEmpty(intersection(toArray(filterValue), toArray(rowValue)));
+}
+
+function stringifyAndCompare(filterValue: [] | string, rowValue: [] | string) {
+  return JSON.stringify(toArray(filterValue)).localeCompare(
+    JSON.stringify(toArray(rowValue))
+  );
+}
+
+function strictCheck(filterValue: [] | string, rowValue: [] | string) {
+  try {
+    return stringifyAndCompare(filterValue, rowValue) === 0;
+  } catch (err) {
+    return false;
+  }
+}
+
+export const parseDate = (
+  dateString: string | null | undefined | Date,
+  format?: string
+) => {
+  let tempDate = new Date(0);
+  if (!dateString) {
+    return tempDate;
+  }
+  if (typeof dateString !== "string") {
+    return isValid(dateString) ? dateString : new Date(0);
+  }
+  let parsedDate;
+  if (format && isMatch(dateString, format)) {
+    return parse(dateString, format, tempDate);
+  }
+  for (const tempFormat of possibleFormats) {
+    if (isMatch(dateString, tempFormat)) {
+      parsedDate = parse(dateString, tempFormat, tempDate);
+      break;
+    }
+  }
+  parsedDate = !parsedDate ? new Date(dateString) : parsedDate;
+  return parsedDate && isNaN(parsedDate.getTime()) ? tempDate : parsedDate;
+};
+
+export const EvaluteFilter = (filter: TableFilter, row: TableRow): boolean => {
+  let rowValue = _get(row, filter.key, "");
+  let filterValue = filter.value ?? "";
+  //handling the numbers with negative and 0 values;
+  if (
+    filter.operator !== "is-empty" &&
+    !isNumber(rowValue) &&
+    (isEmpty(rowValue) || isEmpty(filterValue))
+  ) {
+    return false;
+  }
+  try {
+    if (filter.operator.startsWith("date-")) {
+      rowValue = parseDate(rowValue, _get(filter, "format"));
+      filterValue = parseDate(filterValue, _get(filter, "format"));
+    }
+    switch (filter.operator) {
+      case "==":
+        return strictCheck(filterValue, rowValue);
+      case "array-contains":
+      case "array-contains-any":
+        return hasIntersected(filterValue, rowValue);
+      case "!=":
+        return !strictCheck(filterValue, rowValue);
+      // case "array-not-contains":  return !hasIntersected(filterValue, rowValue);
+      case "is-empty":
+        return customEmptyCheck(rowValue) || !rowValue;
+      case "is-not-empty":
+        return !(customEmptyCheck(rowValue) || !rowValue);
+      case "date-equal":
+        return isSameDay(rowValue, filterValue);
+      case "date-before":
+        return isBefore(rowValue, filterValue);
+      case "date-after":
+        return isAfter(rowValue, filterValue);
+      case "date-before-equal":
+        return (
+          isSameDay(rowValue, filterValue) || isBefore(rowValue, filterValue)
+        );
+      case "date-after-equal":
+        return (
+          isSameDay(rowValue, filterValue) || isAfter(rowValue, filterValue)
+        );
+      // case "time-minute-equal": return new Date(rowValue).getTime() <= new Date(filterValue).getTime() ;
+      case "id-equal":
+        return filterValue && rowValue === filterValue;
+    }
+  } catch (err) {}
+
+  return false;
+};
+
+export const isMetCriteria = (
+  row: TableRow,
+  tableFilters: TableFilter[],
+  tableFiltersJoin: "AND" | "OR"
+) => {
+  let flag = true;
+  for (const filter of tableFilters) {
+    if (tableFiltersJoin === "OR" && EvaluteFilter(filter, row)) {
+      return true;
+    }
+    if (tableFiltersJoin === "AND" && !EvaluteFilter(filter, row)) {
+      return false;
+    }
+
+    flag = tableFiltersJoin === "OR" ? false : true;
+  }
+  return flag;
+};
+
+function getDateValue(date: any) {
+  if (!date) {
+    return new Date(0);
+  }
+  if (isValid(date)) {
+    return new Date(date);
+  }
+  if (!!date.toDate) {
+    return date.toDate();
+  }
+  if (isNumber(date)) {
+    return new Date(date);
+  }
+  return new Date(0);
+}
+
+function handleGeoData(location1: any, location2: any) {
+  if (!location1 && !location2) {
+    return 0;
+  }
+  if (!location1) {
+    return -1;
+  }
+  if (!location2) {
+    return 1;
+  }
+  try {
+    return location1._compareTo(location2);
+  } catch (err) {
+    console.error("error occured while comparing", err);
+    return -1;
+  }
+}
+
+const customEmptyCheck = (value: any) => {
+  if (isNumber(value) || value instanceof Date || !!value?.toDate) {
+    return false;
+  }
+  return isObject(value) ? !size(value) : isEmpty(value);
+};
+
+function getDuration(durationMeta: Record<string, any>) {
+  try {
+    const start = getDateValue(durationMeta.start);
+    const end = getDateValue(durationMeta.end);
+    return start - end;
+  } catch (err) {
+    return 0;
+  }
+}
+
+export const customComparator = (
+  a: TableRow,
+  b: TableRow,
+  sortFilters: TableSort[],
+  columnsMap: Record<string, ColumnConfig> | undefined
+) => {
+  let flag = 0;
+  for (const { key, direction } of sortFilters) {
+    let [aValue, bValue] = [a[key], b[key]];
+    const columnMeta = _get(columnsMap, key);
+
+    if (direction?.toLowerCase() === "desc") {
+      [aValue, bValue] = [bValue, aValue];
+    }
+    if (aValue === bValue) {
+      continue;
+    }
+    const isAEmpty = customEmptyCheck(aValue);
+    const isBEmpty = customEmptyCheck(bValue);
+    if (isAEmpty && isBEmpty) continue;
+    if (isAEmpty) return -1;
+    if (isBEmpty) return 1;
+
+    const fieldType = _get(columnMeta, "type", "").toLowerCase();
+    if (!fieldType) {
+      continue;
+    }
+    switch (true) {
+      case fieldType.endsWith("text") ||
+        includes(commonEvaluatorTypes, fieldType):
+        flag = aValue.localeCompare(bValue);
+        break;
+
+      case includes(nummericEvaluatorType, fieldType):
+        flag = aValue - bValue;
+        break;
+      case fieldType.endsWith("_select"):
+        flag = stringifyAndCompare(aValue, bValue);
+        break; //as select option will have less number of options
+      case fieldType.startsWith("date") ||
+        includes(dateEvalutorType, fieldType):
+        flag = getDateValue(aValue) - getDateValue(bValue);
+        break;
+      case fieldType === "duration":
+        flag = getDuration(aValue) - getDuration(bValue);
+        break;
+      case fieldType === "color":
+        flag = (aValue?.hex ?? "").localCompare(bValue?.hex ?? "");
+        break;
+      case includes(strictEvaluatorTypes, fieldType):
+        stringifyAndCompare(aValue, bValue);
+        break;
+      case fieldType === "geo_point":
+        flag = handleGeoData(aValue, bValue);
+    }
+    if (flag !== 0) {
+      break;
+    }
+  }
+  return flag;
+};
+
+function mergeSortedArrays(
+  localRows: TableRow[],
+  dbRows: TableRow[],
+  tableSort: TableSort[],
+  columnsMap: Record<string, ColumnConfig> | undefined
+) {
+  const mergedArray = [];
+  let i = 0,
+    j = 0;
+
+  while (i < localRows.length && j < dbRows.length) {
+    const comparatorValue = customComparator(
+      localRows[i],
+      dbRows[j],
+      tableSort,
+      columnsMap
+    );
+    if (comparatorValue <= 0) {
+      mergedArray.push(localRows[i]);
+      i++;
+    } else {
+      mergedArray.push(dbRows[j]);
+      j++;
+    }
+  }
+
+  while (i < localRows.length) {
+    mergedArray.push(localRows[i]);
+    i++;
+  }
+
+  while (j < dbRows.length) {
+    mergedArray.push(dbRows[j]);
+    j++;
+  }
+
+  return mergedArray;
+}
+
+function handleFiltersAndSorts(
+  rows: TableRow[],
+  {
+    tableFilters,
+    tableSort,
+    tableFiltersJoin,
+    columnsMap,
+  }: {
+    tableFilters: TableFilter[];
+    tableSort: TableSort[];
+    tableFiltersJoin: "AND" | "OR";
+    columnsMap?: Record<string, ColumnConfig> | undefined;
+  }
+) {
+  const isTableSortEmpty = isEmpty(tableSort);
+  const isTableFilterEmpty = isEmpty(tableFilters);
+  if (isTableSortEmpty && isTableFilterEmpty) {
+    return rows;
+  }
+  try {
+    rows = rows.filter((row) => {
+      //if filters are applied on the table. making sure that local rows were filtered.
+      if (!isTableFilterEmpty) {
+        return isMetCriteria(row, tableFilters, tableFiltersJoin);
+      }
+      return true;
+    });
+    if (!isEmpty(tableSort) && !isEmpty(columnsMap)) {
+      rows = rows.sort((a, b) => customComparator(a, b, tableSort, columnsMap));
+    }
+  } catch (err) {
+    console.error("Error occured while handling filters and sorts", err);
+  } finally {
+    return rows;
+  }
+}
+
 /** Combine tableRowsLocal and tableRowsDb */
 export const tableRowsAtom = atom<TableRow[]>((get) => {
+  const tableType = get(tableTypeAtom);
+  let tableFilters = get(tableFiltersAtom);
+  let tableFiltersJoin = get(tableFiltersJoinAtom);
+  let tableSort = get(tableSortsAtom);
   const rowsDb = get(tableRowsDbAtom);
-  const rowsLocal = get(tableRowsLocalAtom);
+  if (tableType === "db") {
+    return [...rowsDb];
+  }
+
+  let rowsLocal = get(tableRowsLocalAtom);
+  const columnsMap = get(tableSchemaAtom)?.columns;
 
   // Optimization: create Map of rowsDb by path to index for faster lookup
+  const isTableSortEmpty = isEmpty(tableSort);
+  const isTableFilterEmpty = isEmpty(tableFilters);
+  const isTableColumnMapEmpty = isEmpty(columnsMap);
+
   const rowsDbMap = new Map<string, number>();
   rowsDb.forEach((row, i) => rowsDbMap.set(row._rowy_ref.path, i));
-
   // Loop through rowsLocal, which is usually the smaller of the two arrays
-  const rowsLocalToMerge = rowsLocal.map((row, i) => {
-    // If row is in rowsDb, merge the two
-    // and remove from rowsDb to prevent duplication
+
+  const canIncludeLocalData = get(canIncludeLocalDataAtom);
+  if (!canIncludeLocalData && tableType === "old") {
+    return [...rowsDb];
+  }
+
+  rowsLocal = rowsLocal.map((row) => {
     if (rowsDbMap.has(row._rowy_ref.path)) {
       const index = rowsDbMap.get(row._rowy_ref.path)!;
       const merged = updateRowData({ ...rowsDb[index] }, row);
+      //updating the last changes to local rows.
+      row = Object.assign(row, merged);
       rowsDbMap.delete(row._rowy_ref.path);
       return merged;
     }
     return row;
   });
 
-  // Merge the two arrays
+  rowsLocal = handleFiltersAndSorts(rowsLocal, {
+    tableFilters,
+    tableSort,
+    tableFiltersJoin,
+    columnsMap,
+  });
+
+  if (tableType === "local") {
+    return [...rowsLocal];
+  }
+
+  // Merge the local sorted/filtered rows with db rows.
+  if (
+    (!isTableSortEmpty || !isTableFilterEmpty) &&
+    !isTableColumnMapEmpty &&
+    !isEmpty(rowsLocal)
+  ) {
+    return mergeSortedArrays(
+      rowsLocal,
+      rowsDb.filter((row) => rowsDbMap.has(row._rowy_ref.path)),
+      tableSort,
+      columnsMap
+    );
+  }
+
   return [
-    ...rowsLocalToMerge,
+    ...rowsLocal,
     ...rowsDb.filter((row) => rowsDbMap.has(row._rowy_ref.path)),
   ];
 });

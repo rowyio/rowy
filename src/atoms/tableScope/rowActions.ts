@@ -20,6 +20,9 @@ import {
   _updateRowDbAtom,
   _deleteRowDbAtom,
   _bulkWriteDbAtom,
+  tableSortsAtom,
+  tableRowsDbAtom,
+  tableTypeAtom,
 } from "./table";
 
 import {
@@ -66,10 +69,29 @@ export const addRowAtom = atom(
     if (!currentUser) throw new Error("Cannot read current user");
     const auditChange = get(auditChangeAtom);
     const tableFilters = get(tableFiltersAtom);
-    const tableColumnsOrdered = get(tableColumnsOrderedAtom);
-    const tableRows = get(tableRowsAtom);
+    const tableSort = get(tableSortsAtom);
+    const tableType = get(tableTypeAtom);
 
-    const _addSingleRowAndAudit = async (row: TableRow) => {
+    const tableColumnsOrdered = get(tableColumnsOrderedAtom);
+    const tableLocalRows = get(tableRowsLocalAtom);
+    const tableDbRows = get(tableRowsDbAtom);
+    let tableRows = get(tableRowsAtom);
+    //this will handle the out of order and id duplicate issues
+    if (tableType !== "old") {
+      tableRows = [...tableLocalRows, ...tableDbRows];
+    }
+
+    const updateTableType = () => {
+      if (tableType === "db") {
+        window.alert("Navigating to Play ground");
+        set(tableTypeAtom, "local");
+      }
+    };
+
+    const _addSingleRowAndAudit = async (
+      row: TableRow,
+      firstInOrderRowId?: string
+    ) => {
       // Store initial values to be written
       const initialValues: TableRow = { _rowy_ref: row._rowy_ref };
 
@@ -124,6 +146,8 @@ export const addRowAtom = atom(
       // - there are filters set and we couldn’t set the value of a field to
       //   fit in the filtered query
       // - user did not set ID to decrement
+
+      let updateInDb = false;
       if (
         row._rowy_outOfOrder === true ||
         outOfOrderFilters.size > 0 ||
@@ -133,20 +157,40 @@ export const addRowAtom = atom(
           type: "add",
           row: { ...rowValues, _rowy_outOfOrder: true },
         });
+        updateInDb = false;
+        updateTableType();
       }
 
       // Also add to rowsLocal if any required fields are missing
       // (not out of order since those cases are handled above)
-      else if (missingRequiredFields.length > 0) {
+
+      // - if adding the row at top of the out of order rows(firstInOrderRowId be zzzzzzz) and if there are no
+      //   required columns in the table schema it will create data in db with path provided.(with id: zzzzzzy)
+      //   and if again user tries to add row at top of out of order rows(firstInOrderRowId will again be zzzzzzz
+      //   and next decrement id will always be firstInOrderRowId be zzzzzzy). it won't add row. so in this case
+      //   pushing it into local rows to avoid this scenario .
+      else if (
+        missingRequiredFields.length > 0 ||
+        (requiredFields.length === 0 && !!firstInOrderRowId)
+      ) {
         set(tableRowsLocalAtom, {
           type: "add",
           row: { ...rowValues, _rowy_outOfOrder: false },
         });
-      }
-
-      // Write to database if no required fields are missing
+        updateTableType();
+        updateInDb = missingRequiredFields.length === 0;
+      } // Write to database if no required fields are missing
       else {
+        updateInDb = true;
+      }
+      if (updateInDb) {
         await updateRowDb(row._rowy_ref.path, omitRowyFields(rowValues));
+        if (tableType === "local") {
+          window.alert(
+            "As the row added in the playground is updated to the db. so not considering as local row. redirecting it to db"
+          );
+          set(tableTypeAtom, "db");
+        }
       }
 
       if (auditChange) auditChange("ADD_ROW", row._rowy_ref.path);
@@ -178,8 +222,22 @@ export const addRowAtom = atom(
           ? `${r._rowy_ref.path.split("/").slice(0, -1).join("/")}/${id}`
           : r._rowy_ref.path;
 
+        //if adding row which is already present in the local data. igonre it. do send a toast message
+        if (
+          !setId &&
+          tableLocalRows.find(
+            (lRow) => lRow._rowy_ref.path === r._rowy_ref.path
+          )
+        ) {
+          window.alert("creating the row with already existing custom_id");
+          continue;
+        }
+
         promises.push(
-          _addSingleRowAndAudit(setId ? { ...r, _rowy_ref: { id, path } } : r)
+          _addSingleRowAndAudit(
+            setId ? { ...r, _rowy_ref: { id, path } } : r,
+            lastId
+          )
         );
       }
 
@@ -195,9 +253,18 @@ export const addRowAtom = atom(
       const path = setId
         ? `${row._rowy_ref.path.split("/").slice(0, -1).join("/")}/${id}`
         : row._rowy_ref.path;
-
+      if (
+        !setId &&
+        tableLocalRows.find(
+          (lRow) => lRow._rowy_ref.path === row._rowy_ref.path
+        )
+      ) {
+        window.alert("creating the row with already existing custom_id");
+        return;
+      }
       await _addSingleRowAndAudit(
-        setId ? { ...row, _rowy_ref: { id, path } } : row
+        setId ? { ...row, _rowy_ref: { id, path } } : row,
+        firstInOrderRowId
       );
     }
   }
