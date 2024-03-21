@@ -31,6 +31,7 @@ import {
 import { SyncAtomValue } from "@src/atoms/utils";
 import { ROUTES } from "@src/constants/routes";
 import useDocumentTitle from "@src/hooks/useDocumentTitle";
+import { TableTypeComp } from "./TablePage";
 
 // prettier-ignore
 const TablePage = lazy(() => import("./TablePage" /* webpackChunkName: "TablePage" */));
@@ -142,6 +143,7 @@ export default function ProvidedTablePage() {
           >
             <main>
               <TablePage enableRowSelection disableModals={Boolean(outlet)} />
+              <TableTypeComp />
             </main>
           </Suspense>
           <Suspense fallback={null}>{outlet}</Suspense>

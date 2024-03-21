@@ -36,6 +36,8 @@ import {
   updateTableSchemaAtom,
   tableFiltersPopoverAtom,
   tableFiltersJoinAtom,
+  tableTypeAtom,
+  canIncludeLocalDataAtom,
 } from "@src/atoms/tableScope";
 import { useFilterInputs } from "./useFilterInputs";
 import { analytics, logEvent } from "@src/analytics";
@@ -88,6 +90,7 @@ export default function Filters() {
     availableFiltersForEachSelectedColumn[0];
 
   const setTableFiltersJoin = useSetAtom(tableFiltersJoinAtom, tableScope);
+  const [tableType] = useAtom(tableTypeAtom, tableScope);
 
   // Get table filters & user filters from config documents
   const tableFilters = useMemoValue(
@@ -188,6 +191,11 @@ export default function Filters() {
 
   const [overrideTableFilters, setOverrideTableFilters] = useState(
     tableFiltersOverridden
+  );
+  const [localDataCheck, setLocalDataCheck] = useState(true);
+  const setCanIncludeLocalData = useSetAtom(
+    canIncludeLocalDataAtom,
+    tableScope
   );
 
   useEffect(() => {
@@ -353,10 +361,29 @@ export default function Filters() {
                       />
                     }
                     label="Override table filters"
-                    sx={{ justifyContent: "center", mb: 1, mr: 0 }}
+                    sx={
+                      tableType === "old"
+                        ? { justifyContent: "start", mb: 0, mr: 0 }
+                        : { justifyContent: "center", mb: 1, mr: 0 }
+                    }
                   />
                 )}
-
+                {tableType === "old" ? (
+                  <>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={localDataCheck}
+                          onChange={(e) => {
+                            setLocalDataCheck(e.target.checked);
+                          }}
+                        />
+                      }
+                      label="Include the Local and out of order rows too."
+                      sx={{ justifyContent: "start", mb: 1, mr: 0 }}
+                    />
+                  </>
+                ) : null}
                 <Stack
                   direction="row"
                   sx={{ "& .MuiButton-root": { minWidth: 100 } }}
@@ -388,6 +415,7 @@ export default function Filters() {
                         userFilterInputs.queries as TableFilter[],
                         userFilterInputs.joinOperator
                       );
+                      setCanIncludeLocalData(localDataCheck);
                       handleClose();
                     }}
                   >

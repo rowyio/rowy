@@ -1,5 +1,5 @@
-import { Suspense, forwardRef } from "react";
-import { useAtom } from "jotai";
+import { Suspense, forwardRef, useEffect } from "react";
+import { useAtom, useSetAtom } from "jotai";
 
 import { Tooltip, Typography, TypographyProps } from "@mui/material";
 import SyncIcon from "@mui/icons-material/Sync";
@@ -10,6 +10,7 @@ import {
   tableRowsAtom,
   tableNextPageAtom,
   serverDocCountAtom,
+  tableTypeAtom,
 } from "@src/atoms/tableScope";
 import { spreadSx } from "@src/utils/ui";
 import useOffline from "@src/hooks/useOffline";
@@ -60,8 +61,8 @@ function LoadedRowsStatus() {
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
   const [serverDocCount] = useAtom(serverDocCountAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
-
-  if (tableNextPage.loading)
+  const [tableType] = useAtom(tableTypeAtom, tableScope);
+  if (tableNextPage.loading && tableType !== "local")
     return <StatusText>{loadingIcon}Loading more…</StatusText>;
 
   return (
@@ -70,8 +71,13 @@ function LoadedRowsStatus() {
         <SyncIcon style={{ transform: "rotate(45deg)" }} />
         Loaded {!tableNextPage.available && "all "}
         {tableRows.length}
-        {serverDocCount !== undefined && ` of ${serverDocCount}`} row
-        {(serverDocCount ?? tableRows.length) !== 1 && "s"}
+        {tableType !== "local" &&
+          serverDocCount !== undefined &&
+          ` of ${serverDocCount}`}{" "}
+        row
+        {tableType !== "local" &&
+          (serverDocCount ?? tableRows.length) !== 1 &&
+          "s"}
       </StatusText>
     </Tooltip>
   );
