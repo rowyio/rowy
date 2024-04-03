@@ -13,7 +13,14 @@ import type {
   VisibilityState,
 } from "@tanstack/react-table";
 import { DropResult } from "react-beautiful-dnd";
-import { get } from "lodash-es";
+import {
+  get,
+  includes,
+  isArray,
+  isNumber,
+  cloneDeep,
+  isEmpty,
+} from "lodash-es";
 
 import StyledTable from "./Styled/StyledTable";
 import TableHeader from "./TableHeader";
@@ -36,6 +43,11 @@ import {
   tableSortsAtom,
   tableIdAtom,
   serverDocCountAtom,
+  endCellAtom,
+  selectedCellsAtom,
+  bulkUpdateRowsAtom,
+  tableSettingsAtom,
+  SelectedCells,
 } from "@src/atoms/tableScope";
 import { projectScope, userSettingsAtom } from "@src/atoms/projectScope";
 import { getFieldType, getFieldProp } from "@src/components/fields";
@@ -46,6 +58,10 @@ import useHotKeys from "./useHotKey";
 import type { TableRow, ColumnConfig } from "@src/types/table";
 import useStateWithRef from "./useStateWithRef"; // testing with useStateWithRef
 import { Checkbox, FormControlLabel } from "@mui/material";
+import SnackbarProgress, {
+  ISnackbarProgressRef,
+} from "@src/components/SnackbarProgress";
+import { useSnackbar } from "notistack";
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
@@ -113,6 +129,7 @@ export default function Table({
   emptyState,
   selectedRows,
 }: ITableProps) {
+  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [serverDocCount] = useAtom(serverDocCountAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
@@ -122,11 +139,20 @@ export default function Table({
   const setReactTable = useSetAtom(reactTableAtom, tableScope);
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
+  const bulkUpdateRows = useSetAtom(bulkUpdateRowsAtom, tableScope);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const snackbarProgressRef = useRef<ISnackbarProgressRef>();
 
   // Get user settings and tableId for applying sort sorting
   const [userSettings] = useAtom(userSettingsAtom, projectScope);
   const [tableId] = useAtom(tableIdAtom, tableScope);
   const setTableSorts = useSetAtom(tableSortsAtom, tableScope);
+  const [selectedCells, setSelectedCells] = useAtom(
+    selectedCellsAtom,
+    tableScope
+  ); // State to track selected cells
+  // const [cellsThatNeedSelectedValues, setCellsThatNeedSelectedValues] = useAtom(cellsThatNeedCopyAtom);
+  const [, setEndCellId] = useAtom(endCellAtom, tableScope);
 
   // Store a **state** and reference to the container element
   // so the state can re-render `TableBody`, preventing virtualization
@@ -287,6 +313,240 @@ export default function Table({
     ["mod+X", handleCut],
     ["mod+V", (e) => handlePaste], // So the event isn't passed to the handler
   ]);
+  const handleShiftArrowKey = useCallback(
+    (direction: "ArrowLeft" | "ArrowRight" | "ArrowDown" | "ArrowUp") => {
+      const selectedCell = selectedCells;
+      if (!selectedCell || !table) return;
+
+      const visibleCells = selectedCell.cell.getContext().row.getVisibleCells();
+      const cellIndex = visibleCells.findIndex(
+        (cell) => cell.id === selectedCell.cell.id
+      );
+      const rowIndex = selectedCell.rowIndex;
+      const rows = table.getRowModel().rows || [];
+
+      if (!direction || !selectedCells) {
+        return;
+      }
+
+      setSelectedCells((prev) => {
+        if (prev) {
+          switch (direction) {
+            case "ArrowLeft":
+              return cellIndex === prev.right && prev.left > 0
+                ? { ...prev, left: prev.left - 1 }
+                : prev.right > cellIndex && prev.right < visibleCells.length
+                ? { ...prev, right: prev.right - 1 }
+                : prev;
+            case "ArrowRight":
+              return cellIndex === prev.left &&
+                prev.right < visibleCells.length - 1
+                ? { ...prev, right: prev.right + 1 }
+                : prev.left < cellIndex && prev.left >= 0
+                ? { ...prev, left: prev.left + 1 }
+                : prev;
+            case "ArrowUp":
+              return rowIndex === prev.down && prev.up > 0
+                ? { ...prev, up: prev.up - 1 }
+                : prev.down > rowIndex && prev.down < rows.length
+                ? { ...prev, down: prev.down - 1 }
+                : prev;
+            case "ArrowDown":
+              return rowIndex === prev.up && prev.down < rows.length - 1
+                ? { ...prev, down: prev.down + 1 }
+                : prev.up < rowIndex && prev.up >= 0
+                ? { ...prev, up: prev.up + 1 }
+                : prev;
+            default:
+              return prev;
+          }
+        }
+        return prev;
+      });
+    },
+    [selectedCells, setSelectedCells, table]
+  );
+
+  enum CopyDirection {
+    Vertical,
+    Horizontal,
+  }
+
+  function getCopyDirection(
+    selectedCells: SelectedCells,
+    endY: number,
+    endX: number
+  ): CopyDirection {
+    const di = Math.min(
+      Math.abs(endY - selectedCells.down),
+      Math.abs(endY - selectedCells.up)
+    );
+    const dj = Math.min(
+      Math.abs(endX - selectedCells.right),
+      Math.abs(endX - selectedCells.left)
+    );
+    return di >= dj ? CopyDirection.Vertical : CopyDirection.Horizontal;
+  }
+
+  function copyCells(
+    copyDirection: CopyDirection,
+    selectedCells: SelectedCells,
+    endY: number,
+    endX: number
+  ) {
+    const updateData = cloneDeep(tableRows);
+    let { left, right, up, down } = selectedCells;
+    let newUpdates = [];
+    if (copyDirection === CopyDirection.Vertical) {
+      let startIndex = endY > down ? up : down;
+      for (
+        let i = endY > down ? down + 1 : up - 1;
+        endY > down ? i <= endY && i < tableRows.length : i >= endY;
+        endY > down ? i++ : i--
+      ) {
+        let row = rows[i];
+        let cells = row?._getAllVisibleCells() || [];
+        const newUpdate: Partial<TableRow> = {};
+        for (
+          let j = endY > down ? left : right;
+          endY > down ? j <= right && j < cells.length : j >= left;
+          endY > down ? j++ : j--
+        ) {
+          let cell = cells[j];
+          let selectedRow = updateData[startIndex];
+          let row = updateData[i];
+          if (cell && row && selectedRow) {
+            let key = cell.column.id;
+            newUpdate[key] = get(selectedRow, key, "");
+          }
+        }
+        if (!isEmpty(newUpdate))
+          newUpdates.push({
+            row: updateData[i],
+            path: updateData[i]._rowy_ref.path,
+            newUpdate,
+            deleteField: false,
+            arrayTableData: updateData[i]._rowy_ref.arrayTableData,
+          });
+        if (endY > down) {
+          startIndex = startIndex === down ? up - 1 : startIndex;
+          startIndex++;
+        } else {
+          startIndex = startIndex === up ? down + 1 : startIndex;
+          startIndex--;
+        }
+      }
+      up = Math.min(up, endY);
+      down = Math.max(down, endY);
+    } else if (copyDirection === CopyDirection.Horizontal) {
+      //ideally this should be allowed.
+      let startIndex = left;
+      for (let i = down; i >= up; i--) {
+        let cells = rows[i]?._getAllVisibleCells() || [];
+        startIndex = endX > right ? left : right;
+        const newUpdate: Partial<TableRow> = {};
+        for (
+          let j = endX > right ? right + 1 : left - 1;
+          endX > right ? j <= endX : j >= endX;
+          endX > right ? j++ : j--
+        ) {
+          let copyCell = cells[startIndex];
+          let cell = cells[j];
+          let selectedRow = updateData[i];
+          let row = updateData[i];
+          if (cell && row && selectedRow && copyCell) {
+            let key = cell.column.id;
+            let copyKey = copyCell.column.id;
+            newUpdate[key] = get(selectedRow, copyKey, "");
+          }
+          if (!isEmpty(newUpdate))
+            newUpdates.push({
+              row: updateData[i],
+              path: updateData[i]._rowy_ref.path,
+              newUpdate,
+              deleteField: false,
+              arrayTableData: updateData[i]._rowy_ref.arrayTableData,
+            });
+          if (endX > right) {
+            startIndex = startIndex === right ? left - 1 : startIndex;
+            startIndex++;
+          } else {
+            startIndex = startIndex === left ? right + 1 : startIndex;
+            startIndex--;
+          }
+        }
+      }
+      left = Math.min(left, endX);
+      right = Math.max(right, endX);
+    }
+    setSelectedCells((prev) => {
+      if (prev) {
+        return {
+          ...prev,
+          up,
+          down,
+          left,
+          right,
+        };
+      }
+      return prev;
+    });
+    return newUpdates;
+  }
+
+  async function handleCopying(endCellId: string | null) {
+    if (!selectedCells || !endCellId) {
+      return;
+    }
+    const rows = table.getRowModel().rows;
+    if (endCellId && rows) {
+      const cellMeta = endCellId.split("__");
+      const cellId = cellMeta[1];
+      const endY = parseInt(cellMeta[0] ?? "");
+
+      if (isNumber(endY)) {
+        const row = rows[endY];
+        const endX = row
+          ?._getAllVisibleCells()
+          .findIndex((cell) => cell.id === cellId);
+        if (isNumber(endX)) {
+          const copyDirection = getCopyDirection(selectedCells, endY, endX);
+          const { up, down, left, right } = selectedCells;
+          const loadingSnackbar = enqueueSnackbar(
+            `Copying values. This might take a while.`,
+            {
+              persist: true,
+              action: (
+                <SnackbarProgress
+                  stateRef={snackbarProgressRef}
+                  target={
+                    copyDirection === CopyDirection.Vertical
+                      ? Math.max(endY - down, up - endY) * (right - left + 1)
+                      : (down - up + 1) * Math.max(endX - right, left - endX) ||
+                        0
+                  }
+                  label=" cells"
+                />
+              ),
+            }
+          );
+          let newUpdates = copyCells(copyDirection, selectedCells, endY, endX);
+          setEndCellId(null);
+          await bulkUpdateRows({
+            updates: newUpdates,
+            collection: tableSettings.collection,
+          });
+          closeSnackbar(loadingSnackbar);
+        }
+      }
+    }
+  }
+
+  useKeyPress(
+    ["ArrowLeft", "ArrowRight", "ArrowDown", "ArrowUp"],
+    handleShiftArrowKey
+  );
+  const { startDrag, isDragging } = useDrag(handleCopying);
 
   // Handle prompt to save local column sizes if user `canEditColumns`
   useSaveColumnSizing(columnSizing, canEditColumns);
@@ -402,6 +662,9 @@ export default function Table({
             canEditCells={canEditCells}
             lastFrozen={lastFrozen}
             columnSizing={columnSizing}
+            tableInstance={table}
+            startDrag={startDrag}
+            isDragging={isDragging}
           />
         )}
       </StyledTable>
@@ -416,4 +679,67 @@ export default function Table({
       <ContextMenu />
     </div>
   );
+}
+
+export function useKeyPress(
+  targetKey: string[] | string,
+  handleShiftArrowKey: Function
+) {
+  const [keyPressed, setKeyPressed] = useState(false);
+
+  targetKey = isArray(targetKey) ? targetKey : [targetKey];
+
+  useEffect(() => {
+    const downHandler = ({ key, shiftKey }: KeyboardEvent) => {
+      if (includes(targetKey, key) && shiftKey) {
+        setKeyPressed(true);
+        handleShiftArrowKey(key);
+      }
+    };
+
+    const upHandler = ({ key }: KeyboardEvent) => {
+      if (includes(targetKey, key)) setKeyPressed(false);
+    };
+
+    window.addEventListener("keydown", downHandler);
+    window.addEventListener("keyup", upHandler);
+
+    return () => {
+      window.removeEventListener("keydown", downHandler);
+      window.removeEventListener("keyup", upHandler);
+    };
+  }, [targetKey]);
+
+  return keyPressed;
+}
+
+export function useDrag(handleCopying: Function) {
+  const [isDragging, setIsDragging] = useState(false);
+  const [endCellId] = useAtom(endCellAtom, tableScope);
+
+  useEffect(() => {
+    if (!isDragging) {
+      return;
+    }
+    function handleMouseUp(e: MouseEvent) {
+      e.preventDefault();
+      if (isDragging) {
+        setIsDragging(false);
+        handleCopying(endCellId);
+      }
+    }
+    // document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isDragging, endCellId]);
+
+  function startDrag(e: MouseEvent, id: string) {
+    e.preventDefault();
+    setIsDragging(true);
+  }
+
+  return { startDrag, isDragging };
 }

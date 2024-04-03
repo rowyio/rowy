@@ -512,3 +512,99 @@ export const updateFieldAtom = atom(
       auditChange("UPDATE_CELL", path, { updatedField: fieldName });
   }
 );
+
+export const bulkUpdateRowsAtom = atom(
+  null,
+  async (
+    get,
+    _,
+    {
+      updates,
+      collection,
+      onBatchCommit,
+      type,
+    }: {
+      updates: {
+        row: TableRow;
+        path: string;
+        newUpdate: Partial<TableRow>;
+        deleteField?: boolean;
+        arrayTableData?: ArrayTableRowData;
+      }[];
+      collection: string;
+      onBatchCommit?: Parameters<BulkWriteFunction>[1];
+      type?: "update";
+    }
+  ) => {
+    const bulkWriteDb = get(_bulkWriteDbAtom);
+    if (!bulkWriteDb) throw new Error("Cannot write to database");
+    const tableSettings = get(tableSettingsAtom);
+    if (!tableSettings) throw new Error("Cannot read table settings");
+    const currentUser = get(currentUserAtom);
+    if (!currentUser) throw new Error("Cannot read current user");
+    const auditChange = get(auditChangeAtom); //To Do
+    const tableColumnsOrdered = get(tableColumnsOrderedAtom);
+
+    const tableRowsLocal = get(tableRowsLocalAtom);
+    const requiredFields = tableColumnsOrdered
+      .filter((column) => column.config?.required)
+      .map((column) => column.key);
+    let operations = updates.map(({ row, newUpdate, path }) => {
+      const update: Partial<TableRow> = {};
+      let localUpdate: Partial<TableRow> = {};
+      let dbUpdate: Partial<TableRow> = {};
+      let missingRequiredFields = [];
+      let newRowValues: Partial<TableRow> = {};
+      let useSet = false;
+      let updatedFields = new Set();
+      let isLocalRow = Boolean(find(tableRowsLocal, ["_rowy_ref.path", path]));
+      for (let fieldName in newUpdate) {
+        const value = _get(newUpdate, fieldName, "");
+        isLocalRow = isLocalRow || fieldName.startsWith("_rowy_formulaValue_");
+
+        // Write audit fields if not explicitly disabled
+        if (tableSettings.audit !== false) {
+          const auditValue = rowyUser(currentUser);
+          update[tableSettings.auditFieldUpdatedBy || "_updatedBy"] =
+            auditValue;
+          if (isLocalRow) {
+            update[tableSettings.auditFieldCreatedBy || "_createdBy"] =
+              auditValue;
+          }
+        }
+        _set(update, fieldName, value);
+        localUpdate = cloneDeep(update);
+        dbUpdate = cloneDeep(update);
+
+        newRowValues = updateRowData(cloneDeep(row), dbUpdate);
+        useSet = useSet || fieldName.split(".").length > 1;
+        updatedFields.add(fieldName);
+      }
+
+      missingRequiredFields = requiredFields.filter(
+        (field) => newRowValues[field] === undefined
+      );
+      // If it’s a local row, update the row in rowsLocal
+      if (isLocalRow) {
+        _(tableRowsLocalAtom, {
+          type: "update",
+          path,
+          row: localUpdate,
+          deleteFields: [],
+        });
+      }
+
+      return {
+        type: type
+          ? type
+          : row?._rowy_ref?.id
+          ? ("update" as "update")
+          : ("add" as "add"),
+        path: `${collection}/${row?._rowy_ref?.id ?? path}`,
+        data: { ...omitRowyFields(row), ...omitRowyFields(dbUpdate) },
+      };
+    });
+    // Write to db
+    await bulkWriteDb(operations, onBatchCommit);
+  }
+);

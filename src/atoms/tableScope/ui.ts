@@ -2,8 +2,9 @@ import { atom } from "jotai";
 import { atomWithStorage, atomWithHash } from "jotai/utils";
 
 import type { PopoverProps } from "@mui/material";
-import type { ColumnConfig, TableFilter } from "@src/types/table";
+import type { ColumnConfig, TableFilter, TableRow } from "@src/types/table";
 import { SEVERITY_LEVELS } from "@src/components/TableModals/CloudLogsModal/CloudLogSeverityIcon";
+import { Cell } from "@tanstack/react-table";
 
 /**
  * Open table column menu. Set to `null` to close.
@@ -136,8 +137,23 @@ export type SelectedCell = {
   focusInside: boolean;
   arrayIndex?: number; // for array sub table
 };
+
+export type SelectedCells = {
+  cell: Cell<TableRow, any>;
+  isfirstSelectedCell: boolean;
+  up: number;
+  down: number;
+  left: number;
+  right: number;
+  rowIndex: number;
+  cellIndex: number;
+};
 /** Store selected cell in table. Used in side drawer and context menu */
 export const selectedCellAtom = atom<SelectedCell | null>(null);
+
+export const selectedCellsAtom = atom<SelectedCells | null>(null);
+
+export const endCellAtom = atom<string | null>(null);
 
 /** Store context menu target atom for positioning. If not null, menu open. */
 export const contextMenuTargetAtom = atom<HTMLElement | null>(null);

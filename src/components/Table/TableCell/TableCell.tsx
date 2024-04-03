@@ -1,8 +1,8 @@
-import { memo } from "react";
-import { useSetAtom } from "jotai";
+import { memo, useMemo, useState } from "react";
+import { useAtom, useSetAtom } from "jotai";
 import { ErrorBoundary } from "react-error-boundary";
 import { flexRender } from "@tanstack/react-table";
-import type { Row, Cell } from "@tanstack/react-table";
+import type { Row, Cell, Table } from "@tanstack/react-table";
 
 import ErrorIcon from "@mui/icons-material/ErrorOutline";
 import WarningIcon from "@mui/icons-material/WarningAmber";
@@ -16,10 +16,14 @@ import {
   tableScope,
   selectedCellAtom,
   contextMenuTargetAtom,
+  selectedCellsAtom,
+  endCellAtom,
 } from "@src/atoms/tableScope";
 import { TABLE_PADDING } from "@src/components/Table";
 import type { TableRow } from "@src/types/table";
 import type { IRenderedTableCellProps } from "./withRenderTableCell";
+import { isNumber } from "lodash-es";
+import React from "react";
 
 export interface ITableCellProps {
   /** Current row with context from TanStack Table state */
@@ -55,6 +59,10 @@ export interface ITableCellProps {
    */
   left: number;
   isPinned: boolean;
+  tableInstance?: Table<TableRow>;
+  rowIndex: number;
+  startDrag: Function;
+  isDragging: boolean;
 }
 
 /**
@@ -82,9 +90,19 @@ export const TableCell = memo(function TableCell({
   width,
   left,
   isPinned,
+  tableInstance,
+  rowIndex,
+  startDrag,
+  isDragging,
 }: ITableCellProps) {
   const setSelectedCell = useSetAtom(selectedCellAtom, tableScope);
   const setContextMenuTarget = useSetAtom(contextMenuTargetAtom, tableScope);
+  //selecting cells for copying
+  const [selectCells, setSelectedCells] = useAtom(
+    selectedCellsAtom,
+    tableScope
+  );
+  const [endCellId, setEndCellId] = useAtom(endCellAtom, tableScope);
 
   const value = cell.getValue();
   const required = cell.column.columnDef.meta?.config?.required;
@@ -92,8 +110,146 @@ export const TableCell = memo(function TableCell({
 
   const isInvalid = validationRegex && !new RegExp(validationRegex).test(value);
   const isMissing = required && value === undefined;
-
+  const row_index = rowIndex;
+  const cell_index = index;
   let renderedValidationTooltip = null;
+
+  const getComputedStyle = useMemo(() => {
+    if (!selectCells) {
+      return {};
+    }
+    if (
+      selectCells.rowIndex === row_index &&
+      cell_index === selectCells.cellIndex
+    ) {
+      return {
+        backgroundColor:
+          selectCells.down - selectCells.up !== 0 ||
+          selectCells.right - selectCells.left !== 0
+            ? "#3498db"
+            : "transparent",
+      };
+    }
+    if (
+      row_index <= selectCells.down &&
+      row_index >= selectCells.up &&
+      cell_index >= selectCells.left &&
+      cell_index <= selectCells.right
+    ) {
+      return {
+        backgroundColor: "#3498db",
+        borderBottom: row_index === selectCells.down ? "1px solid blue" : "",
+        borderRight: cell_index === selectCells.right ? "1px solid blue" : "",
+        borderLeft: cell_index === selectCells.left ? "1px solid blue" : "",
+        borderTop: row_index === selectCells.up ? "1px solid blue" : "",
+      };
+    }
+
+    return {};
+  }, [selectCells, row_index, cell_index]);
+
+  const copySelectedStyle = useMemo(() => {
+    if (!endCellId || !selectCells) {
+      return {};
+    }
+    const rows = tableInstance?.getRowModel().rows;
+    if (
+      selectCells.rowIndex === row_index &&
+      cell_index === selectCells.cellIndex
+    ) {
+      return {};
+    }
+    if (
+      row_index <= selectCells.down &&
+      row_index >= selectCells.up &&
+      cell_index >= selectCells.left &&
+      cell_index <= selectCells.right
+    ) {
+      return {};
+    }
+    if (endCellId && rows) {
+      const cellMeta = endCellId.split("__");
+      const cellId = cellMeta[1];
+      const endY = parseInt(cellMeta[0] ?? "");
+      console.log("endCellId", endCellId, endY, isNumber(endY), cellId);
+      if (isNumber(endY)) {
+        const row = rows[endY];
+        const endX = row
+          ?._getAllVisibleCells()
+          .findIndex((cell: Cell<TableRow, any>) => cell.id === cellId);
+        if (isNumber(endX)) {
+          let di = Math.min(
+            Math.abs(endY - selectCells.down),
+            Math.abs(endY - selectCells.up)
+          );
+          let dj = Math.min(
+            Math.abs(endX - selectCells.right),
+            Math.abs(endX - selectCells.left)
+          );
+          if (di >= dj) {
+            if (
+              (row_index <= selectCells.up - 1 &&
+                row_index >= endY &&
+                cell_index <= selectCells.right &&
+                cell_index >= selectCells.left) ||
+              (row_index >= selectCells.down + 1 &&
+                row_index <= endY &&
+                cell_index >= selectCells.left &&
+                cell_index <= selectCells.right)
+            ) {
+              return {
+                backgroundColor: "#FFDDDD",
+              };
+            }
+          } else {
+            if (
+              row_index <= selectCells.down &&
+              row_index >= selectCells.up &&
+              ((cell_index >= selectCells.right + 1 && cell_index <= endX) ||
+                (cell_index >= endX && cell_index < selectCells.left))
+            ) {
+              return {
+                backgroundColor: "#FFDDDD",
+              };
+            }
+          }
+        }
+      }
+    }
+    return {};
+  }, [endCellId, selectCells, tableInstance, row_index, cell_index]);
+
+  const dragShowStyle = useMemo(() => {
+    if (!selectCells) {
+      return "none";
+    }
+    if (selectCells.down === row_index && cell_index === selectCells.right) {
+      return "block";
+    }
+    return "none";
+  }, [cell_index, row_index, selectCells]);
+
+  const handleCellClick = (
+    cell: Cell<TableRow, any>,
+    e: any,
+    rowIndex: number
+  ) => {
+    const cellIndex = cell
+      .getContext()
+      .row.getVisibleCells()
+      .findIndex((c) => cell.id === c.id);
+    setSelectedCells({
+      cell,
+      isfirstSelectedCell: true,
+      left: cellIndex,
+      right: cellIndex,
+      up: rowIndex,
+      down: rowIndex,
+      rowIndex,
+      cellIndex,
+    });
+    setEndCellId(null);
+  };
 
   if (isInvalid) {
     renderedValidationTooltip = (
@@ -131,9 +287,55 @@ export const TableCell = memo(function TableCell({
     disabled: !canEditCells || cell.column.columnDef.meta?.editable === false,
     rowHeight,
   };
+  const DragAndCopy = () => {
+    const [isHovered, setIsHovered] = useState(false);
+    return (
+      <div
+        id={`show__${cell.id}__${row.id}`}
+        style={{
+          position: "absolute",
+          display: dragShowStyle,
+          bottom: -5,
+          right: -5,
+          backgroundColor: "red",
+          height: 10,
+          width: 10,
+          borderRadius: "50%",
+          cursor: "pointer",
+          zIndex: 10,
+        }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onMouseDown={(e) =>
+          startDrag(e as unknown as MouseEvent, `show_${cell.id}__${row.id}`)
+        }
+      >
+        {isHovered && (
+          <div
+            style={{
+              position: "absolute",
+              top: "-150%",
+              left: 20,
+              backgroundColor: "rgba(0, 0, 0, 0.8)",
+              color: "white",
+              padding: "5px",
+              borderRadius: "4px",
+              boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
+              zIndex: 1000,
+            }}
+          >
+            <div style={{ fontSize: "14x", fontWeight: "bold" }}>
+              Drag To Copy
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <StyledCell
+      id={`${rowIndex}__${cell.id}__${row.id}`}
       key={cell.id}
       data-row-id={row.id}
       data-col-id={cell.column.id}
@@ -154,16 +356,22 @@ export const TableCell = memo(function TableCell({
       }
       aria-invalid={isInvalid || isMissing}
       style={{
-        width,
-        height: rowHeight,
-        position: isPinned ? "sticky" : "absolute",
-        left: left - (isPinned ? TABLE_PADDING : 0),
-        backgroundColor:
-          cell.column.id === "_rowy_column_actions" ? "transparent" : undefined,
-        borderBottomWidth:
-          cell.column.id === "_rowy_column_actions" ? 0 : undefined,
-        borderRightWidth:
-          cell.column.id === "_rowy_column_actions" ? 0 : undefined,
+        ...{
+          width,
+          height: rowHeight,
+          position: isPinned ? "sticky" : "absolute",
+          left: left - (isPinned ? TABLE_PADDING : 0),
+          backgroundColor:
+            cell.column.id === "_rowy_column_actions"
+              ? "transparent"
+              : undefined,
+          borderBottomWidth:
+            cell.column.id === "_rowy_column_actions" ? 0 : undefined,
+          borderRightWidth:
+            cell.column.id === "_rowy_column_actions" ? 0 : undefined,
+        },
+        ...copySelectedStyle,
+        ...getComputedStyle,
       }}
       onClick={(e) => {
         setSelectedCell({
@@ -173,6 +381,7 @@ export const TableCell = memo(function TableCell({
           focusInside: false,
         });
         (e.target as HTMLDivElement).focus();
+        handleCellClick(cell, e, rowIndex);
       }}
       onDoubleClick={(e) => {
         setSelectedCell({
@@ -201,10 +410,31 @@ export const TableCell = memo(function TableCell({
           setContextMenuTarget(e.target as HTMLElement);
         }
       }}
+      onMouseMove={(e) => {
+        e.preventDefault();
+        if (!isDragging) {
+          return;
+        }
+        setEndCellId(`${rowIndex}__${cell.id}__${row.id}`);
+      }}
+      onMouseUp={(e) => {
+        e.preventDefault();
+        if (!isDragging) {
+          return;
+        }
+        setSelectedCell({
+          arrayIndex: row.original._rowy_ref.arrayTableData?.index,
+          path: row.original._rowy_ref.path,
+          columnKey: cell.column.id,
+          focusInside: false,
+        });
+        (e.target as HTMLDivElement).focus();
+      }}
     >
       {renderedValidationTooltip}
       <ErrorBoundary fallbackRender={InlineErrorFallback}>
         {flexRender(cell.column.columnDef.cell, tableCellComponentProps)}
+        <DragAndCopy />
       </ErrorBoundary>
     </StyledCell>
   );

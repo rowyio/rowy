@@ -5,6 +5,7 @@ import {
   Row,
   ColumnSizingState,
   flexRender,
+  Table,
 } from "@tanstack/react-table";
 
 import StyledRow from "./Styled/StyledRow";
@@ -45,6 +46,9 @@ export interface ITableBodyProps {
   /**
    * Must pass this prop so that it re-renders when local column sizing changes */
   columnSizing: ColumnSizingState;
+  tableInstance?: Table<TableRow>;
+  startDrag: Function;
+  isDragging: boolean;
 }
 
 /**
@@ -61,6 +65,9 @@ export const TableBody = memo(function TableBody({
   canEditCells,
   lastFrozen,
   columnSizing,
+  tableInstance,
+  startDrag,
+  isDragging,
 }: ITableBodyProps) {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [selectedCell] = useAtom(selectedCellAtom, tableScope);
@@ -143,6 +150,10 @@ export const TableBody = memo(function TableBody({
                   rowHeight={rowHeight}
                   left={virtualCell.start}
                   isPinned={cell.column.getIsPinned() === "left"}
+                  tableInstance={tableInstance}
+                  rowIndex={virtualRow.index}
+                  startDrag={startDrag}
+                  isDragging={isDragging}
                 />
               );
             })}
