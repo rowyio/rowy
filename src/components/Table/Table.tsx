@@ -9,6 +9,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import type {
+  Cell,
   ColumnPinningState,
   VisibilityState,
 } from "@tanstack/react-table";
@@ -44,10 +45,10 @@ import {
   tableIdAtom,
   serverDocCountAtom,
   endCellAtom,
-  selectedCellsAtom,
+  selectedCopyCellsAtom,
   bulkUpdateRowsAtom,
   tableSettingsAtom,
-  SelectedCells,
+  SelectedCopyCells,
 } from "@src/atoms/tableScope";
 import { projectScope, userSettingsAtom } from "@src/atoms/projectScope";
 import { getFieldType, getFieldProp } from "@src/components/fields";
@@ -62,6 +63,13 @@ import SnackbarProgress, {
   ISnackbarProgressRef,
 } from "@src/components/SnackbarProgress";
 import { useSnackbar } from "notistack";
+import {
+  CopyDirection,
+  getCopyDirection,
+  getNewUpdateDetails,
+  updateCellValues,
+  updateStartIndex,
+} from "@src/utils/table";
 
 export const DEFAULT_ROW_HEIGHT = 41;
 export const DEFAULT_COL_WIDTH = 150;
@@ -147,8 +155,8 @@ export default function Table({
   const [userSettings] = useAtom(userSettingsAtom, projectScope);
   const [tableId] = useAtom(tableIdAtom, tableScope);
   const setTableSorts = useSetAtom(tableSortsAtom, tableScope);
-  const [selectedCells, setSelectedCells] = useAtom(
-    selectedCellsAtom,
+  const [selectedCopyCells, setSelectedCopyCells] = useAtom(
+    selectedCopyCellsAtom,
     tableScope
   ); // State to track selected cells
   // const [cellsThatNeedSelectedValues, setCellsThatNeedSelectedValues] = useAtom(cellsThatNeedCopyAtom);
@@ -314,90 +322,123 @@ export default function Table({
     ["mod+V", (e) => handlePaste], // So the event isn't passed to the handler
   ]);
   const handleShiftArrowKey = useCallback(
-    (direction: "ArrowLeft" | "ArrowRight" | "ArrowDown" | "ArrowUp") => {
-      const selectedCell = selectedCells;
-      if (!selectedCell || !table) return;
+    useThrottledCallback(
+      (direction: "ArrowLeft" | "ArrowRight" | "ArrowDown" | "ArrowUp") => {
+        const selectedCell = selectedCopyCells;
+        if (!selectedCell || !table) return;
 
-      const visibleCells = selectedCell.cell.getContext().row.getVisibleCells();
-      const cellIndex = visibleCells.findIndex(
-        (cell) => cell.id === selectedCell.cell.id
-      );
-      const rowIndex = selectedCell.rowIndex;
-      const rows = table.getRowModel().rows || [];
+        const visibleCells = selectedCell.cell
+          .getContext()
+          .row.getVisibleCells();
+        const cellIndex = visibleCells.findIndex(
+          (cell) => cell.id === selectedCell.cell.id
+        );
+        const rowIndex = selectedCell.rowIndex;
+        const rows = table.getRowModel().rows || [];
 
-      if (!direction || !selectedCells) {
-        return;
-      }
-
-      setSelectedCells((prev) => {
-        if (prev) {
-          switch (direction) {
-            case "ArrowLeft":
-              return cellIndex === prev.right && prev.left > 0
-                ? { ...prev, left: prev.left - 1 }
-                : prev.right > cellIndex && prev.right < visibleCells.length
-                ? { ...prev, right: prev.right - 1 }
-                : prev;
-            case "ArrowRight":
-              return cellIndex === prev.left &&
-                prev.right < visibleCells.length - 1
-                ? { ...prev, right: prev.right + 1 }
-                : prev.left < cellIndex && prev.left >= 0
-                ? { ...prev, left: prev.left + 1 }
-                : prev;
-            case "ArrowUp":
-              return rowIndex === prev.down && prev.up > 0
-                ? { ...prev, up: prev.up - 1 }
-                : prev.down > rowIndex && prev.down < rows.length
-                ? { ...prev, down: prev.down - 1 }
-                : prev;
-            case "ArrowDown":
-              return rowIndex === prev.up && prev.down < rows.length - 1
-                ? { ...prev, down: prev.down + 1 }
-                : prev.up < rowIndex && prev.up >= 0
-                ? { ...prev, up: prev.up + 1 }
-                : prev;
-            default:
-              return prev;
-          }
+        if (!direction || !selectedCopyCells) {
+          return;
         }
-        return prev;
-      });
-    },
-    [selectedCells, setSelectedCells, table]
+
+        setSelectedCopyCells((prev) => {
+          if (prev) {
+            switch (direction) {
+              case "ArrowLeft":
+                return cellIndex === prev.right && prev.left > 0
+                  ? { ...prev, left: prev.left - 1 }
+                  : prev.right > cellIndex && prev.right < visibleCells.length
+                  ? { ...prev, right: prev.right - 1 }
+                  : prev;
+              case "ArrowRight":
+                return cellIndex === prev.left &&
+                  prev.right < visibleCells.length - 1
+                  ? { ...prev, right: prev.right + 1 }
+                  : prev.left < cellIndex && prev.left >= 0
+                  ? { ...prev, left: prev.left + 1 }
+                  : prev;
+              case "ArrowUp":
+                return rowIndex === prev.down && prev.up > 0
+                  ? { ...prev, up: prev.up - 1 }
+                  : prev.down > rowIndex && prev.down < rows.length
+                  ? { ...prev, down: prev.down - 1 }
+                  : prev;
+              case "ArrowDown":
+                return rowIndex === prev.up && prev.down < rows.length - 1
+                  ? { ...prev, down: prev.down + 1 }
+                  : prev.up < rowIndex && prev.up >= 0
+                  ? { ...prev, up: prev.up + 1 }
+                  : prev;
+              default:
+                return prev;
+            }
+          }
+          return prev;
+        });
+      },
+      100
+    ),
+    [selectedCopyCells, setSelectedCopyCells, table]
   );
-
-  enum CopyDirection {
-    Vertical,
-    Horizontal,
-  }
-
-  function getCopyDirection(
-    selectedCells: SelectedCells,
-    endY: number,
-    endX: number
-  ): CopyDirection {
-    const di = Math.min(
-      Math.abs(endY - selectedCells.down),
-      Math.abs(endY - selectedCells.up)
-    );
-    const dj = Math.min(
-      Math.abs(endX - selectedCells.right),
-      Math.abs(endX - selectedCells.left)
-    );
-    return di >= dj ? CopyDirection.Vertical : CopyDirection.Horizontal;
-  }
 
   function copyCells(
     copyDirection: CopyDirection,
-    selectedCells: SelectedCells,
+    selectedCopyCells: SelectedCopyCells,
     endY: number,
     endX: number
   ) {
     const updateData = cloneDeep(tableRows);
-    let { left, right, up, down } = selectedCells;
+    let { left, right, up, down } = selectedCopyCells;
     let newUpdates = [];
-    if (copyDirection === CopyDirection.Vertical) {
+    let skip = false;
+    if (endY < down && endY > up) {
+      skip = true;
+      let startIndex = endX < right ? right : left;
+      for (let i = down; i >= up; i--) {
+        let row = rows[i];
+        let cells = row?._getAllVisibleCells() || [];
+        const newUpdate: Partial<TableRow> = {};
+        for (let j = left - 1; j >= endX; j--) {
+          updateCellValues(
+            cells,
+            updateData,
+            newUpdate,
+            i,
+            j,
+            i,
+            startIndex,
+            true
+          );
+        }
+        for (let k = right + 1; k <= endX; k++) {
+          updateCellValues(
+            cells,
+            updateData,
+            newUpdate,
+            i,
+            k,
+            i,
+            startIndex,
+            true
+          );
+        }
+        if (!isEmpty(newUpdate))
+          newUpdates.push(getNewUpdateDetails(updateData, i, newUpdate));
+        startIndex = updateStartIndex(
+          startIndex,
+          endY,
+          endX,
+          left,
+          right,
+          down,
+          up,
+          true
+        );
+      }
+      left = Math.min(left, endX);
+      right = Math.max(right, endX);
+    }
+
+    if (copyDirection === CopyDirection.Vertical && !skip) {
       let startIndex = endY > down ? up : down;
       for (
         let i = endY > down ? down + 1 : up - 1;
@@ -412,34 +453,25 @@ export default function Table({
           endY > down ? j <= right && j < cells.length : j >= left;
           endY > down ? j++ : j--
         ) {
-          let cell = cells[j];
-          let selectedRow = updateData[startIndex];
-          let row = updateData[i];
-          if (cell && row && selectedRow) {
-            let key = cell.column.id;
-            newUpdate[key] = get(selectedRow, key, "");
-          }
+          updateCellValues(cells, updateData, newUpdate, i, j, startIndex, j);
+          startIndex = updateStartIndex(
+            startIndex,
+            endY,
+            endX,
+            left,
+            right,
+            down,
+            up
+          );
         }
         if (!isEmpty(newUpdate))
-          newUpdates.push({
-            row: updateData[i],
-            path: updateData[i]._rowy_ref.path,
-            newUpdate,
-            deleteField: false,
-            arrayTableData: updateData[i]._rowy_ref.arrayTableData,
-          });
-        if (endY > down) {
-          startIndex = startIndex === down ? up - 1 : startIndex;
-          startIndex++;
-        } else {
-          startIndex = startIndex === up ? down + 1 : startIndex;
-          startIndex--;
-        }
+          newUpdates.push(getNewUpdateDetails(updateData, i, newUpdate));
       }
       up = Math.min(up, endY);
       down = Math.max(down, endY);
-    } else if (copyDirection === CopyDirection.Horizontal) {
+    } else if (copyDirection === CopyDirection.Horizontal && !skip) {
       //ideally this should be allowed.
+
       let startIndex = left;
       for (let i = down; i >= up; i--) {
         let cells = rows[i]?._getAllVisibleCells() || [];
@@ -450,52 +482,38 @@ export default function Table({
           endX > right ? j <= endX : j >= endX;
           endX > right ? j++ : j--
         ) {
-          let copyCell = cells[startIndex];
-          let cell = cells[j];
-          let selectedRow = updateData[i];
-          let row = updateData[i];
-          if (cell && row && selectedRow && copyCell) {
-            let key = cell.column.id;
-            let copyKey = copyCell.column.id;
-            newUpdate[key] = get(selectedRow, copyKey, "");
-          }
-          if (!isEmpty(newUpdate))
-            newUpdates.push({
-              row: updateData[i],
-              path: updateData[i]._rowy_ref.path,
-              newUpdate,
-              deleteField: false,
-              arrayTableData: updateData[i]._rowy_ref.arrayTableData,
-            });
-          if (endX > right) {
-            startIndex = startIndex === right ? left - 1 : startIndex;
-            startIndex++;
-          } else {
-            startIndex = startIndex === left ? right + 1 : startIndex;
-            startIndex--;
-          }
+          updateCellValues(
+            cells,
+            updateData,
+            newUpdate,
+            i,
+            j,
+            i,
+            startIndex,
+            true
+          );
+          startIndex = updateStartIndex(
+            startIndex,
+            endY,
+            endX,
+            left,
+            right,
+            down,
+            up,
+            true
+          );
         }
+        if (!isEmpty(newUpdate))
+          newUpdates.push(getNewUpdateDetails(updateData, i, newUpdate));
       }
       left = Math.min(left, endX);
       right = Math.max(right, endX);
     }
-    setSelectedCells((prev) => {
-      if (prev) {
-        return {
-          ...prev,
-          up,
-          down,
-          left,
-          right,
-        };
-      }
-      return prev;
-    });
-    return newUpdates;
+    return { newUpdates, up, down, left, right };
   }
 
   async function handleCopying(endCellId: string | null) {
-    if (!selectedCells || !endCellId) {
+    if (!selectedCopyCells || !endCellId) {
       return;
     }
     const rows = table.getRowModel().rows;
@@ -510,8 +528,8 @@ export default function Table({
           ?._getAllVisibleCells()
           .findIndex((cell) => cell.id === cellId);
         if (isNumber(endX)) {
-          const copyDirection = getCopyDirection(selectedCells, endY, endX);
-          const { up, down, left, right } = selectedCells;
+          const copyDirection = getCopyDirection(selectedCopyCells, endY, endX);
+          const { up, down, left, right } = selectedCopyCells;
           const loadingSnackbar = enqueueSnackbar(
             `Copying values. This might take a while.`,
             {
@@ -530,13 +548,31 @@ export default function Table({
               ),
             }
           );
-          let newUpdates = copyCells(copyDirection, selectedCells, endY, endX);
-          setEndCellId(null);
+          let {
+            newUpdates,
+            left: nleft,
+            right: nright,
+            down: ndown,
+            up: nup,
+          } = copyCells(copyDirection, selectedCopyCells, endY, endX);
           await bulkUpdateRows({
             updates: newUpdates,
             collection: tableSettings.collection,
           });
           closeSnackbar(loadingSnackbar);
+          setSelectedCopyCells((prev) => {
+            if (prev) {
+              return {
+                ...prev,
+                up: nup,
+                down: ndown,
+                left: nleft,
+                right: nright,
+              };
+            }
+            return prev;
+          });
+          setEndCellId(null);
         }
       }
     }
@@ -713,7 +749,7 @@ export function useKeyPress(
   return keyPressed;
 }
 
-export function useDrag(handleCopying: Function) {
+export function useDrag(handleCopying: (key: string | null) => void) {
   const [isDragging, setIsDragging] = useState(false);
   const [endCellId] = useAtom(endCellAtom, tableScope);
 

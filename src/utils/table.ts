@@ -1,7 +1,10 @@
-import { mergeWith, isArray } from "lodash-es";
+import { mergeWith, isArray, get, isNumber } from "lodash-es";
+import { Cell, Table } from "@tanstack/react-table";
 import type { User } from "firebase/auth";
 import { TABLE_GROUP_SCHEMAS, TABLE_SCHEMAS } from "@src/config/dbPaths";
 import { TableSettings } from "@src/types/table";
+import { SelectedCopyCells } from "@src/atoms/tableScope";
+import { TableRow } from "@src/types/table";
 
 /**
  * Creates a standard user object to write to table rows
@@ -161,3 +164,221 @@ export const getTableBuildFunctionPathname = (
   const rootTableId = split.shift();
   return root + rootTableId + encodeURIComponent("/" + split.join("/"));
 };
+
+export enum CopyDirection {
+  Vertical,
+  Horizontal,
+}
+
+export function getCopyDirection(
+  selectedCells: SelectedCopyCells,
+  endY: number,
+  endX: number
+): CopyDirection {
+  const di = Math.min(
+    Math.abs(endY - selectedCells.down),
+    Math.abs(endY - selectedCells.up)
+  );
+  const dj = Math.min(
+    Math.abs(endX - selectedCells.right),
+    Math.abs(endX - selectedCells.left)
+  );
+  return di >= dj ? CopyDirection.Vertical : CopyDirection.Horizontal;
+}
+
+export function updateCellValues(
+  cells: Cell<TableRow, unknown>[],
+  updateData: TableRow[],
+  newUpdate: Partial<TableRow>,
+  rowIndex: number,
+  cellIndex: number,
+  selectedRowIndex: number,
+  copyCellIndex: number,
+  useCopyCellIndex?: boolean
+) {
+  let cell = cells[cellIndex];
+  let copyCell = cells[copyCellIndex];
+  let selectedRow = updateData[selectedRowIndex];
+  let row = updateData[rowIndex];
+  if (cell && row && selectedRow) {
+    let key = cell.column.id;
+    let copyKey = copyCell?.column?.id;
+    newUpdate[key] = get(selectedRow, useCopyCellIndex ? copyKey : key, "");
+  }
+}
+
+export function updateStartIndex(
+  startIndex: number,
+  endY: number,
+  endX: number,
+  left: number,
+  right: number,
+  down: number,
+  up: number,
+  isHorizontal?: boolean
+) {
+  if (isHorizontal) {
+    if (endX < right) {
+      startIndex = startIndex === left ? right + 1 : startIndex;
+      startIndex--;
+    } else {
+      startIndex = startIndex === right ? left - 1 : startIndex;
+      startIndex++;
+    }
+    return startIndex;
+  }
+
+  if (endY > down) {
+    startIndex = startIndex === down ? up - 1 : startIndex;
+    startIndex++;
+  } else {
+    startIndex = startIndex === up ? down + 1 : startIndex;
+    startIndex--;
+  }
+  return startIndex;
+}
+
+export function getNewUpdateDetails(
+  updateData: TableRow[],
+  rowIndex: number,
+  newUpdate: Partial<TableRow>
+) {
+  return {
+    row: updateData[rowIndex],
+    path: updateData[rowIndex]._rowy_ref.path,
+    newUpdate,
+    deleteField: false,
+    arrayTableData: updateData[rowIndex]._rowy_ref.arrayTableData,
+  };
+}
+
+export function getCellStyle(
+  selectedCopyCells: SelectedCopyCells | null,
+  row_index: number,
+  cell_index: number
+): React.CSSProperties {
+  if (!selectedCopyCells) {
+    return {};
+  }
+  const { up, down, left, right, rowIndex, cellIndex } = selectedCopyCells;
+  if (rowIndex === row_index && cell_index === cellIndex) {
+    return {
+      backgroundColor:
+        down - up !== 0 || right - left !== 0 ? "#3498db" : "transparent",
+    };
+  }
+  if (
+    row_index <= down &&
+    row_index >= up &&
+    cell_index >= left &&
+    cell_index <= right
+  ) {
+    return {
+      backgroundColor: "#3498db",
+      borderBottomStyle: row_index === down ? "solid" : "none",
+      borderBottomColor: row_index === down ? "blue" : "transparent",
+      borderRightStyle: cell_index === right ? "solid" : "none",
+      borderRightColor: cell_index === right ? "blue" : "transparent",
+      borderLeftStyle: cell_index === left ? "solid" : "none",
+      borderLeftColor: cell_index === left ? "blue" : "transparent",
+      borderTopStyle: row_index === up ? "solid" : "none",
+      borderTopColor: row_index === up ? "blue" : "transparent",
+    };
+  }
+
+  return {};
+}
+
+export function getCopySelectedCellStyle(
+  selectedCopyCells: SelectedCopyCells | null,
+  endCellId: string | null,
+  tableInstance: Table<TableRow> | undefined,
+  row_index: number,
+  cell_index: number
+) {
+  if (!endCellId || !selectedCopyCells) {
+    return {};
+  }
+  const { up, down, left, right, rowIndex, cellIndex } = selectedCopyCells;
+  const rows = tableInstance?.getRowModel().rows;
+  if (rowIndex === row_index && cell_index === cellIndex) {
+    return {};
+  }
+  if (
+    row_index <= down &&
+    row_index >= up &&
+    cell_index >= left &&
+    cell_index <= right
+  ) {
+    return {};
+  }
+  if (endCellId && rows) {
+    const cellMeta = endCellId.split("__");
+    const cellId = cellMeta[1];
+    const endY = parseInt(cellMeta[0] ?? "");
+    if (isNumber(endY)) {
+      const row = rows[endY];
+      const endX = row
+        ?._getAllVisibleCells()
+        .findIndex((cell: Cell<TableRow, any>) => cell.id === cellId);
+      if (isNumber(endX)) {
+        const direction = getCopyDirection(selectedCopyCells, endY, endX);
+        if (
+          endY < down &&
+          endY > up &&
+          row_index <= down &&
+          row_index >= up &&
+          ((cell_index < left && cell_index >= endX) ||
+            (cell_index > right && cell_index <= endX))
+        ) {
+          return {
+            backgroundColor: "#FFDDDD",
+          };
+        }
+        if (direction === CopyDirection.Vertical) {
+          if (
+            (row_index <= up - 1 &&
+              row_index >= endY &&
+              cell_index <= right &&
+              cell_index >= left) ||
+            (row_index >= down + 1 &&
+              row_index <= endY &&
+              cell_index >= left &&
+              cell_index <= right)
+          ) {
+            return {
+              backgroundColor: "#FFDDDD",
+            };
+          }
+        } else {
+          if (
+            row_index <= down &&
+            row_index >= up &&
+            ((cell_index >= right + 1 && cell_index <= endX) ||
+              (cell_index >= endX && cell_index < left))
+          ) {
+            return {
+              backgroundColor: "#FFDDDD",
+            };
+          }
+        }
+      }
+    }
+  }
+  return {};
+}
+
+export function getDragDropShowStyles(
+  selectedCopyCells: SelectedCopyCells | null,
+  row_index: number,
+  cell_index: number
+) {
+  if (!selectedCopyCells) {
+    return "none";
+  }
+  const { down, right } = selectedCopyCells;
+  if (down === row_index && cell_index === right) {
+    return "block";
+  }
+  return "none";
+}

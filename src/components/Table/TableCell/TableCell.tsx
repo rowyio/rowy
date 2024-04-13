@@ -16,14 +16,18 @@ import {
   tableScope,
   selectedCellAtom,
   contextMenuTargetAtom,
-  selectedCellsAtom,
+  selectedCopyCellsAtom,
   endCellAtom,
 } from "@src/atoms/tableScope";
 import { TABLE_PADDING } from "@src/components/Table";
 import type { TableRow } from "@src/types/table";
 import type { IRenderedTableCellProps } from "./withRenderTableCell";
-import { isNumber } from "lodash-es";
 import React from "react";
+import {
+  getCellStyle,
+  getCopySelectedCellStyle,
+  getDragDropShowStyles,
+} from "@src/utils/table";
 
 export interface ITableCellProps {
   /** Current row with context from TanStack Table state */
@@ -98,8 +102,8 @@ export const TableCell = memo(function TableCell({
   const setSelectedCell = useSetAtom(selectedCellAtom, tableScope);
   const setContextMenuTarget = useSetAtom(contextMenuTargetAtom, tableScope);
   //selecting cells for copying
-  const [selectCells, setSelectedCells] = useAtom(
-    selectedCellsAtom,
+  const [selectedCopyCells, setSelectedCopyCells] = useAtom(
+    selectedCopyCellsAtom,
     tableScope
   );
   const [endCellId, setEndCellId] = useAtom(endCellAtom, tableScope);
@@ -114,120 +118,29 @@ export const TableCell = memo(function TableCell({
   const cell_index = index;
   let renderedValidationTooltip = null;
 
-  const getComputedStyle = useMemo(() => {
-    if (!selectCells) {
-      return {};
-    }
-    if (
-      selectCells.rowIndex === row_index &&
-      cell_index === selectCells.cellIndex
-    ) {
-      return {
-        backgroundColor:
-          selectCells.down - selectCells.up !== 0 ||
-          selectCells.right - selectCells.left !== 0
-            ? "#3498db"
-            : "transparent",
-      };
-    }
-    if (
-      row_index <= selectCells.down &&
-      row_index >= selectCells.up &&
-      cell_index >= selectCells.left &&
-      cell_index <= selectCells.right
-    ) {
-      return {
-        backgroundColor: "#3498db",
-        borderBottom: row_index === selectCells.down ? "1px solid blue" : "",
-        borderRight: cell_index === selectCells.right ? "1px solid blue" : "",
-        borderLeft: cell_index === selectCells.left ? "1px solid blue" : "",
-        borderTop: row_index === selectCells.up ? "1px solid blue" : "",
-      };
-    }
-
-    return {};
-  }, [selectCells, row_index, cell_index]);
+  const cellStyles = useMemo(() => {
+    return getCellStyle(selectedCopyCells, row_index, cell_index);
+  }, [selectedCopyCells, row_index, cell_index]) as React.CSSProperties;
 
   const copySelectedStyle = useMemo(() => {
-    if (!endCellId || !selectCells) {
-      return {};
-    }
-    const rows = tableInstance?.getRowModel().rows;
-    if (
-      selectCells.rowIndex === row_index &&
-      cell_index === selectCells.cellIndex
-    ) {
-      return {};
-    }
-    if (
-      row_index <= selectCells.down &&
-      row_index >= selectCells.up &&
-      cell_index >= selectCells.left &&
-      cell_index <= selectCells.right
-    ) {
-      return {};
-    }
-    if (endCellId && rows) {
-      const cellMeta = endCellId.split("__");
-      const cellId = cellMeta[1];
-      const endY = parseInt(cellMeta[0] ?? "");
-      console.log("endCellId", endCellId, endY, isNumber(endY), cellId);
-      if (isNumber(endY)) {
-        const row = rows[endY];
-        const endX = row
-          ?._getAllVisibleCells()
-          .findIndex((cell: Cell<TableRow, any>) => cell.id === cellId);
-        if (isNumber(endX)) {
-          let di = Math.min(
-            Math.abs(endY - selectCells.down),
-            Math.abs(endY - selectCells.up)
-          );
-          let dj = Math.min(
-            Math.abs(endX - selectCells.right),
-            Math.abs(endX - selectCells.left)
-          );
-          if (di >= dj) {
-            if (
-              (row_index <= selectCells.up - 1 &&
-                row_index >= endY &&
-                cell_index <= selectCells.right &&
-                cell_index >= selectCells.left) ||
-              (row_index >= selectCells.down + 1 &&
-                row_index <= endY &&
-                cell_index >= selectCells.left &&
-                cell_index <= selectCells.right)
-            ) {
-              return {
-                backgroundColor: "#FFDDDD",
-              };
-            }
-          } else {
-            if (
-              row_index <= selectCells.down &&
-              row_index >= selectCells.up &&
-              ((cell_index >= selectCells.right + 1 && cell_index <= endX) ||
-                (cell_index >= endX && cell_index < selectCells.left))
-            ) {
-              return {
-                backgroundColor: "#FFDDDD",
-              };
-            }
-          }
-        }
-      }
-    }
-    return {};
-  }, [endCellId, selectCells, tableInstance, row_index, cell_index]);
+    return getCopySelectedCellStyle(
+      selectedCopyCells,
+      endCellId,
+      tableInstance,
+      row_index,
+      cell_index
+    );
+  }, [
+    endCellId,
+    selectedCopyCells,
+    tableInstance,
+    row_index,
+    cell_index,
+  ]) as React.CSSProperties;
 
   const dragShowStyle = useMemo(() => {
-    if (!selectCells) {
-      return "none";
-    }
-    if (selectCells.down === row_index && cell_index === selectCells.right) {
-      return "block";
-    }
-    return "none";
-  }, [cell_index, row_index, selectCells]);
+    return getDragDropShowStyles(selectedCopyCells, row_index, cell_index);
+  }, [cell_index, row_index, selectedCopyCells]);
 
   const handleCellClick = (
     cell: Cell<TableRow, any>,
@@ -236,9 +149,9 @@ export const TableCell = memo(function TableCell({
   ) => {
     const cellIndex = cell
       .getContext()
-      .row.getVisibleCells()
+      .row._getAllVisibleCells()
       .findIndex((c) => cell.id === c.id);
-    setSelectedCells({
+    setSelectedCopyCells({
       cell,
       isfirstSelectedCell: true,
       left: cellIndex,
@@ -336,6 +249,7 @@ export const TableCell = memo(function TableCell({
   return (
     <StyledCell
       id={`${rowIndex}__${cell.id}__${row.id}`}
+      aria-disabled={!!endCellId}
       key={cell.id}
       data-row-id={row.id}
       data-col-id={cell.column.id}
@@ -371,7 +285,7 @@ export const TableCell = memo(function TableCell({
             cell.column.id === "_rowy_column_actions" ? 0 : undefined,
         },
         ...copySelectedStyle,
-        ...getComputedStyle,
+        ...cellStyles,
       }}
       onClick={(e) => {
         setSelectedCell({
@@ -381,7 +295,7 @@ export const TableCell = memo(function TableCell({
           focusInside: false,
         });
         (e.target as HTMLDivElement).focus();
-        handleCellClick(cell, e, rowIndex);
+        if (!endCellId) handleCellClick(cell, e, rowIndex);
       }}
       onDoubleClick={(e) => {
         setSelectedCell({

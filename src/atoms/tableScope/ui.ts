@@ -138,7 +138,7 @@ export type SelectedCell = {
   arrayIndex?: number; // for array sub table
 };
 
-export type SelectedCells = {
+export type SelectedCopyCells = {
   cell: Cell<TableRow, any>;
   isfirstSelectedCell: boolean;
   up: number;
@@ -151,7 +151,7 @@ export type SelectedCells = {
 /** Store selected cell in table. Used in side drawer and context menu */
 export const selectedCellAtom = atom<SelectedCell | null>(null);
 
-export const selectedCellsAtom = atom<SelectedCells | null>(null);
+export const selectedCopyCellsAtom = atom<SelectedCopyCells | null>(null);
 
 export const endCellAtom = atom<string | null>(null);
 
