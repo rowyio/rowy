@@ -119,8 +119,13 @@ export const TableCell = memo(function TableCell({
   let renderedValidationTooltip = null;
 
   const cellStyles = useMemo(() => {
-    return getCellStyle(selectedCopyCells, row_index, cell_index);
-  }, [selectedCopyCells, row_index, cell_index]) as React.CSSProperties;
+    return getCellStyle(selectedCopyCells, row_index, cell_index, endCellId);
+  }, [
+    selectedCopyCells,
+    row_index,
+    cell_index,
+    endCellId,
+  ]) as React.CSSProperties;
 
   const copySelectedStyle = useMemo(() => {
     return getCopySelectedCellStyle(

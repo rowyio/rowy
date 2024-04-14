@@ -255,7 +255,8 @@ export function getNewUpdateDetails(
 export function getCellStyle(
   selectedCopyCells: SelectedCopyCells | null,
   row_index: number,
-  cell_index: number
+  cell_index: number,
+  endCellId: string | null
 ): React.CSSProperties {
   if (!selectedCopyCells) {
     return {};
@@ -264,7 +265,9 @@ export function getCellStyle(
   if (rowIndex === row_index && cell_index === cellIndex) {
     return {
       backgroundColor:
-        down - up !== 0 || right - left !== 0 ? "#3498db" : "transparent",
+        down - up !== 0 || right - left !== 0 || endCellId
+          ? "#3498db"
+          : "transparent",
     };
   }
   if (
@@ -275,14 +278,6 @@ export function getCellStyle(
   ) {
     return {
       backgroundColor: "#3498db",
-      borderBottomStyle: row_index === down ? "solid" : "none",
-      borderBottomColor: row_index === down ? "blue" : "transparent",
-      borderRightStyle: cell_index === right ? "solid" : "none",
-      borderRightColor: cell_index === right ? "blue" : "transparent",
-      borderLeftStyle: cell_index === left ? "solid" : "none",
-      borderLeftColor: cell_index === left ? "blue" : "transparent",
-      borderTopStyle: row_index === up ? "solid" : "none",
-      borderTopColor: row_index === up ? "blue" : "transparent",
     };
   }
 
