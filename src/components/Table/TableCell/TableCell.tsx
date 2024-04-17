@@ -28,6 +28,9 @@ import {
   getCopySelectedCellStyle,
   getDragDropShowStyles,
 } from "@src/utils/table";
+import ActionIcon from "@mui/icons-material/TouchAppOutlined";
+import { isEmpty } from "lodash-es";
+import { PaletteOptions } from "@mui/material";
 
 export interface ITableCellProps {
   /** Current row with context from TanStack Table state */
@@ -117,6 +120,7 @@ export const TableCell = memo(function TableCell({
   const row_index = rowIndex;
   const cell_index = index;
   let renderedValidationTooltip = null;
+  let renderDragAndDropTooltip = null;
 
   const cellStyles = useMemo(() => {
     return getCellStyle(selectedCopyCells, row_index, cell_index, endCellId);
@@ -184,9 +188,51 @@ export const TableCell = memo(function TableCell({
       <RichTooltip
         icon={<WarningIcon fontSize="inherit" color="warning" />}
         title="Required field"
-        message="This row will not be saved until all the required fields contain valid data"
+        message="This row will not Row out of orderbe saved until all the required fields contain valid data"
         placement="right"
         render={({ openTooltip }) => <StyledDot onClick={openTooltip} />}
+      />
+    );
+  }
+
+  if (!isMissing && dragShowStyle === "block") {
+    renderDragAndDropTooltip = (
+      <RichTooltip
+        icon={<ActionIcon fontSize="inherit" color="info" />}
+        title="Drag to Copy"
+        message={
+          <>
+            <div>Instructions:</div>
+            <div>
+              - To select cells, start by clicking on a cell, then hold down the
+              Shift key while using the arrow keys to expand the selection to
+              include the desired cells.
+            </div>
+            <div>
+              - To copy cells, click and drag over the selected cells, then drag
+              the selection to the desired location where you want to copy them.
+            </div>
+          </>
+        }
+        placement="right"
+        render={({ openTooltip }) => (
+          <StyledDot
+            sx={{
+              bottom: "-10px",
+              right: "-5px",
+              top: "auto",
+              cursor: "crosshair",
+            }}
+            paletteKey="primary"
+            onClick={openTooltip}
+            onMouseDown={(e) =>
+              startDrag(
+                e as unknown as MouseEvent,
+                `show_${cell.id}__${row.id}`
+              )
+            }
+          />
+        )}
       />
     );
   }
@@ -205,51 +251,12 @@ export const TableCell = memo(function TableCell({
     disabled: !canEditCells || cell.column.columnDef.meta?.editable === false,
     rowHeight,
   };
-  const DragAndCopy = () => {
-    const [isHovered, setIsHovered] = useState(false);
-    return (
-      <div
-        id={`show__${cell.id}__${row.id}`}
-        style={{
-          position: "absolute",
-          display: dragShowStyle,
-          bottom: -5,
-          right: -5,
-          backgroundColor: "red",
-          height: 10,
-          width: 10,
-          borderRadius: "50%",
-          cursor: "pointer",
-          zIndex: 10,
-        }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        onMouseDown={(e) =>
-          startDrag(e as unknown as MouseEvent, `show_${cell.id}__${row.id}`)
-        }
-      >
-        {isHovered && (
-          <div
-            style={{
-              position: "absolute",
-              top: "-150%",
-              left: 20,
-              backgroundColor: "rgba(0, 0, 0, 0.8)",
-              color: "white",
-              padding: "5px",
-              borderRadius: "4px",
-              boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
-              zIndex: 1000,
-            }}
-          >
-            <div style={{ fontSize: "14x", fontWeight: "bold" }}>
-              Drag To Copy
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
+
+  let paletteKey = !isEmpty(cellStyles)
+    ? "primary"
+    : !isEmpty(copySelectedStyle)
+    ? "secondary"
+    : (null as keyof PaletteOptions | null);
 
   return (
     <StyledCell
@@ -266,6 +273,7 @@ export const TableCell = memo(function TableCell({
       aria-readonly={
         !canEditCells || cell.column.columnDef.meta?.editable === false
       }
+      paletteKey={paletteKey}
       aria-required={Boolean(cell.column.columnDef.meta?.config?.required)}
       aria-selected={isSelectedCell}
       aria-describedby={
@@ -289,9 +297,8 @@ export const TableCell = memo(function TableCell({
           borderRightWidth:
             cell.column.id === "_rowy_column_actions" ? 0 : undefined,
         },
-        ...copySelectedStyle,
-        ...cellStyles,
       }}
+      color={paletteKey ?? "primary"}
       onClick={(e) => {
         setSelectedCell({
           arrayIndex: row.original._rowy_ref.arrayTableData?.index,
@@ -310,6 +317,8 @@ export const TableCell = memo(function TableCell({
           focusInside: true,
         });
         (e.target as HTMLDivElement).focus();
+        setSelectedCopyCells(null);
+        setEndCellId(null);
       }}
       onContextMenu={(e) => {
         e.preventDefault();
@@ -351,9 +360,9 @@ export const TableCell = memo(function TableCell({
       }}
     >
       {renderedValidationTooltip}
+      {renderDragAndDropTooltip}
       <ErrorBoundary fallbackRender={InlineErrorFallback}>
         {flexRender(cell.column.columnDef.cell, tableCellComponentProps)}
-        <DragAndCopy />
       </ErrorBoundary>
     </StyledCell>
   );

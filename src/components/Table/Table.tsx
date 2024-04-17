@@ -322,61 +322,55 @@ export default function Table({
     ["mod+V", (e) => handlePaste], // So the event isn't passed to the handler
   ]);
   const handleShiftArrowKey = useCallback(
-    useThrottledCallback(
-      (direction: "ArrowLeft" | "ArrowRight" | "ArrowDown" | "ArrowUp") => {
-        const selectedCell = selectedCopyCells;
-        if (!selectedCell || !table) return;
+    (direction: string) => {
+      const selectedCell = selectedCopyCells;
+      if (!selectedCell || !table) return;
 
-        const visibleCells = selectedCell.cell
-          .getContext()
-          .row.getVisibleCells();
-        const cellIndex = visibleCells.findIndex(
-          (cell) => cell.id === selectedCell.cell.id
-        );
-        const rowIndex = selectedCell.rowIndex;
-        const rows = table.getRowModel().rows || [];
+      const visibleCells = selectedCell.cell.getContext().row.getVisibleCells();
+      const cellIndex = visibleCells.findIndex(
+        (cell) => cell.id === selectedCell.cell.id
+      );
+      const rowIndex = selectedCell.rowIndex;
+      const rows = table.getRowModel().rows || [];
 
-        if (!direction || !selectedCopyCells) {
-          return;
-        }
+      if (!direction || !selectedCopyCells) {
+        return;
+      }
 
-        setSelectedCopyCells((prev) => {
-          if (prev) {
-            switch (direction) {
-              case "ArrowLeft":
-                return cellIndex === prev.right && prev.left > 0
-                  ? { ...prev, left: prev.left - 1 }
-                  : prev.right > cellIndex && prev.right < visibleCells.length
-                  ? { ...prev, right: prev.right - 1 }
-                  : prev;
-              case "ArrowRight":
-                return cellIndex === prev.left &&
-                  prev.right < visibleCells.length - 1
-                  ? { ...prev, right: prev.right + 1 }
-                  : prev.left < cellIndex && prev.left >= 0
-                  ? { ...prev, left: prev.left + 1 }
-                  : prev;
-              case "ArrowUp":
-                return rowIndex === prev.down && prev.up > 0
-                  ? { ...prev, up: prev.up - 1 }
-                  : prev.down > rowIndex && prev.down < rows.length
-                  ? { ...prev, down: prev.down - 1 }
-                  : prev;
-              case "ArrowDown":
-                return rowIndex === prev.up && prev.down < rows.length - 1
-                  ? { ...prev, down: prev.down + 1 }
-                  : prev.up < rowIndex && prev.up >= 0
-                  ? { ...prev, up: prev.up + 1 }
-                  : prev;
-              default:
-                return prev;
-            }
+      setSelectedCopyCells((prev) => {
+        if (prev) {
+          switch (direction) {
+            case "ArrowLeft":
+              return cellIndex === prev.right && prev.left > 1
+                ? { ...prev, left: prev.left - 1 }
+                : prev.right > cellIndex && prev.right < visibleCells.length
+                ? { ...prev, right: prev.right - 1 }
+                : prev;
+            case "ArrowRight":
+              return cellIndex === prev.left && prev.right < visibleCells.length
+                ? { ...prev, right: prev.right + 1 }
+                : prev.left < cellIndex && prev.left >= 1
+                ? { ...prev, left: prev.left + 1 }
+                : prev;
+            case "ArrowUp":
+              return rowIndex === prev.down && prev.up > 0
+                ? { ...prev, up: prev.up - 1 }
+                : prev.down > rowIndex && prev.down < rows.length
+                ? { ...prev, down: prev.down - 1 }
+                : prev;
+            case "ArrowDown":
+              return rowIndex === prev.up && prev.down < rows.length - 1
+                ? { ...prev, down: prev.down + 1 }
+                : prev.up < rowIndex && prev.up >= 0
+                ? { ...prev, up: prev.up + 1 }
+                : prev;
+            default:
+              return prev;
           }
-          return prev;
-        });
-      },
-      100
-    ),
+        }
+        return prev;
+      });
+    },
     [selectedCopyCells, setSelectedCopyCells, table]
   );
 
@@ -397,7 +391,7 @@ export default function Table({
         let row = rows[i];
         let cells = row?._getAllVisibleCells() || [];
         const newUpdate: Partial<TableRow> = {};
-        for (let j = left - 1; j >= endX; j--) {
+        for (let j = left - 1; j >= endX && j >= 1; j--) {
           updateCellValues(
             cells,
             updateData,
@@ -409,7 +403,7 @@ export default function Table({
             true
           );
         }
-        for (let k = right + 1; k <= endX; k++) {
+        for (let k = right + 1; k <= endX && k <= cells.length; k++) {
           updateCellValues(
             cells,
             updateData,
@@ -442,7 +436,7 @@ export default function Table({
       let startIndex = endY > down ? up : down;
       for (
         let i = endY > down ? down + 1 : up - 1;
-        endY > down ? i <= endY && i < tableRows.length : i >= endY;
+        endY > down ? i <= endY && i < tableRows.length : i >= endY && i >= 0;
         endY > down ? i++ : i--
       ) {
         let row = rows[i];
@@ -450,20 +444,20 @@ export default function Table({
         const newUpdate: Partial<TableRow> = {};
         for (
           let j = endY > down ? left : right;
-          endY > down ? j <= right && j < cells.length : j >= left;
+          endY > down ? j <= right && j <= cells.length : j >= left;
           endY > down ? j++ : j--
         ) {
           updateCellValues(cells, updateData, newUpdate, i, j, startIndex, j);
-          startIndex = updateStartIndex(
-            startIndex,
-            endY,
-            endX,
-            left,
-            right,
-            down,
-            up
-          );
         }
+        startIndex = updateStartIndex(
+          startIndex,
+          endY,
+          endX,
+          left,
+          right,
+          down,
+          up
+        );
         if (!isEmpty(newUpdate))
           newUpdates.push(getNewUpdateDetails(updateData, i, newUpdate));
       }
@@ -479,7 +473,7 @@ export default function Table({
         const newUpdate: Partial<TableRow> = {};
         for (
           let j = endX > right ? right + 1 : left - 1;
-          endX > right ? j <= endX : j >= endX;
+          endX > right ? j <= endX && j <= cells.length : j >= endX && j >= 1;
           endX > right ? j++ : j--
         ) {
           updateCellValues(
@@ -492,6 +486,7 @@ export default function Table({
             startIndex,
             true
           );
+
           startIndex = updateStartIndex(
             startIndex,
             endY,
@@ -516,65 +511,77 @@ export default function Table({
     if (!selectedCopyCells || !endCellId) {
       return;
     }
-    const rows = table.getRowModel().rows;
-    if (endCellId && rows) {
-      const cellMeta = endCellId.split("__");
-      const cellId = cellMeta[1];
-      const endY = parseInt(cellMeta[0] ?? "");
+    let loadingSnackbar;
+    try {
+      const rows = table.getRowModel().rows;
+      if (endCellId && rows) {
+        const cellMeta = endCellId.split("__");
+        const cellId = cellMeta[1];
+        const endY = parseInt(cellMeta[0] ?? "");
 
-      if (isNumber(endY)) {
-        const row = rows[endY];
-        const endX = row
-          ?._getAllVisibleCells()
-          .findIndex((cell) => cell.id === cellId);
-        if (isNumber(endX)) {
-          const copyDirection = getCopyDirection(selectedCopyCells, endY, endX);
-          const { up, down, left, right } = selectedCopyCells;
-          const loadingSnackbar = enqueueSnackbar(
-            `Copying values. This might take a while.`,
-            {
-              persist: true,
-              action: (
-                <SnackbarProgress
-                  stateRef={snackbarProgressRef}
-                  target={
-                    copyDirection === CopyDirection.Vertical
-                      ? Math.max(endY - down, up - endY) * (right - left + 1)
-                      : (down - up + 1) * Math.max(endX - right, left - endX) ||
-                        0
-                  }
-                  label=" cells"
-                />
-              ),
-            }
-          );
-          let {
-            newUpdates,
-            left: nleft,
-            right: nright,
-            down: ndown,
-            up: nup,
-          } = copyCells(copyDirection, selectedCopyCells, endY, endX);
-          await bulkUpdateRows({
-            updates: newUpdates,
-            collection: tableSettings.collection,
-          });
-          closeSnackbar(loadingSnackbar);
-          setSelectedCopyCells((prev) => {
-            if (prev) {
-              return {
-                ...prev,
-                up: nup,
-                down: ndown,
-                left: nleft,
-                right: nright,
-              };
-            }
-            return prev;
-          });
-          setEndCellId(null);
+        if (isNumber(endY)) {
+          const row = rows[endY];
+          const endX = row
+            ?._getAllVisibleCells()
+            .findIndex((cell) => cell.id === cellId);
+          if (isNumber(endX)) {
+            const copyDirection = getCopyDirection(
+              selectedCopyCells,
+              endY,
+              endX
+            );
+            const { up, down, left, right } = selectedCopyCells;
+            loadingSnackbar = enqueueSnackbar(
+              `Copying values. This might take a while.`,
+              {
+                persist: true,
+                action: (
+                  <SnackbarProgress
+                    stateRef={snackbarProgressRef}
+                    target={
+                      copyDirection === CopyDirection.Vertical
+                        ? Math.max(endY - down, up - endY) * (right - left + 1)
+                        : (down - up + 1) *
+                            Math.max(endX - right, left - endX) || 0
+                    }
+                    label=" cells"
+                  />
+                ),
+              }
+            );
+            let {
+              newUpdates,
+              left: nleft,
+              right: nright,
+              down: ndown,
+              up: nup,
+            } = copyCells(copyDirection, selectedCopyCells, endY, endX);
+            await bulkUpdateRows({
+              updates: newUpdates,
+              collection: tableSettings.collection,
+            });
+            closeSnackbar(loadingSnackbar);
+            setSelectedCopyCells((prev) => {
+              if (prev) {
+                return {
+                  ...prev,
+                  up: nup,
+                  down: ndown,
+                  left: nleft,
+                  right: nright,
+                };
+              }
+              return prev;
+            });
+          }
         }
       }
+    } catch (err) {
+      if (loadingSnackbar) {
+        closeSnackbar(loadingSnackbar);
+      }
+    } finally {
+      setEndCellId(null);
     }
   }
 
@@ -719,7 +726,7 @@ export default function Table({
 
 export function useKeyPress(
   targetKey: string[] | string,
-  handleShiftArrowKey: Function
+  handleShiftArrowKey: (key: string) => void
 ) {
   const [keyPressed, setKeyPressed] = useState(false);
 

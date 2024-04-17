@@ -14,31 +14,33 @@ import {
 
 const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.popper}`]: { zIndex: theme.zIndex.drawer - 1 },
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor:
-      theme.palette.mode === "light"
-        ? theme.palette.background.default
-        : colord(theme.palette.background.paper)
-            .mix("#fff", 0.16)
-            .toHslString(),
-    boxShadow: theme.shadows[8],
+))(({ theme }) => {
+  return {
+    [`& .${tooltipClasses.popper}`]: { zIndex: theme.zIndex.drawer - 1 },
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor:
+        theme.palette.mode === "light"
+          ? theme.palette.background.default
+          : colord(theme.palette.background.paper)
+              .mix("#fff", 0.16)
+              .toHslString(),
+      boxShadow: theme.shadows[8],
 
-    ...theme.typography.body2,
-    color: theme.palette.text.primary,
-    padding: 0,
-  },
-  [`& .${tooltipClasses.arrow}::before`]: {
-    backgroundColor:
-      theme.palette.mode === "light"
-        ? theme.palette.background.default
-        : colord(theme.palette.background.paper)
-            .mix("#fff", 0.16)
-            .toHslString(),
-    boxShadow: theme.shadows[8],
-  },
-}));
+      ...theme.typography.body2,
+      color: theme.palette.text.primary,
+      padding: 0,
+    },
+    [`& .${tooltipClasses.arrow}::before`]: {
+      backgroundColor:
+        theme.palette.mode === "light"
+          ? theme.palette.background.default
+          : colord(theme.palette.background.paper)
+              .mix("#fff", 0.16)
+              .toHslString(),
+      boxShadow: theme.shadows[8],
+    },
+  };
+});
 
 export interface IRichTooltipProps
   extends Partial<Omit<TooltipProps, "title">> {
