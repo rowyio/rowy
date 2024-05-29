@@ -177,7 +177,7 @@ export default function Table({
           header: ({ table }) => {
             const checked =
               Object.keys(selectedRows.state).length >= serverDocCount!;
-            const indeterminate = Object.keys(selectedRows.state).length > 0;
+            const isIndeterminate = Object.keys(selectedRows.state).length > 0 && !checked;
             return (
               <FormControlLabel
                 sx={{ margin: 0 }}
@@ -185,10 +185,10 @@ export default function Table({
                 control={
                   <Checkbox
                     checked={checked}
-                    indeterminate={indeterminate && !checked}
+                    indeterminate={isIndeterminate}
                     onChange={() => {
                       table.toggleAllRowsSelected(
-                        !table.getIsAllRowsSelected()
+                        isIndeterminate ? table.getIsAllRowsSelected() : !table.getIsAllRowsSelected()
                       );
                     }}
                   />
