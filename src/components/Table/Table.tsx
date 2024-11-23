@@ -121,6 +121,7 @@ export default function Table({
   const [tablePage, setTablePage] = useAtom(tablePageAtom, tableScope);
   const setReactTable = useSetAtom(reactTableAtom, tableScope);
 
+  const setSelectedCell = useSetAtom(selectedCellAtom, tableScope);
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
 
   // Get user settings and tableId for applying sort sorting
@@ -313,6 +314,8 @@ export default function Table({
 
       const { scrollHeight, scrollTop, clientHeight } = containerElement;
       if (scrollHeight - scrollTop - clientHeight < 300) {
+        // deselect cell on next page load
+        setSelectedCell(null);
         setTablePage((p) => p + 1);
       }
     },
