@@ -44,5 +44,6 @@ export const config: IFieldConfig = {
     }
   },
   contextMenuActions: BasicContextMenuActions,
+  keywords: ["hexcode"]
 };
 export default config;

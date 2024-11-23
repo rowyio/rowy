@@ -50,5 +50,6 @@ export const config: IFieldConfig = {
     operators: filterOperators,
   },
   contextMenuActions: BasicContextMenuActions,
+  keywords: ["options"]
 };
 export default config;

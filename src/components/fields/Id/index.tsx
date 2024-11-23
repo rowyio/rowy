@@ -19,5 +19,6 @@ export const config: IFieldConfig = {
   description: "Displays the row’s ID. Read-only. Cannot be sorted.",
   TableCell: withRenderTableCell(DisplayCell, null),
   SideDrawerField,
+  keywords: ["unique"]
 };
 export default config;
