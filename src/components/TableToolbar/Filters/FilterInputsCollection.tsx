@@ -1,3 +1,4 @@
+import { useState } from "react";
 import FilterInputs from "./FilterInputs";
 
 import { Button } from "@mui/material";
@@ -37,6 +38,8 @@ export default function FilterInputsCollection({
     });
   };
 
+  const [isDraggingDisabled, setIsDraggingDisabled] = useState<boolean>(false);
+
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
@@ -49,6 +52,7 @@ export default function FilterInputsCollection({
                     key={query.id}
                     draggableId={query.id.toString()}
                     index={index}
+                    isDragDisabled={isDraggingDisabled}
                   >
                     {(provided) => (
                       <div
@@ -82,6 +86,9 @@ export default function FilterInputsCollection({
                               newQueries.splice(index, 1);
                               return newQueries;
                             });
+                          }}
+                          setIsDraggingDisabled={(isDisabled: boolean) => {
+                            setIsDraggingDisabled(isDisabled);
                           }}
                           index={index}
                           noOfQueries={queries.length}

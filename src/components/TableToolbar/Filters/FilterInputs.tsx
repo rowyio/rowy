@@ -40,6 +40,7 @@ export interface IFilterInputsProps {
   handleChangeColumn: (column: string) => void;
   joinOperator: "AND" | "OR";
   setJoinOperator: (operator: "AND" | "OR") => void;
+  setIsDraggingDisabled: (isDisabled: boolean) => void;
 }
 
 export default function FilterInputs({
@@ -55,6 +56,7 @@ export default function FilterInputs({
   handleDelete,
   index,
   noOfQueries,
+  setIsDraggingDisabled,
 }: IFilterInputsProps) {
   const columnType = selectedColumn ? getFieldType(selectedColumn) : null;
 
@@ -155,28 +157,35 @@ export default function FilterInputs({
               </InputLabel>
 
               <Suspense fallback={<FieldSkeleton />}>
-                {columnType &&
-                  createElement(
-                    query.key === "_rowy_ref.id"
-                      ? IdFilterInput
-                      : getFieldProp("filter.customInput" as any, columnType) ||
-                          getFieldProp("SideDrawerField", columnType),
-                    {
-                      column: selectedColumn,
-                      _rowy_ref: {},
-                      value: query.value,
-                      onSubmit: () => {},
-                      onChange: (value: any) => {
-                        const newQuery = {
-                          ...query,
-                          value,
-                        };
-                        setQuery(newQuery);
-                      },
-                      disabled,
-                      operator: query.operator,
-                    }
-                  )}
+                <div
+                  onMouseEnter={() => setIsDraggingDisabled(true)}
+                  onMouseLeave={() => setIsDraggingDisabled(false)}
+                >
+                  {columnType &&
+                    createElement(
+                      query.key === "_rowy_ref.id"
+                        ? IdFilterInput
+                        : getFieldProp(
+                            "filter.customInput" as any,
+                            columnType
+                          ) || getFieldProp("SideDrawerField", columnType),
+                      {
+                        column: selectedColumn,
+                        _rowy_ref: {},
+                        value: query.value,
+                        onSubmit: () => {},
+                        onChange: (value: any) => {
+                          const newQuery = {
+                            ...query,
+                            value,
+                          };
+                          setQuery(newQuery);
+                        },
+                        disabled,
+                        operator: query.operator,
+                      }
+                    )}
+                </div>
               </Suspense>
             </ErrorBoundary>
           )}
