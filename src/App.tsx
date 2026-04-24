@@ -24,6 +24,7 @@ import useKeyPressWithAtom from "@src/hooks/useKeyPressWithAtom";
 import TableGroupRedirectPage from "./pages/TableGroupRedirectPage";
 import SignOutPage from "@src/pages/Auth/SignOutPage";
 import ProvidedArraySubTablePage from "./pages/Table/ProvidedArraySubTablePage";
+import DirectTableTestPage from "./pages/Test/DirectTableTestPage";
 
 // prettier-ignore
 const AuthPage = lazy(() => import("@src/pages/Auth/AuthPage" /* webpackChunkName: "AuthPage" */));
@@ -82,6 +83,7 @@ export default function App() {
         <Loading fullScreen message="Authenticating" />
       ) : (
         <Routes>
+          <Route path="/test" element={<DirectTableTestPage />} />
           <Route path="*" element={<NotFound />} />
 
           <Route path={ROUTES.auth} element={<AuthPage />} />
