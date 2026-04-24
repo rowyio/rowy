@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { ErrorBoundary } from "react-error-boundary";
 import { flexRender } from "@tanstack/react-table";
 import type { Row, Cell } from "@tanstack/react-table";
@@ -16,7 +16,9 @@ import {
   tableScope,
   selectedCellAtom,
   contextMenuTargetAtom,
+  fillRangeAtom,
 } from "@src/atoms/tableScope";
+import { styled } from "@mui/material";
 import { TABLE_PADDING } from "@src/components/Table";
 import type { TableRow } from "@src/types/table";
 import type { IRenderedTableCellProps } from "./withRenderTableCell";
@@ -33,7 +35,7 @@ export interface ITableCellProps {
   /** User has double-clicked or pressed Enter and this cell is selected */
   focusInsideCell: boolean;
   /**
-   * Used to disable `aria-description` that says “Press Enter to edit”
+   * Used to disable `aria-description` that says Press Enter to edit
    * for Auditing and Metadata cells. Need to find another way to do this.
    */
   isReadOnlyCell: boolean;
@@ -56,6 +58,18 @@ export interface ITableCellProps {
   left: number;
   isPinned: boolean;
 }
+
+const FillHandle = styled("div")(({ theme }) => ({
+  position: "absolute",
+  bottom: -5,
+  right: -5,
+  width: 9,
+  height: 9,
+  backgroundColor: theme.palette.primary.main,
+  border: "1px solid white",
+  cursor: "crosshair",
+  zIndex: 10,
+}));
 
 /**
  * Renders the container div for each cell with accessibility attributes for
@@ -85,6 +99,7 @@ export const TableCell = memo(function TableCell({
 }: ITableCellProps) {
   const setSelectedCell = useSetAtom(selectedCellAtom, tableScope);
   const setContextMenuTarget = useSetAtom(contextMenuTargetAtom, tableScope);
+  const [fillRange, setFillRange] = useAtom(fillRangeAtom, tableScope);
 
   const value = cell.getValue();
   const required = cell.column.columnDef.meta?.config?.required;
@@ -201,7 +216,41 @@ export const TableCell = memo(function TableCell({
           setContextMenuTarget(e.target as HTMLElement);
         }
       }}
+      onMouseEnter={() => {
+        if (fillRange) {
+          setFillRange((prev) => ({
+            ...prev!,
+            endCell: {
+              path: row.original._rowy_ref.path,
+              columnKey: cell.column.id,
+              focusInside: false,
+              arrayIndex: row.original._rowy_ref.arrayTableData?.index,
+            },
+          }));
+        }
+      }}
     >
+      {isSelectedCell && !focusInsideCell && !isReadOnlyCell && canEditCells && (
+        <FillHandle
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            setFillRange({
+              startCell: {
+                path: row.original._rowy_ref.path,
+                columnKey: cell.column.id,
+                focusInside: false,
+                arrayIndex: row.original._rowy_ref.arrayTableData?.index,
+              },
+              endCell: {
+                path: row.original._rowy_ref.path,
+                columnKey: cell.column.id,
+                focusInside: false,
+                arrayIndex: row.original._rowy_ref.arrayTableData?.index,
+              },
+            });
+          }}
+        />
+      )}
       {renderedValidationTooltip}
       <ErrorBoundary fallbackRender={InlineErrorFallback}>
         {flexRender(cell.column.columnDef.cell, tableCellComponentProps)}

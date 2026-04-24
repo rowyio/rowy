@@ -32,10 +32,12 @@ import {
   tableNextPageAtom,
   tablePageAtom,
   updateColumnAtom,
-  selectedCellAtom,
-  tableSortsAtom,
   tableIdAtom,
   serverDocCountAtom,
+  selectedCellAtom,
+  tableSortsAtom,
+  fillRangeAtom,
+  updateFieldAtom,
 } from "@src/atoms/tableScope";
 import { projectScope, userSettingsAtom } from "@src/atoms/projectScope";
 import { getFieldType, getFieldProp } from "@src/components/fields";
@@ -63,7 +65,7 @@ const columnHelper = createColumnHelper<TableRow>();
 const getRowId = (row: TableRow) => row._rowy_ref.path || row._rowy_ref.id;
 
 export interface ITableProps {
-  /** Determines if “Add column” button is displayed */
+  /** Determines if Add column button is displayed */
   canAddColumns: boolean;
   /** Determines if columns can be rearranged */
   canEditColumns: boolean;
@@ -282,6 +284,8 @@ export default function Table({
     leafColumns,
   });
   const [selectedCell] = useAtom(selectedCellAtom, tableScope);
+  const [fillRange, setFillRange] = useAtom(fillRangeAtom, tableScope);
+  const updateField = useSetAtom(updateFieldAtom, tableScope);
   const { handleCopy, handlePaste, handleCut } = useMenuAction(selectedCell);
   const { handler: hotKeysHandler } = useHotKeys([
     ["mod+C", handleCopy],
@@ -334,6 +338,69 @@ export default function Table({
       document.removeEventListener("paste", handlePaste);
     };
   }, [handlePaste]);
+
+  useEffect(() => {
+    const handleMouseUp = async () => {
+      if (!fillRange) return;
+
+      const { startCell, endCell } = fillRange;
+      if (
+        startCell.path === endCell.path &&
+        startCell.columnKey === endCell.columnKey
+      ) {
+        setFillRange(null);
+        return;
+      }
+
+      // Find start and end row indices
+      const startIndex = tableRows.findIndex(
+        (r) => r._rowy_ref.path === startCell.path
+      );
+      const endIndex = tableRows.findIndex(
+        (r) => r._rowy_ref.path === endCell.path
+      );
+
+      if (startIndex === -1 || endIndex === -1) {
+        setFillRange(null);
+        return;
+      }
+
+      const minRow = Math.min(startIndex, endIndex);
+      const maxRow = Math.max(startIndex, endIndex);
+
+      // Get source value
+      const sourceRow = tableRows[startIndex];
+      const columnConfig = tableSchema.columns?.[startCell.columnKey];
+      if (!columnConfig) {
+        setFillRange(null);
+        return;
+      }
+      const value = get(sourceRow, columnConfig.fieldName);
+
+      // Apply fill
+      const promises: Promise<any>[] = [];
+      for (let i = minRow; i <= maxRow; i++) {
+        if (i === startIndex) continue; // Skip source
+        const targetRow = tableRows[i];
+        promises.push(
+          updateField({
+            path: targetRow._rowy_ref.path,
+            fieldName: columnConfig.fieldName,
+            value,
+            arrayTableData: targetRow._rowy_ref.arrayTableData
+              ? { index: targetRow._rowy_ref.arrayTableData.index }
+              : undefined,
+          })
+        );
+      }
+
+      await Promise.all(promises);
+      setFillRange(null);
+    };
+
+    window.addEventListener("mouseup", handleMouseUp);
+    return () => window.removeEventListener("mouseup", handleMouseUp);
+  }, [fillRange, tableRows, tableSchema, updateField, setFillRange]);
 
   // apply user default sort on first render
   const [applySort, setApplySort] = useState(true);

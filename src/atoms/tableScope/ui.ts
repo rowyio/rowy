@@ -139,6 +139,13 @@ export type SelectedCell = {
 /** Store selected cell in table. Used in side drawer and context menu */
 export const selectedCellAtom = atom<SelectedCell | null>(null);
 
+export type FillRange = {
+  startCell: SelectedCell;
+  endCell: SelectedCell;
+};
+/** Store fill range during drag-to-fill operation */
+export const fillRangeAtom = atom<FillRange | null>(null);
+
 /** Store context menu target atom for positioning. If not null, menu open. */
 export const contextMenuTargetAtom = atom<HTMLElement | null>(null);
 
