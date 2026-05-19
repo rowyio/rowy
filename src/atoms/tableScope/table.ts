@@ -171,23 +171,30 @@ export const tableRowsDbAtom = atom<TableRow[]>([]);
 export const tableRowsAtom = atom<TableRow[]>((get) => {
   const rowsDb = get(tableRowsDbAtom);
   const rowsLocal = get(tableRowsLocalAtom);
+  const hasServerQuery =
+    get(tableFiltersAtom).length > 0 || get(tableSortsAtom).length > 0;
 
   // Optimization: create Map of rowsDb by path to index for faster lookup
   const rowsDbMap = new Map<string, number>();
   rowsDb.forEach((row, i) => rowsDbMap.set(row._rowy_ref.path, i));
 
   // Loop through rowsLocal, which is usually the smaller of the two arrays
-  const rowsLocalToMerge = rowsLocal.map((row, i) => {
+  const rowsLocalToMerge = rowsLocal.reduce<TableRow[]>((rows, row) => {
     // If row is in rowsDb, merge the two
     // and remove from rowsDb to prevent duplication
     if (rowsDbMap.has(row._rowy_ref.path)) {
       const index = rowsDbMap.get(row._rowy_ref.path)!;
       const merged = updateRowData({ ...rowsDb[index] }, row);
       rowsDbMap.delete(row._rowy_ref.path);
-      return merged;
+      rows.push(merged);
+      return rows;
     }
-    return row;
-  });
+
+    // When the table is filtered or sorted, rowsDb already reflects the server
+    // query. Local-only out-of-order rows should not bypass it.
+    if (!hasServerQuery) rows.push(row);
+    return rows;
+  }, []);
 
   // Merge the two arrays
   return [

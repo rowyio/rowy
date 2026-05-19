@@ -8,6 +8,8 @@ import { currentUserAtom } from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
+  tableFiltersAtom,
+  tableSortsAtom,
   tableRowsDbAtom,
   tableRowsLocalAtom,
   _updateRowDbAtom,
@@ -44,6 +46,11 @@ const initRows = (
       tableType: "primaryCollection",
       audit: enableAudit,
     });
+
+    const setTableFilters = useSetAtom(tableFiltersAtom, tableScope);
+    setTableFilters([]);
+    const setTableSorts = useSetAtom(tableSortsAtom, tableScope);
+    setTableSorts([]);
 
     const setRowsDb = useSetAtom(tableRowsDbAtom, tableScope);
     setRowsDb([...initialRowsDb]);
@@ -102,6 +109,82 @@ const generatedRowsLocal = new Array(GENERATED_ROWS_LENGTH)
     _rowy_ref: { id: `rowLocal${i}`, path: TEST_COLLECTION + "/rowLocal" + i },
     index: i,
   }));
+
+describe("tableRowsAtom", () => {
+  test("includes local-only rows when there are no filters or sorts", () => {
+    initRows(generatedRows, generatedRowsLocal);
+
+    const {
+      result: { current: tableRows },
+    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+
+    expect(tableRows).toHaveLength(GENERATED_ROWS_LENGTH * 2);
+    expect(find(tableRows, ["_rowy_ref.id", "rowLocal0"])).toBeDefined();
+  });
+
+  test("hides local-only rows when filters are active", () => {
+    initRows(generatedRows, generatedRowsLocal);
+    const {
+      result: { current: setTableFilters },
+    } = renderHook(() => useSetAtom(tableFiltersAtom, tableScope));
+
+    act(() =>
+      setTableFilters([
+        { id: "filter-1", key: "percentage", operator: "==", value: 0.1 },
+      ])
+    );
+
+    const {
+      result: { current: tableRows },
+    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+
+    expect(tableRows).toHaveLength(GENERATED_ROWS_LENGTH);
+    expect(find(tableRows, ["_rowy_ref.id", "rowLocal0"])).toBeUndefined();
+  });
+
+  test("hides local-only rows when sorts are active", () => {
+    initRows(generatedRows, generatedRowsLocal);
+    const {
+      result: { current: setTableSorts },
+    } = renderHook(() => useSetAtom(tableSortsAtom, tableScope));
+
+    act(() => setTableSorts([{ key: "index", direction: "asc" }]));
+
+    const {
+      result: { current: tableRows },
+    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+
+    expect(tableRows).toHaveLength(GENERATED_ROWS_LENGTH);
+    expect(find(tableRows, ["_rowy_ref.id", "rowLocal0"])).toBeUndefined();
+  });
+
+  test("keeps local edits for rows returned by a filtered query", () => {
+    initRows(generatedRows, [
+      {
+        _rowy_ref: { id: "row2", path: TEST_COLLECTION + "/row2" },
+        edited: true,
+      },
+      ...generatedRowsLocal,
+    ]);
+    const {
+      result: { current: setTableFilters },
+    } = renderHook(() => useSetAtom(tableFiltersAtom, tableScope));
+
+    act(() =>
+      setTableFilters([
+        { id: "filter-1", key: "percentage", operator: "==", value: 0.1 },
+      ])
+    );
+
+    const {
+      result: { current: tableRows },
+    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+
+    expect(tableRows).toHaveLength(GENERATED_ROWS_LENGTH);
+    expect(find(tableRows, ["_rowy_ref.id", "row2"])?.edited).toBe(true);
+    expect(find(tableRows, ["_rowy_ref.id", "rowLocal0"])).toBeUndefined();
+  });
+});
 
 describe("addRow", () => {
   describe("single", () => {
