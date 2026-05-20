@@ -8,6 +8,8 @@ import { currentUserAtom } from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
+  tableFiltersAtom,
+  tableSortsAtom,
   tableRowsDbAtom,
   tableRowsLocalAtom,
   _updateRowDbAtom,
@@ -44,6 +46,10 @@ const initRows = (
       tableType: "primaryCollection",
       audit: enableAudit,
     });
+    const setTableFilters = useSetAtom(tableFiltersAtom, tableScope);
+    setTableFilters([]);
+    const setTableSorts = useSetAtom(tableSortsAtom, tableScope);
+    setTableSorts([]);
 
     const setRowsDb = useSetAtom(tableRowsDbAtom, tableScope);
     setRowsDb([...initialRowsDb]);
@@ -102,6 +108,73 @@ const generatedRowsLocal = new Array(GENERATED_ROWS_LENGTH)
     _rowy_ref: { id: `rowLocal${i}`, path: TEST_COLLECTION + "/rowLocal" + i },
     index: i,
   }));
+
+const getRowIds = (rows: TableRow[]) => rows.map((row) => row._rowy_ref.id);
+
+describe("tableRows", () => {
+  test("displays out-of-order local rows without filters or sorts", () => {
+    initRows([generatedRows[0]], [
+      { ...generatedRowsLocal[0], _rowy_outOfOrder: true },
+    ]);
+
+    const {
+      result: { current: tableRows },
+    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+
+    expect(getRowIds(tableRows)).toEqual(["rowLocal0", "row0"]);
+  });
+
+  test("hides out-of-order local rows when filters are applied", () => {
+    initRows(
+      [
+        { ...generatedRows[0], percentage: 0.1 },
+        { ...generatedRows[1], percentage: 0.1 },
+      ],
+      [
+        {
+          ...generatedRowsLocal[0],
+          percentage: 0.1,
+          _rowy_outOfOrder: true,
+        },
+        { ...generatedRowsLocal[1], percentage: 0, _rowy_outOfOrder: true },
+      ]
+    );
+
+    const {
+      result: { current: setTableFilters },
+    } = renderHook(() => useSetAtom(tableFiltersAtom, tableScope));
+
+    act(() =>
+      setTableFilters([
+        { id: "percentage", key: "percentage", operator: "==", value: 0.1 },
+      ])
+    );
+
+    const {
+      result: { current: tableRows },
+    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+
+    expect(getRowIds(tableRows)).toEqual(["row0", "row1"]);
+  });
+
+  test("hides out-of-order local rows when sorts are applied", () => {
+    initRows([generatedRows[0]], [
+      { ...generatedRowsLocal[0], index: -1, _rowy_outOfOrder: true },
+    ]);
+
+    const {
+      result: { current: setTableSorts },
+    } = renderHook(() => useSetAtom(tableSortsAtom, tableScope));
+
+    act(() => setTableSorts([{ key: "index", direction: "asc" }]));
+
+    const {
+      result: { current: tableRows },
+    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+
+    expect(getRowIds(tableRows)).toEqual(["row0"]);
+  });
+});
 
 describe("addRow", () => {
   describe("single", () => {
