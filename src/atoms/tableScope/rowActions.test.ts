@@ -8,6 +8,8 @@ import { currentUserAtom } from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
+  tableFiltersAtom,
+  tableSortsAtom,
   tableRowsDbAtom,
   tableRowsLocalAtom,
   _updateRowDbAtom,
@@ -54,6 +56,10 @@ const initRows = (
 
     const setRowsLocal = useSetAtom(tableRowsLocalAtom, tableScope);
     setRowsLocal({ type: "set", rows: [...initialRowsLocal] });
+    const setTableFilters = useSetAtom(tableFiltersAtom, tableScope);
+    setTableFilters([]);
+    const setTableSorts = useSetAtom(tableSortsAtom, tableScope);
+    setTableSorts([]);
 
     const setUpdateRowDb = useSetAtom(_updateRowDbAtom, tableScope);
     setUpdateRowDb(() => async (path: string, update: Partial<TableRow>) => {
@@ -102,6 +108,87 @@ const generatedRowsLocal = new Array(GENERATED_ROWS_LENGTH)
     _rowy_ref: { id: `rowLocal${i}`, path: TEST_COLLECTION + "/rowLocal" + i },
     index: i,
   }));
+
+describe("tableRowsAtom", () => {
+  test("hides out-of-order local rows when filters are active", async () => {
+    initRows(generatedRows.slice(0, 2), [
+      {
+        _rowy_ref: {
+          id: "rowLocalOOO",
+          path: TEST_COLLECTION + "/rowLocalOOO",
+        },
+        _rowy_outOfOrder: true,
+      },
+      {
+        _rowy_ref: {
+          id: "rowLocalInOrder",
+          path: TEST_COLLECTION + "/rowLocalInOrder",
+        },
+        _rowy_outOfOrder: false,
+      },
+    ]);
+
+    const { result: setFilters } = renderHook(() =>
+      useSetAtom(tableFiltersAtom, tableScope)
+    );
+    act(() =>
+      setFilters.current([
+        {
+          key: "status",
+          operator: "==",
+          value: "open",
+        } as any,
+      ])
+    );
+
+    const {
+      result: { current: tableRows },
+    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+
+    expect(find(tableRows, ["_rowy_ref.id", "rowLocalOOO"])).toBeUndefined();
+    expect(find(tableRows, ["_rowy_ref.id", "rowLocalInOrder"])).toBeDefined();
+    expect(tableRows).toHaveLength(3);
+  });
+
+  test("hides out-of-order local rows when sorts are active", async () => {
+    initRows(generatedRows.slice(0, 2), [
+      {
+        _rowy_ref: {
+          id: "rowLocalOOO",
+          path: TEST_COLLECTION + "/rowLocalOOO",
+        },
+        _rowy_outOfOrder: true,
+      },
+      {
+        _rowy_ref: {
+          id: "rowLocalInOrder",
+          path: TEST_COLLECTION + "/rowLocalInOrder",
+        },
+        _rowy_outOfOrder: false,
+      },
+    ]);
+
+    const { result: setSorts } = renderHook(() =>
+      useSetAtom(tableSortsAtom, tableScope)
+    );
+    act(() =>
+      setSorts.current([
+        {
+          key: "index",
+          direction: "asc",
+        } as any,
+      ])
+    );
+
+    const {
+      result: { current: tableRows },
+    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+
+    expect(find(tableRows, ["_rowy_ref.id", "rowLocalOOO"])).toBeUndefined();
+    expect(find(tableRows, ["_rowy_ref.id", "rowLocalInOrder"])).toBeDefined();
+    expect(tableRows).toHaveLength(3);
+  });
+});
 
 describe("addRow", () => {
   describe("single", () => {
