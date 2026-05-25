@@ -171,13 +171,34 @@ export const tableRowsDbAtom = atom<TableRow[]>([]);
 export const tableRowsAtom = atom<TableRow[]>((get) => {
   const rowsDb = get(tableRowsDbAtom);
   const rowsLocal = get(tableRowsLocalAtom);
+  const tableFilters = get(tableFiltersAtom);
+  const tableSorts = get(tableSortsAtom);
+  const hasActiveFiltersOrSorts =
+    tableFilters.length > 0 || tableSorts.length > 0;
 
   // Optimization: create Map of rowsDb by path to index for faster lookup
   const rowsDbMap = new Map<string, number>();
   rowsDb.forEach((row, i) => rowsDbMap.set(row._rowy_ref.path, i));
 
+  // When filters/sorts are active, do not surface out-of-order local rows that
+  // bypass the filtered query. Still merge local edits for rows that *are* in
+  // the db result set (so UI reflects local state without breaking row counts).
+  if (hasActiveFiltersOrSorts) {
+    const localByPath = new Map<string, TableRow>();
+    for (const row of rowsLocal) {
+      if (rowsDbMap.has(row._rowy_ref.path)) {
+        localByPath.set(row._rowy_ref.path, row);
+      }
+    }
+
+    return rowsDb.map((row) => {
+      const local = localByPath.get(row._rowy_ref.path);
+      return local ? updateRowData({ ...row }, local) : row;
+    });
+  }
+
   // Loop through rowsLocal, which is usually the smaller of the two arrays
-  const rowsLocalToMerge = rowsLocal.map((row, i) => {
+  const rowsLocalToMerge = rowsLocal.map((row) => {
     // If row is in rowsDb, merge the two
     // and remove from rowsDb to prevent duplication
     if (rowsDbMap.has(row._rowy_ref.path)) {
@@ -189,7 +210,7 @@ export const tableRowsAtom = atom<TableRow[]>((get) => {
     return row;
   });
 
-  // Merge the two arrays
+  // Merge the two arrays (out-of-order rows first)
   return [
     ...rowsLocalToMerge,
     ...rowsDb.filter((row) => rowsDbMap.has(row._rowy_ref.path)),
