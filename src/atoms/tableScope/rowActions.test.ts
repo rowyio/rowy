@@ -14,6 +14,8 @@ import {
   _deleteRowDbAtom,
   addRowAtom,
   deleteRowAtom,
+  fillCellRangeAtom,
+  fillColumnRangeAtom,
 } from "@src/atoms/tableScope";
 import { TableRow } from "@src/types/table";
 import { tableRowsAtom } from "./table";
@@ -606,3 +608,200 @@ describe("deleteRow", () => {
     expect(tableRows).toHaveLength(0);
   });
 });
+
+describe("fillCellRange", () => {
+  test("fills string/text values from a source row to multiple target rows", async () => {
+    initRows(generatedRows);
+    const {
+      result: { current: fillCellRange },
+    } = renderHook(() => useSetAtom(fillCellRangeAtom, tableScope));
+    expect(fillCellRange).toBeDefined();
+
+    const sourceRow = {
+      _rowy_ref: { id: "sourceRow", path: TEST_COLLECTION + "/sourceRow" },
+      textField: "Copied Text Value",
+    };
+
+    await act(() =>
+      fillCellRange({
+        sourceRow,
+        targetRows: [
+          TEST_COLLECTION + "/row1",
+          TEST_COLLECTION + "/row2",
+          TEST_COLLECTION + "/row3",
+        ],
+        columnKeys: "textField",
+      })
+    );
+
+    const {
+      result: { current: tableRows },
+    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+
+    expect(find(tableRows, ["_rowy_ref.id", "row1"])?.textField).toBe(
+      "Copied Text Value"
+    );
+    expect(find(tableRows, ["_rowy_ref.id", "row2"])?.textField).toBe(
+      "Copied Text Value"
+    );
+    expect(find(tableRows, ["_rowy_ref.id", "row3"])?.textField).toBe(
+      "Copied Text Value"
+    );
+    expect(
+      find(tableRows, ["_rowy_ref.id", "row0"])?.textField
+    ).toBeUndefined();
+  });
+
+  test("fills numeric values from a source row to target rows", async () => {
+    initRows(generatedRows);
+    const {
+      result: { current: fillCellRange },
+    } = renderHook(() => useSetAtom(fillCellRangeAtom, tableScope));
+
+    const sourceRow = {
+      _rowy_ref: { id: "sourceRow", path: TEST_COLLECTION + "/sourceRow" },
+      numField: 42.5,
+    };
+
+    await act(() =>
+      fillCellRange({
+        sourceRow,
+        targetRows: [generatedRows[1], generatedRows[2]],
+        columnKeys: ["numField"],
+      })
+    );
+
+    const {
+      result: { current: tableRows },
+    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+
+    expect(find(tableRows, ["_rowy_ref.id", "row1"])?.numField).toBe(42.5);
+    expect(find(tableRows, ["_rowy_ref.id", "row2"])?.numField).toBe(42.5);
+  });
+
+  test("fills empty/null values", async () => {
+    const rowsWithData = generatedRows.map((r) => ({
+      ...r,
+      textField: "Existing Value",
+    }));
+    initRows(rowsWithData);
+    const {
+      result: { current: fillCellRange },
+    } = renderHook(() => useSetAtom(fillCellRangeAtom, tableScope));
+
+    const sourceRow = {
+      _rowy_ref: { id: "sourceRow", path: TEST_COLLECTION + "/sourceRow" },
+      textField: null,
+    };
+
+    await act(() =>
+      fillCellRange({
+        sourceRow,
+        targetRows: [TEST_COLLECTION + "/row1", TEST_COLLECTION + "/row2"],
+        columnKeys: "textField",
+      })
+    );
+
+    const {
+      result: { current: tableRows },
+    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+
+    expect(find(tableRows, ["_rowy_ref.id", "row1"])?.textField).toBeNull();
+    expect(find(tableRows, ["_rowy_ref.id", "row2"])?.textField).toBeNull();
+    expect(find(tableRows, ["_rowy_ref.id", "row3"])?.textField).toBe(
+      "Existing Value"
+    );
+  });
+
+  test("handles missing target rows gracefully", async () => {
+    initRows(generatedRows);
+    const {
+      result: { current: fillCellRange },
+    } = renderHook(() => useSetAtom(fillCellRangeAtom, tableScope));
+
+    const sourceRow = {
+      _rowy_ref: { id: "sourceRow", path: TEST_COLLECTION + "/sourceRow" },
+      textField: "Test",
+    };
+
+    await act(() =>
+      fillCellRange({
+        sourceRow,
+        targetRows: [
+          TEST_COLLECTION + "/nonExistentRow1",
+          TEST_COLLECTION + "/row1",
+          TEST_COLLECTION + "/nonExistentRow2",
+        ],
+        columnKeys: "textField",
+      })
+    );
+
+    const {
+      result: { current: tableRows },
+    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+
+    expect(find(tableRows, ["_rowy_ref.id", "row1"])?.textField).toBe("Test");
+  });
+
+  test("fills multiple column keys across target rows and preserves audit metadata", async () => {
+    initRows(generatedRows, [], true);
+    const {
+      result: { current: fillCellRange },
+    } = renderHook(() => useSetAtom(fillCellRangeAtom, tableScope));
+
+    const sourceRow = {
+      _rowy_ref: { id: "sourceRow", path: TEST_COLLECTION + "/sourceRow" },
+      textCol: "Multi-Col Text",
+      numberCol: 999,
+      boolCol: true,
+    };
+
+    await act(() =>
+      fillCellRange({
+        sourceRow,
+        targetRows: [TEST_COLLECTION + "/row1", TEST_COLLECTION + "/row2"],
+        columnKeys: ["textCol", "numberCol", "boolCol"],
+      })
+    );
+
+    const {
+      result: { current: tableRows },
+    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+
+    const row1 = find(tableRows, ["_rowy_ref.id", "row1"]);
+    expect(row1?.textCol).toBe("Multi-Col Text");
+    expect(row1?.numberCol).toBe(999);
+    expect(row1?.boolCol).toBe(true);
+    expect(row1?._updatedBy).toBeDefined();
+    expect(row1?._updatedBy?.displayName).toBe("Test User");
+  });
+
+  test("fillColumnRange alias behaves identically to fillCellRange", async () => {
+    initRows(generatedRows);
+    const {
+      result: { current: fillColumnRange },
+    } = renderHook(() => useSetAtom(fillColumnRangeAtom, tableScope));
+
+    const sourceRow = {
+      _rowy_ref: { id: "sourceRow", path: TEST_COLLECTION + "/sourceRow" },
+      field: "Alias Value",
+    };
+
+    await act(() =>
+      fillColumnRange({
+        sourceRow,
+        targetRows: [TEST_COLLECTION + "/row4"],
+        columnKeys: "field",
+      })
+    );
+
+    const {
+      result: { current: tableRows },
+    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+
+    expect(find(tableRows, ["_rowy_ref.id", "row4"])?.field).toBe(
+      "Alias Value"
+    );
+  });
+});
+

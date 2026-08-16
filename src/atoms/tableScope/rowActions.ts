@@ -7,6 +7,7 @@ import {
   isEqual,
   unset,
   filter,
+  chunk,
 } from "lodash-es";
 
 import { currentUserAtom } from "@src/atoms/projectScope";
@@ -502,3 +503,158 @@ export const updateFieldAtom = atom(
       auditChange("UPDATE_CELL", path, { updatedField: fieldName });
   }
 );
+
+export interface IFillCellRangeOptions {
+  /** The source row to copy cell values from */
+  sourceRow: TableRow;
+  /** Array of target row paths or target TableRow objects to fill cell values into */
+  targetRows: (string | TableRow)[];
+  /** Column key or array of column keys to fill */
+  columnKeys: string | string[];
+}
+/**
+ * Set function fills/copies cell values from a source row across a range of target rows
+ * for specified column keys (Text, Numbers, Checkbox, Single Select, Date, etc.).
+ * Updates both local state and database while preserving audit metadata.
+ *
+ * @param options - {@link IFillCellRangeOptions}
+ *
+ * @example Basic usage:
+ * ```
+ * const fillCellRange = useSetAtom(fillCellRangeAtom, tableScope);
+ * fillCellRange({ sourceRow, targetRows, columnKeys: ["name", "status"] });
+ * ```
+ */
+export const fillCellRangeAtom = atom(
+  null,
+  async (
+    get,
+    set,
+    { sourceRow, targetRows, columnKeys }: IFillCellRangeOptions
+  ) => {
+    const updateRowDb = get(_updateRowDbAtom);
+    const bulkWriteDb = get(_bulkWriteDbAtom);
+    if (!updateRowDb && !bulkWriteDb)
+      throw new Error("Cannot write to database");
+    const tableSettings = get(tableSettingsAtom);
+    if (!tableSettings) throw new Error("Cannot read table settings");
+    const currentUser = get(currentUserAtom);
+    if (!currentUser) throw new Error("Cannot read current user");
+    const auditChange = get(auditChangeAtom);
+    const tableColumnsOrdered = get(tableColumnsOrderedAtom);
+    const tableRows = get(tableRowsAtom);
+    const tableRowsLocal = get(tableRowsLocalAtom);
+
+    if (!sourceRow || !targetRows || targetRows.length === 0) return;
+
+    const keys = Array.isArray(columnKeys) ? columnKeys : [columnKeys];
+    if (keys.length === 0) return;
+
+    const validKeys = keys.filter((key) => {
+      const column = tableColumnsOrdered.find((c) => c.key === key);
+      if (column && (column.config?.isLocked === true || column.config?.editable === false)) {
+        return false;
+      }
+      return true;
+    });
+    if (validKeys.length === 0) return;
+
+    const auditUpdate: Partial<TableRow> = {};
+    if (tableSettings.audit !== false) {
+      const auditValue = rowyUser(currentUser);
+      auditUpdate[tableSettings.auditFieldUpdatedBy || "_updatedBy"] =
+        auditValue;
+    }
+
+    const requiredFields = tableColumnsOrdered
+      .filter((column) => column.config?.required)
+      .map((column) => column.key);
+
+    const dbOperations: { type: "update"; path: string; data: any }[] = [];
+    const dbUpdates: { path: string; data: any }[] = [];
+    const updatedPaths: string[] = [];
+
+    for (const target of targetRows) {
+      const targetPath =
+        typeof target === "string" ? target : target?._rowy_ref?.path;
+      if (!targetPath) continue;
+
+      const targetRow = find(tableRows, ["_rowy_ref.path", targetPath]);
+      if (!targetRow) continue;
+
+      const isLocalRow = Boolean(
+        find(tableRowsLocal, ["_rowy_ref.path", targetPath])
+      );
+
+      const update: Partial<TableRow> = { ...auditUpdate };
+      let hasChange = false;
+
+      for (const key of validKeys) {
+        const sourceValue = _get(sourceRow, key);
+        const valueToSet =
+          sourceValue === undefined ? null : cloneDeep(sourceValue);
+        const currentValue = _get(targetRow, key);
+
+        if (!isEqual(currentValue, valueToSet)) {
+          hasChange = true;
+        }
+        _set(update, key, valueToSet);
+      }
+
+      if (!hasChange) continue;
+
+      const localUpdate = cloneDeep(update);
+      const dbUpdate = cloneDeep(update);
+      const newRowValues = updateRowData(cloneDeep(targetRow), dbUpdate);
+
+      const missingRequiredFields = requiredFields.filter(
+        (field) => newRowValues[field] === undefined
+      );
+
+      if (isLocalRow) {
+        set(tableRowsLocalAtom, {
+          type: "update",
+          path: targetPath,
+          row: localUpdate,
+        });
+
+        if (missingRequiredFields.length === 0) {
+          const data = omitRowyFields(newRowValues);
+          dbOperations.push({ type: "update", path: targetPath, data });
+          dbUpdates.push({ path: targetPath, data });
+          updatedPaths.push(targetPath);
+        }
+      } else {
+        const data = omitRowyFields(dbUpdate);
+        dbOperations.push({ type: "update", path: targetPath, data });
+        dbUpdates.push({ path: targetPath, data });
+        updatedPaths.push(targetPath);
+      }
+    }
+
+    if (bulkWriteDb && dbOperations.length > 0) {
+      const chunks = chunk(dbOperations, 500);
+      for (const c of chunks) {
+        await bulkWriteDb(c);
+      }
+    } else if (updateRowDb && dbUpdates.length > 0) {
+      const chunks = chunk(dbUpdates, 500);
+      for (const c of chunks) {
+        await Promise.all(
+          c.map(({ path, data }) => updateRowDb(path, data))
+        );
+      }
+    }
+
+    if (auditChange && updatedPaths.length > 0) {
+      for (const path of updatedPaths) {
+        for (const key of validKeys) {
+          auditChange("UPDATE_CELL", path, { updatedField: key });
+        }
+      }
+    }
+  }
+);
+
+export const fillColumnRangeAtom = fillCellRangeAtom;
+
