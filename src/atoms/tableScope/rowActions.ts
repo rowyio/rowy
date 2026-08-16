@@ -7,6 +7,7 @@ import {
   isEqual,
   unset,
   filter,
+  chunk,
 } from "lodash-es";
 
 import { currentUserAtom } from "@src/atoms/projectScope";
@@ -549,6 +550,15 @@ export const fillCellRangeAtom = atom(
     const keys = Array.isArray(columnKeys) ? columnKeys : [columnKeys];
     if (keys.length === 0) return;
 
+    const validKeys = keys.filter((key) => {
+      const column = tableColumnsOrdered.find((c) => c.key === key);
+      if (column && (column.config?.isLocked === true || column.config?.editable === false)) {
+        return false;
+      }
+      return true;
+    });
+    if (validKeys.length === 0) return;
+
     const auditUpdate: Partial<TableRow> = {};
     if (tableSettings.audit !== false) {
       const auditValue = rowyUser(currentUser);
@@ -579,7 +589,7 @@ export const fillCellRangeAtom = atom(
       const update: Partial<TableRow> = { ...auditUpdate };
       let hasChange = false;
 
-      for (const key of keys) {
+      for (const key of validKeys) {
         const sourceValue = _get(sourceRow, key);
         const valueToSet =
           sourceValue === undefined ? null : cloneDeep(sourceValue);
@@ -623,16 +633,22 @@ export const fillCellRangeAtom = atom(
     }
 
     if (bulkWriteDb && dbOperations.length > 0) {
-      await bulkWriteDb(dbOperations);
+      const chunks = chunk(dbOperations, 500);
+      for (const c of chunks) {
+        await bulkWriteDb(c);
+      }
     } else if (updateRowDb && dbUpdates.length > 0) {
-      await Promise.all(
-        dbUpdates.map(({ path, data }) => updateRowDb(path, data))
-      );
+      const chunks = chunk(dbUpdates, 500);
+      for (const c of chunks) {
+        await Promise.all(
+          c.map(({ path, data }) => updateRowDb(path, data))
+        );
+      }
     }
 
     if (auditChange && updatedPaths.length > 0) {
       for (const path of updatedPaths) {
-        for (const key of keys) {
+        for (const key of validKeys) {
           auditChange("UPDATE_CELL", path, { updatedField: key });
         }
       }
