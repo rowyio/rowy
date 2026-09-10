@@ -28,11 +28,7 @@ export default function TableGrid({
               if (!table) return null;
 
               return (
-                <SlideTransition
-                  key={table.id}
-                  appear
-                  timeout={(sectionIndex + 1) * 100 + tableIndex * 50}
-                >
+                <SlideTransition key={table.id} appear timeout={100}>
                   <Grid item xs={12} sm={6} md={4} lg={3}>
                     <TableCard
                       {...table}
@@ -53,7 +49,7 @@ export default function TableGrid({
                 <SlideTransition
                   key={"grid-section-" + sectionName}
                   in
-                  timeout={(sectionIndex + 1) * 100}
+                  timeout={100}
                 >
                   <SectionHeading sx={{ pl: 2, pr: 1.5 }}>
                     {sectionName}
